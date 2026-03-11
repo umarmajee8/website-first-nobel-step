@@ -1,0 +1,878 @@
+
+<!DOCTYPE html>
+<html lang="en" class="scroll-smooth">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>First Nobel Step | Official Government Registered Portal</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <!-- Load Premium Typography: Inter -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@100..900&display=swap" rel="stylesheet">
+    
+    <script>
+        tailwind.config = {
+            darkMode: 'class',
+            theme: {
+                extend: {
+                    fontFamily: {
+                        sans: ['"Inter"', 'ui-sans-serif', 'system-ui', 'sans-serif'],
+                        display: ['"Inter"', 'sans-serif'],
+                        lemon: ['"Inter"', 'sans-serif'],
+                    },
+                    colors: {
+                        'pakistan-green': '#01411C',
+                        'whatsapp-green': '#25D366',
+                    },
+                    animation: {
+                        'spin-slow': 'spin 20s linear infinite',
+                        'float': 'float 6s ease-in-out infinite',
+                    },
+                    keyframes: {
+                        float: {
+                            '0%, 100%': { transform: 'translateY(0px)' },
+                            '50%': { transform: 'translateY(-10px)' },
+                        }
+                    }
+                }
+            }
+        }
+    </script>
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+            -webkit-font-smoothing: antialiased;
+            -moz-osx-font-smoothing: grayscale;
+            text-rendering: optimizeLegibility;
+            letter-spacing: -0.01em;
+        }
+        
+        .font-lemon {
+            font-family: 'Inter', sans-serif;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            font-weight: 700;
+        }
+
+        h1, h2, h3 {
+            font-family: 'Inter', sans-serif;
+            font-weight: 800;
+            letter-spacing: -0.03em;
+        }
+
+        .hero-title {
+            font-family: 'Inter', sans-serif;
+            font-weight: 900;
+            line-height: 0.95;
+            letter-spacing: -0.04em;
+        }
+
+        /* Custom Scrollbar */
+        .custom-scrollbar::-webkit-scrollbar {
+            width: 5px;
+        }
+        .custom-scrollbar::-webkit-scrollbar-track {
+            background: transparent;
+        }
+        .custom-scrollbar::-webkit-scrollbar-thumb {
+            background: #01411C;
+            border-radius: 10px;
+        }
+
+        .seal-animation {
+            animation: seal-float-glow 4s infinite ease-in-out;
+        }
+        @keyframes seal-float-glow {
+            0%, 100% { 
+                transform: translateY(0) scale(1);
+                box-shadow: 0 0 20px rgba(1, 65, 28, 0.1);
+            }
+            50% { 
+                transform: translateY(-8px) scale(1.03);
+                box-shadow: 0 10px 40px rgba(1, 65, 28, 0.3);
+            }
+        }
+        @keyframes slow-rotate {
+            from { transform: rotate(0deg); }
+            to { transform: rotate(360deg); }
+        }
+        .animate-slow-rotate {
+            animation: slow-rotate 15s linear infinite;
+        }
+
+        /* Modal Transitions */
+        .modal-enter { opacity: 0; transform: scale(0.95); }
+        .modal-enter-active { opacity: 1; transform: scale(1); transition: opacity 300ms, transform 300ms; }
+        .modal-exit { opacity: 1; transform: scale(1); }
+        .modal-exit-active { opacity: 0; transform: scale(0.95); transition: opacity 200ms, transform 200ms; }
+        
+        .hidden-important { display: none !important; }
+    </style>
+<script type="importmap">
+{
+  "imports": {
+    "react/": "https://esm.sh/react@^19.2.3/",
+    "react": "https://esm.sh/react@^19.2.3"
+  }
+}
+</script>
+<link rel="stylesheet" href="/index.css">
+</head>
+<body class="bg-white dark:bg-gray-900 text-gray-900 dark:text-gray-100 transition-colors duration-300 selection:bg-green-100 selection:text-pakistan-green">
+
+    <!-- HEADER -->
+    <header class="sticky top-0 z-50 bg-white/80 dark:bg-gray-900/80 backdrop-blur-md border-b border-gray-100 dark:border-gray-800 transition-colors duration-300">
+        <div class="max-w-7xl mx-auto px-4 h-16 flex items-center justify-between">
+            <!-- Logo -->
+            <div class="group cursor-pointer flex items-center gap-3 h-10">
+                <svg viewBox="15 20 70 100" class="h-full w-auto drop-shadow-sm">
+                    <g class="fill-pakistan-green dark:fill-white transition-colors">
+                        <path d="M31,21.5 h27 v14.5 c0,0 -12.5,1.5 -12.8,24.5 c-0.2,15.5 -10.5,31.5 -17.5,36.5 c-7,5 -16,1 -16,-5.5 c0-5.5,5-8,9.5-11 c4-2.5,10-11,10-23.5 c0-13.5,0.3-22.5,0.3-22.5 z" />
+                        <path d="M53.5,58.5 c0,0,3.8,12,3.8,24 c0,10.5,0,17.5,10.5,20.5 c9.5,3,17-2.5,17-8 c0-3-3.5-6-8.5-7.5 c-4.5-1.5-9.5-6-11.5-13 c-2-7-4.5-16-4.5-16 z" />
+                    </g>
+                </svg>
+                <div class="flex flex-col">
+                    <span class="font-lemon text-base tracking-tight leading-none text-gray-900 dark:text-white">First Nobel Step</span>
+                    <span class="text-[9px] font-bold tracking-[0.25em] leading-none mt-1.5 text-pakistan-green dark:text-green-400">(PRIVATE) LIMITED</span>
+                </div>
+            </div>
+            
+            <div class="flex items-center gap-4">
+                <button id="theme-toggle" class="p-2 rounded-xl bg-gray-100 dark:bg-gray-800 text-gray-600 dark:text-gray-300 hover:bg-gray-200 dark:hover:bg-gray-700 transition-all active:scale-95">
+                    <i class="fa-solid fa-moon text-base dark:hidden"></i>
+                    <i class="fa-solid fa-sun text-base hidden dark:inline-block"></i>
+                </button>
+
+                <button onclick="openForm()" class="bg-pakistan-green text-white px-5 py-2 rounded-lg font-lemon text-[10px] tracking-widest hover:bg-green-800 transition-all shadow-[0_10px_20px_-5px_rgba(1,65,28,0.4)] active:scale-95 text-center inline-block">
+                    Apply Now
+                </button>
+            </div>
+        </div>
+    </header>
+
+    <main>
+        <!-- HERO SECTION -->
+        <section class="relative bg-white dark:bg-gray-900 text-gray-900 dark:text-white py-12 lg:py-20 overflow-hidden border-b border-gray-100 dark:border-gray-800 transition-colors duration-300">
+            <div class="absolute top-0 right-0 w-1/2 h-full opacity-5 pointer-events-none">
+                <div class="w-full h-full bg-gradient-to-l from-pakistan-green to-transparent"></div>
+            </div>
+            
+            <div class="max-w-7xl mx-auto px-4 relative z-10">
+                <div class="flex flex-col lg:flex-row items-center gap-8 lg:gap-16">
+                    <div class="flex-1 text-center lg:text-left">
+                        <div class="inline-flex items-center gap-2 px-4 py-1.5 bg-green-50 dark:bg-green-900/20 border border-green-200 dark:border-green-800 rounded-full mb-6">
+                            <span class="w-2 h-2 bg-green-500 rounded-full animate-pulse"></span>
+                            <span class="text-[10px] font-lemon text-pakistan-green dark:text-green-400 tracking-[0.2em]">Enrollment Currently Open</span>
+                        </div>
+                        
+                        <h1 class="hero-title text-5xl md:text-7xl lg:text-8xl mb-6">
+                            YOUR FIRST <br />
+                            <span class="text-pakistan-green dark:text-green-500">MILLION</span> STEP.
+                        </h1>
+                        
+                        <p class="text-lg md:text-xl text-gray-600 dark:text-gray-400 mb-10 leading-relaxed max-w-2xl font-medium tracking-tight">
+                            Empowering Pakistan's Entrepreneurs, Students, and Job Professionals. Official membership of First Nobel Step (Pvt.) Ltd. is your gateway to global opportunities.
+                        </p>
+                        
+                        <div class="flex flex-col sm:flex-row gap-5 items-center justify-center lg:justify-start">
+                            <button onclick="openForm()" class="w-full sm:w-auto bg-pakistan-green text-white px-12 py-5 rounded-2xl font-lemon text-lg text-center hover:bg-green-900 hover:scale-[1.02] transition-all shadow-[0_20px_50px_-15px_rgba(1,65,28,0.5)] flex items-center justify-center gap-3 group active:scale-95">
+                                Apply Now <i class="fa-solid fa-arrow-right group-hover:translate-x-1 transition-transform"></i>
+                            </button>
+                            
+                            <div class="flex items-center gap-4 px-6 py-4 bg-gray-50 dark:bg-gray-800 rounded-2xl border border-gray-100 dark:border-gray-700">
+                                <i class="fa-solid fa-certificate text-pakistan-green dark:text-green-500 text-2xl"></i>
+                                <div class="flex flex-col text-left">
+                                    <span class="text-[9px] font-lemon tracking-[0.2em] text-gray-400">Official Status</span>
+                                    <span class="text-sm font-extrabold text-pakistan-green dark:text-green-400 font-display">Govt. Registered (Pvt.) Ltd.</span>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="mt-12 flex justify-center lg:justify-start gap-12 opacity-30 dark:opacity-50 grayscale hover:grayscale-0 transition-all duration-700 text-gray-900 dark:text-white">
+                            <div class="flex items-center gap-2.5 font-lemon text-[9px] tracking-[0.3em]">
+                                <i class="fa-solid fa-shield-halved text-xl"></i> Secure
+                            </div>
+                            <div class="flex items-center gap-2.5 font-lemon text-[9px] tracking-[0.3em]">
+                                <i class="fa-solid fa-earth-americas text-xl"></i> Global
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Badge Animation -->
+                    <div class="flex-shrink-0 hidden lg:block scale-110">
+                        <div class="relative w-48 h-48 flex items-center justify-center">
+                            <svg class="absolute w-full h-full animate-spin-slow" viewBox="0 0 200 200">
+                                <defs><path id="badgeCirclePath" d="M 100, 100 m -80, 0 a 80,80 0 1,1 160,0 a 80,80 0 1,1 -160,0" /></defs>
+                                <text class="text-[10px] font-black fill-pakistan-green dark:fill-green-500 opacity-40 uppercase tracking-[4px]">
+                                    <textPath href="#badgeCirclePath" startOffset="0%">
+                                        Government of Pakistan • Official Registration • Verified •
+                                    </textPath>
+                                </text>
+                            </svg>
+                            <div class="absolute w-[150px] h-[150px] border border-dashed border-pakistan-green/20 dark:border-green-500/20 rounded-full animate-slow-rotate"></div>
+                            <div class="w-32 h-32 bg-white dark:bg-gray-800 rounded-full flex flex-col items-center justify-center border-4 border-pakistan-green dark:border-green-600 relative z-10 seal-animation shadow-[0_20px_50px_rgba(1,65,28,0.3)] overflow-hidden">
+                                <div class="p-4 flex flex-col items-center">
+                                    <img src="https://upload.wikimedia.org/wikipedia/commons/e/ef/State_emblem_of_Pakistan.svg" alt="Govt Logo" class="w-16 h-16 object-contain mb-1 filter drop-shadow-sm" />
+                                    <div class="text-[8px] font-black text-center leading-none tracking-tighter text-pakistan-green dark:text-green-400 uppercase">Govt. of Pakistan <br /> (Pvt.) Ltd.</div>
+                                </div>
+                            </div>
+                            <div class="absolute inset-0 bg-green-500/10 blur-[40px] -z-10 rounded-full animate-pulse"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- MEMBERSHIP SECTION -->
+        <section id="membership" class="py-20 bg-gray-50 dark:bg-gray-800 transition-colors duration-300">
+            <div class="max-w-7xl mx-auto px-4">
+                <div class="text-center mb-16">
+                    <div class="inline-block px-5 py-2 bg-green-100 dark:bg-green-900/30 text-pakistan-green dark:text-green-400 rounded-full text-[9px] font-lemon tracking-[0.3em] mb-4">
+                        Unlock Your Potential
+                    </div>
+                    <h2 class="text-4xl lg:text-5xl font-display font-extrabold mb-6 tracking-tight dark:text-white">Official Membership Programs</h2>
+                    <p class="text-gray-500 dark:text-gray-400 max-w-2xl mx-auto text-lg font-medium leading-relaxed tracking-tight">
+                        Legally structured pathways for your global career and business success. Choose the path that matches your ambition.
+                    </p>
+                </div>
+                
+                <div class="grid grid-cols-1 lg:grid-cols-3 gap-8 items-stretch">
+                    <!-- Professional Card -->
+                    <div class="relative bg-white dark:bg-gray-900 flex flex-col p-6 rounded-3xl border border-pakistan-green dark:border-green-600 ring-4 ring-green-50 dark:ring-green-900/20 shadow-[0_25px_60px_-15px_rgba(1,65,28,0.3)] lg:scale-105 z-10 h-full transition-all duration-500">
+                        <div class="absolute top-0 left-1/2 -translate-x-1/2 -translate-y-1/2 bg-pakistan-green text-white text-[9px] font-lemon px-5 py-1.5 rounded-full tracking-widest shadow-lg whitespace-nowrap">
+                            Official Professional Choice
+                        </div>
+                        <div class="mb-6 text-center sm:text-left">
+                            <div class="w-12 h-12 rounded-xl flex items-center justify-center mb-4 bg-pakistan-green text-white">
+                                <i class="fa-solid fa-briefcase text-xl"></i>
+                            </div>
+                            <h3 class="text-lg font-lemon mb-1 tracking-tight dark:text-white">Job Professionals</h3>
+                            <p class="text-gray-500 dark:text-gray-400 text-xs leading-relaxed">Direct access to fully sponsored international career opportunities.</p>
+                        </div>
+                        <div class="h-px bg-gray-100 dark:bg-gray-800 w-full mb-6"></div>
+                        <div class="mb-3 text-[10px] font-lemon text-pakistan-green dark:text-green-400 tracking-widest">What You Unlock:</div>
+                        <ul class="space-y-3 mb-6 flex-grow">
+                            <li class="flex items-start gap-2.5 text-sm"><i class="fa-solid fa-check text-pakistan-green dark:text-green-400 text-[9px] mt-1 bg-green-50 dark:bg-green-900/40 p-1 rounded-full"></i> <span class="text-gray-700 dark:text-gray-300 font-medium text-xs">Direct access to sponsored foreign jobs</span></li>
+                            <li class="flex items-start gap-2.5 text-sm"><i class="fa-solid fa-check text-pakistan-green dark:text-green-400 text-[9px] mt-1 bg-green-50 dark:bg-green-900/40 p-1 rounded-full"></i> <span class="text-gray-700 dark:text-gray-300 font-medium text-xs">Overseas opportunities with borne expenses</span></li>
+                            <li class="flex items-start gap-2.5 text-sm"><i class="fa-solid fa-check text-pakistan-green dark:text-green-400 text-[9px] mt-1 bg-green-50 dark:bg-green-900/40 p-1 rounded-full"></i> <span class="text-gray-700 dark:text-gray-300 font-medium text-xs">Verified job placements in top economies</span></li>
+                        </ul>
+                        <button onclick="openForm('professional')" class="w-full py-3.5 rounded-xl font-lemon text-[10px] tracking-widest bg-pakistan-green text-white shadow-xl shadow-green-900/10 hover:bg-green-900 uppercase transition-all hover:scale-[1.02] active:scale-95">
+                            Join Job Professionals
+                        </button>
+                    </div>
+
+                    <!-- Entrepreneur Card -->
+                    <div class="relative bg-white dark:bg-gray-900 flex flex-col p-6 rounded-3xl border border-gray-100 dark:border-gray-700 shadow-sm hover:-translate-y-1 transition-all h-full">
+                        <div class="mb-6 text-center sm:text-left">
+                            <div class="w-12 h-12 rounded-xl flex items-center justify-center mb-4 bg-green-50 dark:bg-green-900/30 text-pakistan-green dark:text-green-400">
+                                <i class="fa-solid fa-rocket text-xl"></i>
+                            </div>
+                            <h3 class="text-lg font-lemon mb-1 tracking-tight dark:text-white">Entrepreneurs</h3>
+                            <p class="text-gray-500 dark:text-gray-400 text-xs leading-relaxed">Transform your vision into a funded reality with expert mentorship.</p>
+                        </div>
+                        <div class="h-px bg-gray-100 dark:bg-gray-800 w-full mb-6"></div>
+                        <div class="mb-3 text-[10px] font-lemon text-pakistan-green dark:text-green-400 tracking-widest">What You Unlock:</div>
+                        <ul class="space-y-3 mb-6 flex-grow">
+                            <li class="flex items-start gap-2.5 text-sm"><i class="fa-solid fa-check text-pakistan-green dark:text-green-400 text-[9px] mt-1 bg-green-50 dark:bg-green-900/40 p-1 rounded-full"></i> <span class="text-gray-700 dark:text-gray-300 font-medium text-xs">Turn your idea into funded reality</span></li>
+                            <li class="flex items-start gap-2.5 text-sm"><i class="fa-solid fa-check text-pakistan-green dark:text-green-400 text-[9px] mt-1 bg-green-50 dark:bg-green-900/40 p-1 rounded-full"></i> <span class="text-gray-700 dark:text-gray-300 font-medium text-xs">Strategic feedback from business leaders</span></li>
+                            <li class="flex items-start gap-2.5 text-sm"><i class="fa-solid fa-check text-pakistan-green dark:text-green-400 text-[9px] mt-1 bg-green-50 dark:bg-green-900/40 p-1 rounded-full"></i> <span class="text-gray-700 dark:text-gray-300 font-medium text-xs">Verified Business Opportunity Alerts</span></li>
+                        </ul>
+                        <button onclick="openForm('entrepreneur')" class="w-full py-3.5 rounded-xl font-lemon text-[10px] tracking-widest bg-pakistan-green text-white shadow-xl shadow-green-900/10 hover:bg-green-900 uppercase transition-all hover:scale-[1.02] active:scale-95">
+                            Join Entrepreneurs
+                        </button>
+                    </div>
+
+                    <!-- Student Card -->
+                    <div class="relative bg-white dark:bg-gray-900 flex flex-col p-6 rounded-3xl border border-gray-100 dark:border-gray-700 shadow-sm hover:-translate-y-1 transition-all h-full">
+                        <div class="mb-6 text-center sm:text-left">
+                            <div class="w-12 h-12 rounded-xl flex items-center justify-center mb-4 bg-green-50 dark:bg-green-900/30 text-pakistan-green dark:text-green-400">
+                                <i class="fa-solid fa-graduation-cap text-xl"></i>
+                            </div>
+                            <h3 class="text-lg font-lemon mb-1 tracking-tight dark:text-white">Official Student</h3>
+                            <p class="text-gray-500 dark:text-gray-400 text-xs leading-relaxed">Academic excellence and professional growth pathways for future leaders.</p>
+                        </div>
+                        <div class="h-px bg-gray-100 dark:bg-gray-800 w-full mb-6"></div>
+                        <div class="mb-3 text-[10px] font-lemon text-pakistan-green dark:text-green-400 tracking-widest">What You Unlock:</div>
+                        <ul class="space-y-3 mb-6 flex-grow">
+                            <li class="flex items-start gap-2.5 text-sm"><i class="fa-solid fa-check text-pakistan-green dark:text-green-400 text-[9px] mt-1 bg-green-50 dark:bg-green-900/40 p-1 rounded-full"></i> <span class="text-gray-700 dark:text-gray-300 font-medium text-xs">Full academic scholarship until graduation</span></li>
+                            <li class="flex items-start gap-2.5 text-sm"><i class="fa-solid fa-check text-pakistan-green dark:text-green-400 text-[9px] mt-1 bg-green-50 dark:bg-green-900/40 p-1 rounded-full"></i> <span class="text-gray-700 dark:text-gray-300 font-medium text-xs">Earn while learning professionally</span></li>
+                            <li class="flex items-start gap-2.5 text-sm"><i class="fa-solid fa-check text-pakistan-green dark:text-green-400 text-[9px] mt-1 bg-green-50 dark:bg-green-900/40 p-1 rounded-full"></i> <span class="text-gray-700 dark:text-gray-300 font-medium text-xs">Paid internships via verified partners</span></li>
+                        </ul>
+                        <button onclick="openForm('student')" class="w-full py-3.5 rounded-xl font-lemon text-[10px] tracking-widest bg-pakistan-green text-white shadow-xl shadow-green-900/10 hover:bg-green-900 uppercase transition-all hover:scale-[1.02] active:scale-95">
+                            Join Official Student
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <!-- FOOTER -->
+    <footer class="bg-green-50 dark:bg-gray-950 text-gray-700 dark:text-gray-400 py-12 border-t border-green-100 dark:border-gray-800 transition-colors duration-300">
+        <div class="max-w-7xl mx-auto px-4">
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-8 mb-10">
+                <div class="md:col-span-1">
+                    <div class="flex items-center gap-3 h-8 mb-6">
+                        <svg viewBox="15 20 70 100" class="h-full w-auto"><g class="fill-pakistan-green dark:fill-white"><path d="M31,21.5 h27 v14.5 c0,0 -12.5,1.5 -12.8,24.5 c-0.2,15.5 -10.5,31.5 -17.5,36.5 c-7,5 -16,1 -16,-5.5 c0-5.5,5-8,9.5-11 c4-2.5,10-11,10-23.5 c0-13.5,0.3-22.5,0.3-22.5 z" /><path d="M53.5,58.5 c0,0,3.8,12,3.8,24 c0,10.5,0,17.5,10.5,20.5 c9.5,3,17-2.5,17-8 c0-3-3.5-6-8.5-7.5 c-4.5-1.5-9.5-6-11.5-13 c-2-7-4.5-16-4.5-16 z" /></g></svg>
+                        <span class="font-lemon text-base tracking-tight leading-none text-gray-900 dark:text-white">First Nobel Step</span>
+                    </div>
+                    <p class="text-xs leading-relaxed mb-6">
+                        The official membership portal of First Nobel Step (Pvt.) Ltd., legally registered by the Government of Pakistan.
+                    </p>
+                    <div class="flex gap-3">
+                        <a href="#" class="w-9 h-9 bg-white dark:bg-gray-800 border border-green-200 dark:border-gray-700 text-pakistan-green dark:text-green-400 rounded-full flex items-center justify-center hover:bg-pakistan-green hover:text-white transition-all shadow-sm"><i class="fa-brands fa-facebook-f text-sm"></i></a>
+                        <a href="#" class="w-9 h-9 bg-white dark:bg-gray-800 border border-green-200 dark:border-gray-700 text-pakistan-green dark:text-green-400 rounded-full flex items-center justify-center hover:bg-pakistan-green hover:text-white transition-all shadow-sm"><i class="fa-brands fa-instagram text-sm"></i></a>
+                        <a href="#" class="w-9 h-9 bg-white dark:bg-gray-800 border border-green-200 dark:border-gray-700 text-pakistan-green dark:text-green-400 rounded-full flex items-center justify-center hover:bg-pakistan-green hover:text-white transition-all shadow-sm"><i class="fa-brands fa-linkedin-in text-sm"></i></a>
+                    </div>
+                </div>
+                <div>
+                    <h4 class="text-pakistan-green dark:text-green-500 font-lemon tracking-widest text-[9px] mb-4">Resources</h4>
+                    <ul class="space-y-2 text-xs font-bold">
+                        <li><a href="tel:+92519876543" class="hover:text-green-600 dark:hover:text-green-400">Help Center</a></li>
+                        <li><a href="#" class="hover:text-green-600 dark:hover:text-green-400">Privacy Policy</a></li>
+                    </ul>
+                </div>
+                <div>
+                    <h4 class="text-pakistan-green dark:text-green-500 font-lemon tracking-widest text-[9px] mb-4">Contact</h4>
+                    <ul class="space-y-2.5 text-xs">
+                        <li class="flex gap-3"><i class="fa-solid fa-location-dot mt-0.5 text-pakistan-green dark:text-green-500"></i> <span class="font-bold text-gray-900 dark:text-gray-200">Headquarters: Blue Area, Islamabad</span></li>
+                        <li class="flex gap-3"><i class="fa-solid fa-phone mt-0.5 text-pakistan-green dark:text-green-500"></i> <span class="font-bold text-gray-900 dark:text-gray-200">+92 51 9876543</span></li>
+                    </ul>
+                </div>
+            </div>
+            
+            <div class="pt-8 border-t border-green-200 dark:border-gray-800 flex flex-col items-center gap-4">
+                <div class="flex items-center gap-3 px-5 py-2.5 bg-white dark:bg-gray-900 rounded-full border border-green-100 dark:border-gray-800 shadow-sm">
+                    <img src="https://upload.wikimedia.org/wikipedia/commons/e/ef/State_emblem_of_Pakistan.svg" alt="Govt Logo" class="w-6 h-6 object-contain" />
+                    <div class="flex flex-col">
+                        <span class="text-[9px] font-lemon tracking-widest text-gray-400 leading-none">Registered by</span>
+                        <span class="text-[10px] font-bold text-pakistan-green dark:text-green-400 tracking-tight">Government of Pakistan</span>
+                    </div>
+                </div>
+                <p class="text-[9px] font-bold uppercase tracking-[0.2em] text-gray-500 dark:text-gray-600">© 2026 First Nobel Step (Pvt.) Ltd.</p>
+            </div>
+        </div>
+    </footer>
+
+    <!-- MODAL OVERLAY -->
+    <div id="modal-overlay" class="hidden fixed inset-0 z-[100] flex items-center justify-center p-4 bg-black/60 backdrop-blur-sm overflow-y-auto transition-opacity duration-300">
+        
+        <!-- EXIT CONFIRMATION -->
+        <div id="exit-confirm" class="hidden absolute inset-0 z-[110] flex items-center justify-center p-6 bg-black/20 backdrop-blur-[2px]">
+             <div class="bg-white dark:bg-gray-800 rounded-3xl p-6 w-full max-w-xs text-center shadow-[0_20px_50px_rgba(0,0,0,0.3)] border border-gray-100 dark:border-gray-700 transform scale-100">
+                <div class="w-12 h-12 bg-red-50 dark:bg-red-900/20 rounded-full flex items-center justify-center mx-auto mb-4 text-red-500">
+                    <i class="fa-solid fa-triangle-exclamation text-xl"></i>
+                </div>
+                <h3 class="text-base font-bold text-gray-900 dark:text-white mb-2">Discard Changes?</h3>
+                <p class="text-xs text-gray-500 dark:text-gray-400 mb-6 leading-relaxed">
+                    You have unsaved progress. Are you sure you want to leave?
+                </p>
+                <div class="flex flex-col gap-2">
+                    <button onclick="hideExitConfirm()" class="w-full py-3 bg-gray-100 dark:bg-gray-700 hover:bg-gray-200 dark:hover:bg-gray-600 text-gray-900 dark:text-white rounded-xl font-bold text-xs transition-colors">
+                        No, Keep Editing
+                    </button>
+                    <button onclick="forceCloseForm()" class="w-full py-3 bg-transparent text-red-500 hover:bg-red-50 dark:hover:bg-red-900/20 rounded-xl font-bold text-xs transition-colors">
+                        Yes, Discard & Exit
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <!-- MAIN FORM MODAL -->
+        <div id="modal-content" class="bg-white dark:bg-gray-900 rounded-[2rem] w-full max-w-2xl shadow-2xl border border-gray-100 dark:border-gray-800 flex flex-col max-h-[90vh] relative overflow-hidden transition-all duration-300 transform scale-95 opacity-0">
+            
+            <!-- Modal Header -->
+            <div class="px-8 pt-8 pb-4 flex items-center justify-between">
+                <div><h2 class="text-2xl font-lemon tracking-tight dark:text-white">Processing Fees</h2><p class="text-[10px] font-lemon text-pakistan-green dark:text-green-400 tracking-widest mt-1">Official Govt. Registered Portal</p></div>
+                <button onclick="attemptCloseForm()" class="w-10 h-10 flex items-center justify-center rounded-full hover:bg-gray-100 dark:hover:bg-gray-800 transition-colors"><i class="fa-solid fa-times text-gray-400"></i></button>
+            </div>
+
+            <!-- Progress Bar -->
+            <nav id="form-progress" class="px-8 py-4">
+                <div class="flex items-center justify-between relative">
+                    <div class="absolute top-1/2 left-0 w-full h-0.5 bg-gray-100 dark:bg-gray-800 -translate-y-1/2 -z-10"></div>
+                    <div id="progress-line" class="absolute top-1/2 left-0 h-0.5 bg-pakistan-green transition-all duration-500 -translate-y-1/2 -z-10" style="width: 0%"></div>
+                    <!-- Steps will be generated by JS or static below -->
+                    <div class="flex flex-col items-center"><div id="step-1-indicator" class="w-8 h-8 rounded-full flex items-center justify-center text-[10px] font-lemon transition-all border-2 bg-pakistan-green border-pakistan-green text-white">1</div></div>
+                    <div class="flex flex-col items-center"><div id="step-2-indicator" class="w-8 h-8 rounded-full flex items-center justify-center text-[10px] font-lemon transition-all border-2 bg-white dark:bg-gray-900 border-gray-200 text-gray-400">2</div></div>
+                    <div class="flex flex-col items-center"><div id="step-3-indicator" class="w-8 h-8 rounded-full flex items-center justify-center text-[10px] font-lemon transition-all border-2 bg-white dark:bg-gray-900 border-gray-200 text-gray-400">3</div></div>
+                    <div class="flex flex-col items-center"><div id="step-4-indicator" class="w-8 h-8 rounded-full flex items-center justify-center text-[10px] font-lemon transition-all border-2 bg-white dark:bg-gray-900 border-gray-200 text-gray-400">4</div></div>
+                </div>
+            </nav>
+
+            <!-- Form Content -->
+            <div id="form-body" class="flex-grow overflow-y-auto px-8 py-6 custom-scrollbar">
+                
+                <!-- STEP 1: Plan Selection -->
+                <div id="step-1" class="space-y-4">
+                    <legend class="text-sm font-medium mb-4 dark:text-gray-300">Select processing category:</legend>
+                    <div onclick="selectPlan('professional')" id="plan-professional" class="plan-card flex items-center gap-4 p-5 rounded-2xl border-2 transition-all cursor-pointer border-gray-100 dark:border-gray-800 hover:border-green-100">
+                        <div class="w-10 h-10 rounded-xl flex items-center justify-center bg-gray-50 dark:bg-gray-800 text-gray-400 icon-box"><i class="fa-solid fa-briefcase"></i></div>
+                        <h4 class="font-lemon text-sm dark:text-white">Professional</h4>
+                        <div class="ml-auto w-5 h-5 rounded-full border-2 flex items-center justify-center border-gray-200 check-circle"></div>
+                    </div>
+                    <div onclick="selectPlan('entrepreneur')" id="plan-entrepreneur" class="plan-card flex items-center gap-4 p-5 rounded-2xl border-2 transition-all cursor-pointer border-gray-100 dark:border-gray-800 hover:border-green-100">
+                        <div class="w-10 h-10 rounded-xl flex items-center justify-center bg-gray-50 dark:bg-gray-800 text-gray-400 icon-box"><i class="fa-solid fa-rocket"></i></div>
+                        <h4 class="font-lemon text-sm dark:text-white">Entrepreneur</h4>
+                        <div class="ml-auto w-5 h-5 rounded-full border-2 flex items-center justify-center border-gray-200 check-circle"></div>
+                    </div>
+                    <div onclick="selectPlan('student')" id="plan-student" class="plan-card flex items-center gap-4 p-5 rounded-2xl border-2 transition-all cursor-pointer border-gray-100 dark:border-gray-800 hover:border-green-100">
+                        <div class="w-10 h-10 rounded-xl flex items-center justify-center bg-gray-50 dark:bg-gray-800 text-gray-400 icon-box"><i class="fa-solid fa-graduation-cap"></i></div>
+                        <h4 class="font-lemon text-sm dark:text-white">Official Student</h4>
+                        <div class="ml-auto w-5 h-5 rounded-full border-2 flex items-center justify-center border-gray-200 check-circle"></div>
+                    </div>
+                </div>
+
+                <!-- STEP 2: Personal Info -->
+                <div id="step-2" class="hidden grid grid-cols-1 md:grid-cols-2 gap-6">
+                    <div class="w-full group">
+                        <label class="block text-[10px] font-lemon tracking-widest mb-2.5 text-gray-500 dark:text-gray-400">Full Name (As per CNIC)</label>
+                        <input type="text" id="input-fullname" oninput="validateStep2()" class="w-full px-5 py-4 rounded-2xl bg-gray-50 dark:bg-gray-800/50 border-2 border-gray-100 dark:border-gray-700 focus:border-pakistan-green outline-none text-sm dark:text-white transition-all" placeholder="Enter Full Name">
+                    </div>
+                    <div class="w-full group">
+                        <label class="block text-[10px] font-lemon tracking-widest mb-2.5 text-gray-500 dark:text-gray-400">CNIC Number</label>
+                        <input type="text" id="input-cnic" oninput="formatCNIC(this); validateStep2()" class="w-full px-5 py-4 rounded-2xl bg-gray-50 dark:bg-gray-800/50 border-2 border-gray-100 dark:border-gray-700 focus:border-pakistan-green outline-none text-sm dark:text-white transition-all" placeholder="XXXXX-XXXXXXX-X">
+                    </div>
+                    <div class="w-full group">
+                        <label class="block text-[10px] font-lemon tracking-widest mb-2.5 text-gray-500 dark:text-gray-400">Email Address</label>
+                        <input type="email" id="input-email" oninput="validateStep2()" class="w-full px-5 py-4 rounded-2xl bg-gray-50 dark:bg-gray-800/50 border-2 border-gray-100 dark:border-gray-700 focus:border-pakistan-green outline-none text-sm dark:text-white transition-all" placeholder="name@example.com">
+                    </div>
+                    <div class="w-full group">
+                        <label class="block text-[10px] font-lemon tracking-widest mb-2.5 text-gray-500 dark:text-gray-400">WhatsApp Number</label>
+                        <input type="tel" id="input-whatsapp" oninput="validateStep2()" class="w-full px-5 py-4 rounded-2xl bg-gray-50 dark:bg-gray-800/50 border-2 border-gray-100 dark:border-gray-700 focus:border-pakistan-green outline-none text-sm dark:text-white transition-all" placeholder="03XXXXXXXXX">
+                    </div>
+                </div>
+
+                <!-- STEP 3: Specific Info -->
+                <div id="step-3" class="hidden space-y-6">
+                    <!-- Student Fields -->
+                    <div id="fields-student" class="hidden space-y-6">
+                        <div class="w-full">
+                            <label class="block text-[10px] font-lemon tracking-widest mb-2.5 text-gray-500 dark:text-gray-400">Academic Institution</label>
+                            <input type="text" id="input-institute" oninput="validateStep3()" class="w-full px-5 py-4 rounded-2xl bg-gray-50 dark:bg-gray-800/50 border-2 border-gray-100 dark:border-gray-700 focus:border-pakistan-green outline-none text-sm dark:text-white" placeholder="e.g. University of the Punjab">
+                        </div>
+                        <div class="w-full">
+                            <label class="block text-[10px] font-lemon tracking-widest mb-2.5 text-gray-500 dark:text-gray-400">Current Degree</label>
+                            <input type="text" id="input-degree" oninput="validateStep3()" class="w-full px-5 py-4 rounded-2xl bg-gray-50 dark:bg-gray-800/50 border-2 border-gray-100 dark:border-gray-700 focus:border-pakistan-green outline-none text-sm dark:text-white" placeholder="e.g. BS Computer Science">
+                        </div>
+                    </div>
+                    <!-- Entrepreneur Fields -->
+                    <div id="fields-entrepreneur" class="hidden space-y-6">
+                        <div class="w-full">
+                            <label class="block text-[10px] font-lemon tracking-widest mb-2.5 text-gray-500 dark:text-gray-400">Business Name</label>
+                            <input type="text" id="input-business" oninput="validateStep3()" class="w-full px-5 py-4 rounded-2xl bg-gray-50 dark:bg-gray-800/50 border-2 border-gray-100 dark:border-gray-700 focus:border-pakistan-green outline-none text-sm dark:text-white" placeholder="e.g. NextGen Solutions">
+                        </div>
+                        <div class="w-full">
+                            <label class="block text-[10px] font-lemon tracking-widest mb-2.5 text-gray-500 dark:text-gray-400">Industry</label>
+                            <select id="input-industry" onchange="validateStep3()" class="w-full px-5 py-4 rounded-2xl bg-gray-50 dark:bg-gray-800/50 border-2 border-gray-100 dark:border-gray-700 focus:border-pakistan-green outline-none text-sm dark:text-white">
+                                <option value="" disabled selected>Select Industry</option>
+                                <option value="tech">Technology & IT</option>
+                                <option value="retail">Retail & E-commerce</option>
+                                <option value="agriculture">Agriculture</option>
+                                <option value="services">Professional Services</option>
+                            </select>
+                        </div>
+                    </div>
+                    <!-- Professional Fields -->
+                    <div id="fields-professional" class="hidden grid grid-cols-1 md:grid-cols-2 gap-6">
+                        <div class="w-full">
+                            <label class="block text-[10px] font-lemon tracking-widest mb-2.5 text-gray-500 dark:text-gray-400">Years of Experience</label>
+                            <input type="text" id="input-experience" oninput="validateStep3()" class="w-full px-5 py-4 rounded-2xl bg-gray-50 dark:bg-gray-800/50 border-2 border-gray-100 dark:border-gray-700 focus:border-pakistan-green outline-none text-sm dark:text-white" placeholder="e.g. 3 Years">
+                        </div>
+                        <div class="w-full">
+                            <label class="block text-[10px] font-lemon tracking-widest mb-2.5 text-gray-500 dark:text-gray-400">Target Country</label>
+                            <select id="input-country" onchange="validateStep3()" class="w-full px-5 py-4 rounded-2xl bg-gray-50 dark:bg-gray-800/50 border-2 border-gray-100 dark:border-gray-700 focus:border-pakistan-green outline-none text-sm dark:text-white">
+                                <option value="" disabled selected>Select Country</option>
+                                <option value="usa">United States</option>
+                                <option value="uk">United Kingdom</option>
+                                <option value="canada">Canada</option>
+                                <option value="uae">UAE & Gulf</option>
+                                <option value="europe">Europe (Schengen)</option>
+                            </select>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- STEP 4: Review -->
+                <div id="step-4" class="hidden space-y-8">
+                     <div class="bg-green-50/50 dark:bg-green-900/10 p-6 rounded-[1.5rem] border border-green-100 dark:border-green-800/50 relative overflow-hidden">
+                        <div class="absolute top-4 right-4">
+                            <!-- Official Seal SVG -->
+                            <div class="relative flex items-center justify-center select-none w-12 h-12 opacity-80 text-pakistan-green">
+                                <div class="absolute inset-0 border border-dashed border-current opacity-40 rounded-full animate-spin-slow"></div>
+                                <div class="absolute inset-[3px] border border-current opacity-15 rounded-full"></div>
+                                <div class="w-full h-full flex items-center justify-center p-[18%]">
+                                    <img src="https://upload.wikimedia.org/wikipedia/commons/e/ef/State_emblem_of_Pakistan.svg" alt="Govt Seal" class="w-full h-full object-contain opacity-100 drop-shadow-sm" />
+                                </div>
+                            </div>
+                        </div>
+                        <h4 class="font-lemon text-[10px] text-pakistan-green dark:text-green-400 mb-6 uppercase tracking-widest">Application Review</h4>
+                        <div class="grid grid-cols-2 gap-4 text-xs relative z-10">
+                          <div><span class="text-gray-400 text-[10px] uppercase">Name</span><span id="review-name" class="font-bold dark:text-white block">--</span></div>
+                          <div><span class="text-gray-400 text-[10px] uppercase">CNIC</span><span id="review-cnic" class="font-bold dark:text-white block font-mono">--</span></div>
+                        </div>
+                      </div>
+                      <label class="flex items-start gap-4 p-5 cursor-pointer bg-gray-50 dark:bg-gray-800/50 rounded-2xl border border-gray-100 dark:border-gray-700">
+                        <input type="checkbox" id="input-terms" onchange="validateStep4()" class="mt-1 h-5 w-5 rounded border-gray-300 text-pakistan-green focus:ring-pakistan-green">
+                        <span class="text-xs text-gray-600 dark:text-gray-400">I declare all information is correct as per Government records.</span>
+                      </label>
+                </div>
+
+            </div>
+
+            <!-- Footer Buttons -->
+            <div class="px-8 pb-8 pt-4 flex gap-4 border-t border-gray-100 dark:border-gray-800">
+                <button id="btn-back" type="button" onclick="prevStep()" class="hidden px-6 py-4 rounded-2xl font-lemon text-[10px] border border-gray-200 text-gray-500 hover:bg-gray-50 dark:hover:bg-gray-800">Back</button>
+                <button id="btn-next" type="button" onclick="nextStep()" disabled class="flex-grow py-4 rounded-2xl font-lemon text-[10px] tracking-widest text-white transition-all bg-gray-200 cursor-not-allowed">Continue</button>
+            </div>
+        </div>
+
+        <!-- LOADING SPINNER -->
+        <div id="loading-view" class="hidden bg-white dark:bg-gray-900 rounded-3xl p-12 max-w-md w-full text-center shadow-2xl">
+            <div class="relative w-20 h-20 mx-auto mb-6">
+                <div class="absolute inset-0 border-4 border-gray-100 dark:border-gray-800 rounded-full"></div>
+                <div class="absolute inset-0 border-4 border-transparent border-t-pakistan-green rounded-full animate-spin"></div>
+                <div class="absolute inset-0 flex items-center justify-center text-pakistan-green animate-pulse"><i class="fa-solid fa-shield-halved text-xl"></i></div>
+            </div>
+            <h2 class="text-xl font-lemon dark:text-white mb-2">Processing Securely</h2>
+            <p class="text-gray-500 text-[10px] font-lemon tracking-widest uppercase">Verified by Govt. Servers</p>
+        </div>
+
+        <!-- SUCCESS / GENERATE CHALLAN -->
+        <div id="success-view" class="hidden bg-white dark:bg-gray-900 rounded-3xl p-8 max-w-md w-full text-center shadow-2xl relative">
+            <div class="absolute top-6 right-6">
+                <div class="relative flex items-center justify-center select-none w-12 h-12 text-pakistan-green">
+                    <div class="absolute inset-0 border border-dashed border-current opacity-40 rounded-full animate-spin-slow"></div>
+                     <img src="https://upload.wikimedia.org/wikipedia/commons/e/ef/State_emblem_of_Pakistan.svg" alt="Govt Seal" class="w-6 h-6 object-contain" />
+                </div>
+            </div>
+            <div class="w-14 h-14 bg-green-50 dark:bg-green-900/20 rounded-full flex items-center justify-center mx-auto mb-6 text-pakistan-green"><i class="fa-solid fa-check text-2xl animate-bounce"></i></div>
+            <h2 class="text-xl font-lemon mb-2 dark:text-white">Applied!</h2>
+            <p class="text-gray-500 mb-8 text-sm leading-relaxed">Your details are registered. Generate your processing challan to complete the application.</p>
+            <button onclick="showChallanReceipt()" class="w-full py-4 bg-pakistan-green text-white rounded-2xl font-lemon text-xs tracking-widest shadow-lg hover:bg-green-800 transition-all">Generate Challan</button>
+        </div>
+
+        <!-- CHALLAN RECEIPT -->
+        <div id="challan-view" class="hidden bg-white dark:bg-gray-900 rounded-[1.5rem] max-w-sm w-full shadow-2xl relative border-4 border-gray-100 dark:border-gray-800 overflow-hidden">
+             <button onclick="forceCloseForm()" class="absolute top-2 right-2 z-50 w-7 h-7 flex items-center justify-center rounded-full bg-white/20 text-white hover:bg-white/40 backdrop-blur-sm transition-colors"><i class="fa-solid fa-times text-xs"></i></button>
+             <div class="bg-pakistan-green p-4 text-white flex justify-between items-center relative overflow-hidden">
+                <div class="relative z-10 flex items-center gap-2">
+                     <div class="w-8 h-8 bg-white/10 backdrop-blur-sm rounded-lg flex items-center justify-center text-sm font-bold border border-white/20">1</div>
+                     <div><h3 class="font-lemon text-xs tracking-wide leading-none">First Nobel Step</h3><p class="text-[7px] uppercase tracking-widest opacity-80 mt-1">(Pvt.) Ltd.</p></div>
+                </div>
+                <div class="relative z-10 text-right"><h2 class="text-xs font-black uppercase">Fee Challan</h2><p class="text-[9px] font-mono opacity-80">#FMS-82931</p></div>
+            </div>
+            <div class="p-5 relative bg-white">
+                <div class="absolute inset-0 flex items-center justify-center opacity-[0.03] pointer-events-none">
+                    <img src="https://upload.wikimedia.org/wikipedia/commons/e/ef/State_emblem_of_Pakistan.svg" class="w-40 h-40 -rotate-12" />
+                </div>
+                <div class="grid grid-cols-2 gap-3 mb-4 relative z-10">
+                    <div class="col-span-2 border-b border-gray-50 pb-1">
+                        <h4 class="text-[8px] font-bold text-gray-400 uppercase tracking-widest mb-1">Applicant</h4>
+                        <p id="challan-name" class="text-sm font-bold text-gray-900 leading-none">--</p>
+                    </div>
+                    <div><h4 class="text-[8px] font-bold text-gray-400 uppercase tracking-widest mb-1">CNIC</h4><p id="challan-cnic" class="text-[10px] font-mono font-bold text-gray-700">--</p></div>
+                    <div class="text-right"><h4 class="text-[8px] font-bold text-gray-400 uppercase tracking-widest mb-1">Date</h4><p class="text-[10px] font-mono font-bold text-gray-700">Today</p></div>
+                </div>
+                <div class="border border-gray-100 rounded-lg overflow-hidden mb-4 relative z-10">
+                    <table class="w-full text-[10px] text-left">
+                        <thead class="bg-gray-50 text-gray-400 font-bold text-[7px] uppercase tracking-wider"><tr><th class="px-2 py-1.5">Description</th><th class="px-2 py-1.5 text-right">PKR</th></tr></thead>
+                        <tbody class="divide-y divide-gray-50">
+                            <tr><td class="px-2 py-2"><span class="font-bold text-gray-800">Processing Fee</span><br/><span id="challan-plan" class="text-[8px] text-gray-400 capitalize">-- Program</span></td><td class="px-2 py-2 text-right font-mono font-bold text-gray-900">1,500</td></tr>
+                            <tr class="bg-pakistan-green/5"><td class="px-2 py-1.5 text-right font-bold text-pakistan-green uppercase text-[8px]">Payable</td><td class="px-2 py-1.5 text-right font-black text-sm text-pakistan-green font-mono">1,500</td></tr>
+                        </tbody>
+                    </table>
+                </div>
+                <button onclick="window.print()" class="w-full mt-4 py-3 bg-pakistan-green text-white rounded-xl font-lemon text-[10px] tracking-widest hover:bg-green-800 transition-all shadow-lg flex items-center justify-center gap-2">Get Challan</button>
+            </div>
+        </div>
+
+    </div>
+
+    <!-- MAIN JAVASCRIPT LOGIC -->
+    <script>
+        // --- State Management ---
+        let state = {
+            isOpen: false,
+            step: 1,
+            plan: null,
+            data: {
+                fullName: '',
+                cnic: '',
+                email: '',
+                whatsapp: '',
+                institute: '',
+                degree: '',
+                businessName: '',
+                industry: '',
+                experience: '',
+                country: ''
+            }
+        };
+
+        // --- DOM Elements ---
+        const modalOverlay = document.getElementById('modal-overlay');
+        const modalContent = document.getElementById('modal-content');
+        const exitConfirm = document.getElementById('exit-confirm');
+        const btnNext = document.getElementById('btn-next');
+        const btnBack = document.getElementById('btn-back');
+        const loadingView = document.getElementById('loading-view');
+        const successView = document.getElementById('success-view');
+        const challanView = document.getElementById('challan-view');
+        const themeToggle = document.getElementById('theme-toggle');
+
+        // --- Theme Logic ---
+        function initTheme() {
+            if (localStorage.getItem('theme') === 'dark' || (!('theme' in localStorage) && window.matchMedia('(prefers-color-scheme: dark)').matches)) {
+                document.documentElement.classList.add('dark');
+            } else {
+                document.documentElement.classList.remove('dark');
+            }
+        }
+        themeToggle.addEventListener('click', () => {
+            document.documentElement.classList.toggle('dark');
+            if (document.documentElement.classList.contains('dark')) {
+                localStorage.setItem('theme', 'dark');
+            } else {
+                localStorage.setItem('theme', 'light');
+            }
+        });
+        initTheme();
+
+        // --- Modal Logic ---
+        function openForm(planId) {
+            state.isOpen = true;
+            modalOverlay.classList.remove('hidden');
+            setTimeout(() => {
+                modalContent.classList.remove('scale-95', 'opacity-0');
+                modalContent.classList.add('scale-100', 'opacity-100');
+            }, 10);
+            document.body.style.overflow = 'hidden';
+
+            if (planId) {
+                selectPlan(planId);
+            }
+        }
+
+        function attemptCloseForm() {
+            // Check if user has started entering data
+            if (state.step > 1 || state.data.fullName) {
+                exitConfirm.classList.remove('hidden');
+            } else {
+                forceCloseForm();
+            }
+        }
+
+        function hideExitConfirm() {
+            exitConfirm.classList.add('hidden');
+        }
+
+        function forceCloseForm() {
+            modalContent.classList.remove('scale-100', 'opacity-100');
+            modalContent.classList.add('scale-95', 'opacity-0');
+            
+            // Hide other views if active
+            loadingView.classList.add('hidden');
+            successView.classList.add('hidden');
+            challanView.classList.add('hidden');
+            modalContent.classList.remove('hidden'); // Reset to show form for next time
+            
+            setTimeout(() => {
+                modalOverlay.classList.add('hidden');
+                state.isOpen = false;
+                resetForm();
+            }, 300);
+            document.body.style.overflow = '';
+            hideExitConfirm();
+        }
+
+        function resetForm() {
+            state.step = 1;
+            state.plan = null;
+            state.data = { fullName: '', cnic: '', email: '', whatsapp: '' };
+            // Clear inputs
+            document.querySelectorAll('input').forEach(i => i.value = '');
+            document.querySelectorAll('input[type="checkbox"]').forEach(i => i.checked = false);
+            updateUI();
+        }
+
+        // --- Form Navigation & Logic ---
+        function selectPlan(planId) {
+            state.plan = planId;
+            // Highlight UI
+            document.querySelectorAll('.plan-card').forEach(el => {
+                if (el.id === 'plan-' + planId) {
+                    el.classList.add('border-pakistan-green', 'bg-green-50', 'dark:bg-green-900/10');
+                    el.classList.remove('border-gray-100', 'dark:border-gray-800');
+                    el.querySelector('.icon-box').classList.add('bg-pakistan-green', 'text-white');
+                    el.querySelector('.icon-box').classList.remove('bg-gray-50', 'dark:bg-gray-800', 'text-gray-400');
+                    el.querySelector('.check-circle').classList.add('bg-pakistan-green', 'border-pakistan-green', 'text-white');
+                    el.querySelector('.check-circle').classList.remove('border-gray-200');
+                    el.querySelector('.check-circle').innerHTML = '<i class="fa-solid fa-check text-[10px] text-white"></i>';
+                } else {
+                    // Reset others
+                    el.classList.remove('border-pakistan-green', 'bg-green-50', 'dark:bg-green-900/10');
+                    el.classList.add('border-gray-100', 'dark:border-gray-800');
+                    el.querySelector('.icon-box').classList.remove('bg-pakistan-green', 'text-white');
+                    el.querySelector('.icon-box').classList.add('bg-gray-50', 'dark:bg-gray-800', 'text-gray-400');
+                    el.querySelector('.check-circle').classList.remove('bg-pakistan-green', 'border-pakistan-green', 'text-white');
+                    el.querySelector('.check-circle').classList.add('border-gray-200');
+                    el.querySelector('.check-circle').innerHTML = '';
+                }
+            });
+            setTimeout(() => nextStep(), 300);
+        }
+
+        function nextStep() {
+            if (state.step < 4) {
+                state.step++;
+                updateUI();
+            } else {
+                submitForm();
+            }
+        }
+
+        function prevStep() {
+            if (state.step > 1) {
+                state.step--;
+                updateUI();
+            }
+        }
+
+        function updateUI() {
+            // Update Progress Bar
+            const progress = ((state.step - 1) / 3) * 100;
+            document.getElementById('progress-line').style.width = `${progress}%`;
+
+            // Update Indicators
+            for (let i = 1; i <= 4; i++) {
+                const el = document.getElementById(`step-${i}-indicator`);
+                if (i <= state.step) {
+                    el.classList.add('bg-pakistan-green', 'border-pakistan-green', 'text-white');
+                    el.classList.remove('bg-white', 'dark:bg-gray-900', 'border-gray-200', 'text-gray-400');
+                } else {
+                    el.classList.remove('bg-pakistan-green', 'border-pakistan-green', 'text-white');
+                    el.classList.add('bg-white', 'dark:bg-gray-900', 'border-gray-200', 'text-gray-400');
+                }
+            }
+
+            // Show/Hide Steps
+            for (let i = 1; i <= 4; i++) {
+                const el = document.getElementById(`step-${i}`);
+                if (i === state.step) el.classList.remove('hidden');
+                else el.classList.add('hidden');
+            }
+
+            // Show/Hide Specific Plan Fields in Step 3
+            if (state.step === 3) {
+                document.getElementById('fields-student').classList.add('hidden');
+                document.getElementById('fields-entrepreneur').classList.add('hidden');
+                document.getElementById('fields-professional').classList.add('hidden');
+                
+                if (state.plan) {
+                    document.getElementById(`fields-${state.plan}`).classList.remove('hidden');
+                }
+            }
+
+            // Update Review Data
+            if (state.step === 4) {
+                document.getElementById('review-name').innerText = document.getElementById('input-fullname').value || '--';
+                document.getElementById('review-cnic').innerText = document.getElementById('input-cnic').value || '--';
+            }
+
+            // Update Buttons
+            btnBack.classList.toggle('hidden', state.step === 1);
+            btnNext.innerText = state.step === 4 ? 'Submit Application' : 'Continue';
+            
+            // Validate Current Step to Enable Next
+            validateCurrentStep();
+        }
+
+        // --- Validation Logic ---
+        function formatCNIC(input) {
+            let val = input.value.replace(/\D/g, '');
+            if (val.length > 5) val = val.slice(0, 5) + '-' + val.slice(5);
+            if (val.length > 13) val = val.slice(0, 13) + '-' + val.slice(13, 14);
+            input.value = val.slice(0, 15);
+        }
+
+        function validateCurrentStep() {
+            let isValid = false;
+            if (state.step === 1) {
+                isValid = !!state.plan;
+            } else if (state.step === 2) {
+                isValid = validateStep2(true);
+            } else if (state.step === 3) {
+                isValid = validateStep3(true);
+            } else if (state.step === 4) {
+                isValid = document.getElementById('input-terms').checked;
+            }
+
+            if (isValid) {
+                btnNext.disabled = false;
+                btnNext.classList.remove('bg-gray-200', 'cursor-not-allowed');
+                btnNext.classList.add('bg-pakistan-green', 'shadow-lg');
+            } else {
+                btnNext.disabled = true;
+                btnNext.classList.add('bg-gray-200', 'cursor-not-allowed');
+                btnNext.classList.remove('bg-pakistan-green', 'shadow-lg');
+            }
+        }
+
+        function validateStep2(checkOnly = false) {
+            const name = document.getElementById('input-fullname').value;
+            const cnic = document.getElementById('input-cnic').value;
+            const email = document.getElementById('input-email').value;
+            const whatsapp = document.getElementById('input-whatsapp').value;
+            
+            const valid = name.length > 2 && cnic.length >= 15 && email.includes('@') && whatsapp.length > 10;
+            if (!checkOnly) validateCurrentStep();
+            return valid;
+        }
+
+        function validateStep3(checkOnly = false) {
+            let valid = false;
+            if (state.plan === 'student') {
+                valid = document.getElementById('input-institute').value.length > 0 && document.getElementById('input-degree').value.length > 0;
+            } else if (state.plan === 'entrepreneur') {
+                valid = document.getElementById('input-business').value.length > 0 && document.getElementById('input-industry').value !== '';
+            } else if (state.plan === 'professional') {
+                valid = document.getElementById('input-experience').value.length > 0 && document.getElementById('input-country').value !== '';
+            }
+            if (!checkOnly) validateCurrentStep();
+            return valid;
+        }
+        
+        function validateStep4() {
+             validateCurrentStep();
+        }
+
+        // --- Submission & Challan ---
+        function submitForm() {
+            // Hide Form
+            modalContent.classList.add('hidden');
+            loadingView.classList.remove('hidden');
+
+            // Simulate API Call
+            setTimeout(() => {
+                loadingView.classList.add('hidden');
+                successView.classList.remove('hidden');
+            }, 2000);
+        }
+
+        function showChallanReceipt() {
+            successView.classList.add('hidden');
+            challanView.classList.remove('hidden');
+            
+            // Populate Receipt
+            document.getElementById('challan-name').innerText = document.getElementById('input-fullname').value;
+            document.getElementById('challan-cnic').innerText = document.getElementById('input-cnic').value;
+            document.getElementById('challan-plan').innerText = state.plan + " Program";
+        }
+    </script>
+<script type="module" src="/index.tsx"></script>
+</body>
+</html>
