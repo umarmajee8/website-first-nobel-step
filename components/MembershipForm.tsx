@@ -104,11 +104,31 @@ const MembershipForm: React.FC<Props> = ({ initialPlanId, onClose }) => {
     return initialPlanId ? 2 : 1;
   });
 
-  const [touchedFields, setTouchedFields] = useState<Record<string, boolean>>({});
+  const [touchedFields, setTouchedFields] = useState<Record<string, boolean>>(() => {
+    const saved = localStorage.getItem(STORAGE_KEY);
+    if (saved) {
+      try {
+        const parsed = JSON.parse(saved);
+        return parsed.touchedFields || {};
+      } catch (e) {}
+    }
+    return {};
+  });
+
+  const [termsAccepted, setTermsAccepted] = useState<boolean>(() => {
+    const saved = localStorage.getItem(STORAGE_KEY);
+    if (saved) {
+      try {
+        const parsed = JSON.parse(saved);
+        return parsed.termsAccepted || false;
+      } catch (e) {}
+    }
+    return false;
+  });
+
   const [isSubmitted, setIsSubmitted] = useState(false);
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [error, setError] = useState<string | null>(null);
-  const [termsAccepted, setTermsAccepted] = useState(false);
   const [showChallan, setShowChallan] = useState(false);
   const [challanId] = useState(() => `FMS-${Math.floor(100000 + Math.random() * 900000)}`);
   
@@ -120,9 +140,9 @@ const MembershipForm: React.FC<Props> = ({ initialPlanId, onClose }) => {
 
   useEffect(() => {
     if (!isSubmitted && !isSubmitting) {
-      localStorage.setItem(STORAGE_KEY, JSON.stringify({ formData, step }));
+      localStorage.setItem(STORAGE_KEY, JSON.stringify({ formData, step, touchedFields, termsAccepted }));
     }
-  }, [formData, step, isSubmitted, isSubmitting]);
+  }, [formData, step, touchedFields, termsAccepted, isSubmitted, isSubmitting]);
 
   const hasUnsavedChanges = useCallback(() => {
     if (isSubmitted || showChallan) return false;
@@ -272,7 +292,10 @@ const MembershipForm: React.FC<Props> = ({ initialPlanId, onClose }) => {
             No, Keep Editing
           </button>
           <button 
-            onClick={onClose}
+            onClick={() => {
+              localStorage.removeItem(STORAGE_KEY);
+              onClose();
+            }}
             className="w-full py-3 bg-transparent text-red-500 hover:bg-red-50 dark:hover:bg-red-900/20 rounded-xl font-bold text-xs transition-colors"
           >
             Yes, Discard & Exit
