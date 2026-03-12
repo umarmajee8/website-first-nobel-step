@@ -1,5 +1,6 @@
 
-import React from 'react';
+import React, { useRef } from 'react';
+import { motion, useScroll, useTransform } from 'motion/react';
 import RegistrationBadge from './RegistrationBadge.tsx';
 
 interface Props {
@@ -7,11 +8,18 @@ interface Props {
 }
 
 const Hero: React.FC<Props> = ({ onApply }) => {
+  const containerRef = useRef(null);
+  const { scrollYProgress } = useScroll({
+    target: containerRef,
+    offset: ["start start", "end start"]
+  });
+  const backgroundY = useTransform(scrollYProgress, [0, 1], ["0%", "50%"]);
+
   return (
-    <section className="relative bg-white dark:bg-gray-900 text-gray-900 dark:text-white py-12 lg:py-20 overflow-hidden border-b border-gray-100 dark:border-gray-800 transition-colors duration-300">
-      <div className="absolute top-0 right-0 w-1/2 h-full opacity-5 pointer-events-none">
+    <section ref={containerRef} className="relative bg-white dark:bg-gray-900 text-gray-900 dark:text-white py-12 lg:py-20 overflow-hidden border-b border-gray-100 dark:border-gray-800 transition-colors duration-300">
+      <motion.div style={{ y: backgroundY }} className="absolute top-0 right-0 w-1/2 h-full opacity-5 pointer-events-none">
         <div className="w-full h-full bg-gradient-to-l from-pakistan-green to-transparent"></div>
-      </div>
+      </motion.div>
       
       <div className="max-w-7xl mx-auto px-4 relative z-10">
         <div className="flex flex-col lg:flex-row items-center gap-8 lg:gap-16">
