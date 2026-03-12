@@ -16,10 +16,18 @@ async function startServer() {
   app.use(express.json());
 
   // Google Sheets API setup
+  let privateKey = process.env.GOOGLE_PRIVATE_KEY || '';
+  // Remove surrounding quotes if user accidentally pasted them
+  if (privateKey.startsWith('"') && privateKey.endsWith('"')) {
+    privateKey = privateKey.slice(1, -1);
+  }
+  // Handle literal \n strings
+  privateKey = privateKey.replace(/\\n/g, '\n');
+
   const auth = new google.auth.GoogleAuth({
     credentials: {
       client_email: process.env.GOOGLE_SERVICE_ACCOUNT_EMAIL,
-      private_key: process.env.GOOGLE_PRIVATE_KEY?.replace(/\\n/g, '\n'),
+      private_key: privateKey,
     },
     scopes: ['https://www.googleapis.com/auth/spreadsheets'],
   });
