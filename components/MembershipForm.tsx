@@ -242,8 +242,10 @@ const MembershipForm: React.FC<Props> = ({ initialPlanId, onClose }) => {
         body: JSON.stringify(formData),
       });
 
+      const data = await response.json();
+
       if (!response.ok) {
-        throw new Error("Failed to submit application. Please try again later.");
+        throw new Error(data.error || "Failed to submit application. Please try again later.");
       }
 
       localStorage.removeItem(STORAGE_KEY);

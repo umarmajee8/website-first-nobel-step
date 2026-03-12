@@ -29,6 +29,10 @@ async function startServer() {
   // API endpoint to submit form data
   app.post('/api/submit-membership', async (req, res) => {
     try {
+      if (!process.env.GOOGLE_SHEET_ID || !process.env.GOOGLE_SERVICE_ACCOUNT_EMAIL || !process.env.GOOGLE_PRIVATE_KEY) {
+        return res.status(500).json({ success: false, error: 'Server configuration error: Missing Google Sheets credentials in Environment Variables.' });
+      }
+
       const { fullName, cnic, email, whatsapp, planId, institute, degree, businessName, industry, experience, targetCountry } = req.body;
 
       await sheets.spreadsheets.values.append({
@@ -41,9 +45,10 @@ async function startServer() {
       });
 
       res.status(200).json({ success: true });
-    } catch (error) {
+    } catch (error: any) {
       console.error('Error submitting to Google Sheets:', error);
-      res.status(500).json({ success: false, error: 'Failed to submit data' });
+      const errorMessage = error.response?.data?.error?.message || error.message || 'Failed to submit data to Google Sheets';
+      res.status(500).json({ success: false, error: `Google Sheets Error: ${errorMessage}` });
     }
   });
 
