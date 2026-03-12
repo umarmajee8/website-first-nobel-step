@@ -43,14 +43,19 @@ async function startServer() {
 
       const { fullName, cnic, email, whatsapp, planId, institute, degree, businessName, industry, experience, targetCountry } = req.body;
 
+      console.log('Submitting to Sheet ID:', process.env.GOOGLE_SHEET_ID);
+      const values = [[new Date().toISOString(), fullName, cnic, email, whatsapp, planId, institute || '', degree || '', businessName || '', industry || '', experience || '', targetCountry || '']];
+      console.log('Values to append:', values);
+
       await sheets.spreadsheets.values.append({
         spreadsheetId: process.env.GOOGLE_SHEET_ID,
         range: 'Sheet1!A:L',
         valueInputOption: 'USER_ENTERED',
         requestBody: {
-          values: [[new Date().toISOString(), fullName, cnic, email, whatsapp, planId, institute || '', degree || '', businessName || '', industry || '', experience || '', targetCountry || '']],
+          values: values,
         },
       });
+      console.log('Data successfully appended to Google Sheets.');
 
       res.status(200).json({ success: true });
     } catch (error: any) {
