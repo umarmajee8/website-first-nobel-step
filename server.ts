@@ -68,11 +68,12 @@ async function startServer() {
 
   // API endpoint to download terms and conditions
   app.get('/api/download-terms', (req, res) => {
-    const doc = new PDFDocument();
-    res.setHeader('Content-Type', 'application/pdf');
-    res.setHeader('Content-Disposition', 'attachment; filename=terms_and_conditions.pdf');
-    doc.pipe(res);
-    doc.fontSize(12).text(`TERMS AND CONDITIONS
+    try {
+      const doc = new PDFDocument();
+      res.setHeader('Content-Type', 'application/pdf');
+      res.setHeader('Content-Disposition', 'attachment; filename=terms_and_conditions.pdf');
+      doc.pipe(res);
+      doc.fontSize(12).text(`TERMS AND CONDITIONS
 First Noble Step (Private) Limited
 Welcome to the official website of First Noble Step (Private) Limited (“Company”, “We”, “Our”, or “Us”).
 These Terms and Conditions ("Terms") govern your access to and use of our website, services, platforms, products, and digital resources (collectively referred to as the “Website” or “Services”).
@@ -530,7 +531,11 @@ These Terms constitute the entire agreement between the user and the Company reg
 If any provision of these Terms is deemed invalid or unenforceable, the remaining provisions will remain fully effective.
 Final Statement
 By using the website of First Noble Step (Private) Limited, you acknowledge that you have read, understood, and agreed to these Terms and Conditions.`);
-    doc.end();
+      doc.end();
+    } catch (error) {
+      console.error('Error generating PDF:', error);
+      res.status(500).send('Error generating PDF');
+    }
   });
 
   // Vite middleware for development
