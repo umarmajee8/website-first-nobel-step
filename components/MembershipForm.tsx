@@ -107,6 +107,7 @@ const MembershipForm: React.FC<Props> = ({ initialPlanId, onClose }) => {
   const [touchedFields, setTouchedFields] = useState<Record<string, boolean>>({});
   const [isSubmitted, setIsSubmitted] = useState(false);
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const [error, setError] = useState<string | null>(null);
   const [termsAccepted, setTermsAccepted] = useState(false);
   const [showChallan, setShowChallan] = useState(false);
   const [challanId] = useState(() => `FMS-${Math.floor(100000 + Math.random() * 900000)}`);
@@ -207,12 +208,30 @@ const MembershipForm: React.FC<Props> = ({ initialPlanId, onClose }) => {
 
   const prevStep = () => { if (step > 1) setStep((prev) => (prev - 1) as FormStep); };
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!termsAccepted) return;
     setIsSubmitting(true);
-    localStorage.removeItem(STORAGE_KEY);
-    setTimeout(() => { setIsSubmitting(false); setIsSubmitted(true); }, 2500);
+    setError(null);
+    try {
+      // Simulate API call
+      await new Promise((resolve, reject) => {
+        setTimeout(() => {
+          // Randomly fail to demonstrate error handling
+          if (Math.random() > 0.7) {
+            reject(new Error("Server connection failed. Please try again later."));
+          } else {
+            resolve(true);
+          }
+        }, 2500);
+      });
+      localStorage.removeItem(STORAGE_KEY);
+      setIsSubmitted(true);
+    } catch (err: any) {
+      setError(err.message || "An unexpected error occurred.");
+    } finally {
+      setIsSubmitting(false);
+    }
   };
 
   const isStepValid = () => {
@@ -433,9 +452,17 @@ const MembershipForm: React.FC<Props> = ({ initialPlanId, onClose }) => {
             </div>
           )}
         </form>
-        <div className="px-8 pb-8 pt-4 flex gap-4 border-t border-gray-100 dark:border-gray-800">
-          {step > 1 && <button type="button" onClick={prevStep} className="px-6 py-4 rounded-2xl font-lemon text-[10px] border border-gray-200 text-gray-500">Back</button>}
-          <button type="button" onClick={step === 4 ? (e) => handleSubmit(e as any) : nextStep} disabled={!isStepValid()} className={`flex-grow py-4 rounded-2xl font-lemon text-[10px] tracking-widest text-white transition-all ${!isStepValid() ? 'bg-gray-200 cursor-not-allowed' : 'bg-pakistan-green shadow-lg'}`}>{step === 4 ? 'Submit Application' : 'Continue'}</button>
+        <div className="px-8 pb-8 pt-4 flex flex-col gap-4 border-t border-gray-100 dark:border-gray-800">
+          {error && (
+            <div className="bg-red-50 dark:bg-red-900/20 text-red-600 dark:text-red-400 p-4 rounded-2xl text-xs font-bold flex items-center gap-3 animate-in fade-in zoom-in-95 duration-200">
+              <i className="fa-solid fa-circle-exclamation"></i>
+              {error}
+            </div>
+          )}
+          <div className="flex gap-4">
+            {step > 1 && <button type="button" onClick={prevStep} className="px-6 py-4 rounded-2xl font-lemon text-[10px] border border-gray-200 text-gray-500">Back</button>}
+            <button type="button" onClick={step === 4 ? (e) => handleSubmit(e as any) : nextStep} disabled={!isStepValid()} className={`flex-grow py-4 rounded-2xl font-lemon text-[10px] tracking-widest text-white transition-all ${!isStepValid() ? 'bg-gray-200 cursor-not-allowed' : 'bg-pakistan-green shadow-lg'}`}>{step === 4 ? 'Submit Application' : 'Continue'}</button>
+          </div>
         </div>
       </div>
     </div>

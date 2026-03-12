@@ -25,7 +25,7 @@ const App: React.FC = () => {
   };
 
   return (
-    <div className="min-h-screen flex flex-col selection:bg-green-100 selection:text-pakistan-green bg-white dark:bg-gray-900 transition-colors duration-300">
+    <div className="min-h-screen flex flex-col selection:bg-green-100 selection:text-pakistan-green bg-white transition-colors duration-300">
       <Header onApply={() => openForm()} />
       <main className="flex-grow">
         <Hero onApply={() => openForm()} />
