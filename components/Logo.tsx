@@ -7,7 +7,7 @@ interface Props {
 const Logo: React.FC<Props> = ({ className = "h-10" }) => {
   return (
     <div className={`flex items-center gap-3 ${className}`}>
-      <img src="https://lh3.googleusercontent.com/d/1ie0n4VX5GGqNi1aZ64Mw11Jhvy3UL6gh" alt="Logo" className="h-full w-auto" referrerPolicy="no-referrer" />
+      <img src="https://lh3.googleusercontent.com/d/1jz7ieEecblKkKangwyklHLYRhTPxz1Aa" alt="Logo" className="h-full w-auto" referrerPolicy="no-referrer" />
       <div className="flex flex-col">
         <span className="font-lemon text-base tracking-tight leading-none dark:text-white text-gray-900">
           First Nobel Step
