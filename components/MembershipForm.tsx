@@ -234,17 +234,18 @@ const MembershipForm: React.FC<Props> = ({ initialPlanId, onClose }) => {
     setIsSubmitting(true);
     setError(null);
     try {
-      // Simulate API call
-      await new Promise((resolve, reject) => {
-        setTimeout(() => {
-          // Randomly fail to demonstrate error handling
-          if (Math.random() > 0.7) {
-            reject(new Error("Server connection failed. Please try again later."));
-          } else {
-            resolve(true);
-          }
-        }, 2500);
+      const response = await fetch('/api/submit-membership', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(formData),
       });
+
+      if (!response.ok) {
+        throw new Error("Failed to submit application. Please try again later.");
+      }
+
       localStorage.removeItem(STORAGE_KEY);
       setIsSubmitted(true);
     } catch (err: any) {
