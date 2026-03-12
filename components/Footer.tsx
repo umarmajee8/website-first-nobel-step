@@ -31,7 +31,7 @@ const Footer: React.FC<Props> = ({ onApply }) => {
               <li><a href="tel:+92519876543" className="hover:text-green-600 dark:hover:text-green-400 transition-colors">Help Center</a></li>
               <li><a href="#" className="hover:text-green-600 dark:hover:text-green-400 transition-colors">Career Blog</a></li>
               <li><a href="#" className="hover:text-green-600 dark:hover:text-green-400 transition-colors">Privacy Policy</a></li>
-              <li><a href="/api/download-terms" download className="hover:text-green-600 dark:hover:text-green-400 transition-colors">Terms & Conditions</a></li>
+              <li><a href="https://drive.google.com/file/d/1dESuKrtxrnFmni4zhMsbShdKlkKRc2vo/view?usp=drivesdk" target="_blank" rel="noopener noreferrer" className="hover:text-green-600 dark:hover:text-green-400 transition-colors">Terms & Conditions</a></li>
             </ul>
           </div>
           
