@@ -3,6 +3,7 @@ import React, { useState } from 'react';
 import Header from './components/Header.tsx';
 import Hero from './components/Hero.tsx';
 import MembershipSection from './components/MembershipSection.tsx';
+import ServicePackages from './components/ServicePackages.tsx';
 import Footer from './components/Footer.tsx';
 import MembershipForm from './components/MembershipForm.tsx';
 
@@ -30,6 +31,7 @@ const App: React.FC = () => {
       <main className="flex-grow">
         <Hero onApply={() => openForm()} />
         <MembershipSection onApply={(id) => openForm(id)} />
+        <ServicePackages />
       </main>
       
       {/* AI Chat Assistant removed to eliminate API key dependency */}

@@ -32,4 +32,4 @@ export interface MembershipApplication {
   targetCountry?: string;
 }
 
-export type FormStep = 1 | 2 | 3 | 4;
+export type FormStep = 1 | 2 | 3 | 4 | 5;

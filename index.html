@@ -230,70 +230,85 @@
                 </div>
                 
                 <div class="grid grid-cols-1 lg:grid-cols-3 gap-8 items-stretch">
-                    <!-- Professional Card -->
-                    <div class="relative bg-white dark:bg-gray-900 flex flex-col p-6 rounded-3xl border border-pakistan-green dark:border-green-600 ring-4 ring-green-50 dark:ring-green-900/20 shadow-[0_25px_60px_-15px_rgba(1,65,28,0.3)] lg:scale-105 z-10 h-full transition-all duration-500">
-                        <div class="absolute top-0 left-1/2 -translate-x-1/2 -translate-y-1/2 bg-pakistan-green text-white text-[9px] font-lemon px-5 py-1.5 rounded-full tracking-widest shadow-lg whitespace-nowrap">
-                            Official Professional Choice
-                        </div>
-                        <div class="mb-6 text-center sm:text-left">
-                            <div class="w-12 h-12 rounded-xl flex items-center justify-center mb-4 bg-pakistan-green text-white">
-                                <i class="fa-solid fa-briefcase text-xl"></i>
+                    <!-- Professional Section -->
+                    <div class="flex flex-col">
+                        <h3 class="font-lemon text-xs tracking-[0.3em] text-pakistan-green dark:text-green-400 mb-4 flex items-center gap-3">
+                            <span class="w-8 h-px bg-pakistan-green/20"></span> Career Growth
+                        </h3>
+                        <div class="relative bg-white dark:bg-gray-900 flex flex-col p-8 rounded-[2.5rem] border border-gray-100 dark:border-gray-700 shadow-sm hover:border-pakistan-green/30 transition-all duration-500 h-full group">
+                            <div class="mb-6 text-center sm:text-left">
+                                <div class="w-12 h-12 rounded-xl flex items-center justify-center mb-4 bg-green-50 dark:bg-green-900/30 text-pakistan-green dark:text-green-400 group-hover:bg-pakistan-green group-hover:text-white transition-colors">
+                                    <i class="fa-solid fa-briefcase text-xl"></i>
+                                </div>
+                                <h3 class="text-lg font-lemon mb-1 tracking-tight dark:text-white">Job Professionals</h3>
+                                <p class="text-gray-500 dark:text-gray-400 text-xs leading-relaxed">Direct access to fully sponsored international career opportunities.</p>
                             </div>
-                            <h3 class="text-lg font-lemon mb-1 tracking-tight dark:text-white">Job Professionals</h3>
-                            <p class="text-gray-500 dark:text-gray-400 text-xs leading-relaxed">Direct access to fully sponsored international career opportunities.</p>
+                            <div class="h-px bg-gray-100 dark:bg-gray-800 w-full mb-6"></div>
+                            <div class="mb-3 text-[10px] font-lemon text-pakistan-green dark:text-green-400 tracking-widest">What You Unlock:</div>
+                            <ul class="space-y-3 mb-6 flex-grow">
+                                <li class="flex items-start gap-2.5 text-sm"><i class="fa-solid fa-check text-pakistan-green dark:text-green-400 text-[9px] mt-1 bg-green-50 dark:bg-green-900/40 p-1 rounded-full"></i> <span class="text-gray-700 dark:text-gray-300 font-medium text-xs">Sponsored foreign jobs</span></li>
+                                <li class="flex items-start gap-2.5 text-sm"><i class="fa-solid fa-check text-pakistan-green dark:text-green-400 text-[9px] mt-1 bg-green-50 dark:bg-green-900/40 p-1 rounded-full"></i> <span class="text-gray-700 dark:text-gray-300 font-medium text-xs">Overseas opportunities</span></li>
+                                <li class="flex items-start gap-2.5 text-sm"><i class="fa-solid fa-check text-pakistan-green dark:text-green-400 text-[9px] mt-1 bg-green-50 dark:bg-green-900/40 p-1 rounded-full"></i> <span class="text-gray-700 dark:text-gray-300 font-medium text-xs">Verified job placements</span></li>
+                            </ul>
+                            <button onclick="openForm('professional')" class="w-full py-4 rounded-xl font-lemon text-[10px] tracking-widest bg-pakistan-green text-white shadow-xl shadow-green-900/10 hover:bg-green-900 uppercase transition-all hover:scale-[1.02] active:scale-95">
+                                Join Professionals
+                            </button>
                         </div>
-                        <div class="h-px bg-gray-100 dark:bg-gray-800 w-full mb-6"></div>
-                        <div class="mb-3 text-[10px] font-lemon text-pakistan-green dark:text-green-400 tracking-widest">What You Unlock:</div>
-                        <ul class="space-y-3 mb-6 flex-grow">
-                            <li class="flex items-start gap-2.5 text-sm"><i class="fa-solid fa-check text-pakistan-green dark:text-green-400 text-[9px] mt-1 bg-green-50 dark:bg-green-900/40 p-1 rounded-full"></i> <span class="text-gray-700 dark:text-gray-300 font-medium text-xs">Direct access to sponsored foreign jobs</span></li>
-                            <li class="flex items-start gap-2.5 text-sm"><i class="fa-solid fa-check text-pakistan-green dark:text-green-400 text-[9px] mt-1 bg-green-50 dark:bg-green-900/40 p-1 rounded-full"></i> <span class="text-gray-700 dark:text-gray-300 font-medium text-xs">Overseas opportunities with borne expenses</span></li>
-                            <li class="flex items-start gap-2.5 text-sm"><i class="fa-solid fa-check text-pakistan-green dark:text-green-400 text-[9px] mt-1 bg-green-50 dark:bg-green-900/40 p-1 rounded-full"></i> <span class="text-gray-700 dark:text-gray-300 font-medium text-xs">Verified job placements in top economies</span></li>
-                        </ul>
-                        <button onclick="openForm('professional')" class="w-full py-3.5 rounded-xl font-lemon text-[10px] tracking-widest bg-pakistan-green text-white shadow-xl shadow-green-900/10 hover:bg-green-900 uppercase transition-all hover:scale-[1.02] active:scale-95">
-                            Join Job Professionals
-                        </button>
                     </div>
 
-                    <!-- Entrepreneur Card -->
-                    <div class="relative bg-white dark:bg-gray-900 flex flex-col p-6 rounded-3xl border border-gray-100 dark:border-gray-700 shadow-sm hover:-translate-y-1 transition-all h-full">
-                        <div class="mb-6 text-center sm:text-left">
-                            <div class="w-12 h-12 rounded-xl flex items-center justify-center mb-4 bg-green-50 dark:bg-green-900/30 text-pakistan-green dark:text-green-400">
-                                <i class="fa-solid fa-rocket text-xl"></i>
+                    <!-- Student Section -->
+                    <div class="flex flex-col">
+                        <h3 class="font-lemon text-xs tracking-[0.3em] text-pakistan-green dark:text-green-400 mb-4 flex items-center gap-3">
+                            <span class="w-8 h-px bg-pakistan-green/20"></span> Academic Path
+                        </h3>
+                        <div class="relative bg-white dark:bg-gray-900 flex flex-col p-8 rounded-[2.5rem] border border-gray-100 dark:border-gray-700 shadow-sm hover:border-pakistan-green/30 transition-all duration-500 h-full group">
+                            <div class="mb-6 text-center sm:text-left">
+                                <div class="w-12 h-12 rounded-xl flex items-center justify-center mb-4 bg-green-50 dark:bg-green-900/30 text-pakistan-green dark:text-green-400 group-hover:bg-pakistan-green group-hover:text-white transition-colors">
+                                    <i class="fa-solid fa-graduation-cap text-xl"></i>
+                                </div>
+                                <h3 class="text-lg font-lemon mb-1 tracking-tight dark:text-white">Official Students</h3>
+                                <p class="text-gray-500 dark:text-gray-400 text-xs leading-relaxed">Academic excellence and professional growth pathways for future leaders.</p>
                             </div>
-                            <h3 class="text-lg font-lemon mb-1 tracking-tight dark:text-white">Entrepreneurs</h3>
-                            <p class="text-gray-500 dark:text-gray-400 text-xs leading-relaxed">Transform your vision into a funded reality with expert mentorship.</p>
+                            <div class="h-px bg-gray-100 dark:bg-gray-800 w-full mb-6"></div>
+                            <div class="mb-3 text-[10px] font-lemon text-pakistan-green dark:text-green-400 tracking-widest">What You Unlock:</div>
+                            <ul class="space-y-3 mb-6 flex-grow">
+                                <li class="flex items-start gap-2.5 text-sm"><i class="fa-solid fa-check text-pakistan-green dark:text-green-400 text-[9px] mt-1 bg-green-50 dark:bg-green-900/40 p-1 rounded-full"></i> <span class="text-gray-700 dark:text-gray-300 font-medium text-xs">Full academic scholarship</span></li>
+                                <li class="flex items-start gap-2.5 text-sm"><i class="fa-solid fa-check text-pakistan-green dark:text-green-400 text-[9px] mt-1 bg-green-50 dark:bg-green-900/40 p-1 rounded-full"></i> <span class="text-gray-700 dark:text-gray-300 font-medium text-xs">Earn while learning</span></li>
+                                <li class="flex items-start gap-2.5 text-sm"><i class="fa-solid fa-check text-pakistan-green dark:text-green-400 text-[9px] mt-1 bg-green-50 dark:bg-green-900/40 p-1 rounded-full"></i> <span class="text-gray-700 dark:text-gray-300 font-medium text-xs">Paid internships</span></li>
+                            </ul>
+                            <button onclick="openForm('student')" class="w-full py-4 rounded-xl font-lemon text-[10px] tracking-widest border-2 border-pakistan-green text-pakistan-green hover:bg-green-50 uppercase transition-all hover:scale-[1.02] active:scale-95">
+                                Join Students
+                            </button>
                         </div>
-                        <div class="h-px bg-gray-100 dark:bg-gray-800 w-full mb-6"></div>
-                        <div class="mb-3 text-[10px] font-lemon text-pakistan-green dark:text-green-400 tracking-widest">What You Unlock:</div>
-                        <ul class="space-y-3 mb-6 flex-grow">
-                            <li class="flex items-start gap-2.5 text-sm"><i class="fa-solid fa-check text-pakistan-green dark:text-green-400 text-[9px] mt-1 bg-green-50 dark:bg-green-900/40 p-1 rounded-full"></i> <span class="text-gray-700 dark:text-gray-300 font-medium text-xs">Turn your idea into funded reality</span></li>
-                            <li class="flex items-start gap-2.5 text-sm"><i class="fa-solid fa-check text-pakistan-green dark:text-green-400 text-[9px] mt-1 bg-green-50 dark:bg-green-900/40 p-1 rounded-full"></i> <span class="text-gray-700 dark:text-gray-300 font-medium text-xs">Strategic feedback from business leaders</span></li>
-                            <li class="flex items-start gap-2.5 text-sm"><i class="fa-solid fa-check text-pakistan-green dark:text-green-400 text-[9px] mt-1 bg-green-50 dark:bg-green-900/40 p-1 rounded-full"></i> <span class="text-gray-700 dark:text-gray-300 font-medium text-xs">Verified Business Opportunity Alerts</span></li>
-                        </ul>
-                        <button onclick="openForm('entrepreneur')" class="w-full py-3.5 rounded-xl font-lemon text-[10px] tracking-widest bg-pakistan-green text-white shadow-xl shadow-green-900/10 hover:bg-green-900 uppercase transition-all hover:scale-[1.02] active:scale-95">
-                            Join Entrepreneurs
-                        </button>
                     </div>
 
-                    <!-- Student Card -->
-                    <div class="relative bg-white dark:bg-gray-900 flex flex-col p-6 rounded-3xl border border-gray-100 dark:border-gray-700 shadow-sm hover:-translate-y-1 transition-all h-full">
-                        <div class="mb-6 text-center sm:text-left">
-                            <div class="w-12 h-12 rounded-xl flex items-center justify-center mb-4 bg-green-50 dark:bg-green-900/30 text-pakistan-green dark:text-green-400">
-                                <i class="fa-solid fa-graduation-cap text-xl"></i>
+                    <!-- Business Section -->
+                    <div class="flex flex-col">
+                        <h3 class="font-lemon text-xs tracking-[0.3em] text-pakistan-green dark:text-green-400 mb-4 flex items-center gap-3">
+                            <span class="w-8 h-px bg-pakistan-green/20"></span> Business Growth
+                        </h3>
+                        <div class="relative bg-white dark:bg-gray-900 flex flex-col p-8 rounded-[2.5rem] border border-pakistan-green dark:border-green-600 ring-4 ring-green-50 dark:ring-green-900/20 shadow-[0_25px_60px_-15px_rgba(1,65,28,0.3)] h-full transition-all duration-500">
+                            <div class="absolute top-0 left-1/2 -translate-x-1/2 -translate-y-1/2 bg-pakistan-green text-white text-[9px] font-lemon px-5 py-1.5 rounded-full tracking-widest shadow-lg whitespace-nowrap">
+                                Premium Choice
                             </div>
-                            <h3 class="text-lg font-lemon mb-1 tracking-tight dark:text-white">Official Student</h3>
-                            <p class="text-gray-500 dark:text-gray-400 text-xs leading-relaxed">Academic excellence and professional growth pathways for future leaders.</p>
+                            <div class="mb-6 text-center sm:text-left">
+                                <div class="w-12 h-12 rounded-xl flex items-center justify-center mb-4 bg-pakistan-green text-white">
+                                    <i class="fa-solid fa-rocket text-xl"></i>
+                                </div>
+                                <h3 class="text-lg font-lemon mb-1 tracking-tight dark:text-white">Entrepreneurs</h3>
+                                <p class="text-gray-500 dark:text-gray-400 text-xs leading-relaxed">Transform your vision into a funded reality with expert mentorship.</p>
+                            </div>
+                            <div class="h-px bg-gray-100 dark:bg-gray-800 w-full mb-6"></div>
+                            <div class="mb-3 text-[10px] font-lemon text-pakistan-green dark:text-green-400 tracking-widest">What You Unlock:</div>
+                            <ul class="space-y-3 mb-6 flex-grow">
+                                <li class="flex items-start gap-2.5 text-sm"><i class="fa-solid fa-check text-pakistan-green dark:text-green-400 text-[9px] mt-1 bg-green-50 dark:bg-green-900/40 p-1 rounded-full"></i> <span class="text-gray-700 dark:text-gray-300 font-medium text-xs">Turn your idea into funded reality</span></li>
+                                <li class="flex items-start gap-2.5 text-sm"><i class="fa-solid fa-check text-pakistan-green dark:text-green-400 text-[9px] mt-1 bg-green-50 dark:bg-green-900/40 p-1 rounded-full"></i> <span class="text-gray-700 dark:text-gray-300 font-medium text-xs">Strategic feedback from leaders</span></li>
+                                <li class="flex items-start gap-2.5 text-sm"><i class="fa-solid fa-check text-pakistan-green dark:text-green-400 text-[9px] mt-1 bg-green-50 dark:bg-green-900/40 p-1 rounded-full"></i> <span class="text-gray-700 dark:text-gray-300 font-medium text-xs">Powerful Business Networking</span></li>
+                            </ul>
+                            <button onclick="openForm('entrepreneur')" class="w-full py-4 rounded-xl font-lemon text-[10px] tracking-widest bg-pakistan-green text-white shadow-xl shadow-green-900/10 hover:bg-green-900 uppercase transition-all hover:scale-[1.02] active:scale-95">
+                                Join Entrepreneurs
+                            </button>
                         </div>
-                        <div class="h-px bg-gray-100 dark:bg-gray-800 w-full mb-6"></div>
-                        <div class="mb-3 text-[10px] font-lemon text-pakistan-green dark:text-green-400 tracking-widest">What You Unlock:</div>
-                        <ul class="space-y-3 mb-6 flex-grow">
-                            <li class="flex items-start gap-2.5 text-sm"><i class="fa-solid fa-check text-pakistan-green dark:text-green-400 text-[9px] mt-1 bg-green-50 dark:bg-green-900/40 p-1 rounded-full"></i> <span class="text-gray-700 dark:text-gray-300 font-medium text-xs">Full academic scholarship until graduation</span></li>
-                            <li class="flex items-start gap-2.5 text-sm"><i class="fa-solid fa-check text-pakistan-green dark:text-green-400 text-[9px] mt-1 bg-green-50 dark:bg-green-900/40 p-1 rounded-full"></i> <span class="text-gray-700 dark:text-gray-300 font-medium text-xs">Earn while learning professionally</span></li>
-                            <li class="flex items-start gap-2.5 text-sm"><i class="fa-solid fa-check text-pakistan-green dark:text-green-400 text-[9px] mt-1 bg-green-50 dark:bg-green-900/40 p-1 rounded-full"></i> <span class="text-gray-700 dark:text-gray-300 font-medium text-xs">Paid internships via verified partners</span></li>
-                        </ul>
-                        <button onclick="openForm('student')" class="w-full py-3.5 rounded-xl font-lemon text-[10px] tracking-widest bg-pakistan-green text-white shadow-xl shadow-green-900/10 hover:bg-green-900 uppercase transition-all hover:scale-[1.02] active:scale-95">
-                            Join Official Student
-                        </button>
                     </div>
                 </div>
             </div>
@@ -320,10 +335,10 @@
                 </div>
                 <div>
                     <h4 class="text-pakistan-green dark:text-green-500 font-lemon tracking-widest text-[9px] mb-4">Resources</h4>
-                    <ul class="space-y-2 text-xs font-bold">
-                        <li><a href="mailto:support@firstnoblestep.com" class="hover:text-green-600 dark:hover:text-green-400">Help Center</a></li>
-                        <li><a href="https://drive.google.com/file/d/1NwKfofJT-kQ5veAhZVj0ebYeB6Tauk4I/view?usp=drivesdk" target="_blank" rel="noopener noreferrer" class="hover:text-green-600 dark:hover:text-green-400 transition-colors cursor-pointer">Privacy Policy</a></li>
-                        <li><a href="https://drive.google.com/file/d/1dESuKrtxrnFmni4zhMsbShdKlkKRc2vo/view?usp=drivesdk" target="_blank" rel="noopener noreferrer" class="hover:text-green-600 dark:hover:text-green-400">Terms & Conditions</a></li>
+                    <ul class="space-y-3 text-xs font-bold">
+                        <li><a href="mailto:support@firstnoblestep.com" class="flex items-center gap-2.5 hover:text-green-600 dark:hover:text-green-400"><i class="fa-regular fa-circle-question text-base opacity-70 w-5 text-center"></i> Help Center</a></li>
+                        <li><a href="https://drive.google.com/file/d/1dESuKrtxrnFmni4zhMsbShdKlkKRc2vo/view?usp=drivesdk" target="_blank" rel="noopener noreferrer" class="flex items-center gap-2.5 hover:text-green-600 dark:hover:text-green-400"><i class="fa-regular fa-clipboard text-base opacity-70 w-5 text-center"></i> Terms & Conditions</a></li>
+                        <li><a href="https://drive.google.com/file/d/1NwKfofJT-kQ5veAhZVj0ebYeB6Tauk4I/view?usp=drivesdk" target="_blank" rel="noopener noreferrer" class="flex items-center gap-2.5 hover:text-green-600 dark:hover:text-green-400 transition-colors cursor-pointer"><i class="fa-solid fa-shield-halved text-base opacity-70 w-5 text-center"></i> Privacy Policy</a></li>
                     </ul>
                 </div>
                 <div>
@@ -392,6 +407,7 @@
                     <div class="flex flex-col items-center"><div id="step-2-indicator" class="w-8 h-8 rounded-full flex items-center justify-center text-[10px] font-lemon transition-all border-2 bg-white dark:bg-gray-900 border-gray-200 text-gray-400">2</div></div>
                     <div class="flex flex-col items-center"><div id="step-3-indicator" class="w-8 h-8 rounded-full flex items-center justify-center text-[10px] font-lemon transition-all border-2 bg-white dark:bg-gray-900 border-gray-200 text-gray-400">3</div></div>
                     <div class="flex flex-col items-center"><div id="step-4-indicator" class="w-8 h-8 rounded-full flex items-center justify-center text-[10px] font-lemon transition-all border-2 bg-white dark:bg-gray-900 border-gray-200 text-gray-400">4</div></div>
+                    <div class="flex flex-col items-center"><div id="step-5-indicator" class="w-8 h-8 rounded-full flex items-center justify-center text-[10px] font-lemon transition-all border-2 bg-white dark:bg-gray-900 border-gray-200 text-gray-400">5</div></div>
                 </div>
             </nav>
 
@@ -399,22 +415,34 @@
             <div id="form-body" class="flex-grow overflow-y-auto px-8 py-6 custom-scrollbar">
                 
                 <!-- STEP 1: Plan Selection -->
-                <div id="step-1" class="space-y-4">
-                    <legend class="text-sm font-medium mb-4 dark:text-gray-300">Select processing category:</legend>
-                    <div onclick="selectPlan('professional')" id="plan-professional" class="plan-card flex items-center gap-4 p-5 rounded-2xl border-2 transition-all cursor-pointer border-gray-100 dark:border-gray-800 hover:border-green-100">
-                        <div class="w-10 h-10 rounded-xl flex items-center justify-center bg-gray-50 dark:bg-gray-800 text-gray-400 icon-box"><i class="fa-solid fa-briefcase"></i></div>
-                        <h4 class="font-lemon text-sm dark:text-white">Professional</h4>
-                        <div class="ml-auto w-5 h-5 rounded-full border-2 flex items-center justify-center border-gray-200 check-circle"></div>
+                <div id="step-1" class="space-y-8">
+                    <div class="bg-gray-50 dark:bg-gray-800/30 p-6 rounded-[2rem] border border-gray-100 dark:border-gray-700">
+                        <h4 class="text-[10px] font-lemon tracking-[0.2em] text-pakistan-green mb-6 uppercase flex items-center gap-3">
+                            <span class="w-6 h-px bg-pakistan-green/20"></span> Individual Pathways
+                        </h4>
+                        <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                            <div onclick="selectPlan('professional')" id="plan-professional" class="plan-card flex items-center gap-4 p-5 rounded-2xl border-2 transition-all cursor-pointer border-gray-100 dark:border-gray-800 hover:border-green-100">
+                                <div class="w-10 h-10 rounded-xl flex items-center justify-center bg-gray-50 dark:bg-gray-800 text-gray-400 icon-box"><i class="fa-solid fa-briefcase"></i></div>
+                                <h4 class="font-lemon text-[10px] dark:text-white">Job Professional</h4>
+                                <div class="ml-auto w-5 h-5 rounded-full border-2 flex items-center justify-center border-gray-200 check-circle"></div>
+                            </div>
+                            <div onclick="selectPlan('student')" id="plan-student" class="plan-card flex items-center gap-4 p-5 rounded-2xl border-2 transition-all cursor-pointer border-gray-100 dark:border-gray-800 hover:border-green-100">
+                                <div class="w-10 h-10 rounded-xl flex items-center justify-center bg-gray-50 dark:bg-gray-800 text-gray-400 icon-box"><i class="fa-solid fa-graduation-cap"></i></div>
+                                <h4 class="font-lemon text-[10px] dark:text-white">Official Student</h4>
+                                <div class="ml-auto w-5 h-5 rounded-full border-2 flex items-center justify-center border-gray-200 check-circle"></div>
+                            </div>
+                        </div>
                     </div>
-                    <div onclick="selectPlan('entrepreneur')" id="plan-entrepreneur" class="plan-card flex items-center gap-4 p-5 rounded-2xl border-2 transition-all cursor-pointer border-gray-100 dark:border-gray-800 hover:border-green-100">
-                        <div class="w-10 h-10 rounded-xl flex items-center justify-center bg-gray-50 dark:bg-gray-800 text-gray-400 icon-box"><i class="fa-solid fa-rocket"></i></div>
-                        <h4 class="font-lemon text-sm dark:text-white">Entrepreneur</h4>
-                        <div class="ml-auto w-5 h-5 rounded-full border-2 flex items-center justify-center border-gray-200 check-circle"></div>
-                    </div>
-                    <div onclick="selectPlan('student')" id="plan-student" class="plan-card flex items-center gap-4 p-5 rounded-2xl border-2 transition-all cursor-pointer border-gray-100 dark:border-gray-800 hover:border-green-100">
-                        <div class="w-10 h-10 rounded-xl flex items-center justify-center bg-gray-50 dark:bg-gray-800 text-gray-400 icon-box"><i class="fa-solid fa-graduation-cap"></i></div>
-                        <h4 class="font-lemon text-sm dark:text-white">Official Student</h4>
-                        <div class="ml-auto w-5 h-5 rounded-full border-2 flex items-center justify-center border-gray-200 check-circle"></div>
+
+                    <div class="p-6">
+                        <h4 class="text-[10px] font-lemon tracking-[0.2em] text-pakistan-green mb-6 uppercase flex items-center gap-3">
+                            <span class="w-6 h-px bg-pakistan-green/20"></span> Business Growth
+                        </h4>
+                        <div onclick="selectPlan('entrepreneur')" id="plan-entrepreneur" class="plan-card flex items-center gap-4 p-5 rounded-2xl border-2 transition-all cursor-pointer border-gray-100 dark:border-gray-800 hover:border-green-100">
+                            <div class="w-10 h-10 rounded-xl flex items-center justify-center bg-gray-50 dark:bg-gray-800 text-gray-400 icon-box"><i class="fa-solid fa-rocket"></i></div>
+                            <h4 class="font-lemon text-[10px] dark:text-white">Entrepreneur</h4>
+                            <div class="ml-auto w-5 h-5 rounded-full border-2 flex items-center justify-center border-gray-200 check-circle"></div>
+                        </div>
                     </div>
                 </div>
 
@@ -511,6 +539,22 @@
                         <input type="checkbox" id="input-terms" onchange="validateStep4()" class="mt-1 h-5 w-5 rounded border-gray-300 text-pakistan-green focus:ring-pakistan-green">
                         <span class="text-xs text-gray-600 dark:text-gray-400">I declare all information is correct as per Government records and I agree to the <a href="https://drive.google.com/file/d/1NwKfofJT-kQ5veAhZVj0ebYeB6Tauk4I/view?usp=drivesdk" target="_blank" class="text-pakistan-green dark:text-green-400 underline hover:text-green-700 transition-colors">Privacy Policy</a>.</span>
                       </label>
+                </div>
+
+                <!-- STEP 5: Email Verification -->
+                <div id="step-5" class="hidden space-y-6">
+                    <div class="text-center mb-6">
+                        <div class="w-16 h-16 bg-green-50 dark:bg-green-900/20 rounded-full flex items-center justify-center mx-auto mb-4 text-pakistan-green">
+                            <i class="fa-solid fa-envelope-circle-check text-2xl"></i>
+                        </div>
+                        <h3 class="text-lg font-lemon dark:text-white">Verify Your Email</h3>
+                        <p class="text-xs text-gray-500 dark:text-gray-400 mt-2">We've sent a 6-digit verification code to <span id="display-email" class="font-bold text-pakistan-green"></span></p>
+                    </div>
+                    <div class="w-full group">
+                        <label class="block text-[10px] font-lemon tracking-widest mb-2.5 text-gray-500 dark:text-gray-400">Verification Code</label>
+                        <input type="text" id="input-verify-code" oninput="validateStep5()" class="w-full px-5 py-4 rounded-2xl bg-gray-50 dark:bg-gray-800/50 border-2 border-gray-100 dark:border-gray-700 focus:border-pakistan-green outline-none text-center text-2xl font-bold tracking-[10px] dark:text-white transition-all" placeholder="000000" maxlength="6">
+                    </div>
+                    <p class="text-[10px] text-center text-gray-400">Didn't receive the code? <button type="button" onclick="sendVerificationCode()" class="text-pakistan-green font-bold hover:underline">Resend Code</button></p>
                 </div>
 
             </div>
@@ -705,11 +749,33 @@
         }
 
         function nextStep() {
-            if (state.step < 4) {
+            if (state.step === 4) {
+                sendVerificationCode();
+                state.step++;
+                updateUI();
+            } else if (state.step < 5) {
                 state.step++;
                 updateUI();
             } else {
                 submitForm();
+            }
+        }
+
+        async function sendVerificationCode() {
+            const email = document.getElementById('input-email').value;
+            const fullName = document.getElementById('input-fullname').value;
+            
+            try {
+                const response = await fetch('/api/send-verification', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ email, fullName })
+                });
+                if (!response.ok) throw new Error('Failed to send code');
+                console.log('Verification code sent');
+            } catch (err) {
+                console.error(err);
+                alert('Failed to send verification code. Please check your connection.');
             }
         }
 
@@ -722,11 +788,11 @@
 
         function updateUI() {
             // Update Progress Bar
-            const progress = ((state.step - 1) / 3) * 100;
+            const progress = ((state.step - 1) / 4) * 100;
             document.getElementById('progress-line').style.width = `${progress}%`;
 
             // Update Indicators
-            for (let i = 1; i <= 4; i++) {
+            for (let i = 1; i <= 5; i++) {
                 const el = document.getElementById(`step-${i}-indicator`);
                 if (i <= state.step) {
                     el.classList.add('bg-pakistan-green', 'border-pakistan-green', 'text-white');
@@ -738,7 +804,7 @@
             }
 
             // Show/Hide Steps
-            for (let i = 1; i <= 4; i++) {
+            for (let i = 1; i <= 5; i++) {
                 const el = document.getElementById(`step-${i}`);
                 if (i === state.step) el.classList.remove('hidden');
                 else el.classList.add('hidden');
@@ -761,9 +827,14 @@
                 document.getElementById('review-cnic').innerText = document.getElementById('input-cnic').value || '--';
             }
 
+            // Update Email Display in Step 5
+            if (state.step === 5) {
+                document.getElementById('display-email').innerText = document.getElementById('input-email').value;
+            }
+
             // Update Buttons
             btnBack.classList.toggle('hidden', state.step === 1);
-            btnNext.innerText = state.step === 4 ? 'Submit Application' : 'Continue';
+            btnNext.innerText = state.step === 5 ? 'Verify & Submit' : 'Continue';
             
             // Validate Current Step to Enable Next
             validateCurrentStep();
@@ -787,6 +858,8 @@
                 isValid = validateStep3(true);
             } else if (state.step === 4) {
                 isValid = document.getElementById('input-terms').checked;
+            } else if (state.step === 5) {
+                isValid = document.getElementById('input-verify-code').value.length === 6;
             }
 
             if (isValid) {
@@ -828,17 +901,55 @@
              validateCurrentStep();
         }
 
+        function validateStep5() {
+             validateCurrentStep();
+        }
+
         // --- Submission & Challan ---
-        function submitForm() {
+        async function submitForm() {
+            // Collect Data
+            const formData = {
+                planId: state.plan,
+                fullName: document.getElementById('input-fullname').value,
+                cnic: document.getElementById('input-cnic').value,
+                email: document.getElementById('input-email').value,
+                whatsapp: document.getElementById('input-whatsapp').value,
+                institute: document.getElementById('input-institute').value,
+                degree: document.getElementById('input-degree').value,
+                businessName: document.getElementById('input-business').value,
+                industry: document.getElementById('input-industry').value,
+                experience: document.getElementById('input-experience').value,
+                targetCountry: document.getElementById('input-country').value,
+                verificationCode: document.getElementById('input-verify-code').value
+            };
+
             // Hide Form
             modalContent.classList.add('hidden');
             loadingView.classList.remove('hidden');
 
-            // Simulate API Call
-            setTimeout(() => {
+            try {
+                const response = await fetch('/api/submit-membership', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(formData)
+                });
+
+                const data = await response.json();
+
+                if (!response.ok) {
+                    throw new Error(data.error || 'Submission failed');
+                }
+
                 loadingView.classList.add('hidden');
                 successView.classList.remove('hidden');
-            }, 2000);
+            } catch (err) {
+                console.error(err);
+                loadingView.classList.add('hidden');
+                modalContent.classList.remove('hidden');
+                alert(err.message || 'Failed to submit application. Please try again.');
+                state.step = 5; // Stay on verification step
+                updateUI();
+            }
         }
 
         function showChallanReceipt() {

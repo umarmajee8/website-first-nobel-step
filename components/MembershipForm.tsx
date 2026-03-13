@@ -128,6 +128,8 @@ const MembershipForm: React.FC<Props> = ({ initialPlanId, onClose }) => {
 
   const [isSubmitted, setIsSubmitted] = useState(false);
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const [isSendingCode, setIsSendingCode] = useState(false);
+  const [verificationCode, setVerificationCode] = useState('');
   const [error, setError] = useState<string | null>(null);
   const [showChallan, setShowChallan] = useState(false);
   const [challanId] = useState(() => `FMS-${Math.floor(100000 + Math.random() * 900000)}`);
@@ -213,7 +215,7 @@ const MembershipForm: React.FC<Props> = ({ initialPlanId, onClose }) => {
     setTimeout(() => setStep(2), 400);
   };
 
-  const nextStep = () => {
+  const nextStep = async () => {
     const currentFields = step === 2 ? ['fullName', 'cnic', 'email', 'whatsapp'] : 
                          step === 3 ? (formData.planId === 'student' ? ['institute', 'degree'] : formData.planId === 'entrepreneur' ? ['businessName', 'industry'] : ['experience', 'targetCountry']) : [];
     let hasErrors = false;
@@ -223,14 +225,39 @@ const MembershipForm: React.FC<Props> = ({ initialPlanId, onClose }) => {
       if (validateField(f, (formData as any)[f])) hasErrors = true;
     });
     setTouchedFields(newTouched);
-    if (!hasErrors && step < 4) setStep((prev) => (prev + 1) as FormStep);
+    
+    if (!hasErrors) {
+      if (step === 4) {
+        await sendVerificationCode();
+        setStep(5);
+      } else if (step < 5) {
+        setStep((prev) => (prev + 1) as FormStep);
+      }
+    }
+  };
+
+  const sendVerificationCode = async () => {
+    setIsSendingCode(true);
+    setError(null);
+    try {
+      const response = await fetch('/api/send-verification', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ email: formData.email, fullName: formData.fullName }),
+      });
+      if (!response.ok) throw new Error('Failed to send verification code');
+    } catch (err: any) {
+      setError(err.message || 'Error sending code');
+    } finally {
+      setIsSendingCode(false);
+    }
   };
 
   const prevStep = () => { if (step > 1) setStep((prev) => (prev - 1) as FormStep); };
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    if (!termsAccepted) return;
+    if (!termsAccepted || verificationCode.length !== 6) return;
     setIsSubmitting(true);
     setError(null);
     try {
@@ -239,7 +266,7 @@ const MembershipForm: React.FC<Props> = ({ initialPlanId, onClose }) => {
         headers: {
           'Content-Type': 'application/json',
         },
-        body: JSON.stringify(formData),
+        body: JSON.stringify({ ...formData, verificationCode }),
       });
 
       const data = await response.json();
@@ -266,6 +293,7 @@ const MembershipForm: React.FC<Props> = ({ initialPlanId, onClose }) => {
       if (formData.planId === 'professional') return !!formData.experience && !!formData.targetCountry;
     }
     if (step === 4) return termsAccepted;
+    if (step === 5) return verificationCode.length === 6;
     return false;
   };
 
@@ -396,8 +424,8 @@ const MembershipForm: React.FC<Props> = ({ initialPlanId, onClose }) => {
         <nav className="px-8 py-4">
           <div className="flex items-center justify-between relative">
             <div className="absolute top-1/2 left-0 w-full h-0.5 bg-gray-100 dark:bg-gray-800 -translate-y-1/2 -z-10"></div>
-            <div className="absolute top-1/2 left-0 h-0.5 bg-pakistan-green transition-all duration-500 -translate-y-1/2 -z-10" style={{ width: `${((step - 1) / 3) * 100}%` }}></div>
-            {[1,2,3,4].map(n => (
+            <div className="absolute top-1/2 left-0 h-0.5 bg-pakistan-green transition-all duration-500 -translate-y-1/2 -z-10" style={{ width: `${((step - 1) / 4) * 100}%` }}></div>
+            {[1,2,3,4,5].map(n => (
               <div key={n} className="flex flex-col items-center">
                 <div className={`w-8 h-8 rounded-full flex items-center justify-center text-[10px] font-lemon transition-all border-2 ${step >= n ? 'bg-pakistan-green border-pakistan-green text-white' : 'bg-white dark:bg-gray-900 border-gray-200 text-gray-400'}`}>{n}</div>
               </div>
@@ -406,15 +434,34 @@ const MembershipForm: React.FC<Props> = ({ initialPlanId, onClose }) => {
         </nav>
         <form onSubmit={handleSubmit} className="flex-grow overflow-y-auto px-8 py-6 custom-scrollbar">
           {step === 1 && (
-            <fieldset className="space-y-4 animate-in fade-in slide-in-from-right-4 duration-300">
-              <legend className="text-sm font-medium mb-4 dark:text-gray-300">Select processing category:</legend>
-              {[{id:'professional',name:'Professional',icon:'fa-briefcase'},{id:'entrepreneur',name:'Entrepreneur',icon:'fa-rocket'},{id:'student',name:'Official Student',icon:'fa-graduation-cap'}].map(p => (
-                <label key={p.id} onClick={() => handlePlanSelect(p.id)} className={`flex items-center gap-4 p-5 rounded-2xl border-2 transition-all cursor-pointer ${formData.planId === p.id ? 'border-pakistan-green bg-green-50 dark:bg-green-900/10' : 'border-gray-100 dark:border-gray-800 hover:border-green-100'}`}>
-                  <div className={`w-10 h-10 rounded-xl flex items-center justify-center ${formData.planId === p.id ? 'bg-pakistan-green text-white' : 'bg-gray-50 dark:bg-gray-800 text-gray-400'}`}><i className={`fa-solid ${p.icon}`}></i></div>
-                  <h4 className="font-lemon text-sm dark:text-white">{p.name}</h4>
-                  <div className={`ml-auto w-5 h-5 rounded-full border-2 flex items-center justify-center ${formData.planId === p.id ? 'border-pakistan-green bg-pakistan-green text-white' : 'border-gray-200'}`}>{formData.planId === p.id && <i className="fa-solid fa-check text-[10px]"></i>}</div>
-                </label>
-              ))}
+            <fieldset className="space-y-8 animate-in fade-in slide-in-from-right-4 duration-300">
+              <div className="bg-gray-50/50 dark:bg-gray-800/30 p-6 rounded-[2rem] border border-gray-100 dark:border-gray-700">
+                <h4 className="text-[10px] font-lemon tracking-[0.2em] text-pakistan-green mb-6 uppercase flex items-center gap-3">
+                  <span className="w-6 h-px bg-pakistan-green/20"></span> Individual Pathways
+                </h4>
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                  {[{id:'professional',name:'Job Professional',icon:'fa-briefcase'},{id:'student',name:'Official Student',icon:'fa-graduation-cap'}].map(p => (
+                    <label key={p.id} onClick={() => handlePlanSelect(p.id)} className={`flex items-center gap-4 p-5 rounded-2xl border-2 transition-all cursor-pointer ${formData.planId === p.id ? 'border-pakistan-green bg-green-50 dark:bg-green-900/10' : 'border-gray-100 dark:border-gray-800 hover:border-green-100'}`}>
+                      <div className={`w-10 h-10 rounded-xl flex items-center justify-center ${formData.planId === p.id ? 'bg-pakistan-green text-white' : 'bg-gray-50 dark:bg-gray-800 text-gray-400'}`}><i className={`fa-solid ${p.icon}`}></i></div>
+                      <h4 className="font-lemon text-[10px] dark:text-white">{p.name}</h4>
+                      <div className={`ml-auto w-5 h-5 rounded-full border-2 flex items-center justify-center ${formData.planId === p.id ? 'border-pakistan-green bg-pakistan-green text-white' : 'border-gray-200'}`}>{formData.planId === p.id && <i className="fa-solid fa-check text-[10px]"></i>}</div>
+                    </label>
+                  ))}
+                </div>
+              </div>
+
+              <div className="p-6">
+                <h4 className="text-[10px] font-lemon tracking-[0.2em] text-pakistan-green mb-6 uppercase flex items-center gap-3">
+                  <span className="w-6 h-px bg-pakistan-green/20"></span> Business Growth
+                </h4>
+                {[{id:'entrepreneur',name:'Entrepreneur',icon:'fa-rocket'}].map(p => (
+                  <label key={p.id} onClick={() => handlePlanSelect(p.id)} className={`flex items-center gap-4 p-5 rounded-2xl border-2 transition-all cursor-pointer ${formData.planId === p.id ? 'border-pakistan-green bg-green-50 dark:bg-green-900/10' : 'border-gray-100 dark:border-gray-800 hover:border-green-100'}`}>
+                    <div className={`w-10 h-10 rounded-xl flex items-center justify-center ${formData.planId === p.id ? 'bg-pakistan-green text-white' : 'bg-gray-50 dark:bg-gray-800 text-gray-400'}`}><i className={`fa-solid ${p.icon}`}></i></div>
+                    <h4 className="font-lemon text-[10px] dark:text-white">{p.name}</h4>
+                    <div className={`ml-auto w-5 h-5 rounded-full border-2 flex items-center justify-center ${formData.planId === p.id ? 'border-pakistan-green bg-pakistan-green text-white' : 'border-gray-200'}`}>{formData.planId === p.id && <i className="fa-solid fa-check text-[10px]"></i>}</div>
+                  </label>
+                ))}
+              </div>
             </fieldset>
           )}
           {step === 2 && (
@@ -477,6 +524,38 @@ const MembershipForm: React.FC<Props> = ({ initialPlanId, onClose }) => {
               </label>
             </div>
           )}
+          {step === 5 && (
+            <div className="space-y-6 animate-in fade-in slide-in-from-right-4 duration-300">
+              <div className="text-center mb-6">
+                <div className="w-16 h-16 bg-green-50 dark:bg-green-900/20 rounded-full flex items-center justify-center mx-auto mb-4 text-pakistan-green">
+                  <i className="fa-solid fa-envelope-circle-check text-2xl"></i>
+                </div>
+                <h3 className="text-lg font-lemon dark:text-white">Verify Your Email</h3>
+                <p className="text-xs text-gray-500 dark:text-gray-400 mt-2">We've sent a 6-digit verification code to <span className="font-bold text-pakistan-green">{formData.email}</span></p>
+              </div>
+              <div className="w-full group">
+                <label className="block text-[10px] font-lemon tracking-widest mb-2.5 text-gray-500 dark:text-gray-400">Verification Code</label>
+                <input 
+                  type="text" 
+                  value={verificationCode}
+                  onChange={(e) => setVerificationCode(e.target.value.replace(/\D/g, '').slice(0, 6))}
+                  className="w-full px-5 py-4 rounded-2xl bg-gray-50 dark:bg-gray-800/50 border-2 border-gray-100 dark:border-gray-700 focus:border-pakistan-green outline-none text-center text-2xl font-bold tracking-[10px] dark:text-white transition-all" 
+                  placeholder="000000" 
+                />
+              </div>
+              <p className="text-[10px] text-center text-gray-400">
+                Didn't receive the code?{' '}
+                <button 
+                  type="button" 
+                  onClick={sendVerificationCode} 
+                  disabled={isSendingCode}
+                  className="text-pakistan-green font-bold hover:underline disabled:opacity-50"
+                >
+                  {isSendingCode ? 'Sending...' : 'Resend Code'}
+                </button>
+              </p>
+            </div>
+          )}
         </form>
         <div className="px-8 pb-8 pt-4 flex flex-col gap-4 border-t border-gray-100 dark:border-gray-800">
           {error && (
@@ -487,7 +566,7 @@ const MembershipForm: React.FC<Props> = ({ initialPlanId, onClose }) => {
           )}
           <div className="flex gap-4">
             {step > 1 && <button type="button" onClick={prevStep} className="px-6 py-4 rounded-2xl font-lemon text-[10px] border border-gray-200 text-gray-500">Back</button>}
-            <button type="button" onClick={step === 4 ? (e) => handleSubmit(e as any) : nextStep} disabled={!isStepValid()} className={`flex-grow py-4 rounded-2xl font-lemon text-[10px] tracking-widest text-white transition-all ${!isStepValid() ? 'bg-gray-200 cursor-not-allowed' : 'bg-pakistan-green shadow-lg'}`}>{step === 4 ? 'Submit Application' : 'Continue'}</button>
+            <button type="button" onClick={step === 5 ? (e) => handleSubmit(e as any) : nextStep} disabled={!isStepValid() || isSendingCode} className={`flex-grow py-4 rounded-2xl font-lemon text-[10px] tracking-widest text-white transition-all ${!isStepValid() || isSendingCode ? 'bg-gray-200 cursor-not-allowed' : 'bg-pakistan-green shadow-lg'}`}>{step === 5 ? 'Verify & Submit' : 'Continue'}</button>
           </div>
         </div>
       </div>
