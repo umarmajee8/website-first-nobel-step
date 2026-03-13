@@ -28,7 +28,7 @@ const Footer: React.FC<Props> = ({ onApply }) => {
           <div>
             <h4 className="text-pakistan-green dark:text-green-400 font-lemon tracking-widest text-[9px] mb-4">Resources</h4>
             <ul className="space-y-2 text-xs font-bold text-gray-700 dark:text-gray-200">
-              <li><a href="tel:+92519876543" className="hover:text-green-600 dark:hover:text-green-400 transition-colors">Help Center</a></li>
+              <li><a href="mailto:support@firstnoblestep.com" className="hover:text-green-600 dark:hover:text-green-400 transition-colors">Help Center</a></li>
               <li><a href="#" className="hover:text-green-600 dark:hover:text-green-400 transition-colors">Career Blog</a></li>
               <li><a href="#" className="hover:text-green-600 dark:hover:text-green-400 transition-colors">Privacy Policy</a></li>
               <li><a href="https://drive.google.com/file/d/1dESuKrtxrnFmni4zhMsbShdKlkKRc2vo/view?usp=drivesdk" target="_blank" rel="noopener noreferrer" className="hover:text-green-600 dark:hover:text-green-400 transition-colors">Terms & Conditions</a></li>
@@ -40,15 +40,15 @@ const Footer: React.FC<Props> = ({ onApply }) => {
             <ul className="space-y-2.5 text-xs text-gray-700 dark:text-gray-200">
               <li className="flex gap-3">
                 <i className="fa-solid fa-location-dot mt-0.5 text-pakistan-green dark:text-green-500"></i>
-                <span className="font-bold text-gray-900 dark:text-white">Headquarters: Blue Area, <br />Islamabad, Pakistan</span>
+                <span className="font-bold text-gray-900 dark:text-white">Headquarters: 129 CCA-3, Block-X, <br />DHA Phase 7, Lahore</span>
               </li>
               <li className="flex gap-3">
                 <i className="fa-solid fa-phone mt-0.5 text-pakistan-green dark:text-green-500"></i>
-                <span className="font-bold text-gray-900 dark:text-white">0300 3338911</span>
+                <span className="font-bold text-gray-900 dark:text-white">0333 2288877</span>
               </li>
               <li className="flex gap-3">
                 <i className="fa-solid fa-envelope mt-0.5 text-pakistan-green dark:text-green-500"></i>
-                <span className="font-bold text-gray-900 dark:text-white">un33business@gmail.com</span>
+                <span className="font-bold text-gray-900 dark:text-white">support@firstnoblestep.com</span>
               </li>
             </ul>
           </div>

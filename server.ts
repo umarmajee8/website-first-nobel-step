@@ -37,6 +37,7 @@ async function startServer() {
 
   // API endpoint to submit form data
   app.post('/api/submit-membership', async (req, res) => {
+    console.log('Received request to submit membership:', req.body);
     try {
       if (!process.env.GOOGLE_SHEET_ID || !process.env.GOOGLE_SERVICE_ACCOUNT_EMAIL || !process.env.GOOGLE_PRIVATE_KEY) {
         return res.status(500).json({ success: false, error: 'Server configuration error: Missing Google Sheets credentials in Environment Variables.' });
