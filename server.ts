@@ -5,6 +5,7 @@ import path from 'path';
 import { fileURLToPath } from 'url';
 import { createServer as createViteServer } from 'vite';
 import PDFDocument from 'pdfkit';
+import nodemailer from 'nodemailer';
 
 dotenv.config();
 
@@ -35,6 +36,15 @@ async function startServer() {
 
   const sheets = google.sheets({ version: 'v4', auth });
 
+  // Email transporter setup
+  const transporter = nodemailer.createTransport({
+    service: 'gmail',
+    auth: {
+      user: process.env.SMTP_USER,
+      pass: process.env.SMTP_PASS,
+    },
+  });
+
   // API endpoint to submit form data
   app.post('/api/submit-membership', async (req, res) => {
     console.log('Received request to submit membership:', req.body);
@@ -58,6 +68,44 @@ async function startServer() {
         },
       });
       console.log('Data successfully appended to Google Sheets.');
+
+      // Send welcome email
+      if (email && process.env.SMTP_USER && process.env.SMTP_PASS) {
+        try {
+          const mailOptions = {
+            from: `"First Nobel Step" <${process.env.SMTP_USER}>`,
+            to: email,
+            subject: 'Welcome to First Nobel Step - Membership Application Received',
+            text: `Dear ${fullName},\n\nThank you for submitting your membership application to First Nobel Step (Pvt.) Ltd.\n\nWe have successfully received your details and our team will review them shortly. Please find the attached Disclaimer document for your reference.\n\nBest regards,\nFirst Nobel Step Team\nsupport@firstnoblestep.com`,
+            html: `
+              <div style="font-family: Arial, sans-serif; color: #333; line-height: 1.6; max-w: 600px; margin: 0 auto; padding: 20px; border: 1px solid #e5e7eb; border-radius: 8px;">
+                <h2 style="color: #01411C; border-bottom: 2px solid #01411C; padding-bottom: 10px;">Welcome to First Nobel Step!</h2>
+                <p>Dear <strong>${fullName}</strong>,</p>
+                <p>Thank you for submitting your membership application to First Nobel Step (Pvt.) Ltd.</p>
+                <p>We have successfully received your details and our team will review them shortly.</p>
+                <p>Please find the attached <strong>Disclaimer</strong> document for your reference.</p>
+                <br/>
+                <p>Best regards,</p>
+                <p><strong>First Nobel Step Team</strong><br/>
+                <a href="mailto:support@firstnoblestep.com" style="color: #01411C;">support@firstnoblestep.com</a></p>
+              </div>
+            `,
+            attachments: [
+              {
+                filename: 'Disclaimer_First_Noble_Step.pdf',
+                path: path.join(__dirname, 'Disclaimer.pdf')
+              }
+            ]
+          };
+
+          await transporter.sendMail(mailOptions);
+          console.log(`Welcome email sent to ${email}`);
+        } catch (emailError) {
+          console.error('Error sending welcome email:', emailError);
+        }
+      } else {
+        console.log('Skipping email send: SMTP credentials not configured or email missing.');
+      }
 
       res.status(200).json({ success: true });
     } catch (error: any) {

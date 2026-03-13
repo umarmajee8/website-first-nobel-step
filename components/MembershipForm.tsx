@@ -473,7 +473,7 @@ const MembershipForm: React.FC<Props> = ({ initialPlanId, onClose }) => {
               </div>
               <label className="flex items-start gap-4 p-5 cursor-pointer bg-gray-50 dark:bg-gray-800/50 rounded-2xl border border-gray-100 dark:border-gray-700">
                 <input type="checkbox" checked={termsAccepted} onChange={(e) => setTermsAccepted(e.target.checked)} className="mt-1 h-5 w-5 rounded border-gray-300 text-pakistan-green" />
-                <span className="text-xs text-gray-600 dark:text-gray-400">I declare all information is correct as per Government records.</span>
+                <span className="text-xs text-gray-600 dark:text-gray-400">I declare all information is correct as per Government records and I agree to the <a href="https://drive.google.com/file/d/1NwKfofJT-kQ5veAhZVj0ebYeB6Tauk4I/view?usp=drivesdk" target="_blank" className="text-pakistan-green dark:text-green-400 underline hover:text-green-700 transition-colors">Privacy Policy</a>.</span>
               </label>
             </div>
           )}
