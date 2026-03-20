@@ -345,7 +345,7 @@
                     <h4 class="text-pakistan-green dark:text-green-500 font-lemon tracking-widest text-[9px] mb-4">Contact</h4>
                     <ul class="space-y-2.5 text-xs">
                         <li class="flex gap-3"><i class="fa-solid fa-location-dot mt-0.5 text-pakistan-green dark:text-green-500"></i> <span class="font-bold text-gray-900 dark:text-gray-200">Headquarters: 129 CCA-3, Block-X, <br />DHA Phase 7, Lahore</span></li>
-                        <li class="flex gap-3"><i class="fa-solid fa-phone mt-0.5 text-pakistan-green dark:text-green-500"></i> <span class="font-bold text-gray-900 dark:text-gray-200">0333 2288877</span></li>
+                        <li class="flex gap-3"><i class="fa-solid fa-phone mt-0.5 text-pakistan-green dark:text-green-500"></i> <span class="font-bold text-gray-900 dark:text-gray-200">+92 3332288877</span></li>
                         <li class="flex gap-3"><i class="fa-solid fa-envelope mt-0.5 text-pakistan-green dark:text-green-500"></i> <span class="font-bold text-gray-900 dark:text-gray-200">support@firstnoblestep.com</span></li>
                     </ul>
                 </div>
@@ -395,6 +395,16 @@
             <div class="px-8 pt-8 pb-4 flex items-center justify-between">
                 <div><h2 class="text-2xl font-lemon tracking-tight dark:text-white">Processing Fees</h2><p class="text-[10px] font-lemon text-pakistan-green dark:text-green-400 tracking-widest mt-1">Official Govt. Registered Portal</p></div>
                 <button onclick="attemptCloseForm()" class="w-10 h-10 flex items-center justify-center rounded-full hover:bg-gray-100 dark:hover:bg-gray-800 transition-colors"><i class="fa-solid fa-times text-gray-400"></i></button>
+            </div>
+
+            <!-- Error Banner -->
+            <div id="form-error-banner" class="hidden mx-8 mt-2 p-4 bg-red-50 dark:bg-red-900/20 border border-red-200 dark:border-red-800/30 rounded-xl flex items-start gap-3 text-red-600 dark:text-red-400 transition-all">
+                <i class="fa-solid fa-circle-exclamation mt-0.5"></i>
+                <div class="flex-grow">
+                    <h4 class="text-xs font-bold mb-1" id="form-error-title">Error</h4>
+                    <p class="text-[10px] leading-relaxed" id="form-error-message">Something went wrong.</p>
+                </div>
+                <button type="button" onclick="hideError()" class="text-red-400 hover:text-red-600 dark:hover:text-red-300"><i class="fa-solid fa-times"></i></button>
             </div>
 
             <!-- Progress Bar -->
@@ -462,7 +472,7 @@
                     </div>
                     <div class="w-full group">
                         <label class="block text-[10px] font-lemon tracking-widest mb-2.5 text-gray-500 dark:text-gray-400">WhatsApp Number</label>
-                        <input type="tel" id="input-whatsapp" oninput="validateStep2()" class="w-full px-5 py-4 rounded-2xl bg-gray-50 dark:bg-gray-800/50 border-2 border-gray-100 dark:border-gray-700 focus:border-pakistan-green outline-none text-sm dark:text-white transition-all" placeholder="03XXXXXXXXX">
+                        <input type="tel" id="input-whatsapp" oninput="validateStep2()" class="w-full px-5 py-4 rounded-2xl bg-gray-50 dark:bg-gray-800/50 border-2 border-gray-100 dark:border-gray-700 focus:border-pakistan-green outline-none text-sm dark:text-white transition-all" placeholder="+92 3XXXXXXXXX">
                     </div>
                 </div>
 
@@ -554,7 +564,7 @@
                         <label class="block text-[10px] font-lemon tracking-widest mb-2.5 text-gray-500 dark:text-gray-400">Verification Code</label>
                         <input type="text" id="input-verify-code" oninput="validateStep5()" class="w-full px-5 py-4 rounded-2xl bg-gray-50 dark:bg-gray-800/50 border-2 border-gray-100 dark:border-gray-700 focus:border-pakistan-green outline-none text-center text-2xl font-bold tracking-[10px] dark:text-white transition-all" placeholder="000000" maxlength="6">
                     </div>
-                    <p class="text-[10px] text-center text-gray-400">Didn't receive the code? <button type="button" onclick="sendVerificationCode()" class="text-pakistan-green font-bold hover:underline">Resend Code</button></p>
+                    <p class="text-[10px] text-center text-gray-400">Didn't receive the code? <button type="button" id="btn-resend-code" onclick="sendVerificationCode()" class="text-pakistan-green font-bold hover:underline disabled:opacity-50 disabled:cursor-not-allowed transition-opacity">Resend Code</button></p>
                 </div>
 
             </div>
@@ -712,6 +722,7 @@
         }
 
         function resetForm() {
+            hideError();
             state.step = 1;
             state.plan = null;
             state.data = { fullName: '', cnic: '', email: '', whatsapp: '' };
@@ -721,8 +732,27 @@
             updateUI();
         }
 
+        // --- Error Handling ---
+        function showError(title, message) {
+            const banner = document.getElementById('form-error-banner');
+            document.getElementById('form-error-title').innerText = title;
+            document.getElementById('form-error-message').innerText = message;
+            banner.classList.remove('hidden');
+            
+            // Scroll to top of modal so error is visible
+            const formBody = document.getElementById('form-body');
+            if (formBody) {
+                formBody.scrollTop = 0;
+            }
+        }
+
+        function hideError() {
+            document.getElementById('form-error-banner').classList.add('hidden');
+        }
+
         // --- Form Navigation & Logic ---
         function selectPlan(planId) {
+            hideError();
             state.plan = planId;
             // Highlight UI
             document.querySelectorAll('.plan-card').forEach(el => {
@@ -749,6 +779,7 @@
         }
 
         function nextStep() {
+            hideError();
             if (state.step === 4) {
                 sendVerificationCode();
                 state.step++;
@@ -762,8 +793,15 @@
         }
 
         async function sendVerificationCode() {
+            hideError();
             const email = document.getElementById('input-email').value;
             const fullName = document.getElementById('input-fullname').value;
+            
+            const resendBtn = document.getElementById('btn-resend-code');
+            if (resendBtn) {
+                resendBtn.disabled = true;
+                resendBtn.innerText = 'Sending...';
+            }
             
             try {
                 const response = await fetch('/api/send-verification', {
@@ -771,15 +809,34 @@
                     headers: { 'Content-Type': 'application/json' },
                     body: JSON.stringify({ email, fullName })
                 });
-                if (!response.ok) throw new Error('Failed to send code');
+                
+                const data = await response.json().catch(() => ({}));
+                
+                if (!response.ok) {
+                    throw new Error(data.error || 'Failed to send verification code. Please try again.');
+                }
                 console.log('Verification code sent');
+                
+                if (resendBtn) {
+                    resendBtn.innerText = 'Code Sent!';
+                    setTimeout(() => {
+                        resendBtn.disabled = false;
+                        resendBtn.innerText = 'Resend Code';
+                    }, 3000);
+                }
             } catch (err) {
                 console.error(err);
-                alert('Failed to send verification code. Please check your connection.');
+                showError('Network Error', err.message || 'Failed to send verification code. Please check your internet connection and try again.');
+                
+                if (resendBtn) {
+                    resendBtn.disabled = false;
+                    resendBtn.innerText = 'Resend Code';
+                }
             }
         }
 
         function prevStep() {
+            hideError();
             if (state.step > 1) {
                 state.step--;
                 updateUI();
@@ -907,6 +964,7 @@
 
         // --- Submission & Challan ---
         async function submitForm() {
+            hideError();
             // Collect Data
             const formData = {
                 planId: state.plan,
@@ -934,10 +992,14 @@
                     body: JSON.stringify(formData)
                 });
 
-                const data = await response.json();
+                const data = await response.json().catch(() => ({}));
 
                 if (!response.ok) {
-                    throw new Error(data.error || 'Submission failed');
+                    // Handle specific error cases
+                    if (response.status === 400 && data.error && data.error.toLowerCase().includes('code')) {
+                        throw new Error('INVALID_CODE:' + (data.error || 'The verification code you entered is incorrect.'));
+                    }
+                    throw new Error(data.error || 'Server encountered an error while processing your request.');
                 }
 
                 loadingView.classList.add('hidden');
@@ -946,9 +1008,27 @@
                 console.error(err);
                 loadingView.classList.add('hidden');
                 modalContent.classList.remove('hidden');
-                alert(err.message || 'Failed to submit application. Please try again.');
+                
                 state.step = 5; // Stay on verification step
                 updateUI();
+                
+                if (err.message.startsWith('INVALID_CODE:')) {
+                    const msg = err.message.replace('INVALID_CODE:', '');
+                    showError('Invalid Verification Code', msg + ' Please check your email and try again.');
+                    // Highlight the input
+                    const codeInput = document.getElementById('input-verify-code');
+                    codeInput.classList.add('border-red-500', 'focus:border-red-500');
+                    codeInput.value = '';
+                    codeInput.focus();
+                    
+                    // Remove error styling on input
+                    codeInput.addEventListener('input', function removeError() {
+                        codeInput.classList.remove('border-red-500', 'focus:border-red-500');
+                        codeInput.removeEventListener('input', removeError);
+                    });
+                } else {
+                    showError('Submission Failed', err.message || 'Failed to submit application. Please check your connection and try again.');
+                }
             }
         }
 

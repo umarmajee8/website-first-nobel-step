@@ -39,15 +39,6 @@ async function startServer() {
   // In-memory store for verification codes (expires in 10 minutes)
   const verificationCodes = new Map<string, { code: string, expires: number }>();
 
-  // Email transporter setup
-  const transporter = nodemailer.createTransport({
-    service: 'gmail',
-    auth: {
-      user: process.env.SMTP_USER,
-      pass: process.env.SMTP_PASS,
-    },
-  });
-
   // API endpoint to send verification code
   app.post('/api/send-verification', async (req, res) => {
     const { email, fullName } = req.body;
@@ -57,6 +48,14 @@ async function startServer() {
     verificationCodes.set(email, { code, expires: Date.now() + 10 * 60 * 1000 });
 
     if (process.env.SMTP_USER && process.env.SMTP_PASS) {
+      const transporter = nodemailer.createTransport({
+        service: 'gmail',
+        auth: {
+          user: process.env.SMTP_USER,
+          pass: process.env.SMTP_PASS,
+        },
+      });
+
       try {
         await transporter.sendMail({
           from: `"First Nobel Step" <${process.env.SMTP_USER}>`,
