@@ -245,7 +245,12 @@ const MembershipForm: React.FC<Props> = ({ initialPlanId, onClose }) => {
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ email: formData.email, fullName: formData.fullName }),
       });
-      if (!response.ok) throw new Error('Failed to send verification code');
+      
+      const data = await response.json();
+      
+      if (!response.ok) {
+        throw new Error(data.error || 'Failed to send verification code');
+      }
     } catch (err: any) {
       setError(err.message || 'Error sending code');
     } finally {

@@ -109,22 +109,29 @@ async function startServer() {
       verificationCodes.delete(email);
 
       if (!process.env.GOOGLE_SHEET_ID || !process.env.GOOGLE_SERVICE_ACCOUNT_EMAIL || !process.env.GOOGLE_PRIVATE_KEY) {
-        return res.status(500).json({ success: false, error: 'Server configuration error: Missing Google Sheets credentials in Environment Variables.' });
+        return res.status(500).json({ success: false, error: 'Server configuration error: Missing Google Sheets credentials in Environment Variables. Please set GOOGLE_SHEET_ID, GOOGLE_SERVICE_ACCOUNT_EMAIL, and GOOGLE_PRIVATE_KEY.' });
       }
 
-      console.log('Submitting to Sheet ID:', process.env.GOOGLE_SHEET_ID);
-      const values = [[new Date().toISOString(), fullName, cnic, email, whatsapp, planId, institute || '', degree || '', businessName || '', industry || '', experience || '', targetCountry || '']];
-      console.log('Values to append:', values);
+      let sheetSuccess = false;
+      try {
+        console.log('Submitting to Sheet ID:', process.env.GOOGLE_SHEET_ID);
+        const values = [[new Date().toISOString(), fullName, cnic, email, whatsapp, planId, institute || '', degree || '', businessName || '', industry || '', experience || '', targetCountry || '']];
+        console.log('Values to append:', values);
 
-      await sheets.spreadsheets.values.append({
-        spreadsheetId: process.env.GOOGLE_SHEET_ID,
-        range: 'Sheet1!A:L',
-        valueInputOption: 'USER_ENTERED',
-        requestBody: {
-          values: values,
-        },
-      });
-      console.log('Data successfully appended to Google Sheets.');
+        await sheets.spreadsheets.values.append({
+          spreadsheetId: process.env.GOOGLE_SHEET_ID,
+          range: 'Sheet1!A:L',
+          valueInputOption: 'USER_ENTERED',
+          requestBody: {
+            values: values,
+          },
+        });
+        console.log('Data successfully appended to Google Sheets.');
+        sheetSuccess = true;
+      } catch (sheetError: any) {
+        console.error('Error appending to Google Sheets:', sheetError);
+        return res.status(500).json({ success: false, error: `Failed to save data to Google Sheets: ${sheetError.message || 'Unknown error'}` });
+      }
 
       // Send welcome email
       if (email && process.env.SMTP_USER && process.env.SMTP_PASS) {
