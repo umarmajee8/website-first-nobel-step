@@ -144,12 +144,13 @@
             </div>
             
             <div class="flex items-center gap-4">
-                <button id="theme-toggle" class="w-10 h-10 rounded-full bg-gray-50 dark:bg-gray-800 flex items-center justify-center text-gray-600 dark:text-gray-300 hover:bg-gray-200 dark:hover:bg-gray-700 transition-colors border border-gray-100 dark:border-gray-700">
-                    <i class="fa-solid fa-moon dark:hidden"></i>
-                    <i class="fa-solid fa-sun hidden dark:block"></i>
+                <button id="theme-toggle" class="flex items-center justify-center gap-1 w-[76px] px-1.5 py-1 rounded-full transition-all duration-300 bg-gray-200 dark:bg-black border border-gray-300 dark:border-gray-700">
+                    <span id="theme-text" class="text-[8px] font-bold text-gray-900 dark:text-white order-1 whitespace-nowrap">DAY MODE</span>
+                    <i id="theme-icon" class="fa-solid fa-sun text-[10px] text-gray-900 dark:text-white order-2"></i>
                 </button>
-                <button onclick="openForm()" class="bg-pakistan-green text-white px-5 py-2 rounded-lg font-lemon text-[10px] tracking-widest hover:bg-green-800 transition-all shadow-[0_10px_20px_-5px_rgba(1,65,28,0.4)] active:scale-95 text-center inline-block">
-                    Apply Now
+                <button onclick="openForm()" class="group relative inline-flex items-center justify-center overflow-hidden bg-pakistan-green text-white px-5 py-2 rounded-lg font-lemon text-[10px] tracking-widest hover:bg-green-800 transition-all shadow-[0_10px_20px_-5px_rgba(1,65,28,0.4)] active:scale-95 text-center">
+                    <span class="transition-all duration-300 group-hover:-translate-x-2">Apply Now</span>
+                    <i class="fa-solid fa-arrow-right absolute right-3 translate-x-4 opacity-0 transition-all duration-300 group-hover:translate-x-0 group-hover:opacity-100"></i>
                 </button>
             </div>
         </div>
@@ -180,8 +181,9 @@
                         </p>
                         
                         <div class="flex flex-col sm:flex-row gap-5 items-center justify-center lg:justify-start">
-                            <button onclick="openForm()" class="w-full sm:w-auto bg-pakistan-green text-white px-12 py-5 rounded-2xl font-lemon text-lg text-center hover:bg-green-900 hover:scale-[1.02] transition-all shadow-[0_20px_50px_-15px_rgba(1,65,28,0.5)] flex items-center justify-center gap-3 group active:scale-95">
-                                Apply Now <i class="fa-solid fa-arrow-right group-hover:translate-x-1 transition-transform"></i>
+                            <button onclick="openForm()" class="group relative w-full sm:w-auto inline-flex items-center justify-center overflow-hidden bg-pakistan-green text-white px-12 py-5 rounded-2xl font-lemon text-lg text-center hover:bg-green-900 hover:scale-[1.02] transition-all shadow-[0_20px_50px_-15px_rgba(1,65,28,0.5)] active:scale-95">
+                                <span class="transition-all duration-300 group-hover:-translate-x-4">Apply Now</span>
+                                <i class="fa-solid fa-arrow-right absolute right-8 translate-x-8 opacity-0 transition-all duration-300 group-hover:translate-x-0 group-hover:opacity-100"></i>
                             </button>
                             
                             <div class="flex items-center gap-4 px-6 py-4 bg-gray-50 dark:bg-gray-800 rounded-2xl border border-gray-100 dark:border-gray-700">
@@ -376,7 +378,7 @@
             
             <!-- Modal Header -->
             <div class="px-8 pt-8 pb-4 flex items-center justify-between">
-                <div><h2 class="text-2xl font-lemon tracking-tight dark:text-white">Processing Fees</h2><p class="text-[10px] font-lemon text-pakistan-green dark:text-green-400 tracking-widest mt-1">Official Portal</p></div>
+                <div><h2 class="text-2xl font-lemon tracking-tight dark:text-white">Membership Application</h2><p class="text-[10px] font-lemon text-pakistan-green dark:text-green-400 tracking-widest mt-1">Official Portal</p></div>
                 <button onclick="attemptCloseForm()" class="w-10 h-10 flex items-center justify-center rounded-full hover:bg-gray-100 dark:hover:bg-gray-800 transition-colors"><i class="fa-solid fa-times text-gray-400"></i></button>
             </div>
 
@@ -517,13 +519,15 @@
                         </div>
                         <div class="w-full">
                             <label class="block text-[10px] font-lemon tracking-widest mb-2.5 text-gray-500 dark:text-gray-400">Industry</label>
-                            <select id="input-industry" onchange="validateStep3()" class="w-full px-5 py-4 rounded-2xl bg-gray-50 dark:bg-gray-800/50 border-2 border-gray-100 dark:border-gray-700 focus:border-pakistan-green outline-none text-sm dark:text-white">
+                            <select id="input-industry" onchange="handleOtherOption('input-industry', 'input-industry-other')" class="w-full px-5 py-4 rounded-2xl bg-gray-50 dark:bg-gray-800/50 border-2 border-gray-100 dark:border-gray-700 focus:border-pakistan-green outline-none text-sm dark:text-white">
                                 <option value="" disabled selected>Select Industry</option>
                                 <option value="tech">Technology & IT</option>
                                 <option value="retail">Retail & E-commerce</option>
                                 <option value="agriculture">Agriculture</option>
                                 <option value="services">Professional Services</option>
+                                <option value="other">Other</option>
                             </select>
+                            <input type="text" id="input-industry-other" placeholder="Please specify" class="hidden w-full mt-3 px-5 py-4 rounded-2xl bg-gray-50 dark:bg-gray-800/50 border-2 border-gray-100 dark:border-gray-700 focus:border-pakistan-green outline-none text-sm dark:text-white" oninput="validateStep3()">
                         </div>
                     </div>
                     <!-- Professional Fields -->
@@ -534,14 +538,16 @@
                         </div>
                         <div class="w-full">
                             <label class="block text-[10px] font-lemon tracking-widest mb-2.5 text-gray-500 dark:text-gray-400">Target Country</label>
-                            <select id="input-country" onchange="validateStep3()" class="w-full px-5 py-4 rounded-2xl bg-gray-50 dark:bg-gray-800/50 border-2 border-gray-100 dark:border-gray-700 focus:border-pakistan-green outline-none text-sm dark:text-white">
+                            <select id="input-country" onchange="handleOtherOption('input-country', 'input-country-other')" class="w-full px-5 py-4 rounded-2xl bg-gray-50 dark:bg-gray-800/50 border-2 border-gray-100 dark:border-gray-700 focus:border-pakistan-green outline-none text-sm dark:text-white">
                                 <option value="" disabled selected>Select Country</option>
                                 <option value="usa">United States</option>
                                 <option value="uk">United Kingdom</option>
                                 <option value="canada">Canada</option>
                                 <option value="uae">UAE & Gulf</option>
                                 <option value="europe">Europe (Schengen)</option>
+                                <option value="other">Other</option>
                             </select>
+                            <input type="text" id="input-country-other" placeholder="Please specify" class="hidden w-full mt-3 px-5 py-4 rounded-2xl bg-gray-50 dark:bg-gray-800/50 border-2 border-gray-100 dark:border-gray-700 focus:border-pakistan-green outline-none text-sm dark:text-white" oninput="validateStep3()">
                         </div>
                     </div>
                 </div>
@@ -583,8 +589,8 @@
                         <div class="w-16 h-16 bg-green-50 dark:bg-green-900/20 rounded-full flex items-center justify-center mx-auto mb-4 text-pakistan-green">
                             <i class="fa-solid fa-wallet text-2xl"></i>
                         </div>
-                        <h3 class="text-lg font-lemon dark:text-white">Select Payment Method</h3>
-                        <p class="text-xs text-gray-500 dark:text-gray-400 mt-2">Choose how you want to pay your processing fee.</p>
+                        <h3 class="text-lg font-lemon dark:text-white">Processing Fee: PKR 2,500</h3>
+                        <p class="text-xs text-gray-500 dark:text-gray-400 mt-2">Please select a payment method to complete your application.</p>
                     </div>
                     
                     <div class="grid grid-cols-1 gap-4">
@@ -701,15 +707,48 @@
         const successView = document.getElementById('success-view');
         const themeToggle = document.getElementById('theme-toggle');
 
+        // --- Helper Logic ---
+        function handleOtherOption(selectId, inputId) {
+            const select = document.getElementById(selectId);
+            const input = document.getElementById(inputId);
+            if (select.value === 'other') {
+                input.classList.remove('hidden');
+            } else {
+                input.classList.add('hidden');
+                input.value = '';
+            }
+            validateStep3();
+        }
+
         // --- Theme Logic ---
+        const themeText = document.getElementById('theme-text');
+        const themeIcon = document.getElementById('theme-icon');
+
+        function updateThemeUI(isDark) {
+            if (isDark) {
+                document.documentElement.classList.add('dark');
+                themeText.textContent = 'NIGHT MODE';
+                themeIcon.classList.replace('fa-sun', 'fa-moon');
+                themeText.classList.replace('order-1', 'order-2');
+                themeIcon.classList.replace('order-2', 'order-1');
+            } else {
+                document.documentElement.classList.remove('dark');
+                themeText.textContent = 'DAY MODE';
+                themeIcon.classList.replace('fa-moon', 'fa-sun');
+                themeText.classList.replace('order-2', 'order-1');
+                themeIcon.classList.replace('order-1', 'order-2');
+            }
+        }
+
         if (themeToggle) {
+            // Set initial state
+            const isDark = localStorage.theme === 'dark' || (!('theme' in localStorage) && window.matchMedia('(prefers-color-scheme: dark)').matches);
+            updateThemeUI(isDark);
+
             themeToggle.addEventListener('click', () => {
-                document.documentElement.classList.toggle('dark');
-                if (document.documentElement.classList.contains('dark')) {
-                    localStorage.theme = 'dark';
-                } else {
-                    localStorage.theme = 'light';
-                }
+                const isDark = document.documentElement.classList.toggle('dark');
+                localStorage.theme = isDark ? 'dark' : 'light';
+                updateThemeUI(isDark);
             });
         }
 
@@ -1050,9 +1089,13 @@
             if (state.plan === 'student') {
                 valid = document.getElementById('input-institute').value.length > 0 && document.getElementById('input-degree').value.length > 0;
             } else if (state.plan === 'entrepreneur') {
-                valid = document.getElementById('input-business').value.length > 0 && document.getElementById('input-industry').value !== '';
+                const industry = document.getElementById('input-industry').value;
+                const industryOther = document.getElementById('input-industry-other').value;
+                valid = document.getElementById('input-business').value.length > 0 && industry !== '' && (industry !== 'other' || industryOther.length > 0);
             } else if (state.plan === 'professional') {
-                valid = document.getElementById('input-experience').value.length > 0 && document.getElementById('input-country').value !== '';
+                const country = document.getElementById('input-country').value;
+                const countryOther = document.getElementById('input-country-other').value;
+                valid = document.getElementById('input-experience').value.length > 0 && country !== '' && (country !== 'other' || countryOther.length > 0);
             }
             if (!checkOnly) validateCurrentStep();
             return valid;
@@ -1079,9 +1122,9 @@
                 institute: document.getElementById('input-institute').value,
                 degree: document.getElementById('input-degree').value,
                 businessName: document.getElementById('input-business').value,
-                industry: document.getElementById('input-industry').value,
+                industry: document.getElementById('input-industry').value === 'other' ? document.getElementById('input-industry-other').value : document.getElementById('input-industry').value,
                 experience: document.getElementById('input-experience').value,
-                targetCountry: document.getElementById('input-country').value,
+                targetCountry: document.getElementById('input-country').value === 'other' ? document.getElementById('input-country-other').value : document.getElementById('input-country').value,
                 verificationCode: document.getElementById('input-verify-code').value.trim(),
                 paymentMethod: state.paymentMethod
             };
