@@ -431,20 +431,56 @@
                 <!-- STEP 2: Personal Info -->
                 <div id="step-2" class="hidden grid grid-cols-1 md:grid-cols-2 gap-6">
                     <div class="w-full group">
-                        <label class="block text-[10px] font-lemon tracking-widest mb-2.5 text-gray-500 dark:text-gray-400">Full Name (As per CNIC)</label>
+                        <div class="flex items-center justify-between mb-2.5">
+                            <label class="block text-[10px] font-lemon tracking-widest text-gray-500 dark:text-gray-400">Full Name (As per CNIC)</label>
+                            <div class="relative group/tooltip">
+                                <i class="fa-solid fa-circle-info text-[10px] text-gray-400 hover:text-pakistan-green transition-colors cursor-help"></i>
+                                <div class="absolute bottom-full right-0 mb-2 w-48 p-2 bg-gray-900 text-white text-[9px] rounded-lg opacity-0 group-hover/tooltip:opacity-100 pointer-events-none transition-opacity z-50 shadow-xl border border-white/10">
+                                    <div class="relative z-10">Enter your full name exactly as it appears on your CNIC.</div>
+                                    <div class="absolute top-full right-2 -mt-1 w-2 h-2 bg-gray-900 rotate-45"></div>
+                                </div>
+                            </div>
+                        </div>
                         <input type="text" id="input-fullname" oninput="validateStep2()" class="w-full px-5 py-4 rounded-2xl bg-gray-50 dark:bg-gray-800/50 border-2 border-gray-100 dark:border-gray-700 focus:border-pakistan-green outline-none text-sm dark:text-white transition-all" placeholder="Enter Full Name">
                     </div>
                     <div class="w-full group">
-                        <label class="block text-[10px] font-lemon tracking-widest mb-2.5 text-gray-500 dark:text-gray-400">CNIC Number</label>
+                        <div class="flex items-center justify-between mb-2.5">
+                            <label class="block text-[10px] font-lemon tracking-widest text-gray-500 dark:text-gray-400">CNIC Number</label>
+                            <div class="relative group/tooltip">
+                                <i class="fa-solid fa-circle-info text-[10px] text-gray-400 hover:text-pakistan-green transition-colors cursor-help"></i>
+                                <div class="absolute bottom-full right-0 mb-2 w-48 p-2 bg-gray-900 text-white text-[9px] rounded-lg opacity-0 group-hover/tooltip:opacity-100 pointer-events-none transition-opacity z-50 shadow-xl border border-white/10">
+                                    <div class="relative z-10">Enter your 13-digit CNIC number in the format: 12345-1234567-1</div>
+                                    <div class="absolute top-full right-2 -mt-1 w-2 h-2 bg-gray-900 rotate-45"></div>
+                                </div>
+                            </div>
+                        </div>
                         <input type="text" id="input-cnic" oninput="formatCNIC(this); validateStep2()" class="w-full px-5 py-4 rounded-2xl bg-gray-50 dark:bg-gray-800/50 border-2 border-gray-100 dark:border-gray-700 focus:border-pakistan-green outline-none text-sm dark:text-white transition-all" placeholder="XXXXX-XXXXXXX-X">
                     </div>
                     <div class="w-full group">
-                        <label class="block text-[10px] font-lemon tracking-widest mb-2.5 text-gray-500 dark:text-gray-400">Email Address</label>
+                        <div class="flex items-center justify-between mb-2.5">
+                            <label class="block text-[10px] font-lemon tracking-widest text-gray-500 dark:text-gray-400">Email Address</label>
+                            <div class="relative group/tooltip">
+                                <i class="fa-solid fa-circle-info text-[10px] text-gray-400 hover:text-pakistan-green transition-colors cursor-help"></i>
+                                <div class="absolute bottom-full right-0 mb-2 w-48 p-2 bg-gray-900 text-white text-[9px] rounded-lg opacity-0 group-hover/tooltip:opacity-100 pointer-events-none transition-opacity z-50 shadow-xl border border-white/10">
+                                    <div class="relative z-10">Provide a valid email address for verification and communication.</div>
+                                    <div class="absolute top-full right-2 -mt-1 w-2 h-2 bg-gray-900 rotate-45"></div>
+                                </div>
+                            </div>
+                        </div>
                         <input type="email" id="input-email" oninput="validateStep2()" class="w-full px-5 py-4 rounded-2xl bg-gray-50 dark:bg-gray-800/50 border-2 border-gray-100 dark:border-gray-700 focus:border-pakistan-green outline-none text-sm dark:text-white transition-all" placeholder="name@example.com">
                     </div>
                     <div class="w-full group">
-                        <label class="block text-[10px] font-lemon tracking-widest mb-2.5 text-gray-500 dark:text-gray-400">WhatsApp Number</label>
-                        <input type="tel" id="input-whatsapp" oninput="validateStep2()" class="w-full px-5 py-4 rounded-2xl bg-gray-50 dark:bg-gray-800/50 border-2 border-gray-100 dark:border-gray-700 focus:border-pakistan-green outline-none text-sm dark:text-white transition-all" placeholder="+92 3XXXXXXXXX">
+                        <div class="flex items-center justify-between mb-2.5">
+                            <label class="block text-[10px] font-lemon tracking-widest text-gray-500 dark:text-gray-400">WhatsApp Number</label>
+                            <div class="relative group/tooltip">
+                                <i class="fa-solid fa-circle-info text-[10px] text-gray-400 hover:text-pakistan-green transition-colors cursor-help"></i>
+                                <div class="absolute bottom-full right-0 mb-2 w-48 p-2 bg-gray-900 text-white text-[9px] rounded-lg opacity-0 group-hover/tooltip:opacity-100 pointer-events-none transition-opacity z-50 shadow-xl border border-white/10">
+                                    <div class="relative z-10">Enter your WhatsApp number starting with 92 (e.g., 923001234567).</div>
+                                    <div class="absolute top-full right-2 -mt-1 w-2 h-2 bg-gray-900 rotate-45"></div>
+                                </div>
+                            </div>
+                        </div>
+                        <input type="tel" id="input-whatsapp" oninput="this.value = this.value.replace(/\D/g, '').slice(0, 13); validateStep2()" class="w-full px-5 py-4 rounded-2xl bg-gray-50 dark:bg-gray-800/50 border-2 border-gray-100 dark:border-gray-700 focus:border-pakistan-green outline-none text-sm dark:text-white transition-all" placeholder="923XXXXXXXXX">
                     </div>
                 </div>
 
@@ -524,7 +560,7 @@
                     </div>
                     <div class="w-full group">
                         <label class="block text-[10px] font-lemon tracking-widest mb-2.5 text-gray-500 dark:text-gray-400">Verification Code</label>
-                        <input type="text" id="input-verify-code" oninput="validateStep5()" class="w-full px-5 py-4 rounded-2xl bg-gray-50 dark:bg-gray-800/50 border-2 border-gray-100 dark:border-gray-700 focus:border-pakistan-green outline-none text-center text-2xl font-bold tracking-[10px] dark:text-white transition-all" placeholder="000000" maxlength="6">
+                        <input type="text" id="input-verify-code" oninput="this.value = this.value.replace(/\D/g, '').slice(0, 6); validateStep5();" class="w-full px-5 py-4 rounded-2xl bg-gray-50 dark:bg-gray-800/50 border-2 border-gray-100 dark:border-gray-700 focus:border-pakistan-green outline-none text-center text-2xl font-bold tracking-[10px] dark:text-white transition-all" placeholder="000000" maxlength="6">
                     </div>
                     <p class="text-[10px] text-center text-gray-400">Didn't receive the code? <button type="button" id="btn-resend-code" onclick="sendVerificationCode()" class="text-pakistan-green font-bold hover:underline disabled:opacity-50 disabled:cursor-not-allowed transition-opacity">Resend Code</button></p>
                 </div>
@@ -548,6 +584,22 @@
                             <div class="flex-grow">
                                 <h4 class="font-bold text-sm dark:text-white">JazzCash</h4>
                                 <p class="text-[10px] text-gray-400">Pay directly via JazzCash app</p>
+                            </div>
+                            <div class="w-5 h-5 rounded-full border-2 border-gray-200 flex items-center justify-center relative">
+                                <div class="check-icon hidden absolute inset-0 bg-pakistan-green rounded-full flex items-center justify-center text-white">
+                                    <i class="fa-solid fa-check text-[10px]"></i>
+                                </div>
+                            </div>
+                        </label>
+
+                        <!-- Easypaisa Option -->
+                        <label id="payment-easypaisa" onclick="selectPaymentMethod('easypaisa')" class="payment-option flex items-center gap-4 p-5 rounded-2xl border-2 border-gray-100 dark:border-gray-800 hover:border-green-100 transition-all cursor-pointer">
+                            <div class="w-16 h-12 rounded-xl flex items-center justify-center bg-white border border-gray-100 dark:border-gray-700 p-2 shadow-sm">
+                                <img src="https://raw.githubusercontent.com/Areeb-Majeed/JazzCash-Payment-Gateway-Integration-in-React-Native/master/assets/easypaisa.png" alt="Easypaisa" class="w-full h-full object-contain" referrerPolicy="no-referrer" onerror="this.src='https://placehold.co/100x100/png?text=EP'" />
+                            </div>
+                            <div class="flex-grow">
+                                <h4 class="font-bold text-sm dark:text-white">Easypaisa</h4>
+                                <p class="text-[10px] text-gray-400">Pay directly via Easypaisa app</p>
                             </div>
                             <div class="w-5 h-5 rounded-full border-2 border-gray-200 flex items-center justify-center relative">
                                 <div class="check-icon hidden absolute inset-0 bg-pakistan-green rounded-full flex items-center justify-center text-white">
@@ -797,12 +849,46 @@
             validateCurrentStep();
         }
 
-        function nextStep() {
+        async function nextStep() {
             hideError();
             if (state.step === 4) {
                 sendVerificationCode();
                 state.step++;
                 updateUI();
+            } else if (state.step === 5) {
+                // Verify code before moving to payment
+                const email = document.getElementById('input-email').value.trim();
+                const code = document.getElementById('input-verify-code').value.trim();
+                
+                btnNext.disabled = true;
+                btnNext.innerText = 'Verifying...';
+                
+                try {
+                    const response = await fetch('/api/verify-code', {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify({ email, code })
+                    });
+                    
+                    const data = await response.json().catch(() => ({}));
+                    
+                    if (!response.ok) {
+                        throw new Error(data.error || 'Verification failed');
+                    }
+                    
+                    state.step++;
+                    updateUI();
+                } catch (err) {
+                    console.error(err);
+                    showError('Verification Error', err.message || 'The code you entered is incorrect. Please check your email.');
+                    // Highlight the input
+                    const codeInput = document.getElementById('input-verify-code');
+                    codeInput.classList.add('border-red-500', 'focus:border-red-500');
+                    codeInput.focus();
+                } finally {
+                    btnNext.disabled = false;
+                    btnNext.innerText = state.step === 6 ? 'Submit Payment' : (state.step === 5 ? 'Verify Email' : 'Continue');
+                }
             } else if (state.step < 6) {
                 state.step++;
                 updateUI();
@@ -813,7 +899,7 @@
 
         async function sendVerificationCode() {
             hideError();
-            const email = document.getElementById('input-email').value;
+            const email = document.getElementById('input-email').value.trim();
             const fullName = document.getElementById('input-fullname').value;
             
             const resendBtn = document.getElementById('btn-resend-code');
@@ -949,15 +1035,23 @@
                 btnNext.classList.add('bg-gray-200', 'cursor-not-allowed');
                 btnNext.classList.remove('bg-pakistan-green', 'shadow-lg');
             }
+            return isValid;
         }
 
         function validateStep2(checkOnly = false) {
-            const name = document.getElementById('input-fullname').value;
-            const cnic = document.getElementById('input-cnic').value;
-            const email = document.getElementById('input-email').value;
-            const whatsapp = document.getElementById('input-whatsapp').value;
+            const name = document.getElementById('input-fullname').value.trim();
+            const cnic = document.getElementById('input-cnic').value.trim();
+            const email = document.getElementById('input-email').value.trim();
+            const whatsapp = document.getElementById('input-whatsapp').value.trim();
             
-            const valid = name.length > 2 && cnic.length >= 15 && email.includes('@') && whatsapp.length > 10;
+            const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+            const cnicRegex = /^\d{5}-\d{7}-\d{1}$/;
+            
+            const valid = name.length >= 3 && 
+                          cnicRegex.test(cnic) && 
+                          emailRegex.test(email) && 
+                          whatsapp.replace(/\D/g, '').length >= 11;
+            
             if (!checkOnly) validateCurrentStep();
             return valid;
         }
@@ -991,7 +1085,7 @@
                 planId: state.plan,
                 fullName: document.getElementById('input-fullname').value,
                 cnic: document.getElementById('input-cnic').value,
-                email: document.getElementById('input-email').value,
+                email: document.getElementById('input-email').value.trim(),
                 whatsapp: document.getElementById('input-whatsapp').value,
                 institute: document.getElementById('input-institute').value,
                 degree: document.getElementById('input-degree').value,
@@ -999,7 +1093,7 @@
                 industry: document.getElementById('input-industry').value,
                 experience: document.getElementById('input-experience').value,
                 targetCountry: document.getElementById('input-country').value,
-                verificationCode: document.getElementById('input-verify-code').value,
+                verificationCode: document.getElementById('input-verify-code').value.trim(),
                 paymentMethod: state.paymentMethod
             };
 
@@ -1063,6 +1157,19 @@
             document.getElementById('challan-cnic').innerText = document.getElementById('input-cnic').value;
             document.getElementById('challan-plan').innerText = state.plan + " Program";
         }
+
+        // Handle Enter key on input fields
+        document.addEventListener('keydown', function(e) {
+            if (e.key === 'Enter' && e.target.tagName === 'INPUT') {
+                // Don't trigger if it's a checkbox (like terms)
+                if (e.target.type === 'checkbox') return;
+                
+                e.preventDefault();
+                if (validateCurrentStep()) {
+                    nextStep();
+                }
+            }
+        });
     </script>
 <script type="module" src="/index.tsx"></script>
 </body>

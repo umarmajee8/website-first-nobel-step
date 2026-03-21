@@ -41,11 +41,13 @@ async function startServer() {
 
   // API endpoint to send verification code
   app.post('/api/send-verification', async (req, res) => {
-    const { email, fullName } = req.body;
-    if (!email) return res.status(400).json({ success: false, error: 'Email is required' });
+    const { email: rawEmail, fullName } = req.body;
+    if (!rawEmail) return res.status(400).json({ success: false, error: 'Email is required' });
 
+    const email = rawEmail.toLowerCase().trim();
     const code = Math.floor(100000 + Math.random() * 900000).toString();
     verificationCodes.set(email, { code, expires: Date.now() + 10 * 60 * 1000 });
+    console.log(`[AUTH] Generated code ${code} for ${email}`);
 
     if (process.env.SMTP_USER && process.env.SMTP_PASS) {
       const transporter = nodemailer.createTransport({
@@ -92,17 +94,57 @@ async function startServer() {
     }
   });
 
+  // API endpoint to verify code before proceeding to payment
+  app.post('/api/verify-code', async (req, res) => {
+    const { email: rawEmail, code: rawCode } = req.body;
+    if (!rawEmail || !rawCode) return res.status(400).json({ success: false, error: 'Email and code are required' });
+
+    const email = rawEmail.toLowerCase().trim();
+    const verificationCode = rawCode.toString().trim();
+
+    const stored = verificationCodes.get(email);
+    if (!stored) {
+      return res.status(400).json({ success: false, error: 'No verification code found for this email. Please request a new code.' });
+    }
+    
+    if (stored.code !== verificationCode) {
+      return res.status(400).json({ success: false, error: 'The verification code is incorrect. Please check your email.' });
+    }
+
+    if (Date.now() > stored.expires) {
+      return res.status(400).json({ success: false, error: 'The verification code has expired. Please request a new one.' });
+    }
+
+    res.status(200).json({ success: true });
+  });
+
   // API endpoint to submit form data
   app.post('/api/submit-membership', async (req, res) => {
     console.log('Received request to submit membership:', req.body);
     try {
-      const { verificationCode, ...formData } = req.body;
-      const { fullName, cnic, email, whatsapp, planId, institute, degree, businessName, industry, experience, targetCountry, paymentMethod } = formData;
+      const { verificationCode: rawCode, ...formData } = req.body;
+      const { fullName, cnic, email: rawEmail, whatsapp, planId, institute, degree, businessName, industry, experience, targetCountry, paymentMethod } = formData;
+
+      if (!rawCode) return res.status(400).json({ success: false, error: 'Verification code is required' });
+      const verificationCode = rawCode.toString().trim();
+
+      if (!rawEmail) return res.status(400).json({ success: false, error: 'Email is required' });
+      const email = rawEmail.toLowerCase().trim();
 
       // Verify code
       const stored = verificationCodes.get(email);
-      if (!stored || stored.code !== verificationCode || Date.now() > stored.expires) {
-        return res.status(400).json({ success: false, error: 'Invalid or expired verification code' });
+      console.log(`[AUTH] Verifying code for ${email}. Stored: ${stored?.code}, Provided: ${verificationCode}`);
+
+      if (!stored) {
+        return res.status(400).json({ success: false, error: 'No verification code found for this email. Please request a new code.' });
+      }
+      
+      if (stored.code !== verificationCode) {
+        return res.status(400).json({ success: false, error: 'The verification code is incorrect. Please check your email.' });
+      }
+
+      if (Date.now() > stored.expires) {
+        return res.status(400).json({ success: false, error: 'The verification code has expired. Please request a new one.' });
       }
 
       // Clear code after use
@@ -136,6 +178,14 @@ async function startServer() {
       // Send welcome email
       if (email && process.env.SMTP_USER && process.env.SMTP_PASS) {
         try {
+          const transporter = nodemailer.createTransport({
+            service: 'gmail',
+            auth: {
+              user: process.env.SMTP_USER,
+              pass: process.env.SMTP_PASS,
+            },
+          });
+
           const mailOptions = {
             from: `"First Nobel Step" <${process.env.SMTP_USER}>`,
             to: email,

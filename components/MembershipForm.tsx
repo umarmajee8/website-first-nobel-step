@@ -19,12 +19,14 @@ interface InputFieldProps {
   value: string;
   onChange: (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => void;
   onBlur: (e: React.FocusEvent<HTMLInputElement | HTMLSelectElement>) => void;
+  onKeyDown?: (e: React.KeyboardEvent<HTMLInputElement | HTMLSelectElement>) => void;
   error: string | null;
   isValid: boolean;
+  tooltip?: string;
 }
 
 const InputField: React.FC<InputFieldProps> = ({ 
-  label, id, name, type = "text", placeholder, options, value, onChange, onBlur, error, isValid 
+  label, id, name, type = "text", placeholder, options, value, onChange, onBlur, onKeyDown, error, isValid, tooltip 
 }) => {
   const hasError = !!error;
   const baseClasses = "w-full px-5 py-4 rounded-2xl bg-gray-50 dark:bg-gray-800/50 border-2 transition-all duration-200 text-sm font-medium text-gray-900 dark:text-white placeholder-gray-400 outline-none disabled:opacity-50 disabled:cursor-not-allowed";
@@ -34,13 +36,24 @@ const InputField: React.FC<InputFieldProps> = ({
 
   return (
     <div className="w-full group">
-      <label htmlFor={id} className={`block text-[10px] font-lemon tracking-widest mb-2.5 transition-colors duration-200 ${hasError ? 'text-red-500' : 'text-gray-500 group-focus-within:text-pakistan-green dark:text-gray-400 dark:group-focus-within:text-green-400'}`}>
-        {label}
-      </label>
+      <div className="flex items-center justify-between mb-2.5">
+        <label htmlFor={id} className={`block text-[10px] font-lemon tracking-widest transition-colors duration-200 ${hasError ? 'text-red-500' : 'text-gray-500 group-focus-within:text-pakistan-green dark:text-gray-400 dark:group-focus-within:text-green-400'}`}>
+          {label}
+        </label>
+        {tooltip && (
+          <div className="relative group/tooltip">
+            <i className="fa-solid fa-circle-info text-[10px] text-gray-400 hover:text-pakistan-green transition-colors cursor-help"></i>
+            <div className="absolute bottom-full right-0 mb-2 w-48 p-2 bg-gray-900 text-white text-[9px] rounded-lg opacity-0 group-hover/tooltip:opacity-100 pointer-events-none transition-opacity z-50 shadow-xl border border-white/10">
+              <div className="relative z-10">{tooltip}</div>
+              <div className="absolute top-full right-2 -mt-1 w-2 h-2 bg-gray-900 rotate-45"></div>
+            </div>
+          </div>
+        )}
+      </div>
       <div className="relative">
         {type === "select" ? (
           <div className="relative">
-            <select id={id} name={name} value={value} onChange={onChange} onBlur={onBlur} className={`${baseClasses} ${stateClasses} appearance-none cursor-pointer`}>
+            <select id={id} name={name} value={value} onChange={onChange} onBlur={onBlur} onKeyDown={onKeyDown} className={`${baseClasses} ${stateClasses} appearance-none cursor-pointer`}>
               <option value="" disabled className="text-gray-400">{placeholder}</option>
               {options?.map(opt => <option key={opt.value} value={opt.value} className="text-gray-900 dark:text-white bg-white dark:bg-gray-900">{opt.label}</option>)}
             </select>
@@ -49,7 +62,7 @@ const InputField: React.FC<InputFieldProps> = ({
             </div>
           </div>
         ) : (
-          <input id={id} type={type} name={name} value={value} onChange={onChange} onBlur={onBlur} placeholder={placeholder} className={`${baseClasses} ${stateClasses}`} />
+          <input id={id} type={type} name={name} value={value} onChange={onChange} onBlur={onBlur} onKeyDown={onKeyDown} placeholder={placeholder} className={`${baseClasses} ${stateClasses}`} />
         )}
         <div className="absolute right-5 top-1/2 -translate-y-1/2 pointer-events-none flex items-center gap-2">
            {hasError && <i className="fa-solid fa-circle-exclamation text-red-500 text-lg animate-in zoom-in duration-300"></i>}
@@ -171,8 +184,28 @@ const MembershipForm: React.FC<Props> = ({ initialPlanId, onClose }) => {
   const validateField = (name: string, value: string): string | null => {
     if (name === 'referralSource') return null;
     if (!value || value.trim() === '') return 'Required';
-    if (name === 'fullName' && value.length < 3) return 'Too short';
-    if (name === 'whatsapp' && value.length < 10) return 'Invalid number';
+    
+    if (name === 'fullName') {
+      if (value.length < 3) return 'Full Name must be at least 3 characters';
+      if (!/^[a-zA-Z\s]+$/.test(value)) return 'Only letters and spaces allowed';
+    }
+    
+    if (name === 'cnic') {
+      const cnicRegex = /^\d{5}-\d{7}-\d{1}$/;
+      if (!cnicRegex.test(value)) return 'Format: 12345-1234567-1';
+    }
+    
+    if (name === 'email') {
+      const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+      if (!emailRegex.test(value.trim())) return 'Invalid email address';
+    }
+    
+    if (name === 'whatsapp') {
+      const cleaned = value.replace(/\D/g, '');
+      if (cleaned.length < 11) return 'Minimum 11 digits required';
+      if (cleaned.length > 13) return 'Maximum 13 digits allowed';
+    }
+    
     return null;
   };
 
@@ -190,6 +223,11 @@ const MembershipForm: React.FC<Props> = ({ initialPlanId, onClose }) => {
       if (cleaned.length > 5) formatted = cleaned.slice(0, 5) + '-' + cleaned.slice(5);
       if (cleaned.length > 12) formatted = formatted.slice(0, 12) + '-' + cleaned.slice(12, 13);
       setFormData(prev => ({ ...prev, cnic: formatted.slice(0, 15) }));
+      return;
+    }
+    if (name === 'whatsapp') {
+      const cleaned = value.replace(/\D/g, '');
+      setFormData(prev => ({ ...prev, whatsapp: cleaned.slice(0, 13) }));
       return;
     }
     setFormData(prev => ({ ...prev, [name]: value }));
@@ -215,6 +253,29 @@ const MembershipForm: React.FC<Props> = ({ initialPlanId, onClose }) => {
       if (step === 4) {
         await sendVerificationCode();
         setStep(5);
+      } else if (step === 5) {
+        // Verify code before moving to payment
+        setIsSendingCode(true);
+        setError(null);
+        try {
+          const response = await fetch('/api/verify-code', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ email: formData.email?.trim(), code: verificationCode.trim() }),
+          });
+          
+          const data = await response.json();
+          
+          if (!response.ok) {
+            throw new Error(data.error || 'Verification failed');
+          }
+          
+          setStep(6);
+        } catch (err: any) {
+          setError(err.message || 'The code you entered is incorrect. Please check your email.');
+        } finally {
+          setIsSendingCode(false);
+        }
       } else if (step < 6) {
         setStep((prev) => (prev + 1) as FormStep);
       }
@@ -228,7 +289,7 @@ const MembershipForm: React.FC<Props> = ({ initialPlanId, onClose }) => {
       const response = await fetch('/api/send-verification', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ email: formData.email, fullName: formData.fullName }),
+        body: JSON.stringify({ email: formData.email?.trim(), fullName: formData.fullName }),
       });
       
       const data = await response.json();
@@ -251,12 +312,13 @@ const MembershipForm: React.FC<Props> = ({ initialPlanId, onClose }) => {
     setIsSubmitting(true);
     setError(null);
     try {
+      const payload = { ...formData, email: formData.email?.trim(), verificationCode: verificationCode.trim() };
       const response = await fetch('/api/submit-membership', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
         },
-        body: JSON.stringify({ ...formData, verificationCode }),
+        body: JSON.stringify(payload),
       });
 
       const data = await response.json();
@@ -288,11 +350,21 @@ const MembershipForm: React.FC<Props> = ({ initialPlanId, onClose }) => {
     return false;
   };
 
-  const renderInputField = (label: string, id: string, name: keyof MembershipApplication, type: string = "text", placeholder: string = "", options?: {value: string, label: string}[]) => {
+  const renderInputField = (label: string, id: string, name: keyof MembershipApplication, type: string = "text", placeholder: string = "", options?: {value: string, label: string}[], tooltip?: string) => {
      const val = (formData as any)[name] || '';
      const error = getFieldError(name);
      const touched = touchedFields[name];
-     return <InputField label={label} id={id} name={name} type={type} placeholder={placeholder} options={options} value={val} onChange={handleInputChange} onBlur={(e) => setTouchedFields(p => ({...p, [e.target.name]: true}))} error={error} isValid={!error && touched && !!val} />;
+     
+     const handleKeyDown = (e: React.KeyboardEvent) => {
+       if (e.key === 'Enter') {
+         e.preventDefault();
+         if (isStepValid()) {
+           nextStep();
+         }
+       }
+     };
+
+     return <InputField label={label} id={id} name={name} type={type} placeholder={placeholder} options={options} value={val} onChange={handleInputChange} onBlur={(e) => setTouchedFields(p => ({...p, [e.target.name]: true}))} onKeyDown={handleKeyDown} error={error} isValid={!error && touched && !!val} tooltip={tooltip} />;
   };
 
   // Exit Confirmation Dialog Overlay
@@ -455,10 +527,10 @@ const MembershipForm: React.FC<Props> = ({ initialPlanId, onClose }) => {
           )}
           {step === 2 && (
             <div className="grid grid-cols-1 md:grid-cols-2 gap-6 animate-in fade-in slide-in-from-right-4 duration-300">
-              {renderInputField("Full Name (As per CNIC)", "fullName", "fullName")}
-              {renderInputField("CNIC Number", "cnic", "cnic")}
-              {renderInputField("Email Address", "email", "email", "email")}
-              {renderInputField("WhatsApp Number", "whatsapp", "whatsapp", "tel")}
+              {renderInputField("Full Name (As per CNIC)", "fullName", "fullName", "text", "Enter Full Name", undefined, "Enter your full name exactly as it appears on your CNIC.")}
+              {renderInputField("CNIC Number", "cnic", "cnic", "text", "XXXXX-XXXXXXX-X", undefined, "Enter your 13-digit CNIC number in the format: 12345-1234567-1")}
+              {renderInputField("Email Address", "email", "email", "email", "name@example.com", undefined, "Provide a valid email address for verification and communication.")}
+              {renderInputField("WhatsApp Number", "whatsapp", "whatsapp", "tel", "923XXXXXXXXX", undefined, "Enter your WhatsApp number starting with 92 (e.g., 923001234567).")}
             </div>
           )}
           {step === 3 && (
@@ -565,6 +637,19 @@ const MembershipForm: React.FC<Props> = ({ initialPlanId, onClose }) => {
                   </div>
                   <div className={`w-5 h-5 rounded-full border-2 flex items-center justify-center ${formData.paymentMethod === 'jazzcash' ? 'border-pakistan-green bg-pakistan-green text-white' : 'border-gray-200'}`}>
                     {formData.paymentMethod === 'jazzcash' && <i className="fa-solid fa-check text-[10px]"></i>}
+                  </div>
+                </label>
+
+                <label onClick={() => setFormData(prev => ({ ...prev, paymentMethod: 'easypaisa' }))} className={`flex items-center gap-4 p-5 rounded-2xl border-2 transition-all cursor-pointer ${formData.paymentMethod === 'easypaisa' ? 'border-pakistan-green bg-green-50 dark:bg-green-900/10' : 'border-gray-100 dark:border-gray-800 hover:border-green-100'}`}>
+                  <div className="w-16 h-12 rounded-xl flex items-center justify-center bg-white border border-gray-100 dark:border-gray-700 p-2 shadow-sm">
+                    <img src="https://raw.githubusercontent.com/Areeb-Majeed/JazzCash-Payment-Gateway-Integration-in-React-Native/master/assets/easypaisa.png" alt="Easypaisa" className="w-full h-full object-contain" referrerPolicy="no-referrer" onError={(e) => (e.currentTarget.src = 'https://placehold.co/100x100/png?text=EP')} />
+                  </div>
+                  <div className="flex-grow">
+                    <h4 className="font-bold text-sm dark:text-white">Easypaisa</h4>
+                    <p className="text-[10px] text-gray-400">Pay directly via Easypaisa app</p>
+                  </div>
+                  <div className={`w-5 h-5 rounded-full border-2 flex items-center justify-center ${formData.paymentMethod === 'easypaisa' ? 'border-pakistan-green bg-pakistan-green text-white' : 'border-gray-200'}`}>
+                    {formData.paymentMethod === 'easypaisa' && <i className="fa-solid fa-check text-[10px]"></i>}
                   </div>
                 </label>
 
