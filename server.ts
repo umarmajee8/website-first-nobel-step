@@ -79,18 +79,16 @@ async function startServer() {
             </div>
           `
         });
-        // Always return the code so the frontend can auto-fill it for testing/debugging
-        res.status(200).json({ success: true, code });
+        // Return the code only if in dev mode or if SMTP failed
+        const responseData: any = { success: true };
+        if (process.env.NODE_ENV !== 'production') {
+          responseData.code = code;
+        }
+        res.status(200).json(responseData);
       } catch (error: any) {
         console.error('Error sending verification email:', error);
-        let errorMessage = 'Failed to send verification email';
-        if (error.message && error.message.includes('Username and Password not accepted')) {
-          errorMessage = 'SMTP Authentication failed. Please ensure you are using a Gmail App Password, not your regular password.';
-        }
-        // Fallback to dev mode so testing can continue
-        console.log(`[DEV FALLBACK] Verification code for ${email}: ${code}`);
-        // ALWAYS return the code so the frontend can auto-fill it
-        res.status(200).json({ success: true, devMode: true, code, fallbackError: errorMessage });
+        // Always return the code in error cases to allow fallback
+        res.status(200).json({ success: true, devMode: true, code, error: 'Failed to send email' });
       }
     } else {
       console.log(`[DEV] Verification code for ${email}: ${code}`);
@@ -177,24 +175,24 @@ async function startServer() {
 
         // Ensure the order matches the expected columns in the Google Sheet
         const values = [[
-          formattedDate,           // Column A: Date & Time
-          fullName,                // Column B: Full Name
-          cnic,                    // Column C: CNIC Number
-          email,                   // Column D: Email Address
-          whatsapp,                // Column E: WhatsApp Number
-          planId,                  // Column F: Selected Pathway
-          paymentMethod || '',     // Column G: Payment Method
-          institute || '',         // Column H: Academic Institution (Student)
-          degree || '',            // Column I: Current Degree (Student)
-          businessName || '',      // Column J: Business Name (Entrepreneur)
-          industry || '',          // Column K: Industry (Entrepreneur)
-          experience || '',        // Column L: Years of Experience (Professional)
-          targetCountry || ''      // Column M: Target Country (Professional)
+          formattedDate || '',
+          fullName || '',
+          cnic || '',
+          email || '',
+          whatsapp || '',
+          planId || '',
+          paymentMethod || '',
+          institute || '',
+          degree || '',
+          businessName || '',
+          industry || '',
+          experience || '',
+          targetCountry || ''
         ]];
         
         console.log('Values to append:', values);
 
-        await sheets.spreadsheets.values.append({
+        const result = await sheets.spreadsheets.values.append({
           spreadsheetId: process.env.GOOGLE_SHEET_ID,
           range: 'Sheet1!A:M',
           valueInputOption: 'USER_ENTERED',
@@ -202,11 +200,11 @@ async function startServer() {
             values: values,
           },
         });
-        console.log('Data successfully appended to Google Sheets.');
-        sheetSuccess = true;
+        console.log('Data successfully appended to Google Sheets. Result:', JSON.stringify(result.data));
+        res.status(200).json({ success: true });
       } catch (sheetError: any) {
         console.error('Error appending to Google Sheets:', sheetError);
-        return res.status(500).json({ success: false, error: `Failed to save data to Google Sheets: ${sheetError.message || 'Unknown error'}` });
+        res.status(500).json({ success: false, error: `Failed to save data to Google Sheets: ${sheetError.message || 'Unknown error'}` });
       }
 
       // Send welcome email
