@@ -448,10 +448,10 @@ const MembershipForm: React.FC<Props> = ({ initialPlanId, onClose }) => {
             <motion.div 
               className="absolute top-1/2 left-0 h-0.5 bg-pakistan-green -translate-y-1/2 -z-10" 
               initial={{ width: 0 }}
-              animate={{ width: `${((step - 1) / 5) * 100}%` }}
+              animate={{ width: `${((step - 1) / 4) * 100}%` }}
               transition={{ duration: 0.5 }}
             />
-            {[1,2,3,4,5,6].map(n => (
+            {[1,2,3,4,5].map(n => (
               <motion.div key={n} className="flex flex-col items-center" initial={{ scale: 0.8 }} animate={{ scale: step >= n ? 1 : 0.9 }}>
                 <div className={`w-8 h-8 rounded-full flex items-center justify-center text-[10px] font-lemon transition-all border-2 ${step >= n ? 'bg-pakistan-green border-pakistan-green text-white' : 'bg-white dark:bg-gray-900 border-gray-200 text-gray-400'}`}>{n}</div>
               </motion.div>
