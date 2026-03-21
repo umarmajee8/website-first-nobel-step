@@ -173,19 +173,19 @@ async function startServer() {
 
         // Ensure the order matches the expected columns in the Google Sheet
         const values = [[
-          formattedDate,           // Column A: Date & Time
-          fullName,                // Column B: Full Name
-          cnic,                    // Column C: CNIC Number
-          email,                   // Column D: Email Address
-          whatsapp,                // Column E: WhatsApp Number
-          planId,                  // Column F: Selected Pathway
-          paymentMethod || '',     // Column G: Payment Method
-          institute || '',         // Column H: Academic Institution (Student)
-          degree || '',            // Column I: Current Degree (Student)
-          businessName || '',      // Column J: Business Name (Entrepreneur)
-          industry || '',          // Column K: Industry (Entrepreneur)
-          experience || '',        // Column L: Years of Experience (Professional)
-          targetCountry || ''      // Column M: Target Country (Professional)
+          fullName,                // Column A: Full Name
+          cnic,                    // Column B: CNIC Number
+          email,                   // Column C: Email Address
+          whatsapp,                // Column D: WhatsApp Number
+          planId,                  // Column E: Selected Pathway
+          paymentMethod || '',     // Column F: Payment Method
+          institute || '',         // Column G: Academic Institution (Student)
+          degree || '',            // Column H: Current Degree (Student)
+          businessName || '',      // Column I: Business Name (Entrepreneur)
+          industry || '',          // Column J: Industry (Entrepreneur)
+          experience || '',        // Column K: Years of Experience (Professional)
+          targetCountry || '',     // Column L: Target Country (Professional)
+          formattedDate            // Column M: Date & Time
         ]];
         
         console.log('Values to append:', values);

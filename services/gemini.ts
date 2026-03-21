@@ -29,7 +29,7 @@ export const getAIResponse = async (userMessage: string) => {
   }
 
   if (lowerMsg.includes("apply") || lowerMsg.includes("join") || lowerMsg.includes("register") || lowerMsg.includes("signup")) {
-    return "You can apply by clicking the 'Apply Now' button in the header or on any of the membership cards. The process is simple: Select your plan, fill in your details, and generate your challan.";
+    return "You can apply by clicking the 'Apply Now' button in the header or on any of the membership cards. The process is simple: Select your plan and fill in your details.";
   }
 
   if (lowerMsg.includes("salam") || lowerMsg.includes("hi") || lowerMsg.includes("hello") || lowerMsg.includes("hey")) {
