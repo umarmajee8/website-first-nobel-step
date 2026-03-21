@@ -30,6 +30,7 @@ export interface MembershipApplication {
   industry?: string;
   experience?: string;
   targetCountry?: string;
+  paymentMethod?: string;
 }
 
-export type FormStep = 1 | 2 | 3 | 4 | 5;
+export type FormStep = 1 | 2 | 3 | 4 | 5 | 6;

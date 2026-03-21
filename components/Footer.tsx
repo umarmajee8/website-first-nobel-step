@@ -16,7 +16,7 @@ const Footer: React.FC<Props> = ({ onApply }) => {
               <Logo className="h-12" />
             </div>
             <p className="text-xs leading-relaxed mb-6 text-gray-500 dark:text-gray-500">
-              The official membership portal of First Nobel Step (Pvt.) Ltd., legally registered by the Government of Pakistan to foster global success for our citizens.
+              The official membership portal of First Nobel Step (Pvt.) Ltd., to foster global success for our citizens.
             </p>
             <div className="flex gap-3">
               <a href="#" className="w-9 h-9 bg-white dark:bg-gray-800 border border-green-200 dark:border-gray-700 text-pakistan-green dark:text-green-500 rounded-full flex items-center justify-center hover:bg-pakistan-green hover:text-white dark:hover:text-green-400 transition-all shadow-sm"><i className="fa-brands fa-facebook-f text-sm"></i></a>
@@ -40,35 +40,21 @@ const Footer: React.FC<Props> = ({ onApply }) => {
             <ul className="space-y-2.5 text-xs text-gray-700 dark:text-gray-200">
               <li className="flex gap-3">
                 <i className="fa-solid fa-location-dot mt-0.5 text-pakistan-green dark:text-green-500"></i>
-                <span className="font-bold text-gray-900 dark:text-white">Headquarters: 129 CCA-3, Block-X, <br />DHA Phase 7, Lahore</span>
+                <a href="https://maps.google.com/?q=129+CCA-3,+Block-X,+DHA+Phase+7,+Lahore" target="_blank" rel="noopener noreferrer" className="font-bold text-gray-900 dark:text-white hover:text-pakistan-green dark:hover:text-green-400 transition-colors">Headquarters: 129 CCA-3, Block-X, <br />DHA Phase 7, Lahore</a>
               </li>
               <li className="flex gap-3">
                 <i className="fa-solid fa-phone mt-0.5 text-pakistan-green dark:text-green-500"></i>
-                <span className="font-bold text-gray-900 dark:text-white">0333 2288877</span>
+                <a href="tel:+923332288877" className="font-bold text-gray-900 dark:text-white hover:text-pakistan-green dark:hover:text-green-400 transition-colors">+92 3332288877</a>
               </li>
               <li className="flex gap-3">
                 <i className="fa-solid fa-envelope mt-0.5 text-pakistan-green dark:text-green-500"></i>
-                <span className="font-bold text-gray-900 dark:text-white">support@firstnoblestep.com</span>
+                <a href="mailto:support@firstnoblestep.com" className="font-bold text-gray-900 dark:text-white hover:text-pakistan-green dark:hover:text-green-400 transition-colors">support@firstnoblestep.com</a>
               </li>
             </ul>
           </div>
         </div>
         
         <div className="pt-8 border-t border-green-200 dark:border-gray-800 flex flex-col items-center gap-4">
-          <div className="flex items-center gap-3 px-5 py-2.5 bg-white dark:bg-gray-800 rounded-full border border-green-100 dark:border-gray-700 shadow-[0_5px_15px_rgba(1,65,28,0.1)]">
-            <div className="w-6 h-6 flex items-center justify-center">
-               <img 
-                 src="https://upload.wikimedia.org/wikipedia/commons/e/ef/State_emblem_of_Pakistan.svg" 
-                 alt="Govt Logo" 
-                 className="w-full h-full object-contain"
-               />
-            </div>
-            <div className="flex flex-col">
-              <span className="text-[9px] font-lemon tracking-widest text-gray-400 dark:text-gray-600 leading-none">Registered by</span>
-              <span className="text-[10px] font-bold text-pakistan-green dark:text-green-400 tracking-tight">Government of Pakistan</span>
-            </div>
-          </div>
-          
           <div className="flex flex-col md:flex-row justify-center items-center text-[9px] font-bold uppercase tracking-[0.2em] text-gray-500 dark:text-gray-600">
             <p>© 2026 First Nobel Step (Pvt.) Ltd. All Rights Reserved.</p>
           </div>

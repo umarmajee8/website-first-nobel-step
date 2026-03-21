@@ -1,7 +1,6 @@
 
 import React, { useRef } from 'react';
 import { motion, useScroll, useTransform } from 'motion/react';
-import RegistrationBadge from './RegistrationBadge.tsx';
 
 interface Props {
   onApply: () => void;
@@ -50,7 +49,7 @@ const Hero: React.FC<Props> = ({ onApply }) => {
                 <i className="fa-solid fa-certificate text-pakistan-green dark:text-green-500 text-2xl"></i>
                 <div className="flex flex-col text-left">
                   <span className="text-[9px] font-lemon tracking-[0.2em] text-gray-400">Official Status</span>
-                  <span className="text-sm font-extrabold text-pakistan-green dark:text-green-400 font-display">Govt. Registered (Pvt.) Ltd.</span>
+                  <span className="text-sm font-extrabold text-pakistan-green dark:text-green-400 font-display">Private Limited Company</span>
                 </div>
               </div>
             </div>
@@ -63,10 +62,6 @@ const Hero: React.FC<Props> = ({ onApply }) => {
                 <i className="fa-solid fa-earth-americas text-xl"></i> Global
               </div>
             </div>
-          </div>
-
-          <div className="flex-shrink-0 hidden lg:block scale-110">
-            <RegistrationBadge />
           </div>
         </div>
       </div>

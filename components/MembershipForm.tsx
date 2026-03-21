@@ -9,21 +9,6 @@ interface Props {
 
 const STORAGE_KEY = 'fms_membership_progress';
 
-// Helper Component: Official Govt Seal
-const OfficialSeal = ({ className = "", color = "text-pakistan-green" }: { className?: string, color?: string }) => (
-  <div className={`relative flex items-center justify-center select-none ${className} ${color}`} title="Government Registered Entity">
-    <div className="absolute inset-0 border border-dashed border-current opacity-40 rounded-full animate-spin-slow"></div>
-    <div className="absolute inset-[3px] border border-current opacity-15 rounded-full"></div>
-    <div className="w-full h-full flex items-center justify-center p-[18%]">
-      <img 
-        src="https://upload.wikimedia.org/wikipedia/commons/e/ef/State_emblem_of_Pakistan.svg" 
-        alt="Govt Seal" 
-        className="w-full h-full object-contain opacity-100 drop-shadow-sm"
-      />
-    </div>
-  </div>
-);
-
 interface InputFieldProps {
   label: string;
   id: string;
@@ -230,7 +215,7 @@ const MembershipForm: React.FC<Props> = ({ initialPlanId, onClose }) => {
       if (step === 4) {
         await sendVerificationCode();
         setStep(5);
-      } else if (step < 5) {
+      } else if (step < 6) {
         setStep((prev) => (prev + 1) as FormStep);
       }
     }
@@ -262,7 +247,7 @@ const MembershipForm: React.FC<Props> = ({ initialPlanId, onClose }) => {
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    if (!termsAccepted || verificationCode.length !== 6) return;
+    if (!termsAccepted || verificationCode.length !== 6 || !formData.paymentMethod) return;
     setIsSubmitting(true);
     setError(null);
     try {
@@ -299,6 +284,7 @@ const MembershipForm: React.FC<Props> = ({ initialPlanId, onClose }) => {
     }
     if (step === 4) return termsAccepted;
     if (step === 5) return verificationCode.length === 6;
+    if (step === 6) return !!formData.paymentMethod;
     return false;
   };
 
@@ -351,7 +337,7 @@ const MembershipForm: React.FC<Props> = ({ initialPlanId, onClose }) => {
             <div className="absolute inset-0 flex items-center justify-center text-pakistan-green animate-pulse"><i className="fa-solid fa-shield-halved text-xl"></i></div>
           </div>
           <h2 className="text-xl font-lemon dark:text-white mb-2">Processing Securely</h2>
-          <p className="text-gray-500 text-[10px] font-lemon tracking-widest uppercase">Verified by Govt. Servers</p>
+          <p className="text-gray-500 text-[10px] font-lemon tracking-widest uppercase">Verified Servers</p>
         </div>
       </div>
     );
@@ -371,7 +357,6 @@ const MembershipForm: React.FC<Props> = ({ initialPlanId, onClose }) => {
                 <div className="relative z-10 text-right"><h2 className="text-xs font-black uppercase">Fee Challan</h2><p className="text-[9px] font-mono opacity-80">#{challanId.split('-')[1]}</p></div>
             </div>
             <div className="p-5 relative bg-white">
-                <div className="absolute inset-0 flex items-center justify-center opacity-[0.03] pointer-events-none"><OfficialSeal className="w-40 h-40 -rotate-12" /></div>
                 <div className="grid grid-cols-2 gap-3 mb-4 relative z-10">
                     <div className="col-span-2 border-b border-gray-50 pb-1">
                         <h4 className="text-[8px] font-bold text-gray-400 uppercase tracking-widest mb-1">Applicant</h4>
@@ -392,7 +377,7 @@ const MembershipForm: React.FC<Props> = ({ initialPlanId, onClose }) => {
                 <div className="space-y-3 relative z-10">
                     <div className="bg-gray-50 p-2 rounded-lg border border-gray-100"><p className="text-[8px] text-gray-600 leading-tight">Pay via any Bank App / EasyPaisa / JazzCash. Provide Challan ID as payment reference.</p></div>
                     <div className="flex justify-between items-center border-t border-dashed border-gray-100 pt-2">
-                        <div className="inline-flex items-center gap-1 px-1.5 py-0.5 bg-green-50 text-pakistan-green text-[7px] font-bold uppercase rounded border border-green-100">Govt Verified</div>
+                        <div className="inline-flex items-center gap-1 px-1.5 py-0.5 bg-green-50 text-pakistan-green text-[7px] font-bold uppercase rounded border border-green-100">Verified</div>
                         <div className="text-right"><div className="h-4 w-20 bg-[repeating-linear-gradient(90deg,#000,#000_1px,transparent_1px,transparent_2px)] opacity-30 mb-0.5"></div><p className="text-[6px] text-gray-400 font-mono tracking-widest uppercase">Digital Copy</p></div>
                     </div>
                 </div>
@@ -405,10 +390,9 @@ const MembershipForm: React.FC<Props> = ({ initialPlanId, onClose }) => {
     return (
       <div className="fixed inset-0 z-[100] flex items-center justify-center p-4 bg-black/60 backdrop-blur-sm">
         <div className="bg-white dark:bg-gray-900 rounded-3xl p-8 max-w-md w-full text-center shadow-2xl relative">
-          <div className="absolute top-6 right-6"><OfficialSeal className="w-12 h-12" /></div>
           <div className="w-14 h-14 bg-green-50 dark:bg-green-900/20 rounded-full flex items-center justify-center mx-auto mb-6 text-pakistan-green"><i className="fa-solid fa-check text-2xl animate-bounce"></i></div>
           <h2 className="text-xl font-lemon mb-2 dark:text-white">Applied!</h2>
-          <p className="text-gray-500 mb-8 text-sm leading-relaxed">Your details are registered. Generate your processing challan to complete the application.</p>
+          <p className="text-gray-500 mb-8 text-sm leading-relaxed">Your details are submitted. Generate your processing challan to complete the application.</p>
           <button onClick={() => setShowChallan(true)} className="w-full py-4 bg-pakistan-green text-white rounded-2xl font-lemon text-xs tracking-widest shadow-lg">Generate Challan</button>
         </div>
       </div>
@@ -423,14 +407,14 @@ const MembershipForm: React.FC<Props> = ({ initialPlanId, onClose }) => {
         {showExitConfirm && <ExitConfirmationDialog />}
 
         <div className="px-8 pt-8 pb-4 flex items-center justify-between">
-          <div><h2 className="text-2xl font-lemon tracking-tight dark:text-white">Processing Fees</h2><p className="text-[10px] font-lemon text-pakistan-green tracking-widest mt-1">Official Govt. Registered Portal</p></div>
+          <div><h2 className="text-2xl font-lemon tracking-tight dark:text-white">Processing Fees</h2><p className="text-[10px] font-lemon text-pakistan-green tracking-widest mt-1">Official Portal</p></div>
           <button ref={closeButtonRef} onClick={handleAttemptClose} className="w-10 h-10 flex items-center justify-center rounded-full hover:bg-gray-100 dark:hover:bg-gray-800 transition-colors"><i className="fa-solid fa-times text-gray-400"></i></button>
         </div>
         <nav className="px-8 py-4">
           <div className="flex items-center justify-between relative">
             <div className="absolute top-1/2 left-0 w-full h-0.5 bg-gray-100 dark:bg-gray-800 -translate-y-1/2 -z-10"></div>
-            <div className="absolute top-1/2 left-0 h-0.5 bg-pakistan-green transition-all duration-500 -translate-y-1/2 -z-10" style={{ width: `${((step - 1) / 4) * 100}%` }}></div>
-            {[1,2,3,4,5].map(n => (
+            <div className="absolute top-1/2 left-0 h-0.5 bg-pakistan-green transition-all duration-500 -translate-y-1/2 -z-10" style={{ width: `${((step - 1) / 5) * 100}%` }}></div>
+            {[1,2,3,4,5,6].map(n => (
               <div key={n} className="flex flex-col items-center">
                 <div className={`w-8 h-8 rounded-full flex items-center justify-center text-[10px] font-lemon transition-all border-2 ${step >= n ? 'bg-pakistan-green border-pakistan-green text-white' : 'bg-white dark:bg-gray-900 border-gray-200 text-gray-400'}`}>{n}</div>
               </div>
@@ -516,7 +500,6 @@ const MembershipForm: React.FC<Props> = ({ initialPlanId, onClose }) => {
           {step === 4 && (
             <div className="space-y-8 animate-in fade-in slide-in-from-right-4 duration-300">
               <div className="bg-green-50/50 dark:bg-green-900/10 p-6 rounded-[1.5rem] border border-green-100 dark:border-green-800/50 relative overflow-hidden">
-                <div className="absolute top-4 right-4"><OfficialSeal className="w-12 h-12 opacity-80" /></div>
                 <h4 className="font-lemon text-[10px] text-pakistan-green dark:text-green-400 mb-6 uppercase tracking-widest">Application Review</h4>
                 <div className="grid grid-cols-2 gap-4 text-xs relative z-10">
                   <div><span className="text-gray-400 text-[10px] uppercase">Name</span><span className="font-bold dark:text-white block">{formData.fullName}</span></div>
@@ -525,7 +508,7 @@ const MembershipForm: React.FC<Props> = ({ initialPlanId, onClose }) => {
               </div>
               <label className="flex items-start gap-4 p-5 cursor-pointer bg-gray-50 dark:bg-gray-800/50 rounded-2xl border border-gray-100 dark:border-gray-700">
                 <input type="checkbox" checked={termsAccepted} onChange={(e) => setTermsAccepted(e.target.checked)} className="mt-1 h-5 w-5 rounded border-gray-300 text-pakistan-green" />
-                <span className="text-xs text-gray-600 dark:text-gray-400">I declare all information is correct as per Government records and I agree to the <a href="https://drive.google.com/file/d/1NwKfofJT-kQ5veAhZVj0ebYeB6Tauk4I/view?usp=drivesdk" target="_blank" className="text-pakistan-green dark:text-green-400 underline hover:text-green-700 transition-colors">Privacy Policy</a>.</span>
+                <span className="text-xs text-gray-600 dark:text-gray-400">I declare all information is correct and I agree to the <a href="https://drive.google.com/file/d/1NwKfofJT-kQ5veAhZVj0ebYeB6Tauk4I/view?usp=drivesdk" target="_blank" className="text-pakistan-green dark:text-green-400 underline hover:text-green-700 transition-colors">Privacy Policy</a>.</span>
               </label>
             </div>
           )}
@@ -561,6 +544,46 @@ const MembershipForm: React.FC<Props> = ({ initialPlanId, onClose }) => {
               </p>
             </div>
           )}
+          {step === 6 && (
+            <div className="space-y-6 animate-in fade-in slide-in-from-right-4 duration-300">
+              <div className="text-center mb-6">
+                <div className="w-16 h-16 bg-green-50 dark:bg-green-900/20 rounded-full flex items-center justify-center mx-auto mb-4 text-pakistan-green">
+                  <i className="fa-solid fa-wallet text-2xl"></i>
+                </div>
+                <h3 className="text-lg font-lemon dark:text-white">Select Payment Method</h3>
+                <p className="text-xs text-gray-500 dark:text-gray-400 mt-2">Choose how you want to pay your processing fee.</p>
+              </div>
+              
+              <div className="grid grid-cols-1 gap-4">
+                <label onClick={() => setFormData(prev => ({ ...prev, paymentMethod: 'jazzcash' }))} className={`flex items-center gap-4 p-5 rounded-2xl border-2 transition-all cursor-pointer ${formData.paymentMethod === 'jazzcash' ? 'border-pakistan-green bg-green-50 dark:bg-green-900/10' : 'border-gray-100 dark:border-gray-800 hover:border-green-100'}`}>
+                  <div className="w-16 h-12 rounded-xl flex items-center justify-center bg-white border border-gray-100 dark:border-gray-700 p-2 shadow-sm">
+                    <img src="/jazzcash.png" alt="JazzCash" className="w-full h-full object-contain" onError={(e) => (e.currentTarget.src = 'https://placehold.co/100x100/png?text=JC')} />
+                  </div>
+                  <div className="flex-grow">
+                    <h4 className="font-bold text-sm dark:text-white">JazzCash</h4>
+                    <p className="text-[10px] text-gray-400">Pay directly via JazzCash app</p>
+                  </div>
+                  <div className={`w-5 h-5 rounded-full border-2 flex items-center justify-center ${formData.paymentMethod === 'jazzcash' ? 'border-pakistan-green bg-pakistan-green text-white' : 'border-gray-200'}`}>
+                    {formData.paymentMethod === 'jazzcash' && <i className="fa-solid fa-check text-[10px]"></i>}
+                  </div>
+                </label>
+
+                <label onClick={() => setFormData(prev => ({ ...prev, paymentMethod: 'card' }))} className={`flex items-center gap-4 p-5 rounded-2xl border-2 transition-all cursor-pointer ${formData.paymentMethod === 'card' ? 'border-pakistan-green bg-green-50 dark:bg-green-900/10' : 'border-gray-100 dark:border-gray-800 hover:border-green-100'}`}>
+                  <div className="w-16 h-12 rounded-xl flex flex-col items-center justify-center bg-white border border-gray-100 dark:border-gray-700 gap-1.5 py-2 shadow-sm">
+                    <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/5/5e/Visa_Inc._logo.svg/2560px-Visa_Inc._logo.svg.png" alt="Visa" className="h-2.5 object-contain" />
+                    <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/2/2a/Mastercard-logo.svg/1280px-Mastercard-logo.svg.png" alt="Mastercard" className="h-3.5 object-contain" />
+                  </div>
+                  <div className="flex-grow">
+                    <h4 className="font-bold text-sm dark:text-white">Credit / Debit Card</h4>
+                    <p className="text-[10px] text-gray-400">Visa, Mastercard, UnionPay</p>
+                  </div>
+                  <div className={`w-5 h-5 rounded-full border-2 flex items-center justify-center ${formData.paymentMethod === 'card' ? 'border-pakistan-green bg-pakistan-green text-white' : 'border-gray-200'}`}>
+                    {formData.paymentMethod === 'card' && <i className="fa-solid fa-check text-[10px]"></i>}
+                  </div>
+                </label>
+              </div>
+            </div>
+          )}
         </form>
         <div className="px-8 pb-8 pt-4 flex flex-col gap-4 border-t border-gray-100 dark:border-gray-800">
           {error && (
@@ -571,7 +594,7 @@ const MembershipForm: React.FC<Props> = ({ initialPlanId, onClose }) => {
           )}
           <div className="flex gap-4">
             {step > 1 && <button type="button" onClick={prevStep} className="px-6 py-4 rounded-2xl font-lemon text-[10px] border border-gray-200 text-gray-500">Back</button>}
-            <button type="button" onClick={step === 5 ? (e) => handleSubmit(e as any) : nextStep} disabled={!isStepValid() || isSendingCode} className={`flex-grow py-4 rounded-2xl font-lemon text-[10px] tracking-widest text-white transition-all ${!isStepValid() || isSendingCode ? 'bg-gray-200 cursor-not-allowed' : 'bg-pakistan-green shadow-lg'}`}>{step === 5 ? 'Verify & Submit' : 'Continue'}</button>
+            <button type="button" onClick={step === 6 ? (e) => handleSubmit(e as any) : nextStep} disabled={!isStepValid() || isSendingCode} className={`flex-grow py-4 rounded-2xl font-lemon text-[10px] tracking-widest text-white transition-all ${!isStepValid() || isSendingCode ? 'bg-gray-200 cursor-not-allowed' : 'bg-pakistan-green shadow-lg'}`}>{step === 6 ? 'Submit Payment' : (step === 5 ? 'Verify Email' : 'Continue')}</button>
           </div>
         </div>
       </div>

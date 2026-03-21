@@ -8,8 +8,8 @@ export const getAIResponse = async (userMessage: string) => {
   const lowerMsg = userMessage.toLowerCase();
 
   // Rule-based responses
-  if (lowerMsg.includes("registered") || lowerMsg.includes("government") || lowerMsg.includes("legal") || lowerMsg.includes("scam") || lowerMsg.includes("fake") || lowerMsg.includes("verify") || lowerMsg.includes("real")) {
-    return "Yes, First Nobel Step (Pvt.) Ltd. is a legally registered entity with the Government of Pakistan. We operate as a Private Limited company dedicated to connecting our citizens with global funding, scholarships, and sponsored career opportunities.";
+  if (lowerMsg.includes("registered") || lowerMsg.includes("legal") || lowerMsg.includes("scam") || lowerMsg.includes("fake") || lowerMsg.includes("verify") || lowerMsg.includes("real")) {
+    return "Yes, First Nobel Step (Pvt.) Ltd. is a legally registered Private Limited company dedicated to connecting our citizens with global funding, scholarships, and sponsored career opportunities.";
   }
 
   if (lowerMsg.includes("student") || lowerMsg.includes("study") || lowerMsg.includes("university") || lowerMsg.includes("scholarship")) {

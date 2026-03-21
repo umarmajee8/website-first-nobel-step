@@ -129,7 +129,7 @@ const AIChatAssistant: React.FC = () => {
                </div>
                <div className="flex flex-col text-white">
                  <div className="flex items-center gap-1"><span className="font-bold text-base leading-none">First Nobel Step</span><i className="fa-solid fa-certificate text-xs text-[#25D366] bg-white rounded-full p-[1px]"></i></div>
-                 <span className="text-xs text-green-100 opacity-90 leading-tight mt-0.5">{isLoading ? 'typing...' : 'Govt. Registered'}</span>
+                 <span className="text-xs text-green-100 opacity-90 leading-tight mt-0.5">{isLoading ? 'typing...' : 'Online'}</span>
                </div>
              </div>
              <div className="flex items-center gap-4 text-white"><i className="fa-solid fa-video"></i><i className="fa-solid fa-phone"></i><i className="fa-solid fa-ellipsis-vertical"></i></div>

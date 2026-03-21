@@ -97,7 +97,7 @@ async function startServer() {
     console.log('Received request to submit membership:', req.body);
     try {
       const { verificationCode, ...formData } = req.body;
-      const { fullName, cnic, email, whatsapp, planId, institute, degree, businessName, industry, experience, targetCountry } = formData;
+      const { fullName, cnic, email, whatsapp, planId, institute, degree, businessName, industry, experience, targetCountry, paymentMethod } = formData;
 
       // Verify code
       const stored = verificationCodes.get(email);
@@ -115,12 +115,12 @@ async function startServer() {
       let sheetSuccess = false;
       try {
         console.log('Submitting to Sheet ID:', process.env.GOOGLE_SHEET_ID);
-        const values = [[new Date().toISOString(), fullName, cnic, email, whatsapp, planId, institute || '', degree || '', businessName || '', industry || '', experience || '', targetCountry || '']];
+        const values = [[new Date().toISOString(), fullName, cnic, email, whatsapp, planId, institute || '', degree || '', businessName || '', industry || '', experience || '', targetCountry || '', paymentMethod || '']];
         console.log('Values to append:', values);
 
         await sheets.spreadsheets.values.append({
           spreadsheetId: process.env.GOOGLE_SHEET_ID,
-          range: 'Sheet1!A:L',
+          range: 'Sheet1!A:M',
           valueInputOption: 'USER_ENTERED',
           requestBody: {
             values: values,
