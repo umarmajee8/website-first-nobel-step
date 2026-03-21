@@ -945,24 +945,23 @@
                 
                 const data = await response.json().catch(() => ({}));
                 
-                // Even if there's a fallback error, if we have a code, it's a success for testing
-                if (!response.ok && !data.code) {
-                    throw new Error(data.error || 'Failed to send verification code. Please try again.');
-                }
-                console.log('Verification code sent');
-                
+                // Check if we have a code, if so, treat as success regardless of response.ok
                 if (data.code) {
-                    // Auto-fill for testing when SMTP is not configured or fails
+                    console.log('Verification code received');
                     const codeInput = document.getElementById('input-verify-code');
                     if (codeInput) {
                         codeInput.value = data.code;
-                        validateStep5();
-                        console.log('Auto-filled dev code:', data.code);
+                        // Trigger validation if possible
+                        if (typeof validateStep5 === 'function') {
+                            validateStep5();
+                        }
+                        console.log('Auto-filled code:', data.code);
                     }
-                }
-                
-                // If it wasn't ok, but we have a code, we still want to proceed
-                if (!response.ok) {
+                    
+                    // Even if response.ok is false, if we have a code, we treat it as success
+                    // to allow the user to proceed.
+                } else if (!response.ok) {
+                    // Only throw error if we DON'T have a code and response is not ok
                     throw new Error(data.error || 'Failed to send verification code. Please try again.');
                 }
                 
