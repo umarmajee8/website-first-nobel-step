@@ -2,6 +2,43 @@
 import React, { useState, useEffect, useRef, useCallback } from 'react';
 import { motion, AnimatePresence } from "motion/react";
 import { FormStep, MembershipApplication } from '../types.ts';
+import { loadStripe } from '@stripe/stripe-js';
+import { Elements, CardElement, useStripe, useElements } from '@stripe/react-stripe-js';
+
+const stripePromise = loadStripe(import.meta.env.VITE_STRIPE_PUBLIC_KEY || '');
+
+const PaymentForm = () => {
+  const stripe = useStripe();
+  const elements = useElements();
+
+  const handleSubmit = async (event: React.FormEvent) => {
+    event.preventDefault();
+    if (!stripe || !elements) return;
+
+    const cardElement = elements.getElement(CardElement);
+    if (!cardElement) return;
+
+    const { error, paymentMethod } = await stripe.createPaymentMethod({
+      type: 'card',
+      card: cardElement,
+    });
+
+    if (error) {
+      console.error(error);
+    } else {
+      console.log('PaymentMethod:', paymentMethod);
+    }
+  };
+
+  return (
+    <form onSubmit={handleSubmit} className="space-y-4">
+      <CardElement className="p-4 border rounded-2xl" />
+      <button type="submit" disabled={!stripe} className="w-full bg-pakistan-green text-white py-4 rounded-2xl">
+        Pay Now
+      </button>
+    </form>
+  );
+};
 
 interface Props {
   initialPlanId: string | null;
@@ -610,7 +647,7 @@ const MembershipForm: React.FC<Props> = ({ initialPlanId, onClose }) => {
               <div className="grid grid-cols-1 gap-4">
                 <label onClick={() => setFormData(prev => ({ ...prev, paymentMethod: 'jazzcash' }))} className={`flex items-center gap-4 p-5 rounded-2xl border-2 transition-all cursor-pointer ${formData.paymentMethod === 'jazzcash' ? 'border-pakistan-green bg-green-50 dark:bg-green-900/10' : 'border-gray-100 dark:border-gray-800 hover:border-green-100'}`}>
                   <div className="w-16 h-12 rounded-xl flex items-center justify-center bg-white border border-gray-100 dark:border-gray-700 p-2 shadow-sm">
-                    <img src="/jazzcash.png" alt="JazzCash" className="w-full h-full object-contain" onError={(e) => (e.currentTarget.src = 'https://placehold.co/100x100/png?text=JC')} />
+                    <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/c/c5/JazzCash_logo.svg/1200px-JazzCash_logo.svg.png" alt="JazzCash" className="w-full h-full object-contain" />
                   </div>
                   <div className="flex-grow">
                     <h4 className="font-bold text-sm dark:text-white">JazzCash</h4>

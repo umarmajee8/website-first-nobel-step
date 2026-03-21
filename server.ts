@@ -6,6 +6,7 @@ import { fileURLToPath } from 'url';
 import { createServer as createViteServer } from 'vite';
 import PDFDocument from 'pdfkit';
 import nodemailer from 'nodemailer';
+import Stripe from 'stripe';
 
 dotenv.config();
 
@@ -18,6 +19,22 @@ async function startServer() {
   app.use(express.json());
 
   // Google Sheets API setup
+  const stripe = new Stripe(process.env.STRIPE_SECRET_KEY || '');
+
+  // API endpoint to create a payment intent
+  app.post('/api/create-payment-intent', async (req, res) => {
+    try {
+      const { amount, currency } = req.body;
+      const paymentIntent = await stripe.paymentIntents.create({
+        amount: amount, // amount in cents
+        currency: currency || 'pkr',
+      });
+      res.status(200).json({ clientSecret: paymentIntent.client_secret });
+    } catch (error: any) {
+      console.error('Error creating payment intent:', error);
+      res.status(500).json({ success: false, error: error.message });
+    }
+  });
   let privateKey = process.env.GOOGLE_PRIVATE_KEY || '';
   // Remove surrounding quotes if user accidentally pasted them
   if (privateKey.startsWith('"') && privateKey.endsWith('"')) {
