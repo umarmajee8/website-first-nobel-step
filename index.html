@@ -974,8 +974,9 @@
                     }, 3000);
                 }
             } catch (err) {
-                console.error(err);
-                showError('Network Error', err.message || 'Failed to send verification code. Please check your internet connection and try again.');
+                console.error('Verification error:', err);
+                // Show the actual error message if possible
+                showError('Error', err.message || 'Failed to send verification code. Please check your internet connection and try again.');
                 
                 if (resendBtn) {
                     resendBtn.disabled = false;
