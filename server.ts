@@ -163,7 +163,31 @@ async function startServer() {
       let sheetSuccess = false;
       try {
         console.log('Submitting to Sheet ID:', process.env.GOOGLE_SHEET_ID);
-        const values = [[new Date().toISOString(), fullName, cnic, email, whatsapp, planId, institute || '', degree || '', businessName || '', industry || '', experience || '', targetCountry || '', paymentMethod || '']];
+        
+        // Format date to a readable format (e.g., DD/MM/YYYY, HH:MM:SS AM/PM in Pakistan Time)
+        const formattedDate = new Date().toLocaleString('en-PK', { 
+          timeZone: 'Asia/Karachi',
+          dateStyle: 'short',
+          timeStyle: 'medium'
+        });
+
+        // Ensure the order matches the expected columns in the Google Sheet
+        const values = [[
+          formattedDate,           // Column A: Date & Time
+          fullName,                // Column B: Full Name
+          cnic,                    // Column C: CNIC Number
+          email,                   // Column D: Email Address
+          whatsapp,                // Column E: WhatsApp Number
+          planId,                  // Column F: Selected Pathway
+          paymentMethod || '',     // Column G: Payment Method
+          institute || '',         // Column H: Academic Institution (Student)
+          degree || '',            // Column I: Current Degree (Student)
+          businessName || '',      // Column J: Business Name (Entrepreneur)
+          industry || '',          // Column K: Industry (Entrepreneur)
+          experience || '',        // Column L: Years of Experience (Professional)
+          targetCountry || ''      // Column M: Target Country (Professional)
+        ]];
+        
         console.log('Values to append:', values);
 
         await sheets.spreadsheets.values.append({

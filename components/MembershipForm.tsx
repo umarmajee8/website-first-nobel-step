@@ -130,8 +130,6 @@ const MembershipForm: React.FC<Props> = ({ initialPlanId, onClose }) => {
   const [isSendingCode, setIsSendingCode] = useState(false);
   const [verificationCode, setVerificationCode] = useState('');
   const [error, setError] = useState<string | null>(null);
-  const [showChallan, setShowChallan] = useState(false);
-  const [challanId] = useState(() => `FMS-${Math.floor(100000 + Math.random() * 900000)}`);
   
   // New state for exit confirmation
   const [showExitConfirm, setShowExitConfirm] = useState(false);
@@ -146,11 +144,11 @@ const MembershipForm: React.FC<Props> = ({ initialPlanId, onClose }) => {
   }, [formData, step, touchedFields, termsAccepted, isSubmitted, isSubmitting]);
 
   const hasUnsavedChanges = useCallback(() => {
-    if (isSubmitted || showChallan) return false;
+    if (isSubmitted) return false;
     // Considered "progress" if past step 1, or if specific text fields have content
     const hasData = formData.fullName || formData.cnic || formData.email || formData.whatsapp;
     return step > 1 || !!hasData;
-  }, [formData, step, isSubmitted, showChallan]);
+  }, [formData, step, isSubmitted]);
 
   const handleAttemptClose = useCallback(() => {
     if (hasUnsavedChanges()) {
@@ -429,56 +427,13 @@ const MembershipForm: React.FC<Props> = ({ initialPlanId, onClose }) => {
   }
 
   if (isSubmitted) {
-    if (showChallan) {
-      return (
-        <div className="fixed inset-0 z-[100] flex items-center justify-center p-2 sm:p-4 bg-black/60 backdrop-blur-sm overflow-y-auto" onClick={(e) => e.target === e.currentTarget && onClose()}>
-          <div className="bg-white dark:bg-gray-900 rounded-[1.5rem] max-w-sm w-full shadow-2xl animate-in zoom-in-95 duration-300 relative border-4 border-gray-100 dark:border-gray-800 overflow-hidden">
-            <button onClick={onClose} className="absolute top-2 right-2 z-50 w-7 h-7 flex items-center justify-center rounded-full bg-white/20 text-white hover:bg-white/40 backdrop-blur-sm transition-colors"><i className="fa-solid fa-times text-xs"></i></button>
-            <div className="bg-pakistan-green p-4 text-white flex justify-between items-center relative overflow-hidden">
-                <div className="relative z-10 flex items-center gap-2">
-                     <div className="w-8 h-8 bg-white/10 backdrop-blur-sm rounded-lg flex items-center justify-center text-sm font-bold border border-white/20">1</div>
-                     <div><h3 className="font-lemon text-xs tracking-wide leading-none">First Nobel Step</h3><p className="text-[7px] uppercase tracking-widest opacity-80 mt-1">(Pvt.) Ltd.</p></div>
-                </div>
-                <div className="relative z-10 text-right"><h2 className="text-xs font-black uppercase">Fee Challan</h2><p className="text-[9px] font-mono opacity-80">#{challanId.split('-')[1]}</p></div>
-            </div>
-            <div className="p-5 relative bg-white">
-                <div className="grid grid-cols-2 gap-3 mb-4 relative z-10">
-                    <div className="col-span-2 border-b border-gray-50 pb-1">
-                        <h4 className="text-[8px] font-bold text-gray-400 uppercase tracking-widest mb-1">Applicant</h4>
-                        <p className="text-sm font-bold text-gray-900 leading-none">{formData.fullName}</p>
-                    </div>
-                    <div><h4 className="text-[8px] font-bold text-gray-400 uppercase tracking-widest mb-1">CNIC</h4><p className="text-[10px] font-mono font-bold text-gray-700">{formData.cnic}</p></div>
-                    <div className="text-right"><h4 className="text-[8px] font-bold text-gray-400 uppercase tracking-widest mb-1">Date</h4><p className="text-[10px] font-mono font-bold text-gray-700">{new Date().toLocaleDateString()}</p></div>
-                </div>
-                <div className="border border-gray-100 rounded-lg overflow-hidden mb-4 relative z-10">
-                    <table className="w-full text-[10px] text-left">
-                        <thead className="bg-gray-50 text-gray-400 font-bold text-[7px] uppercase tracking-wider"><tr><th className="px-2 py-1.5">Description</th><th className="px-2 py-1.5 text-right">PKR</th></tr></thead>
-                        <tbody className="divide-y divide-gray-50">
-                            <tr><td className="px-2 py-2"><span className="font-bold text-gray-800">Processing Fee</span><br/><span className="text-[8px] text-gray-400 capitalize">{formData.planId} Program</span></td><td className="px-2 py-2 text-right font-mono font-bold text-gray-900">1,500</td></tr>
-                            <tr className="bg-pakistan-green/5"><td className="px-2 py-1.5 text-right font-bold text-pakistan-green uppercase text-[8px]">Payable</td><td className="px-2 py-1.5 text-right font-black text-sm text-pakistan-green font-mono">1,500</td></tr>
-                        </tbody>
-                    </table>
-                </div>
-                <div className="space-y-3 relative z-10">
-                    <div className="bg-gray-50 p-2 rounded-lg border border-gray-100"><p className="text-[8px] text-gray-600 leading-tight">Pay via any Bank App / EasyPaisa / JazzCash. Provide Challan ID as payment reference.</p></div>
-                    <div className="flex justify-between items-center border-t border-dashed border-gray-100 pt-2">
-                        <div className="inline-flex items-center gap-1 px-1.5 py-0.5 bg-green-50 text-pakistan-green text-[7px] font-bold uppercase rounded border border-green-100">Verified</div>
-                        <div className="text-right"><div className="h-4 w-20 bg-[repeating-linear-gradient(90deg,#000,#000_1px,transparent_1px,transparent_2px)] opacity-30 mb-0.5"></div><p className="text-[6px] text-gray-400 font-mono tracking-widest uppercase">Digital Copy</p></div>
-                    </div>
-                </div>
-                <button onClick={() => window.print()} className="w-full mt-4 py-3 bg-pakistan-green text-white rounded-xl font-lemon text-[10px] tracking-widest hover:bg-green-800 transition-all shadow-lg flex items-center justify-center gap-2">Get Challan</button>
-            </div>
-          </div>
-        </div>
-      );
-    }
     return (
       <div className="fixed inset-0 z-[100] flex items-center justify-center p-4 bg-black/60 backdrop-blur-sm">
         <div className="bg-white dark:bg-gray-900 rounded-3xl p-8 max-w-md w-full text-center shadow-2xl relative">
           <div className="w-14 h-14 bg-green-50 dark:bg-green-900/20 rounded-full flex items-center justify-center mx-auto mb-6 text-pakistan-green"><i className="fa-solid fa-check text-2xl animate-bounce"></i></div>
           <h2 className="text-xl font-lemon mb-2 dark:text-white">Applied!</h2>
-          <p className="text-gray-500 mb-8 text-sm leading-relaxed">Your details are submitted. Generate your processing challan to complete the application.</p>
-          <button onClick={() => setShowChallan(true)} className="w-full py-4 bg-pakistan-green text-white rounded-2xl font-lemon text-xs tracking-widest shadow-lg">Generate Challan</button>
+          <p className="text-gray-500 mb-8 text-sm leading-relaxed">Your details are submitted successfully. We will review your application and get back to you soon.</p>
+          <button onClick={onClose} className="w-full py-4 bg-pakistan-green text-white rounded-2xl font-lemon text-xs tracking-widest shadow-lg">Close</button>
         </div>
       </div>
     );

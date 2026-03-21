@@ -647,44 +647,12 @@
             <p class="text-gray-500 text-[10px] font-lemon tracking-widest uppercase">Verified Servers</p>
         </div>
 
-        <!-- SUCCESS / GENERATE CHALLAN -->
+        <!-- SUCCESS -->
         <div id="success-view" class="hidden bg-white dark:bg-gray-900 rounded-3xl p-8 max-w-md w-full text-center shadow-2xl relative">
             <div class="w-14 h-14 bg-green-50 dark:bg-green-900/20 rounded-full flex items-center justify-center mx-auto mb-6 text-pakistan-green"><i class="fa-solid fa-check text-2xl animate-bounce"></i></div>
             <h2 class="text-xl font-lemon mb-2 dark:text-white">Applied!</h2>
-            <p class="text-gray-500 mb-8 text-sm leading-relaxed">Your details are submitted. Generate your processing challan to complete the application.</p>
-            <button onclick="showChallanReceipt()" class="w-full py-4 bg-pakistan-green text-white rounded-2xl font-lemon text-xs tracking-widest shadow-lg hover:bg-green-800 transition-all">Generate Challan</button>
-        </div>
-
-        <!-- CHALLAN RECEIPT -->
-        <div id="challan-view" class="hidden bg-white dark:bg-gray-900 rounded-[1.5rem] max-w-sm w-full shadow-2xl relative border-4 border-gray-100 dark:border-gray-800 overflow-hidden">
-             <button onclick="forceCloseForm()" class="absolute top-2 right-2 z-50 w-7 h-7 flex items-center justify-center rounded-full bg-white/20 text-white hover:bg-white/40 backdrop-blur-sm transition-colors"><i class="fa-solid fa-times text-xs"></i></button>
-             <div class="bg-pakistan-green p-4 text-white flex justify-between items-center relative overflow-hidden">
-                <div class="relative z-10 flex items-center gap-2">
-                     <div class="w-8 h-8 bg-white/10 backdrop-blur-sm rounded-lg flex items-center justify-center text-sm font-bold border border-white/20">1</div>
-                     <div><h3 class="font-lemon text-xs tracking-wide leading-none">First Nobel Step</h3><p class="text-[7px] uppercase tracking-widest opacity-80 mt-1">(Pvt.) Ltd.</p></div>
-                </div>
-                <div class="relative z-10 text-right"><h2 class="text-xs font-black uppercase">Fee Challan</h2><p class="text-[9px] font-mono opacity-80">#FMS-82931</p></div>
-            </div>
-            <div class="p-5 relative bg-white">
-                <div class="grid grid-cols-2 gap-3 mb-4 relative z-10">
-                    <div class="col-span-2 border-b border-gray-50 pb-1">
-                        <h4 class="text-[8px] font-bold text-gray-400 uppercase tracking-widest mb-1">Applicant</h4>
-                        <p id="challan-name" class="text-sm font-bold text-gray-900 leading-none">--</p>
-                    </div>
-                    <div><h4 class="text-[8px] font-bold text-gray-400 uppercase tracking-widest mb-1">CNIC</h4><p id="challan-cnic" class="text-[10px] font-mono font-bold text-gray-700">--</p></div>
-                    <div class="text-right"><h4 class="text-[8px] font-bold text-gray-400 uppercase tracking-widest mb-1">Date</h4><p class="text-[10px] font-mono font-bold text-gray-700">Today</p></div>
-                </div>
-                <div class="border border-gray-100 rounded-lg overflow-hidden mb-4 relative z-10">
-                    <table class="w-full text-[10px] text-left">
-                        <thead class="bg-gray-50 text-gray-400 font-bold text-[7px] uppercase tracking-wider"><tr><th class="px-2 py-1.5">Description</th><th class="px-2 py-1.5 text-right">PKR</th></tr></thead>
-                        <tbody class="divide-y divide-gray-50">
-                            <tr><td class="px-2 py-2"><span class="font-bold text-gray-800">Processing Fee</span><br/><span id="challan-plan" class="text-[8px] text-gray-400 capitalize">-- Program</span></td><td class="px-2 py-2 text-right font-mono font-bold text-gray-900">1,500</td></tr>
-                            <tr class="bg-pakistan-green/5"><td class="px-2 py-1.5 text-right font-bold text-pakistan-green uppercase text-[8px]">Payable</td><td class="px-2 py-1.5 text-right font-black text-sm text-pakistan-green font-mono">1,500</td></tr>
-                        </tbody>
-                    </table>
-                </div>
-                <button onclick="window.print()" class="w-full mt-4 py-3 bg-pakistan-green text-white rounded-xl font-lemon text-[10px] tracking-widest hover:bg-green-800 transition-all shadow-lg flex items-center justify-center gap-2">Get Challan</button>
-            </div>
+            <p class="text-gray-500 mb-8 text-sm leading-relaxed">Your details are submitted successfully. We will contact you shortly.</p>
+            <button onclick="forceCloseForm()" class="w-full py-4 bg-pakistan-green text-white rounded-2xl font-lemon text-xs tracking-widest shadow-lg hover:bg-green-800 transition-all">Close</button>
         </div>
 
     </div>
@@ -719,7 +687,6 @@
         const btnBack = document.getElementById('btn-back');
         const loadingView = document.getElementById('loading-view');
         const successView = document.getElementById('success-view');
-        const challanView = document.getElementById('challan-view');
         const themeToggle = document.getElementById('theme-toggle');
 
         // --- Theme Logic ---
@@ -761,7 +728,6 @@
             // Hide other views if active
             loadingView.classList.add('hidden');
             successView.classList.add('hidden');
-            challanView.classList.add('hidden');
             modalContent.classList.remove('hidden'); // Reset to show form for next time
             
             setTimeout(() => {
@@ -1079,7 +1045,7 @@
              validateCurrentStep();
         }
 
-        // --- Submission & Challan ---
+        // --- Submission ---
         async function submitForm() {
             hideError();
             // Collect Data
@@ -1148,16 +1114,6 @@
                     showError('Submission Failed', err.message || 'Failed to submit application. Please check your connection and try again.');
                 }
             }
-        }
-
-        function showChallanReceipt() {
-            successView.classList.add('hidden');
-            challanView.classList.remove('hidden');
-            
-            // Populate Receipt
-            document.getElementById('challan-name').innerText = document.getElementById('input-fullname').value;
-            document.getElementById('challan-cnic').innerText = document.getElementById('input-cnic').value;
-            document.getElementById('challan-plan').innerText = state.plan + " Program";
         }
 
         // Handle Enter key on input fields
