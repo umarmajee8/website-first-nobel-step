@@ -104,14 +104,19 @@ async function startServer() {
 
     const stored = verificationCodes.get(email);
     if (!stored) {
+      console.log(`[AUTH] No code found for ${email}`);
       return res.status(400).json({ success: false, error: 'No verification code found for this email. Please request a new code.' });
     }
     
+    console.log(`[AUTH] Verifying code for ${email}. Stored: "${stored.code}", Provided: "${verificationCode}"`);
+
     if (stored.code !== verificationCode) {
-      return res.status(400).json({ success: false, error: 'The verification code is incorrect. Please check your email.' });
+      console.log(`[AUTH] Code mismatch for ${email}. Stored: "${stored.code}", Provided: "${verificationCode}"`);
+      return res.status(400).json({ success: false, error: `The verification code is incorrect for ${email}. Please check your email and enter the latest code sent to you.` });
     }
 
     if (Date.now() > stored.expires) {
+      console.log(`[AUTH] Code expired for ${email}`);
       return res.status(400).json({ success: false, error: 'The verification code has expired. Please request a new one.' });
     }
 
@@ -133,14 +138,15 @@ async function startServer() {
 
       // Verify code
       const stored = verificationCodes.get(email);
-      console.log(`[AUTH] Verifying code for ${email}. Stored: ${stored?.code}, Provided: ${verificationCode}`);
+      console.log(`[AUTH] Final submission verification for ${email}. Stored: "${stored?.code}", Provided: "${verificationCode}"`);
 
       if (!stored) {
         return res.status(400).json({ success: false, error: 'No verification code found for this email. Please request a new code.' });
       }
       
       if (stored.code !== verificationCode) {
-        return res.status(400).json({ success: false, error: 'The verification code is incorrect. Please check your email.' });
+        console.log(`[AUTH] Code mismatch for ${email}. Stored: "${stored.code}", Provided: "${verificationCode}"`);
+        return res.status(400).json({ success: false, error: `The verification code is incorrect for ${email}. Please check your email and enter the latest code sent to you.` });
       }
 
       if (Date.now() > stored.expires) {

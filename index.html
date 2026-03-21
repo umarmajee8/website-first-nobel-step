@@ -873,6 +873,8 @@
                     const data = await response.json().catch(() => ({}));
                     
                     if (!response.ok) {
+                        const codeInput = document.getElementById('input-verify-code');
+                        codeInput.value = ''; // Clear incorrect code
                         throw new Error(data.error || 'Verification failed');
                     }
                     
@@ -1128,9 +1130,9 @@
                 state.step = 5; // Stay on verification step
                 updateUI();
                 
-                if (err.message.startsWith('INVALID_CODE:')) {
+                if (err.message.toLowerCase().includes('code')) {
                     const msg = err.message.replace('INVALID_CODE:', '');
-                    showError('Invalid Verification Code', msg + ' Please check your email and try again.');
+                    showError('Invalid Verification Code', msg + ' Please check your email and enter the latest code sent to you.');
                     // Highlight the input
                     const codeInput = document.getElementById('input-verify-code');
                     codeInput.classList.add('border-red-500', 'focus:border-red-500');

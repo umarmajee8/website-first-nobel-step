@@ -1,5 +1,6 @@
 
 import React, { useState, useEffect, useRef, useCallback } from 'react';
+import { motion, AnimatePresence } from "motion/react";
 import { FormStep, MembershipApplication } from '../types.ts';
 
 interface Props {
@@ -267,12 +268,13 @@ const MembershipForm: React.FC<Props> = ({ initialPlanId, onClose }) => {
           const data = await response.json();
           
           if (!response.ok) {
+            setVerificationCode(''); // Clear incorrect code
             throw new Error(data.error || 'Verification failed');
           }
           
           setStep(6);
         } catch (err: any) {
-          setError(err.message || 'The code you entered is incorrect. Please check your email.');
+          setError(err.message || 'The code you entered is incorrect. Please check your email and try again.');
         } finally {
           setIsSendingCode(false);
         }
@@ -312,7 +314,11 @@ const MembershipForm: React.FC<Props> = ({ initialPlanId, onClose }) => {
     setIsSubmitting(true);
     setError(null);
     try {
-      const payload = { ...formData, email: formData.email?.trim(), verificationCode: verificationCode.trim() };
+      const payload = { 
+        ...formData, 
+        email: formData.email?.trim(), 
+        verificationCode: verificationCode.trim() 
+      };
       const response = await fetch('/api/submit-membership', {
         method: 'POST',
         headers: {
@@ -330,7 +336,14 @@ const MembershipForm: React.FC<Props> = ({ initialPlanId, onClose }) => {
       localStorage.removeItem(STORAGE_KEY);
       setIsSubmitted(true);
     } catch (err: any) {
-      setError(err.message || "An unexpected error occurred.");
+      console.error('Submission Error:', err);
+      setError(err.message || "An unexpected error occurred during submission.");
+      
+      // If code is invalid, move back to verification step
+      if (err.message.toLowerCase().includes('code')) {
+        setStep(5);
+        setVerificationCode('');
+      }
     } finally {
       setIsSubmitting(false);
     }
@@ -485,17 +498,30 @@ const MembershipForm: React.FC<Props> = ({ initialPlanId, onClose }) => {
         <nav className="px-8 py-4">
           <div className="flex items-center justify-between relative">
             <div className="absolute top-1/2 left-0 w-full h-0.5 bg-gray-100 dark:bg-gray-800 -translate-y-1/2 -z-10"></div>
-            <div className="absolute top-1/2 left-0 h-0.5 bg-pakistan-green transition-all duration-500 -translate-y-1/2 -z-10" style={{ width: `${((step - 1) / 5) * 100}%` }}></div>
+            <motion.div 
+              className="absolute top-1/2 left-0 h-0.5 bg-pakistan-green -translate-y-1/2 -z-10" 
+              initial={{ width: 0 }}
+              animate={{ width: `${((step - 1) / 5) * 100}%` }}
+              transition={{ duration: 0.5 }}
+            />
             {[1,2,3,4,5,6].map(n => (
-              <div key={n} className="flex flex-col items-center">
+              <motion.div key={n} className="flex flex-col items-center" initial={{ scale: 0.8 }} animate={{ scale: step >= n ? 1 : 0.9 }}>
                 <div className={`w-8 h-8 rounded-full flex items-center justify-center text-[10px] font-lemon transition-all border-2 ${step >= n ? 'bg-pakistan-green border-pakistan-green text-white' : 'bg-white dark:bg-gray-900 border-gray-200 text-gray-400'}`}>{n}</div>
-              </div>
+              </motion.div>
             ))}
           </div>
         </nav>
         <form onSubmit={handleSubmit} className="flex-grow overflow-y-auto px-8 py-6 custom-scrollbar">
-          {step === 1 && (
-            <fieldset className="space-y-8 animate-in fade-in slide-in-from-right-4 duration-300">
+          <AnimatePresence mode="wait">
+            <motion.div
+              key={step}
+              initial={{ opacity: 0, x: 20 }}
+              animate={{ opacity: 1, x: 0 }}
+              exit={{ opacity: 0, x: -20 }}
+              transition={{ duration: 0.3 }}
+            >
+              {step === 1 && (
+                <fieldset className="space-y-8">
               <div className="bg-gray-50/50 dark:bg-gray-800/30 p-6 rounded-[2rem] border border-gray-100 dark:border-gray-700">
                 <h4 className="text-[10px] font-lemon tracking-[0.2em] text-pakistan-green mb-6 uppercase flex items-center gap-3">
                   <span className="w-6 h-px bg-pakistan-green/20"></span> Individual Pathways
@@ -524,17 +550,17 @@ const MembershipForm: React.FC<Props> = ({ initialPlanId, onClose }) => {
                 ))}
               </div>
             </fieldset>
-          )}
-          {step === 2 && (
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-6 animate-in fade-in slide-in-from-right-4 duration-300">
+              )}
+              {step === 2 && (
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
               {renderInputField("Full Name (As per CNIC)", "fullName", "fullName", "text", "Enter Full Name", undefined, "Enter your full name exactly as it appears on your CNIC.")}
               {renderInputField("CNIC Number", "cnic", "cnic", "text", "XXXXX-XXXXXXX-X", undefined, "Enter your 13-digit CNIC number in the format: 12345-1234567-1")}
               {renderInputField("Email Address", "email", "email", "email", "name@example.com", undefined, "Provide a valid email address for verification and communication.")}
               {renderInputField("WhatsApp Number", "whatsapp", "whatsapp", "tel", "923XXXXXXXXX", undefined, "Enter your WhatsApp number starting with 92 (e.g., 923001234567).")}
             </div>
-          )}
-          {step === 3 && (
-            <div className="space-y-6 animate-in fade-in slide-in-from-right-4 duration-300">
+              )}
+              {step === 3 && (
+                <div className="space-y-6">
               {formData.planId === 'student' && (
                 <div className="space-y-6">
                   {renderInputField("Academic Institution", "institute", "institute", "text", "e.g. University of the Punjab")}
@@ -568,9 +594,9 @@ const MembershipForm: React.FC<Props> = ({ initialPlanId, onClose }) => {
                 </div>
               )}
             </div>
-          )}
-          {step === 4 && (
-            <div className="space-y-8 animate-in fade-in slide-in-from-right-4 duration-300">
+              )}
+              {step === 4 && (
+                <div className="space-y-8">
               <div className="bg-green-50/50 dark:bg-green-900/10 p-6 rounded-[1.5rem] border border-green-100 dark:border-green-800/50 relative overflow-hidden">
                 <h4 className="font-lemon text-[10px] text-pakistan-green dark:text-green-400 mb-6 uppercase tracking-widest">Application Review</h4>
                 <div className="grid grid-cols-2 gap-4 text-xs relative z-10">
@@ -583,9 +609,9 @@ const MembershipForm: React.FC<Props> = ({ initialPlanId, onClose }) => {
                 <span className="text-xs text-gray-600 dark:text-gray-400">I declare all information is correct and I agree to the <a href="https://drive.google.com/file/d/1NwKfofJT-kQ5veAhZVj0ebYeB6Tauk4I/view?usp=drivesdk" target="_blank" className="text-pakistan-green dark:text-green-400 underline hover:text-green-700 transition-colors">Privacy Policy</a>.</span>
               </label>
             </div>
-          )}
-          {step === 5 && (
-            <div className="space-y-6 animate-in fade-in slide-in-from-right-4 duration-300">
+              )}
+              {step === 5 && (
+                <div className="space-y-6">
               <div className="text-center mb-6">
                 <div className="w-16 h-16 bg-green-50 dark:bg-green-900/20 rounded-full flex items-center justify-center mx-auto mb-4 text-pakistan-green">
                   <i className="fa-solid fa-envelope-circle-check text-2xl"></i>
@@ -615,9 +641,9 @@ const MembershipForm: React.FC<Props> = ({ initialPlanId, onClose }) => {
                 </button>
               </p>
             </div>
-          )}
-          {step === 6 && (
-            <div className="space-y-6 animate-in fade-in slide-in-from-right-4 duration-300">
+              )}
+              {step === 6 && (
+                <div className="space-y-6">
               <div className="text-center mb-6">
                 <div className="w-16 h-16 bg-green-50 dark:bg-green-900/20 rounded-full flex items-center justify-center mx-auto mb-4 text-pakistan-green">
                   <i className="fa-solid fa-wallet text-2xl"></i>
@@ -668,7 +694,9 @@ const MembershipForm: React.FC<Props> = ({ initialPlanId, onClose }) => {
                 </label>
               </div>
             </div>
-          )}
+              )}
+            </motion.div>
+          </AnimatePresence>
         </form>
         <div className="px-8 pb-8 pt-4 flex flex-col gap-4 border-t border-gray-100 dark:border-gray-800">
           {error && (
