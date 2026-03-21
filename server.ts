@@ -79,7 +79,8 @@ async function startServer() {
             </div>
           `
         });
-        res.status(200).json({ success: true });
+        // Always return the code so the frontend can auto-fill it for testing/debugging
+        res.status(200).json({ success: true, code });
       } catch (error: any) {
         console.error('Error sending verification email:', error);
         let errorMessage = 'Failed to send verification email';
