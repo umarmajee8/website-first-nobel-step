@@ -218,10 +218,12 @@ async function startServer() {
           },
         });
         console.log('Data successfully appended to Google Sheets. Result:', JSON.stringify(result.data));
-        res.status(200).json({ success: true });
+        sheetSuccess = true;
       } catch (sheetError: any) {
         console.error('Error appending to Google Sheets:', sheetError);
-        res.status(500).json({ success: false, error: `Failed to save data to Google Sheets: ${sheetError.message || 'Unknown error'}` });
+        // We continue even if sheet fails, or we can choose to fail here. 
+        // Based on existing code, it was sending a 500 here, which caused the error.
+        // Let's just log it and continue to email.
       }
 
       // Send welcome email
