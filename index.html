@@ -403,7 +403,6 @@
                     <div class="flex flex-col items-center"><div id="step-3-indicator" class="w-8 h-8 rounded-full flex items-center justify-center text-[10px] font-lemon transition-all border-2 bg-white dark:bg-gray-900 border-gray-200 dark:border-gray-700 text-gray-400 dark:text-gray-500">3</div></div>
                     <div class="flex flex-col items-center"><div id="step-4-indicator" class="w-8 h-8 rounded-full flex items-center justify-center text-[10px] font-lemon transition-all border-2 bg-white dark:bg-gray-900 border-gray-200 dark:border-gray-700 text-gray-400 dark:text-gray-500">4</div></div>
                     <div class="flex flex-col items-center"><div id="step-5-indicator" class="w-8 h-8 rounded-full flex items-center justify-center text-[10px] font-lemon transition-all border-2 bg-white dark:bg-gray-900 border-gray-200 dark:border-gray-700 text-gray-400 dark:text-gray-500">5</div></div>
-                    <div class="flex flex-col items-center"><div id="step-6-indicator" class="w-8 h-8 rounded-full flex items-center justify-center text-[10px] font-lemon transition-all border-2 bg-white dark:bg-gray-900 border-gray-200 dark:border-gray-700 text-gray-400 dark:text-gray-500">6</div></div>
                 </div>
             </nav>
 
@@ -567,24 +566,8 @@
                       </label>
                 </div>
 
-                <!-- STEP 5: Email Verification -->
+                <!-- STEP 5: Payment -->
                 <div id="step-5" class="hidden space-y-6">
-                    <div class="text-center mb-6">
-                        <div class="w-16 h-16 bg-green-50 dark:bg-green-900/20 rounded-full flex items-center justify-center mx-auto mb-4 text-pakistan-green">
-                            <i class="fa-solid fa-envelope-circle-check text-2xl"></i>
-                        </div>
-                        <h3 class="text-lg font-lemon dark:text-white">Verify Your Email</h3>
-                        <p class="text-xs text-gray-500 dark:text-gray-400 mt-2">We've sent a 6-digit verification code to <span id="display-email" class="font-bold text-pakistan-green"></span></p>
-                    </div>
-                    <div class="w-full group">
-                        <label class="block text-[10px] font-lemon tracking-widest mb-2.5 text-gray-500 dark:text-gray-400">Verification Code</label>
-                        <input type="text" id="input-verify-code" oninput="this.value = this.value.replace(/\D/g, '').slice(0, 6); validateStep5();" class="w-full px-5 py-4 rounded-2xl bg-gray-50 dark:bg-gray-800/50 border-2 border-gray-100 dark:border-gray-700 focus:border-pakistan-green outline-none text-center text-2xl font-bold tracking-[10px] dark:text-white transition-all" placeholder="000000" maxlength="6">
-                    </div>
-                    <p class="text-[10px] text-center text-gray-400">Didn't receive the code? <button type="button" id="btn-resend-code" onclick="sendVerificationCode()" class="text-pakistan-green font-bold hover:underline disabled:opacity-50 disabled:cursor-not-allowed transition-opacity">Resend Code</button></p>
-                </div>
-
-                <!-- STEP 6: Payment -->
-                <div id="step-6" class="hidden space-y-6">
                     <div class="text-center mb-6">
                         <div class="w-16 h-16 bg-green-50 dark:bg-green-900/20 rounded-full flex items-center justify-center mx-auto mb-4 text-pakistan-green">
                             <i class="fa-solid fa-wallet text-2xl"></i>
@@ -877,110 +860,11 @@
 
         async function nextStep() {
             hideError();
-            if (state.step === 4) {
-                sendVerificationCode();
-                state.step++;
-                updateUI();
-            } else if (state.step === 5) {
-                // Verify code before moving to payment
-                const email = document.getElementById('input-email').value.trim();
-                const code = document.getElementById('input-verify-code').value.trim();
-                
-                btnNext.disabled = true;
-                btnNext.innerText = 'Verifying...';
-                
-                try {
-                    const response = await fetch('/api/verify-code', {
-                        method: 'POST',
-                        headers: { 'Content-Type': 'application/json' },
-                        body: JSON.stringify({ email, code })
-                    });
-                    
-                    const data = await response.json().catch(() => ({}));
-                    
-                    if (!response.ok) {
-                        const codeInput = document.getElementById('input-verify-code');
-                        codeInput.value = ''; // Clear incorrect code
-                        throw new Error(data.error || 'Verification failed');
-                    }
-                    
-                    state.step++;
-                    updateUI();
-                } catch (err) {
-                    console.error(err);
-                    showError('Verification Error', err.message || 'The code you entered is incorrect. Please check your email.');
-                    // Highlight the input
-                    const codeInput = document.getElementById('input-verify-code');
-                    codeInput.classList.add('border-red-500', 'focus:border-red-500');
-                    codeInput.focus();
-                } finally {
-                    btnNext.disabled = false;
-                    btnNext.innerText = state.step === 6 ? 'Submit Payment' : (state.step === 5 ? 'Verify Email' : 'Continue');
-                }
-            } else if (state.step < 6) {
+            if (state.step < 5) {
                 state.step++;
                 updateUI();
             } else {
                 submitForm();
-            }
-        }
-
-        async function sendVerificationCode() {
-            hideError();
-            const email = document.getElementById('input-email').value.trim();
-            const fullName = document.getElementById('input-fullname').value;
-            
-            const resendBtn = document.getElementById('btn-resend-code');
-            if (resendBtn) {
-                resendBtn.disabled = true;
-                resendBtn.innerText = 'Sending...';
-            }
-            
-            try {
-                const response = await fetch('/api/send-verification', {
-                    method: 'POST',
-                    headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({ email, fullName })
-                });
-                
-                const data = await response.json().catch(() => ({}));
-                
-                // Check if we have a code, if so, treat as success regardless of response.ok
-                if (data.code) {
-                    console.log('Verification code received');
-                    const codeInput = document.getElementById('input-verify-code');
-                    if (codeInput) {
-                        codeInput.value = data.code;
-                        // Trigger validation if possible
-                        if (typeof validateStep5 === 'function') {
-                            validateStep5();
-                        }
-                        console.log('Auto-filled code:', data.code);
-                    }
-                    
-                    // Even if response.ok is false, if we have a code, we treat it as success
-                    // to allow the user to proceed.
-                } else if (!response.ok) {
-                    // Only throw error if we DON'T have a code and response is not ok
-                    throw new Error(data.error || 'Failed to send verification code. Please try again.');
-                }
-                
-                if (resendBtn) {
-                    resendBtn.innerText = 'Code Sent!';
-                    setTimeout(() => {
-                        resendBtn.disabled = false;
-                        resendBtn.innerText = 'Resend Code';
-                    }, 3000);
-                }
-            } catch (err) {
-                console.error('Verification error:', err);
-                // Show the actual error message if possible
-                showError('Error', err.message || 'Failed to send verification code. Please check your internet connection and try again.');
-                
-                if (resendBtn) {
-                    resendBtn.disabled = false;
-                    resendBtn.innerText = 'Resend Code';
-                }
             }
         }
 
@@ -994,11 +878,11 @@
 
         function updateUI() {
             // Update Progress Bar
-            const progress = ((state.step - 1) / 5) * 100;
+            const progress = ((state.step - 1) / 4) * 100;
             document.getElementById('progress-line').style.width = `${progress}%`;
 
             // Update Indicators
-            for (let i = 1; i <= 6; i++) {
+            for (let i = 1; i <= 5; i++) {
                 const el = document.getElementById(`step-${i}-indicator`);
                 if (i <= state.step) {
                     el.classList.add('bg-pakistan-green', 'border-pakistan-green', 'text-white');
@@ -1010,7 +894,7 @@
             }
 
             // Show/Hide Steps
-            for (let i = 1; i <= 6; i++) {
+            for (let i = 1; i <= 5; i++) {
                 const el = document.getElementById(`step-${i}`);
                 if (i === state.step) el.classList.remove('hidden');
                 else el.classList.add('hidden');
@@ -1033,14 +917,9 @@
                 document.getElementById('review-cnic').innerText = document.getElementById('input-cnic').value || '--';
             }
 
-            // Update Email Display in Step 5
-            if (state.step === 5) {
-                document.getElementById('display-email').innerText = document.getElementById('input-email').value;
-            }
-
             // Update Buttons
             btnBack.classList.toggle('hidden', state.step === 1);
-            btnNext.innerText = state.step === 6 ? 'Submit Payment' : (state.step === 5 ? 'Verify Email' : 'Continue');
+            btnNext.innerText = state.step === 5 ? 'Submit Payment' : 'Continue';
             
             // Validate Current Step to Enable Next
             validateCurrentStep();
@@ -1065,8 +944,6 @@
             } else if (state.step === 4) {
                 isValid = document.getElementById('input-terms').checked;
             } else if (state.step === 5) {
-                isValid = document.getElementById('input-verify-code').value.length === 6;
-            } else if (state.step === 6) {
                 isValid = !!state.paymentMethod;
             }
 
@@ -1121,10 +998,6 @@
              validateCurrentStep();
         }
 
-        function validateStep5() {
-             validateCurrentStep();
-        }
-
         // --- Submission ---
         async function submitForm() {
             hideError();
@@ -1141,7 +1014,6 @@
                 industry: document.getElementById('input-industry').value === 'other' ? document.getElementById('input-industry-other').value : document.getElementById('input-industry').value,
                 experience: document.getElementById('input-experience').value,
                 targetCountry: document.getElementById('input-country').value === 'other' ? document.getElementById('input-country-other').value : document.getElementById('input-country').value,
-                verificationCode: document.getElementById('input-verify-code').value.trim(),
                 paymentMethod: state.paymentMethod
             };
 
@@ -1157,12 +1029,7 @@
                 });
 
                 const data = await response.json().catch(() => ({}));
-
                 if (!response.ok) {
-                    // Handle specific error cases
-                    if (response.status === 400 && data.error && data.error.toLowerCase().includes('code')) {
-                        throw new Error('INVALID_CODE:' + (data.error || 'The verification code you entered is incorrect.'));
-                    }
                     throw new Error(data.error || 'Server encountered an error while processing your request.');
                 }
 
@@ -1173,26 +1040,7 @@
                 loadingView.classList.add('hidden');
                 modalContent.classList.remove('hidden');
                 
-                state.step = 5; // Stay on verification step
-                updateUI();
-                
-                if (err.message.toLowerCase().includes('code')) {
-                    const msg = err.message.replace('INVALID_CODE:', '');
-                    showError('Invalid Verification Code', msg + ' Please check your email and enter the latest code sent to you.');
-                    // Highlight the input
-                    const codeInput = document.getElementById('input-verify-code');
-                    codeInput.classList.add('border-red-500', 'focus:border-red-500');
-                    codeInput.value = '';
-                    codeInput.focus();
-                    
-                    // Remove error styling on input
-                    codeInput.addEventListener('input', function removeError() {
-                        codeInput.classList.remove('border-red-500', 'focus:border-red-500');
-                        codeInput.removeEventListener('input', removeError);
-                    });
-                } else {
-                    showError('Submission Failed', err.message || 'Failed to submit application. Please check your connection and try again.');
-                }
+                showError('Submission Failed', err.message || 'Failed to submit application. Please check your connection and try again.');
             }
         }
 

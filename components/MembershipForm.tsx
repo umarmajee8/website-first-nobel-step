@@ -20,7 +20,7 @@ const PaymentForm = () => {
 
     const { error, paymentMethod } = await stripe.createPaymentMethod({
       type: 'card',
-      card: cardElement,
+      card: cardElement as any,
     });
 
     if (error) {
@@ -164,8 +164,6 @@ const MembershipForm: React.FC<Props> = ({ initialPlanId, onClose }) => {
 
   const [isSubmitted, setIsSubmitted] = useState(false);
   const [isSubmitting, setIsSubmitting] = useState(false);
-  const [isSendingCode, setIsSendingCode] = useState(false);
-  const [verificationCode, setVerificationCode] = useState('');
   const [error, setError] = useState<string | null>(null);
   
   // New state for exit confirmation
@@ -294,10 +292,6 @@ const MembershipForm: React.FC<Props> = ({ initialPlanId, onClose }) => {
     }
   };
 
-  const sendVerificationCode = async () => {
-    // This is no longer needed
-  };
-
   const prevStep = () => { if (step > 1) setStep((prev) => (prev - 1) as FormStep); };
 
   const handleSubmit = async (e: React.FormEvent) => {
@@ -329,12 +323,6 @@ const MembershipForm: React.FC<Props> = ({ initialPlanId, onClose }) => {
     } catch (err: any) {
       console.error('Submission Error:', err);
       setError(err.message || "An unexpected error occurred during submission.");
-      
-      // If code is invalid, move back to verification step
-      if (err.message.toLowerCase().includes('code')) {
-        setStep(5);
-        setVerificationCode('');
-      }
     } finally {
       setIsSubmitting(false);
     }
@@ -626,7 +614,7 @@ const MembershipForm: React.FC<Props> = ({ initialPlanId, onClose }) => {
           )}
           <div className="flex gap-4">
             {step > 1 && <button type="button" onClick={prevStep} className="px-6 py-4 rounded-2xl font-lemon text-[10px] border border-gray-200 text-gray-500">Back</button>}
-            <button type="button" onClick={step === 5 ? (e) => handleSubmit(e as any) : nextStep} disabled={!isStepValid() || isSendingCode} className={`flex-grow py-4 rounded-2xl font-lemon text-[10px] tracking-widest text-white transition-all ${!isStepValid() || isSendingCode ? 'bg-gray-200 cursor-not-allowed' : 'bg-pakistan-green shadow-lg'}`}>{step === 5 ? 'Submit Payment' : 'Continue'}</button>
+            <button type="button" onClick={step === 5 ? (e) => handleSubmit(e as any) : nextStep} disabled={!isStepValid()} className={`flex-grow py-4 rounded-2xl font-lemon text-[10px] tracking-widest text-white transition-all ${!isStepValid() ? 'bg-gray-200 cursor-not-allowed' : 'bg-pakistan-green shadow-lg'}`}>{step === 5 ? 'Submit Payment' : 'Continue'}</button>
           </div>
         </div>
       </div>

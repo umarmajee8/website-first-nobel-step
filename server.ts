@@ -53,127 +53,15 @@ async function startServer() {
 
   const sheets = google.sheets({ version: 'v4', auth });
 
-  // In-memory store for verification codes (expires in 10 minutes)
-  const verificationCodes = new Map<string, { code: string, expires: number }>();
-
-  // API endpoint to send verification code
-  app.post('/api/send-verification', async (req, res) => {
-    const { email: rawEmail, fullName } = req.body;
-    if (!rawEmail) return res.status(400).json({ success: false, error: 'Email is required' });
-
-    const email = rawEmail.toLowerCase().trim();
-    const code = Math.floor(100000 + Math.random() * 900000).toString();
-    verificationCodes.set(email, { code, expires: Date.now() + 10 * 60 * 1000 });
-    console.log(`[AUTH] Generated code ${code} for ${email}`);
-
-    if (process.env.SMTP_USER && process.env.SMTP_PASS) {
-      const transporter = nodemailer.createTransport({
-        service: 'gmail',
-        auth: {
-          user: process.env.SMTP_USER,
-          pass: process.env.SMTP_PASS,
-        },
-      });
-
-      try {
-        await transporter.sendMail({
-          from: `"First Nobel Step" <${process.env.SMTP_USER}>`,
-          to: email,
-          subject: 'Your Verification Code - First Nobel Step',
-          text: `Dear ${fullName || 'Applicant'},\n\nYour verification code is: ${code}\n\nThis code will expire in 10 minutes.\n\nBest regards,\nFirst Nobel Step Team`,
-          html: `
-            <div style="font-family: Arial, sans-serif; color: #333; padding: 20px; border: 1px solid #eee; border-radius: 10px; max-width: 500px;">
-              <h2 style="color: #01411C;">Verification Code</h2>
-              <p>Dear <strong>${fullName || 'Applicant'}</strong>,</p>
-              <p>Thank you for starting your application. Please use the following code to verify your email address:</p>
-              <div style="background: #f4f4f4; padding: 15px; text-align: center; font-size: 24px; font-weight: bold; letter-spacing: 5px; color: #01411C; border-radius: 5px; margin: 20px 0;">
-                ${code}
-              </div>
-              <p>This code will expire in <strong>10 minutes</strong>.</p>
-              <p>If you did not request this code, please ignore this email.</p>
-              <hr style="border: none; border-top: 1px solid #eee; margin: 20px 0;" />
-              <p style="font-size: 12px; color: #888;">First Nobel Step (Pvt.) Ltd.</p>
-            </div>
-          `
-        });
-        // Return the code only if in dev mode or if SMTP failed
-        const responseData: any = { success: true };
-        if (process.env.NODE_ENV !== 'production') {
-          responseData.code = code;
-        }
-        res.status(200).json(responseData);
-      } catch (error: any) {
-        console.error('Error sending verification email:', error);
-        // Always return the code in error cases to allow fallback
-        res.status(200).json({ success: true, devMode: true, code, error: 'Failed to send email' });
-      }
-    } else {
-      console.log(`[DEV] Verification code for ${email}: ${code}`);
-      res.status(200).json({ success: true, devMode: true, code }); // In dev, we might not have SMTP
-    }
-  });
-
-  // API endpoint to verify code before proceeding to payment
-  app.post('/api/verify-code', async (req, res) => {
-    const { email: rawEmail, code: rawCode } = req.body;
-    if (!rawEmail || !rawCode) return res.status(400).json({ success: false, error: 'Email and code are required' });
-
-    const email = rawEmail.toLowerCase().trim();
-    const verificationCode = rawCode.toString().trim();
-
-    const stored = verificationCodes.get(email);
-    if (!stored) {
-      console.log(`[AUTH] No code found for ${email}`);
-      return res.status(400).json({ success: false, error: 'No verification code found for this email. Please request a new code.' });
-    }
-    
-    console.log(`[AUTH] Verifying code for ${email}. Stored: "${stored.code}", Provided: "${verificationCode}"`);
-
-    if (stored.code !== verificationCode) {
-      console.log(`[AUTH] Code mismatch for ${email}. Stored: "${stored.code}", Provided: "${verificationCode}"`);
-      return res.status(400).json({ success: false, error: `The verification code is incorrect for ${email}. Please check your email and enter the latest code sent to you.` });
-    }
-
-    if (Date.now() > stored.expires) {
-      console.log(`[AUTH] Code expired for ${email}`);
-      return res.status(400).json({ success: false, error: 'The verification code has expired. Please request a new one.' });
-    }
-
-    res.status(200).json({ success: true });
-  });
-
   // API endpoint to submit form data
   app.post('/api/submit-membership', async (req, res) => {
     console.log('Received request to submit membership:', req.body);
     try {
-      const { verificationCode: rawCode, ...formData } = req.body;
+      const formData = req.body;
       const { fullName, cnic, email: rawEmail, whatsapp, planId, institute, degree, businessName, industry, experience, targetCountry, paymentMethod } = formData;
-
-      if (!rawCode) return res.status(400).json({ success: false, error: 'Verification code is required' });
-      const verificationCode = rawCode.toString().trim();
 
       if (!rawEmail) return res.status(400).json({ success: false, error: 'Email is required' });
       const email = rawEmail.toLowerCase().trim();
-
-      // Verify code
-      const stored = verificationCodes.get(email);
-      console.log(`[AUTH] Final submission verification for ${email}. Stored: "${stored?.code}", Provided: "${verificationCode}"`);
-
-      if (!stored) {
-        return res.status(400).json({ success: false, error: 'No verification code found for this email. Please request a new code.' });
-      }
-      
-      if (stored.code !== verificationCode) {
-        console.log(`[AUTH] Code mismatch for ${email}. Stored: "${stored.code}", Provided: "${verificationCode}"`);
-        return res.status(400).json({ success: false, error: `The verification code is incorrect for ${email}. Please check your email and enter the latest code sent to you.` });
-      }
-
-      if (Date.now() > stored.expires) {
-        return res.status(400).json({ success: false, error: 'The verification code has expired. Please request a new one.' });
-      }
-
-      // Clear code after use
-      verificationCodes.delete(email);
 
       if (!process.env.GOOGLE_SHEET_ID || !process.env.GOOGLE_SERVICE_ACCOUNT_EMAIL || !process.env.GOOGLE_PRIVATE_KEY) {
         return res.status(500).json({ success: false, error: 'Server configuration error: Missing Google Sheets credentials in Environment Variables. Please set GOOGLE_SHEET_ID, GOOGLE_SERVICE_ACCOUNT_EMAIL, and GOOGLE_PRIVATE_KEY.' });
@@ -222,8 +110,6 @@ async function startServer() {
       } catch (sheetError: any) {
         console.error('Error appending to Google Sheets:', sheetError);
         // We continue even if sheet fails, or we can choose to fail here. 
-        // Based on existing code, it was sending a 500 here, which caused the error.
-        // Let's just log it and continue to email.
       }
 
       // Send welcome email
@@ -267,19 +153,16 @@ async function startServer() {
           console.log(`Welcome email sent to ${email}`);
         } catch (emailError: any) {
           console.error('Error sending welcome email:', emailError);
-          if (emailError.message && emailError.message.includes('Username and Password not accepted')) {
-            console.error('SMTP Authentication failed. Please ensure you are using a Gmail App Password, not your regular password.');
-          }
         }
-      } else {
-        console.log('Skipping email send: SMTP credentials not configured or email missing.');
       }
 
-      res.status(200).json({ success: true });
+      return res.status(200).json({ success: true });
     } catch (error: any) {
-      console.error('Error submitting to Google Sheets:', error);
-      const errorMessage = error.response?.data?.error?.message || error.message || 'Failed to submit data to Google Sheets';
-      res.status(500).json({ success: false, error: `Google Sheets Error: ${errorMessage}` });
+      console.error('Error submitting form:', error);
+      const errorMessage = error.response?.data?.error?.message || error.message || 'Failed to submit data';
+      if (!res.headersSent) {
+        return res.status(500).json({ success: false, error: `Error: ${errorMessage}` });
+      }
     }
   });
 
