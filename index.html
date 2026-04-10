@@ -1105,6 +1105,11 @@
 
                 loadingView.classList.add('hidden');
                 successView.classList.remove('hidden');
+
+                // Open payment page in a new tab if not basic plan
+                if (state.plan !== 'basic' && state.paymentMethod) {
+                    window.open(`/payment.html?method=${state.paymentMethod}&plan=${state.plan}`, '_blank');
+                }
             } catch (err) {
                 console.error(err);
                 loadingView.classList.add('hidden');
