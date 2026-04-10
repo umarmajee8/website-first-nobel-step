@@ -1053,7 +1053,7 @@
             loadingView.classList.remove('hidden');
 
             try {
-                const response = await fetch('/api/submit-membership', {
+                const response = await fetch('https://website-first-nobel-step.vercel.app/api/submit-membership', {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
                     body: JSON.stringify(formData)
