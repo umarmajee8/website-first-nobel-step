@@ -12,41 +12,51 @@
     </style>
 </head>
 <body class="bg-gray-50 flex items-center justify-center min-h-screen p-4">
-    <div class="bg-white p-8 rounded-3xl shadow-xl max-w-2xl w-full text-center border border-gray-100">
-        <h1 class="text-2xl font-bold text-gray-900 mb-8">How would you like to pay?</h1>
+    <div class="bg-white p-8 rounded-3xl shadow-xl max-w-md w-full text-center border border-gray-100">
+        <div class="w-16 h-16 bg-green-50 rounded-full flex items-center justify-center mx-auto mb-6 text-green-600">
+            <i class="fa-solid fa-lock text-2xl"></i>
+        </div>
+        <h1 class="text-2xl font-bold text-gray-900 mb-2">Secure Payment Gateway</h1>
+        <p class="text-gray-500 text-sm mb-8">First Nobel Step (Pvt.) Ltd. Secure Portal</p>
         
-        <div class="grid grid-cols-1 sm:grid-cols-3 gap-4 mb-8">
-            <!-- Payment Methods -->
-            <button onclick="selectMethod('Visa')" class="p-4 border border-gray-200 rounded-xl hover:border-green-500 transition-colors flex items-center justify-center">
-                <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/5/5e/Visa_Inc._logo.svg/2560px-Visa_Inc._logo.svg.png" alt="Visa" class="h-8 object-contain">
-            </button>
-            <button onclick="selectMethod('Mastercard')" class="p-4 border border-gray-200 rounded-xl hover:border-green-500 transition-colors flex items-center justify-center">
-                <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/2/2a/Mastercard-logo.svg/1280px-Mastercard-logo.svg.png" alt="Mastercard" class="h-8 object-contain">
-            </button>
-            <button onclick="selectMethod('PayPal')" class="p-4 border border-gray-200 rounded-xl hover:border-green-500 transition-colors flex items-center justify-center">
-                <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/b/b5/PayPal.svg/1200px-PayPal.svg.png" alt="PayPal" class="h-8 object-contain">
-            </button>
-            <button onclick="selectMethod('Giropay')" class="p-4 border border-gray-200 rounded-xl hover:border-green-500 transition-colors flex items-center justify-center">
-                <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/b/b2/Giropay_logo.svg/1200px-Giropay_logo.svg.png" alt="Giropay" class="h-8 object-contain">
-            </button>
-            <button onclick="selectMethod('iDEAL')" class="p-4 border border-gray-200 rounded-xl hover:border-green-500 transition-colors flex items-center justify-center">
-                <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/c/c5/Ideal_logo.svg/1200px-Ideal_logo.svg.png" alt="iDEAL" class="h-8 object-contain">
-            </button>
-            <button onclick="selectMethod('JCB')" class="p-4 border border-gray-200 rounded-xl hover:border-green-500 transition-colors flex items-center justify-center">
-                <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/4/40/JCB_logo.svg/1200px-JCB_logo.svg.png" alt="JCB" class="h-8 object-contain">
-            </button>
+        <div class="relative w-full h-2 bg-gray-100 rounded-full overflow-hidden mb-8">
+            <div class="absolute top-0 left-0 h-full bg-green-500 w-1/2 animate-[pulse_1s_ease-in-out_infinite]"></div>
+        </div>
+
+        <div class="p-4 bg-gray-50 rounded-xl text-left mb-6">
+            <div class="flex justify-between text-sm mb-2">
+                <span class="text-gray-500">Method:</span>
+                <span class="font-semibold text-gray-900 capitalize" id="display-method">Loading...</span>
+            </div>
+            <div class="flex justify-between text-sm">
+                <span class="text-gray-500">Amount:</span>
+                <span class="font-semibold text-gray-900" id="display-amount">Loading...</span>
+            </div>
         </div>
 
         <button onclick="window.close()" class="w-full py-3 bg-gray-900 text-white rounded-xl font-medium hover:bg-gray-800 transition-colors">
-            Cancel
+            Cancel & Close
         </button>
     </div>
 
     <script>
-        function selectMethod(method) {
-            alert('You selected: ' + method + '. Proceeding to secure checkout...');
-            console.log('Selected payment method:', method);
-        }
+        // Extract query params
+        const urlParams = new URLSearchParams(window.location.search);
+        const method = urlParams.get('method') || 'Unknown';
+        const plan = urlParams.get('plan') || 'Unknown';
+        
+        let amount = 'PKR 0';
+        if (plan === 'standard') amount = 'PKR 14,999';
+        else if (plan === 'professional_pkg') amount = 'PKR 24,999';
+        else if (plan === 'entrepreneur') amount = 'PKR 5,000';
+
+        document.getElementById('display-method').innerText = method;
+        document.getElementById('display-amount').innerText = amount;
+
+        // Simulate redirect after 3 seconds
+        setTimeout(() => {
+            console.log('Redirecting to ' + method + ' gateway...');
+        }, 3000);
     </script>
 </body>
 </html>
