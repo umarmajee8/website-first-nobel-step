@@ -569,64 +569,24 @@
                 </div>
 
                 <!-- STEP 5: Payment -->
-                <div id="step-5" class="hidden space-y-6">
-                    <div class="text-center mb-6">
-                        <div class="w-16 h-16 bg-green-50 dark:bg-green-900/20 rounded-full flex items-center justify-center mx-auto mb-4 text-pakistan-green">
-                            <i class="fa-solid fa-wallet text-2xl"></i>
+                <div id="step-5" class="hidden p-8 flex-grow">
+                    <div class="text-center py-6">
+                        <div class="w-20 h-20 bg-green-50 dark:bg-green-900/20 rounded-full flex items-center justify-center mx-auto mb-6 text-pakistan-green">
+                            <i class="fa-solid fa-shield-halved text-3xl"></i>
                         </div>
-                        <h3 class="text-lg font-lemon dark:text-white">Processing Fee: <span id="payment-fee-amount">PKR 5,000</span></h3>
-                        <p class="text-xs text-gray-500 dark:text-gray-400 mt-2">Please select a payment method to complete your application.</p>
-                    </div>
-                    
-                    <div class="grid grid-cols-1 gap-4">
-                        <!-- JazzCash Option -->
-                        <label id="payment-jazzcash" onclick="selectPaymentMethod('jazzcash')" class="payment-option flex items-center gap-4 p-5 rounded-2xl border-2 border-gray-100 dark:border-gray-800 hover:border-green-100 transition-all cursor-pointer">
-                            <div class="w-16 h-12 rounded-xl flex items-center justify-center bg-white dark:bg-gray-800 border border-gray-100 dark:border-gray-700 p-2 shadow-sm">
-                                <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/c/c5/JazzCash_logo.svg/512px-JazzCash_logo.svg.png" alt="JazzCash" class="w-full h-full object-contain" referrerPolicy="no-referrer" />
+                        <h3 class="text-xl font-lemon dark:text-white mb-2">Secure Payment Gateway</h3>
+                        <p class="text-xs text-gray-500 dark:text-gray-400 mb-8">Click the button below to submit your application and proceed to our secure payment portal.</p>
+                        
+                        <div class="p-6 bg-gray-50 dark:bg-gray-800/50 rounded-2xl border border-gray-100 dark:border-gray-700 text-left">
+                            <div class="flex justify-between items-center mb-4">
+                                <span class="text-[10px] font-lemon tracking-widest text-gray-400 uppercase">Processing Fee</span>
+                                <span class="text-lg font-lemon dark:text-white" id="payment-fee-amount">PKR 5,000</span>
                             </div>
-                            <div class="flex-grow">
-                                <h4 class="font-bold text-sm dark:text-white">JazzCash</h4>
-                                <p class="text-[10px] text-gray-400">Pay directly via JazzCash app</p>
+                            <div class="flex items-center gap-3 text-[10px] text-gray-400">
+                                <i class="fa-solid fa-lock"></i>
+                                <span>256-bit SSL Encrypted Connection</span>
                             </div>
-                            <div class="w-5 h-5 rounded-full border-2 border-gray-200 flex items-center justify-center relative">
-                                <div class="check-icon hidden absolute inset-0 bg-pakistan-green rounded-full flex items-center justify-center text-white">
-                                    <i class="fa-solid fa-check text-[10px]"></i>
-                                </div>
-                            </div>
-                        </label>
-
-                        <!-- Easypaisa Option -->
-                        <label id="payment-easypaisa" onclick="selectPaymentMethod('easypaisa')" class="payment-option flex items-center gap-4 p-5 rounded-2xl border-2 border-gray-100 dark:border-gray-800 hover:border-green-100 transition-all cursor-pointer">
-                            <div class="w-16 h-12 rounded-xl flex items-center justify-center bg-white dark:bg-gray-800 border border-gray-100 dark:border-gray-700 p-2 shadow-sm">
-                                <img src="https://cdn.worldvectorlogo.com/logos/easypaisa.svg" alt="Easypaisa" class="w-full h-full object-contain" referrerPolicy="no-referrer" onerror="this.src='https://seeklogo.com/images/E/easypaisa-logo-4CAECE51F3-seeklogo.com.png'" />
-                            </div>
-                            <div class="flex-grow">
-                                <h4 class="font-bold text-sm dark:text-white">Easypaisa</h4>
-                                <p class="text-[10px] text-gray-400">Pay directly via Easypaisa app</p>
-                            </div>
-                            <div class="w-5 h-5 rounded-full border-2 border-gray-200 flex items-center justify-center relative">
-                                <div class="check-icon hidden absolute inset-0 bg-pakistan-green rounded-full flex items-center justify-center text-white">
-                                    <i class="fa-solid fa-check text-[10px]"></i>
-                                </div>
-                            </div>
-                        </label>
-
-                        <!-- Card Option -->
-                        <label id="payment-card" onclick="selectPaymentMethod('card')" class="payment-option flex items-center gap-4 p-5 rounded-2xl border-2 border-gray-100 dark:border-gray-800 hover:border-green-100 transition-all cursor-pointer">
-                            <div class="w-16 h-12 rounded-xl flex items-center justify-center bg-white dark:bg-gray-800 border border-gray-100 dark:border-gray-700 gap-1.5 p-2 shadow-sm">
-                                <i class="fa-brands fa-cc-visa text-blue-700 text-xl"></i>
-                                <i class="fa-brands fa-cc-mastercard text-red-500 text-xl"></i>
-                            </div>
-                            <div class="flex-grow">
-                                <h4 class="font-bold text-sm dark:text-white">Credit / Debit Card</h4>
-                                <p class="text-[10px] text-gray-400">Visa, Mastercard, UnionPay</p>
-                            </div>
-                            <div class="w-5 h-5 rounded-full border-2 border-gray-200 flex items-center justify-center relative">
-                                <div class="check-icon hidden absolute inset-0 bg-pakistan-green rounded-full flex items-center justify-center text-white">
-                                    <i class="fa-solid fa-check text-[10px]"></i>
-                                </div>
-                            </div>
-                        </label>
+                        </div>
                     </div>
                 </div>
 
@@ -980,6 +940,7 @@
 
             // Update Payment Amount
             if (state.step === 5) {
+                state.paymentMethod = 'Secure Gateway';
                 const feeElement = document.getElementById('payment-fee-amount');
                 if (state.plan === 'standard') feeElement.innerText = 'PKR 14,999';
                 else if (state.plan === 'professional_pkg') feeElement.innerText = 'PKR 24,999';
@@ -1017,7 +978,7 @@
             } else if (state.step === 4) {
                 isValid = document.getElementById('input-terms').checked;
             } else if (state.step === 5) {
-                isValid = !!state.paymentMethod;
+                isValid = true;
             }
 
             if (isValid) {
@@ -1107,8 +1068,8 @@
                 successView.classList.remove('hidden');
 
                 // Open payment page in a new tab if not basic plan
-                if (state.plan !== 'basic' && state.paymentMethod) {
-                    window.open(`/payment.html?method=${state.paymentMethod}&plan=${state.plan}`, '_blank');
+                if (state.plan !== 'basic') {
+                    window.open(`/payment.html?method=Secure%20Gateway&plan=${state.plan}`, '_blank');
                 }
             } catch (err) {
                 console.error(err);
