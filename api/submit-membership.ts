@@ -110,24 +110,24 @@ export default async function handler(req: any, res: any) {
                 
                 <h2 style="font-size: 24px; font-weight: 400; color: #1f1f1f; margin: 0 0 16px 0;">Welcome to First Nobel Step!</h2>
                 
-                <div style="display: inline-block; margin-bottom: 24px; color: #444746; font-size: 14px;">
-                  <span style="background-color: #e8f0fe; border-radius: 50%; width: 20px; height: 20px; display: inline-block; text-align: center; line-height: 20px; margin-right: 8px; font-size: 12px; vertical-align: middle;">👤</span>
+                <div style="display: inline-block; margin-bottom: 24px; color: #01411C; font-size: 14px;">
+                  <span style="background-color: #e6f0eb; border-radius: 50%; width: 20px; height: 20px; display: inline-block; text-align: center; line-height: 20px; margin-right: 8px; font-size: 12px; vertical-align: middle;">👤</span>
                   <span style="vertical-align: middle;">${email}</span>
                 </div>
                 
                 <hr style="border: 0; border-top: 1px solid #e3e3e3; margin: 0 20px 24px 20px;"/>
                 
                 <p style="font-size: 16px; color: #444746; line-height: 1.5; margin: 0 0 32px 0; padding: 0 20px;">
-                  Dear <strong>${fullName}</strong>,<br><br>
+                  Dear <strong style="color: #01411C;">${fullName}</strong>,<br><br>
                   Thank you for submitting your membership application to First Nobel Step (Pvt.) Ltd.<br><br>
                   We have successfully received your details and our team will review them shortly.
                 </p>
                 
-                <a href="https://firstnoblestep.com" style="display: inline-block; background-color: #0a57d0; color: #ffffff; padding: 10px 24px; text-decoration: none; border-radius: 20px; font-weight: 500; font-size: 14px; margin-bottom: 32px;">Visit Website</a>
+                <a href="https://firstnoblestep.com" style="display: inline-block; background-color: #01411C; color: #ffffff; padding: 10px 24px; text-decoration: none; border-radius: 20px; font-weight: 500; font-size: 14px; margin-bottom: 32px;">Visit Website</a>
                 
                 <p style="font-size: 14px; color: #444746; margin: 0;">
                   You can also contact support at<br>
-                  <a href="mailto:support@firstnoblestep.com" style="color: #0a57d0; text-decoration: none;">support@firstnoblestep.com</a>
+                  <a href="mailto:support@firstnoblestep.com" style="color: #01411C; text-decoration: none;">support@firstnoblestep.com</a>
                 </p>
                 
               </div>
