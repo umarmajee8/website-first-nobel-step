@@ -99,17 +99,21 @@ export default async function handler(req: any, res: any) {
           from: `"First Nobel Step" <${process.env.SMTP_USER}>`,
           to: email,
           subject: 'Welcome to First Nobel Step - Membership Application Received',
-          text: `Dear ${fullName},\n\nThank you for submitting your membership application to First Nobel Step (Pvt.) Ltd.\n\nWe have successfully received your details and our team will review them shortly.\n\nBest regards,\nFirst Nobel Step Team\nsupport@firstnoblestep.com`,
+          text: `Dear ${fullName},\n\nThank you for submitting your membership application to First Nobel Step (Pvt.) Ltd.\n\nWe have successfully received your details and our team will review them shortly.\n\nBest regards,\nFirst Nobel Step Team\nsupport@firstnoblestep.com\n\n---\nDISCLAIMER:\nFirst Noble Step (Private) Limited provides consultancy and informational services. We do not provide regulated financial, investment, legal, tax, or brokerage advice. Any reliance on our information is at your own risk. Please consult qualified professionals before making business or financial decisions.`,
           html: `
-            <div style="font-family: Arial, sans-serif; color: #333; line-height: 1.6; max-w: 600px; margin: 0 auto; padding: 20px; border: 1px solid #e5e7eb; border-radius: 8px;">
-              <h2 style="color: #01411C; border-bottom: 2px solid #01411C; padding-bottom: 10px;">Welcome to First Nobel Step!</h2>
-              <p>Dear <strong>${fullName}</strong>,</p>
-              <p>Thank you for submitting your membership application to First Nobel Step (Pvt.) Ltd.</p>
-              <p>We have successfully received your details and our team will review them shortly.</p>
-              <br/>
-              <p>Best regards,</p>
-              <p><strong>First Nobel Step Team</strong><br/>
-              <a href="mailto:support@firstnoblestep.com" style="color: #01411C;">support@firstnoblestep.com</a></p>
+            <div style="font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; color: #202124; line-height: 1.5; max-width: 500px; margin: 40px auto; padding: 30px; border: 1px solid #dadce0; border-radius: 8px; text-align: center;">
+              <div style="margin-bottom: 24px;">
+                <img src="https://www.google.com/images/branding/googlelogo/1x/googlelogo_color_272x92dp.png" alt="Logo" style="width: 100px;"/>
+              </div>
+              <h2 style="font-size: 22px; font-weight: 500; margin-bottom: 16px;">Welcome to First Nobel Step</h2>
+              <p style="margin-bottom: 24px; color: #3c4043;">Dear <strong>${fullName}</strong>,<br/>Thank you for submitting your membership application. We have successfully received your details and our team will review them shortly.</p>
+              
+              <a href="https://firstnoblestep.com" style="display: inline-block; background-color: #01411C; color: #ffffff; padding: 12px 24px; text-decoration: none; border-radius: 4px; font-weight: 500; margin-bottom: 24px;">Visit Website</a>
+              
+              <p style="font-size: 14px; color: #70757a; margin-bottom: 24px;">If you have any questions, please contact us at <a href="mailto:support@firstnoblestep.com" style="color: #01411C;">support@firstnoblestep.com</a></p>
+              
+              <hr style="border: 0; border-top: 1px solid #dadce0; margin: 24px 0;"/>
+              <p style="font-size: 12px; color: #70757a;"><strong>DISCLAIMER:</strong> First Noble Step (Private) Limited provides consultancy and informational services. We do not provide regulated financial, investment, legal, tax, or brokerage advice. Any reliance on our information is at your own risk. Please consult qualified professionals before making business or financial decisions.</p>
             </div>
           `
         };
