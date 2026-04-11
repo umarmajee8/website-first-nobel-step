@@ -101,15 +101,41 @@ export default async function handler(req: any, res: any) {
           subject: 'Welcome to First Nobel Step - Membership Application Received',
           text: `Dear ${fullName},\n\nThank you for submitting your membership application to First Nobel Step (Pvt.) Ltd.\n\nWe have successfully received your details and our team will review them shortly.\n\nBest regards,\nFirst Nobel Step Team\nsupport@firstnoblestep.com`,
           html: `
-            <div style="font-family: Arial, sans-serif; color: #333; line-height: 1.6; max-w: 600px; margin: 0 auto; padding: 20px; border: 1px solid #e5e7eb; border-radius: 8px;">
-              <h2 style="color: #01411C; border-bottom: 2px solid #01411C; padding-bottom: 10px;">Welcome to First Nobel Step!</h2>
-              <p>Dear <strong>${fullName}</strong>,</p>
-              <p>Thank you for submitting your membership application to First Nobel Step (Pvt.) Ltd.</p>
-              <p>We have successfully received your details and our team will review them shortly.</p>
-              <br/>
-              <p>Best regards,</p>
-              <p><strong>First Nobel Step Team</strong><br/>
-              <a href="mailto:support@firstnoblestep.com" style="color: #01411C;">support@firstnoblestep.com</a></p>
+            <div style="background-color: #f0f4f9; padding: 40px 20px; font-family: 'Google Sans', Roboto, Arial, sans-serif; margin: 0;">
+              <div style="background-color: #ffffff; max-width: 500px; margin: 0 auto; border: 1px solid #dadce0; border-radius: 8px; padding: 40px 20px; text-align: center;">
+                
+                <div style="margin-bottom: 16px;">
+                  <h1 style="margin: 0; font-size: 24px; font-weight: 600; color: #01411C; letter-spacing: -0.5px;">First Nobel Step</h1>
+                </div>
+                
+                <h2 style="font-size: 24px; font-weight: 400; color: #1f1f1f; margin: 0 0 16px 0;">Welcome to First Nobel Step!</h2>
+                
+                <div style="display: inline-block; margin-bottom: 24px; color: #444746; font-size: 14px;">
+                  <span style="background-color: #e8f0fe; border-radius: 50%; width: 20px; height: 20px; display: inline-block; text-align: center; line-height: 20px; margin-right: 8px; font-size: 12px; vertical-align: middle;">👤</span>
+                  <span style="vertical-align: middle;">${email}</span>
+                </div>
+                
+                <hr style="border: 0; border-top: 1px solid #e3e3e3; margin: 0 20px 24px 20px;"/>
+                
+                <p style="font-size: 16px; color: #444746; line-height: 1.5; margin: 0 0 32px 0; padding: 0 20px;">
+                  Dear <strong>${fullName}</strong>,<br><br>
+                  Thank you for submitting your membership application to First Nobel Step (Pvt.) Ltd.<br><br>
+                  We have successfully received your details and our team will review them shortly.
+                </p>
+                
+                <a href="https://firstnoblestep.com" style="display: inline-block; background-color: #0a57d0; color: #ffffff; padding: 10px 24px; text-decoration: none; border-radius: 20px; font-weight: 500; font-size: 14px; margin-bottom: 32px;">Visit Website</a>
+                
+                <p style="font-size: 14px; color: #444746; margin: 0;">
+                  You can also contact support at<br>
+                  <a href="mailto:support@firstnoblestep.com" style="color: #0a57d0; text-decoration: none;">support@firstnoblestep.com</a>
+                </p>
+                
+              </div>
+              
+              <div style="max-width: 500px; margin: 24px auto 0; text-align: center; font-size: 12px; color: #5f6368; line-height: 1.5; padding: 0 20px;">
+                <p style="margin: 0 0 8px 0;">You received this email to let you know about important updates to your First Nobel Step application.</p>
+                <p style="margin: 0 0 16px 0;">&copy; ${new Date().getFullYear()} First Nobel Step (Pvt.) Ltd.<br>129 CCA-3, Block-X, DHA Phase 7, Lahore</p>
+              </div>
             </div>
           `
         };
