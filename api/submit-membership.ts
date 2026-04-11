@@ -99,7 +99,7 @@ export default async function handler(req: any, res: any) {
           from: `"First Nobel Step" <${process.env.SMTP_USER}>`,
           to: email,
           subject: 'Welcome to First Nobel Step - Membership Application Received',
-          text: `Dear ${fullName},\n\nThank you for submitting your membership application to First Nobel Step (Pvt.) Ltd.\n\nWe have successfully received your details and our team will review them shortly.\n\nBest regards,\nFirst Nobel Step Team\nsupport@firstnoblestep.com\n\n---\nDISCLAIMER:\nFirst Noble Step (Private) Limited provides consultancy and informational services. We do not provide regulated financial, investment, legal, tax, or brokerage advice. Any reliance on our information is at your own risk. Please consult qualified professionals before making business or financial decisions.`,
+          text: `Dear ${fullName},\n\nThank you for submitting your membership application to First Nobel Step (Pvt.) Ltd.\n\nWe have successfully received your details and our team will review them shortly.\n\nPlease find the disclaimer document attached.\n\nBest regards,\nFirst Nobel Step Team\nsupport@firstnoblestep.com`,
           html: `
             <div style="background-color: #f0f4f9; padding: 40px 20px; font-family: 'Google Sans', Roboto, Arial, sans-serif; margin: 0;">
               <div style="background-color: #ffffff; max-width: 500px; margin: 0 auto; border: 1px solid #dadce0; border-radius: 8px; padding: 40px 20px; text-align: center;">
@@ -120,7 +120,8 @@ export default async function handler(req: any, res: any) {
                 <p style="font-size: 16px; color: #444746; line-height: 1.5; margin: 0 0 32px 0; padding: 0 20px;">
                   Dear <strong>${fullName}</strong>,<br><br>
                   Thank you for submitting your membership application to First Nobel Step (Pvt.) Ltd.<br><br>
-                  We have successfully received your details and our team will review them shortly.
+                  We have successfully received your details and our team will review them shortly.<br><br>
+                  Please find the disclaimer document attached to this email.
                 </p>
                 
                 <a href="https://firstnoblestep.com" style="display: inline-block; background-color: #0a57d0; color: #ffffff; padding: 10px 24px; text-decoration: none; border-radius: 20px; font-weight: 500; font-size: 14px; margin-bottom: 32px;">Visit Website</a>
@@ -135,10 +136,15 @@ export default async function handler(req: any, res: any) {
               <div style="max-width: 500px; margin: 24px auto 0; text-align: center; font-size: 12px; color: #5f6368; line-height: 1.5; padding: 0 20px;">
                 <p style="margin: 0 0 8px 0;">You received this email to let you know about important updates to your First Nobel Step application.</p>
                 <p style="margin: 0 0 16px 0;">&copy; ${new Date().getFullYear()} First Nobel Step (Pvt.) Ltd.<br>129 CCA-3, Block-X, DHA Phase 7, Lahore</p>
-                <p style="margin: 0; font-size: 10px; color: #70757a;"><strong>DISCLAIMER:</strong> First Noble Step (Private) Limited provides consultancy and informational services. We do not provide regulated financial, investment, legal, tax, or brokerage advice. Any reliance on our information is at your own risk. Please consult qualified professionals before making business or financial decisions.</p>
               </div>
             </div>
-          `
+          `,
+          attachments: [
+            {
+              filename: 'Disclaimer.pdf',
+              path: 'https://firstnoblestep.com/disclaimer.pdf' // Assuming the file is hosted here
+            }
+          ]
         };
 
         await transporter.sendMail(mailOptions);
