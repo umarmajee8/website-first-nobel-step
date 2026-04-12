@@ -280,7 +280,7 @@ const MembershipForm: React.FC<Props> = ({ initialPlanId, onClose }) => {
 
   const nextStep = async () => {
     const currentFields = step === 2 ? ['fullName', 'cnic', 'email', 'whatsapp'] : 
-                         step === 3 ? (formData.planId === 'student' ? ['institute', 'degree'] : formData.planId === 'entrepreneur' ? ['businessName', 'industry'] : ['experience', 'targetCountry']) : [];
+                         step === 4 ? (formData.planId === 'student' ? ['institute', 'degree'] : formData.planId === 'entrepreneur' ? ['businessName', 'industry'] : ['experience', 'targetCountry']) : [];
     let hasErrors = false;
     const newTouched = { ...touchedFields };
     currentFields.forEach(f => {
@@ -290,7 +290,28 @@ const MembershipForm: React.FC<Props> = ({ initialPlanId, onClose }) => {
     setTouchedFields(newTouched);
     
     if (!hasErrors) {
-      if (step === 5) {
+      if (step === 3) {
+        setOtpError('');
+        if (!formData.otp || formData.otp.length !== 6) {
+          setOtpError('Please enter a valid 6-digit code.');
+          return;
+        }
+        try {
+          const response = await fetch('/api/verify-otp', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ email: formData.email, otp: formData.otp, otpHash: formData.otpHash })
+          });
+          const data = await response.json();
+          if (!data.success) {
+            throw new Error(data.error || 'Invalid verification code');
+          }
+          setStep(4);
+        } catch (err: any) {
+          setOtpError(err.message);
+          return;
+        }
+      } else if (step === 5) {
         setStep(6);
       } else if (step < 6) {
         setStep((prev) => (prev + 1) as FormStep);
@@ -333,6 +354,12 @@ const MembershipForm: React.FC<Props> = ({ initialPlanId, onClose }) => {
       setIsSubmitting(false);
     }
   };
+
+  useEffect(() => {
+    if (step === 3 && !otpSent && !otpLoading && !otpError) {
+      handleSendOTP();
+    }
+  }, [step, otpSent, otpLoading, otpError]);
 
   const handleSendOTP = async () => {
     setOtpLoading(true);
@@ -538,6 +565,7 @@ const MembershipForm: React.FC<Props> = ({ initialPlanId, onClose }) => {
                   
                   <div className="flex flex-col gap-3 items-center w-full">
                     <div className="flex flex-col items-center gap-3 w-full">
+                      {otpLoading && <p className="text-xs text-gray-500">Sending verification code...</p>}
                       <input 
                         type="text" 
                         maxLength={6} 
@@ -546,14 +574,16 @@ const MembershipForm: React.FC<Props> = ({ initialPlanId, onClose }) => {
                         onChange={(e) => setFormData(prev => ({ ...prev, otp: e.target.value }))}
                         className="text-center tracking-[0.5em] font-mono text-lg w-full max-w-[200px] px-4 py-4 rounded-2xl border-2 border-gray-100 dark:border-gray-700 bg-white dark:bg-gray-900 focus:border-pakistan-green outline-none dark:text-white" 
                       />
-                      <button 
-                        type="button" 
-                        onClick={handleSendOTP} 
-                        disabled={otpLoading}
-                        className={`w-full max-w-xs py-3 ${otpSent ? 'bg-transparent text-pakistan-green underline' : 'bg-gray-100 hover:bg-gray-200 dark:bg-gray-700 dark:hover:bg-gray-600 text-gray-800 dark:text-white'} text-xs rounded-2xl transition-colors font-lemon tracking-widest uppercase disabled:opacity-50`}
-                      >
-                        {otpLoading ? 'Sending...' : (otpSent ? 'Resend Code' : 'Send Verification Code')}
-                      </button>
+                      {(!otpLoading && (otpSent || otpError)) && (
+                        <button 
+                          type="button" 
+                          onClick={handleSendOTP} 
+                          disabled={otpLoading}
+                          className="w-full max-w-xs py-3 bg-transparent text-pakistan-green underline hover:text-green-700 text-xs rounded-2xl transition-colors font-lemon tracking-widest uppercase disabled:opacity-50"
+                        >
+                          Resend Code
+                        </button>
+                      )}
                       {otpMessage && <p className="text-xs text-green-600">{otpMessage}</p>}
                       {otpError && <p className="text-xs text-red-500">{otpError}</p>}
                     </div>
@@ -618,47 +648,50 @@ const MembershipForm: React.FC<Props> = ({ initialPlanId, onClose }) => {
                       <i className="fa-solid fa-wallet text-2xl"></i>
                     </div>
                     <h3 className="text-lg font-lemon dark:text-white">Select Payment Method</h3>
-                    <p className="text-xs text-gray-500 dark:text-gray-400 mt-2">Choose how you want to pay your processing fee.</p>
+                    <p className="text-xs text-gray-500 dark:text-gray-400 mt-2">Choose how you want to pay your processing fee via Fastpay.</p>
                   </div>
                   
                   <div className="grid grid-cols-1 gap-4">
-                    <label onClick={() => setFormData(prev => ({ ...prev, paymentMethod: 'jazzcash' }))} className={`flex items-center gap-4 p-5 rounded-2xl border-2 transition-all cursor-pointer ${formData.paymentMethod === 'jazzcash' ? 'border-pakistan-green bg-green-50 dark:bg-green-900/10' : 'border-gray-100 dark:border-gray-800 hover:border-green-100'}`}>
-                      <div className="w-16 h-12 rounded-xl flex items-center justify-center bg-white border border-gray-100 dark:border-gray-700 p-2 shadow-sm">
-                        <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/c/c5/JazzCash_logo.svg/1200px-JazzCash_logo.svg.png" alt="JazzCash" className="w-full h-full object-contain" />
-                      </div>
-                      <div className="flex-grow">
-                        <h4 className="font-bold text-sm dark:text-white">JazzCash</h4>
-                        <p className="text-[10px] text-gray-400">Pay directly via JazzCash app</p>
-                      </div>
-                      <div className={`w-5 h-5 rounded-full border-2 flex items-center justify-center ${formData.paymentMethod === 'jazzcash' ? 'border-pakistan-green bg-pakistan-green text-white' : 'border-gray-200'}`}>
-                        {formData.paymentMethod === 'jazzcash' && <i className="fa-solid fa-check text-[10px]"></i>}
-                      </div>
-                    </label>
                     <label onClick={() => setFormData(prev => ({ ...prev, paymentMethod: 'easypaisa' }))} className={`flex items-center gap-4 p-5 rounded-2xl border-2 transition-all cursor-pointer ${formData.paymentMethod === 'easypaisa' ? 'border-pakistan-green bg-green-50 dark:bg-green-900/10' : 'border-gray-100 dark:border-gray-800 hover:border-green-100'}`}>
-                      <div className="w-16 h-12 rounded-xl flex items-center justify-center bg-white border border-gray-100 dark:border-gray-700 p-2 shadow-sm">
-                        <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/c/c5/Easypaisa_logo.svg/1200px-Easypaisa_logo.svg.png" alt="Easypaisa" className="w-full h-full object-contain" />
+                      <div className="w-16 h-12 rounded-xl flex items-center justify-center bg-[#00A94F] shadow-sm">
+                        <span className="text-white text-[10px] font-bold tracking-wider">easypaisa</span>
                       </div>
                       <div className="flex-grow">
                         <h4 className="font-bold text-sm dark:text-white">Easypaisa</h4>
-                        <p className="text-[10px] text-gray-400">Pay directly via Easypaisa app</p>
                       </div>
                       <div className={`w-5 h-5 rounded-full border-2 flex items-center justify-center ${formData.paymentMethod === 'easypaisa' ? 'border-pakistan-green bg-pakistan-green text-white' : 'border-gray-200'}`}>
                         {formData.paymentMethod === 'easypaisa' && <i className="fa-solid fa-check text-[10px]"></i>}
                       </div>
                     </label>
+
+                    <label onClick={() => setFormData(prev => ({ ...prev, paymentMethod: 'jazzcash' }))} className={`flex items-center gap-4 p-5 rounded-2xl border-2 transition-all cursor-pointer ${formData.paymentMethod === 'jazzcash' ? 'border-pakistan-green bg-green-50 dark:bg-green-900/10' : 'border-gray-100 dark:border-gray-800 hover:border-green-100'}`}>
+                      <div className="w-16 h-12 rounded-xl flex items-center justify-center bg-[#ED1C24] shadow-sm">
+                        <span className="text-white text-[11px] font-bold tracking-wider">JazzCash</span>
+                      </div>
+                      <div className="flex-grow">
+                        <h4 className="font-bold text-sm dark:text-white">JazzCash</h4>
+                      </div>
+                      <div className={`w-5 h-5 rounded-full border-2 flex items-center justify-center ${formData.paymentMethod === 'jazzcash' ? 'border-pakistan-green bg-pakistan-green text-white' : 'border-gray-200'}`}>
+                        {formData.paymentMethod === 'jazzcash' && <i className="fa-solid fa-check text-[10px]"></i>}
+                      </div>
+                    </label>
+
                     <label onClick={() => setFormData(prev => ({ ...prev, paymentMethod: 'card' }))} className={`flex items-center gap-4 p-5 rounded-2xl border-2 transition-all cursor-pointer ${formData.paymentMethod === 'card' ? 'border-pakistan-green bg-green-50 dark:bg-green-900/10' : 'border-gray-100 dark:border-gray-800 hover:border-green-100'}`}>
-                      <div className="w-16 h-12 rounded-xl flex flex-col items-center justify-center bg-white border border-gray-100 dark:border-gray-700 gap-1.5 py-2 shadow-sm">
-                        <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/5/5e/Visa_Inc._logo.svg/2560px-Visa_Inc._logo.svg.png" alt="Visa" className="h-2.5 object-contain" />
-                        <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/2/2a/Mastercard-logo.svg/1280px-Mastercard-logo.svg.png" alt="Mastercard" className="h-3.5 object-contain" />
+                      <div className="w-16 h-12 rounded-xl flex items-center justify-center bg-gray-800 shadow-sm">
+                        <i className="fa-regular fa-credit-card text-white text-xl"></i>
                       </div>
                       <div className="flex-grow">
                         <h4 className="font-bold text-sm dark:text-white">Credit / Debit Card</h4>
-                        <p className="text-[10px] text-gray-400">Visa, Mastercard, UnionPay</p>
                       </div>
                       <div className={`w-5 h-5 rounded-full border-2 flex items-center justify-center ${formData.paymentMethod === 'card' ? 'border-pakistan-green bg-pakistan-green text-white' : 'border-gray-200'}`}>
                         {formData.paymentMethod === 'card' && <i className="fa-solid fa-check text-[10px]"></i>}
                       </div>
                     </label>
+                  </div>
+
+                  <div className="flex items-center justify-center gap-2 text-[10px] text-gray-400 mt-6">
+                    <i className="fa-solid fa-shield-halved text-pakistan-green"></i>
+                    <span>Secured by Fastpay</span>
                   </div>
 
                   {formData.paymentMethod === 'card' && (

@@ -524,8 +524,9 @@
                         
                         <div id="otp-section" class="flex flex-col gap-3 items-center w-full">
                             <div class="flex flex-col items-center gap-3 w-full">
+                                <p id="otp-status" class="text-xs text-gray-500 hidden">Sending verification code...</p>
                                 <input type="text" id="input-otp" maxlength="6" placeholder="------" class="text-center tracking-[0.5em] font-mono text-lg w-full max-w-[200px] px-4 py-4 rounded-2xl border-2 border-gray-100 dark:border-gray-700 bg-white dark:bg-gray-900 focus:border-pakistan-green outline-none dark:text-white" oninput="validateStep3()">
-                                <button type="button" id="btn-send-otp" onclick="sendOTP()" class="w-full max-w-xs py-3 bg-gray-100 hover:bg-gray-200 dark:bg-gray-700 dark:hover:bg-gray-600 text-gray-800 dark:text-white text-xs rounded-2xl transition-colors font-lemon tracking-widest uppercase">Send Verification Code</button>
+                                <button type="button" id="btn-send-otp" onclick="sendOTP()" class="hidden w-full max-w-xs py-3 bg-transparent text-pakistan-green underline hover:text-green-700 text-xs rounded-2xl transition-colors font-lemon tracking-widest uppercase disabled:opacity-50">Resend Code</button>
                                 <p id="otp-message" class="text-xs text-green-600 hidden">Code sent successfully!</p>
                                 <p id="otp-error" class="text-xs text-red-500 hidden"></p>
                             </div>
@@ -606,20 +607,59 @@
                 <div id="step-6" class="hidden p-6 flex-grow">
                     <div class="text-center py-2">
                         <div class="w-16 h-16 bg-green-50 dark:bg-green-900/20 rounded-full flex items-center justify-center mx-auto mb-4 text-pakistan-green">
-                            <i class="fa-solid fa-lock text-2xl"></i>
+                            <i class="fa-solid fa-wallet text-2xl"></i>
                         </div>
-                        <h3 class="text-xl font-bold text-gray-900 dark:text-white mb-2">Secure Payment</h3>
-                        <p class="text-sm text-gray-600 dark:text-gray-400 mb-6 max-w-xs mx-auto">Your application is ready. Proceed to our secure payment portal to complete your registration.</p>
+                        <h3 class="text-xl font-bold text-gray-900 dark:text-white mb-2">Select Payment Method</h3>
+                        <p class="text-sm text-gray-600 dark:text-gray-400 mb-6 max-w-xs mx-auto">Choose how you want to pay your processing fee via Fastpay.</p>
                         
-                        <div class="bg-white dark:bg-gray-800 rounded-2xl border border-gray-200 dark:border-gray-700 shadow-sm p-5 mb-2">
+                        <div class="bg-white dark:bg-gray-800 rounded-2xl border border-gray-200 dark:border-gray-700 shadow-sm p-5 mb-6">
                             <div class="flex justify-between items-center mb-2">
                                 <span class="text-sm text-gray-500 dark:text-gray-400">Total Amount</span>
                                 <span class="text-2xl font-bold text-pakistan-green" id="payment-fee-amount">PKR 5,000</span>
                             </div>
-                            <div class="flex items-center justify-center gap-2 text-xs text-gray-400 mt-3">
-                                <i class="fa-solid fa-shield-halved text-pakistan-green"></i>
-                                <span>Encrypted & Secure Transaction</span>
-                            </div>
+                        </div>
+
+                        <div class="grid grid-cols-1 gap-3 text-left">
+                            <label onclick="selectPaymentMethod('easypaisa')" id="payment-easypaisa" class="payment-option flex items-center gap-4 p-4 rounded-2xl border-2 border-gray-100 dark:border-gray-800 hover:border-green-100 transition-all cursor-pointer">
+                                <div class="w-14 h-10 rounded-xl flex items-center justify-center bg-[#00A94F] shadow-sm">
+                                    <span class="text-white text-[8px] font-bold tracking-wider">easypaisa</span>
+                                </div>
+                                <div class="flex-grow">
+                                    <h4 class="font-bold text-sm dark:text-white">Easypaisa</h4>
+                                </div>
+                                <div class="w-5 h-5 rounded-full border-2 border-gray-200 flex items-center justify-center check-icon hidden">
+                                    <i class="fa-solid fa-check text-[10px] text-white"></i>
+                                </div>
+                            </label>
+
+                            <label onclick="selectPaymentMethod('jazzcash')" id="payment-jazzcash" class="payment-option flex items-center gap-4 p-4 rounded-2xl border-2 border-gray-100 dark:border-gray-800 hover:border-green-100 transition-all cursor-pointer">
+                                <div class="w-14 h-10 rounded-xl flex items-center justify-center bg-[#ED1C24] shadow-sm">
+                                    <span class="text-white text-[9px] font-bold tracking-wider">JazzCash</span>
+                                </div>
+                                <div class="flex-grow">
+                                    <h4 class="font-bold text-sm dark:text-white">JazzCash</h4>
+                                </div>
+                                <div class="w-5 h-5 rounded-full border-2 border-gray-200 flex items-center justify-center check-icon hidden">
+                                    <i class="fa-solid fa-check text-[10px] text-white"></i>
+                                </div>
+                            </label>
+
+                            <label onclick="selectPaymentMethod('card')" id="payment-card" class="payment-option flex items-center gap-4 p-4 rounded-2xl border-2 border-gray-100 dark:border-gray-800 hover:border-green-100 transition-all cursor-pointer">
+                                <div class="w-14 h-10 rounded-xl flex items-center justify-center bg-gray-800 shadow-sm">
+                                    <i class="fa-regular fa-credit-card text-white"></i>
+                                </div>
+                                <div class="flex-grow">
+                                    <h4 class="font-bold text-sm dark:text-white">Credit/Debit Card</h4>
+                                </div>
+                                <div class="w-5 h-5 rounded-full border-2 border-gray-200 flex items-center justify-center check-icon hidden">
+                                    <i class="fa-solid fa-check text-[10px] text-white"></i>
+                                </div>
+                            </label>
+                        </div>
+
+                        <div class="flex items-center justify-center gap-2 text-[10px] text-gray-400 mt-6">
+                            <i class="fa-solid fa-shield-halved text-pakistan-green"></i>
+                            <span>Secured by Fastpay</span>
                         </div>
                     </div>
                 </div>
@@ -913,11 +953,48 @@
 
         async function nextStep() {
             hideError();
+            if (state.step === 3) {
+                // Verify OTP first
+                const otpInput = document.getElementById('input-otp').value;
+                const email = document.getElementById('input-email').value.trim();
+                const errorEl = document.getElementById('otp-error');
+                const btnNext = document.getElementById('btn-next');
+                
+                btnNext.disabled = true;
+                btnNext.innerText = 'Verifying...';
+                errorEl.classList.add('hidden');
+
+                try {
+                    const response = await fetch('/api/verify-otp', {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify({ email, otp: otpInput, otpHash: state.otpHash })
+                    });
+                    const data = await response.json();
+                    if (!data.success) {
+                        throw new Error(data.error || 'Invalid verification code');
+                    }
+                    // Success, move to next step
+                    state.step++;
+                    updateUI();
+                } catch (err) {
+                    errorEl.innerText = err.message;
+                    errorEl.classList.remove('hidden');
+                } finally {
+                    btnNext.disabled = false;
+                    btnNext.innerText = 'Continue';
+                }
+                return;
+            }
+
             if (state.step === 5 && state.plan === 'basic') {
                 submitForm();
             } else if (state.step < 6) {
                 state.step++;
                 updateUI();
+                if (state.step === 3 && !state.otpHash) {
+                    sendOTP();
+                }
             } else {
                 submitForm();
             }
@@ -980,7 +1057,6 @@
 
             // Update Payment Amount
             if (state.step === 6) {
-                state.paymentMethod = 'Secure Gateway';
                 const feeElement = document.getElementById('payment-fee-amount');
                 if (state.plan === 'standard') feeElement.innerText = 'PKR 2,499';
                 else if (state.plan === 'professional_pkg') feeElement.innerText = 'PKR 6,999';
@@ -1021,7 +1097,7 @@
             } else if (state.step === 5) {
                 isValid = document.getElementById('input-terms').checked && document.getElementById('input-disclaimer').checked;
             } else if (state.step === 6) {
-                isValid = true;
+                isValid = !!state.paymentMethod;
             }
 
             if (isValid) {
@@ -1084,9 +1160,12 @@
             const btn = document.getElementById('btn-send-otp');
             const errorEl = document.getElementById('otp-error');
             const msgEl = document.getElementById('otp-message');
+            const statusEl = document.getElementById('otp-status');
 
             btn.disabled = true;
-            btn.innerText = 'Sending...';
+            btn.classList.add('hidden');
+            statusEl.classList.remove('hidden');
+            statusEl.innerText = 'Sending verification code...';
             errorEl.classList.add('hidden');
             msgEl.classList.add('hidden');
 
@@ -1101,17 +1180,18 @@
                 if (data.success) {
                     state.otpHash = data.hash;
                     btn.disabled = false;
-                    btn.innerText = 'Resend Code';
-                    btn.className = 'w-full max-w-xs py-3 bg-transparent text-pakistan-green underline text-xs rounded-2xl transition-colors font-lemon tracking-widest uppercase';
+                    btn.classList.remove('hidden');
+                    statusEl.classList.add('hidden');
                     msgEl.classList.remove('hidden');
                 } else {
                     throw new Error(data.error || 'Failed to send code');
                 }
             } catch (err) {
+                statusEl.classList.add('hidden');
                 errorEl.innerText = err.message;
                 errorEl.classList.remove('hidden');
                 btn.disabled = false;
-                btn.innerText = state.otpHash ? 'Resend Code' : 'Send Verification Code';
+                btn.classList.remove('hidden');
             }
         }
 

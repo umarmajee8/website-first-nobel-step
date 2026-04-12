@@ -103,6 +103,29 @@ async function startServer() {
     }
   });
 
+  // API endpoint to verify OTP
+  app.post('/api/verify-otp', async (req, res) => {
+    try {
+      const { email: rawEmail, otp, otpHash } = req.body;
+      if (!rawEmail || !otp || !otpHash) {
+        return res.status(400).json({ success: false, error: 'Missing parameters' });
+      }
+      
+      const email = rawEmail.toLowerCase().trim();
+      const crypto = await import('crypto');
+      const secret = process.env.GOOGLE_PRIVATE_KEY || 'fallback_secret';
+      const expectedHash = crypto.createHash('sha256').update(otp + email + secret).digest('hex');
+
+      if (expectedHash === otpHash) {
+        return res.status(200).json({ success: true });
+      } else {
+        return res.status(400).json({ success: false, error: 'Invalid verification code' });
+      }
+    } catch (error: any) {
+      return res.status(500).json({ success: false, error: 'Server error' });
+    }
+  });
+
   // API endpoint to submit form data
   app.post('/api/submit-membership', async (req, res) => {
     console.log('Received request to submit membership:', req.body);
