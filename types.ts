@@ -31,6 +31,8 @@ export interface MembershipApplication {
   experience?: string;
   targetCountry?: string;
   paymentMethod?: string;
+  otp?: string;
+  otpHash?: string | null;
 }
 
 export type FormStep = 1 | 2 | 3 | 4 | 5 | 6;

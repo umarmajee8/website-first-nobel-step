@@ -387,6 +387,7 @@
                     <div class="flex flex-col items-center"><div id="step-3-indicator" class="w-8 h-8 rounded-full flex items-center justify-center text-[10px] font-lemon transition-all border-2 bg-white dark:bg-gray-900 border-gray-200 dark:border-gray-700 text-gray-400 dark:text-gray-500">3</div></div>
                     <div class="flex flex-col items-center"><div id="step-4-indicator" class="w-8 h-8 rounded-full flex items-center justify-center text-[10px] font-lemon transition-all border-2 bg-white dark:bg-gray-900 border-gray-200 dark:border-gray-700 text-gray-400 dark:text-gray-500">4</div></div>
                     <div class="flex flex-col items-center"><div id="step-5-indicator" class="w-8 h-8 rounded-full flex items-center justify-center text-[10px] font-lemon transition-all border-2 bg-white dark:bg-gray-900 border-gray-200 dark:border-gray-700 text-gray-400 dark:text-gray-500">5</div></div>
+                    <div class="flex flex-col items-center"><div id="step-6-indicator" class="w-8 h-8 rounded-full flex items-center justify-center text-[10px] font-lemon transition-all border-2 bg-white dark:bg-gray-900 border-gray-200 dark:border-gray-700 text-gray-400 dark:text-gray-500">6</div></div>
                 </div>
             </nav>
 
@@ -417,7 +418,7 @@
                                 </div>
                                 <div>
                                     <h4 class="font-lemon text-[10px] dark:text-white">Standard Package</h4>
-                                    <p class="text-[10px] text-blue-600 font-bold mt-0.5">PKR 14,999</p>
+                                    <p class="text-[10px] text-blue-600 font-bold mt-0.5">PKR 2,499</p>
                                 </div>
                             </div>
                             <div onclick="selectPlan('professional_pkg')" id="plan-professional_pkg" class="plan-card flex flex-col gap-3 p-4 rounded-2xl border-2 transition-all cursor-pointer border-gray-100 dark:border-gray-800 hover:border-purple-100 relative overflow-hidden">
@@ -427,7 +428,7 @@
                                 </div>
                                 <div>
                                     <h4 class="font-lemon text-[10px] dark:text-white">Professional Package</h4>
-                                    <p class="text-[10px] text-purple-600 font-bold mt-0.5">PKR 24,999</p>
+                                    <p class="text-[10px] text-purple-600 font-bold mt-0.5">PKR 6,999</p>
                                 </div>
                             </div>
                         </div>
@@ -439,7 +440,10 @@
                         </h4>
                         <div onclick="selectPlan('entrepreneur')" id="plan-entrepreneur" class="plan-card flex items-center gap-4 p-5 rounded-2xl border-2 transition-all cursor-pointer border-gray-100 dark:border-gray-800 hover:border-green-100">
                             <div class="w-10 h-10 rounded-xl flex items-center justify-center bg-gray-50 dark:bg-gray-800 text-gray-400 icon-box"><i class="fa-solid fa-rocket"></i></div>
-                            <h4 class="font-lemon text-[10px] dark:text-white">Entrepreneur</h4>
+                            <div>
+                                <h4 class="font-lemon text-[10px] dark:text-white">Entrepreneur</h4>
+                                <p class="text-[10px] text-green-600 font-bold mt-0.5">PKR 50,000</p>
+                            </div>
                             <div class="ml-auto w-5 h-5 rounded-full border-2 flex items-center justify-center border-gray-200 check-circle"></div>
                         </div>
                     </div>
@@ -509,13 +513,33 @@
                     </div>
                 </div>
 
-                <!-- STEP 3: Specific Info -->
-                <div id="step-3" class="hidden space-y-6">
+                <!-- STEP 3: Email Verification -->
+                <div id="step-3" class="hidden p-6 flex-grow">
+                    <div class="text-center py-2">
+                        <div class="w-16 h-16 bg-green-50 dark:bg-green-900/20 rounded-full flex items-center justify-center mx-auto mb-4 text-pakistan-green">
+                            <i class="fa-solid fa-envelope-circle-check text-2xl"></i>
+                        </div>
+                        <h3 class="text-xl font-bold text-gray-900 dark:text-white mb-2">Email Verification</h3>
+                        <p class="text-sm text-gray-600 dark:text-gray-400 mb-6 max-w-xs mx-auto">Please verify your email (<span id="verify-email-display" class="font-semibold text-pakistan-green"></span>) to proceed.</p>
+                        
+                        <div id="otp-section" class="flex flex-col gap-3 items-center w-full">
+                            <div class="flex flex-col items-center gap-3 w-full">
+                                <input type="text" id="input-otp" maxlength="6" placeholder="------" class="text-center tracking-[0.5em] font-mono text-lg w-full max-w-[200px] px-4 py-4 rounded-2xl border-2 border-gray-100 dark:border-gray-700 bg-white dark:bg-gray-900 focus:border-pakistan-green outline-none dark:text-white" oninput="validateStep3()">
+                                <button type="button" id="btn-send-otp" onclick="sendOTP()" class="w-full max-w-xs py-3 bg-gray-100 hover:bg-gray-200 dark:bg-gray-700 dark:hover:bg-gray-600 text-gray-800 dark:text-white text-xs rounded-2xl transition-colors font-lemon tracking-widest uppercase">Send Verification Code</button>
+                                <p id="otp-message" class="text-xs text-green-600 hidden">Code sent successfully!</p>
+                                <p id="otp-error" class="text-xs text-red-500 hidden"></p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- STEP 4: Specific Info -->
+                <div id="step-4" class="hidden space-y-6">
                     <!-- Student & Professional Fields -->
                     <div id="fields-package" class="hidden space-y-6">
                         <div class="w-full">
                             <label class="block text-[10px] font-lemon tracking-widest mb-2.5 text-gray-500 dark:text-gray-400">Current Status</label>
-                            <select id="input-status" class="w-full px-5 py-4 rounded-2xl bg-gray-50 dark:bg-gray-800/50 border-2 border-gray-100 dark:border-gray-700 focus:border-pakistan-green outline-none text-sm dark:text-white" onchange="validateStep3()">
+                            <select id="input-status" class="w-full px-5 py-4 rounded-2xl bg-gray-50 dark:bg-gray-800/50 border-2 border-gray-100 dark:border-gray-700 focus:border-pakistan-green outline-none text-sm dark:text-white" onchange="validateStep4()">
                                 <option value="" disabled selected>Select Status</option>
                                 <option value="student">Student</option>
                                 <option value="professional">Job Professional</option>
@@ -532,14 +556,14 @@
                                 <option value="europe">Europe (Schengen)</option>
                                 <option value="other">Other</option>
                             </select>
-                            <input type="text" id="input-country-other" placeholder="Please specify" class="hidden w-full mt-3 px-5 py-4 rounded-2xl bg-gray-50 dark:bg-gray-800/50 border-2 border-gray-100 dark:border-gray-700 focus:border-pakistan-green outline-none text-sm dark:text-white" oninput="validateStep3()">
+                            <input type="text" id="input-country-other" placeholder="Please specify" class="hidden w-full mt-3 px-5 py-4 rounded-2xl bg-gray-50 dark:bg-gray-800/50 border-2 border-gray-100 dark:border-gray-700 focus:border-pakistan-green outline-none text-sm dark:text-white" oninput="validateStep4()">
                         </div>
                     </div>
                     <!-- Entrepreneur Fields -->
                     <div id="fields-entrepreneur" class="hidden space-y-6">
                         <div class="w-full">
                             <label class="block text-[10px] font-lemon tracking-widest mb-2.5 text-gray-500 dark:text-gray-400">Business Name</label>
-                            <input type="text" id="input-business" oninput="validateStep3()" class="w-full px-5 py-4 rounded-2xl bg-gray-50 dark:bg-gray-800/50 border-2 border-gray-100 dark:border-gray-700 focus:border-pakistan-green outline-none text-sm dark:text-white" placeholder="e.g. NextGen Solutions">
+                            <input type="text" id="input-business" oninput="validateStep4()" class="w-full px-5 py-4 rounded-2xl bg-gray-50 dark:bg-gray-800/50 border-2 border-gray-100 dark:border-gray-700 focus:border-pakistan-green outline-none text-sm dark:text-white" placeholder="e.g. NextGen Solutions">
                         </div>
                         <div class="w-full">
                             <label class="block text-[10px] font-lemon tracking-widest mb-2.5 text-gray-500 dark:text-gray-400">Industry</label>
@@ -551,13 +575,13 @@
                                 <option value="services">Professional Services</option>
                                 <option value="other">Other</option>
                             </select>
-                            <input type="text" id="input-industry-other" placeholder="Please specify" class="hidden w-full mt-3 px-5 py-4 rounded-2xl bg-gray-50 dark:bg-gray-800/50 border-2 border-gray-100 dark:border-gray-700 focus:border-pakistan-green outline-none text-sm dark:text-white" oninput="validateStep3()">
+                            <input type="text" id="input-industry-other" placeholder="Please specify" class="hidden w-full mt-3 px-5 py-4 rounded-2xl bg-gray-50 dark:bg-gray-800/50 border-2 border-gray-100 dark:border-gray-700 focus:border-pakistan-green outline-none text-sm dark:text-white" oninput="validateStep4()">
                         </div>
                     </div>
                 </div>
 
-                <!-- STEP 4: Review -->
-                <div id="step-4" class="hidden space-y-8">
+                <!-- STEP 5: Review -->
+                <div id="step-5" class="hidden space-y-6">
                      <div class="bg-green-50/50 dark:bg-green-900/10 p-6 rounded-[1.5rem] border border-green-100 dark:border-green-800/50 relative overflow-hidden">
                         <h4 class="font-lemon text-[10px] text-pakistan-green dark:text-green-400 mb-6 uppercase tracking-widest">Application Review</h4>
                         <div class="grid grid-cols-2 gap-4 text-xs relative z-10">
@@ -565,14 +589,21 @@
                           <div><span class="text-gray-400 text-[10px] uppercase">CNIC</span><span id="review-cnic" class="font-bold dark:text-white block font-mono">--</span></div>
                         </div>
                       </div>
-                      <label class="flex items-start gap-4 p-5 cursor-pointer bg-gray-50 dark:bg-gray-800/50 rounded-2xl border border-gray-100 dark:border-gray-700">
-                        <input type="checkbox" id="input-terms" onchange="validateStep4()" class="mt-1 h-5 w-5 rounded border-gray-300 text-pakistan-green focus:ring-pakistan-green">
-                        <span class="text-xs text-gray-600 dark:text-gray-400">I declare all information is correct and I agree to the <a href="https://drive.google.com/file/d/1NwKfofJT-kQ5veAhZVj0ebYeB6Tauk4I/view?usp=drivesdk" target="_blank" class="text-pakistan-green dark:text-green-400 underline hover:text-green-700 transition-colors">Privacy Policy</a>.</span>
-                      </label>
+                      
+                      <div class="flex flex-col gap-3 px-2">
+                          <label class="flex items-start gap-3 cursor-pointer">
+                            <input type="checkbox" id="input-terms" onchange="validateStep5()" class="mt-0.5 h-5 w-5 rounded border-gray-300 text-pakistan-green focus:ring-pakistan-green">
+                            <span class="text-xs text-gray-600 dark:text-gray-400">I declare all information is correct and I agree to the <a href="https://drive.google.com/file/d/1NwKfofJT-kQ5veAhZVj0ebYeB6Tauk4I/view?usp=drivesdk" target="_blank" class="text-pakistan-green dark:text-green-400 underline hover:text-green-700 transition-colors">Privacy Policy</a>.</span>
+                          </label>
+                          <label class="flex items-start gap-3 cursor-pointer">
+                            <input type="checkbox" id="input-disclaimer" onchange="validateStep5()" class="mt-0.5 h-5 w-5 rounded border-gray-300 text-pakistan-green focus:ring-pakistan-green">
+                            <span class="text-xs text-gray-600 dark:text-gray-400">I agree to the <a href="https://drive.google.com/file/d/1AztKci5xP-UtafBjh6Uj1bVbTOZcO6JF/view?usp=sharing" target="_blank" class="text-pakistan-green dark:text-green-400 underline hover:text-green-700 transition-colors">Disclaimer Files</a>.</span>
+                          </label>
+                      </div>
                 </div>
 
-                <!-- STEP 5: Payment -->
-                <div id="step-5" class="hidden p-6 flex-grow">
+                <!-- STEP 6: Payment -->
+                <div id="step-6" class="hidden p-6 flex-grow">
                     <div class="text-center py-2">
                         <div class="w-16 h-16 bg-green-50 dark:bg-green-900/20 rounded-full flex items-center justify-center mx-auto mb-4 text-pakistan-green">
                             <i class="fa-solid fa-lock text-2xl"></i>
@@ -631,6 +662,7 @@
             step: 1,
             plan: null,
             paymentMethod: null,
+            otpHash: null,
             data: {
                 fullName: '',
                 cnic: '',
@@ -665,7 +697,7 @@
                 input.classList.add('hidden');
                 input.value = '';
             }
-            validateStep3();
+            validateStep4();
         }
 
         // --- Theme Logic ---
@@ -881,9 +913,9 @@
 
         async function nextStep() {
             hideError();
-            if (state.step === 4 && state.plan === 'basic') {
+            if (state.step === 5 && state.plan === 'basic') {
                 submitForm();
-            } else if (state.step < 5) {
+            } else if (state.step < 6) {
                 state.step++;
                 updateUI();
             } else {
@@ -901,11 +933,11 @@
 
         function updateUI() {
             // Update Progress Bar
-            const progress = ((state.step - 1) / 4) * 100;
+            const progress = ((state.step - 1) / 5) * 100;
             document.getElementById('progress-line').style.width = `${progress}%`;
 
             // Update Indicators
-            for (let i = 1; i <= 5; i++) {
+            for (let i = 1; i <= 6; i++) {
                 const el = document.getElementById(`step-${i}-indicator`);
                 if (i <= state.step) {
                     el.classList.add('bg-pakistan-green', 'border-pakistan-green', 'text-white');
@@ -917,14 +949,19 @@
             }
 
             // Show/Hide Steps
-            for (let i = 1; i <= 5; i++) {
+            for (let i = 1; i <= 6; i++) {
                 const el = document.getElementById(`step-${i}`);
                 if (i === state.step) el.classList.remove('hidden');
                 else el.classList.add('hidden');
             }
 
-            // Show/Hide Specific Plan Fields in Step 3
+            // Update Email Verification
             if (state.step === 3) {
+                document.getElementById('verify-email-display').innerText = document.getElementById('input-email').value;
+            }
+
+            // Show/Hide Specific Plan Fields in Step 4
+            if (state.step === 4) {
                 document.getElementById('fields-package').classList.add('hidden');
                 document.getElementById('fields-entrepreneur').classList.add('hidden');
                 
@@ -936,26 +973,26 @@
             }
 
             // Update Review Data
-            if (state.step === 4) {
+            if (state.step === 5) {
                 document.getElementById('review-name').innerText = document.getElementById('input-fullname').value || '--';
                 document.getElementById('review-cnic').innerText = document.getElementById('input-cnic').value || '--';
             }
 
             // Update Payment Amount
-            if (state.step === 5) {
+            if (state.step === 6) {
                 state.paymentMethod = 'Secure Gateway';
                 const feeElement = document.getElementById('payment-fee-amount');
                 if (state.plan === 'standard') feeElement.innerText = 'PKR 2,499';
                 else if (state.plan === 'professional_pkg') feeElement.innerText = 'PKR 6,999';
-                else feeElement.innerText = 'PKR 5,000'; // Default/Entrepreneur
+                else feeElement.innerText = 'PKR 50,000'; // Default/Entrepreneur
             }
 
             // Update Buttons
             btnBack.classList.toggle('hidden', state.step === 1);
-            if (state.step === 4 && state.plan === 'basic') {
+            if (state.step === 5 && state.plan === 'basic') {
                 btnNext.innerText = 'Submit Application';
             } else {
-                btnNext.innerText = state.step === 5 ? 'Submit Payment' : 'Continue';
+                btnNext.innerText = state.step === 6 ? 'Submit Payment' : 'Continue';
             }
             
             // Validate Current Step to Enable Next
@@ -977,10 +1014,13 @@
             } else if (state.step === 2) {
                 isValid = validateStep2(true);
             } else if (state.step === 3) {
-                isValid = validateStep3(true);
+                const otpInput = document.getElementById('input-otp').value;
+                isValid = otpInput.length === 6 && state.otpHash !== null;
             } else if (state.step === 4) {
-                isValid = document.getElementById('input-terms').checked;
+                isValid = validateStep4(true);
             } else if (state.step === 5) {
+                isValid = document.getElementById('input-terms').checked && document.getElementById('input-disclaimer').checked;
+            } else if (state.step === 6) {
                 isValid = true;
             }
 
@@ -1014,7 +1054,11 @@
             return valid;
         }
 
-        function validateStep3(checkOnly = false) {
+        function validateStep3() {
+             validateCurrentStep();
+        }
+
+        function validateStep4(checkOnly = false) {
             let valid = false;
             if (['basic', 'standard', 'professional_pkg'].includes(state.plan)) {
                 const status = document.getElementById('input-status').value;
@@ -1030,8 +1074,45 @@
             return valid;
         }
         
-        function validateStep4() {
+        function validateStep5() {
              validateCurrentStep();
+        }
+
+        async function sendOTP() {
+            const email = document.getElementById('input-email').value.trim();
+            const fullName = document.getElementById('input-fullname').value.trim();
+            const btn = document.getElementById('btn-send-otp');
+            const errorEl = document.getElementById('otp-error');
+            const msgEl = document.getElementById('otp-message');
+
+            btn.disabled = true;
+            btn.innerText = 'Sending...';
+            errorEl.classList.add('hidden');
+            msgEl.classList.add('hidden');
+
+            try {
+                const response = await fetch('/api/send-otp', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ email, fullName })
+                });
+                
+                const data = await response.json();
+                if (data.success) {
+                    state.otpHash = data.hash;
+                    btn.disabled = false;
+                    btn.innerText = 'Resend Code';
+                    btn.className = 'w-full max-w-xs py-3 bg-transparent text-pakistan-green underline text-xs rounded-2xl transition-colors font-lemon tracking-widest uppercase';
+                    msgEl.classList.remove('hidden');
+                } else {
+                    throw new Error(data.error || 'Failed to send code');
+                }
+            } catch (err) {
+                errorEl.innerText = err.message;
+                errorEl.classList.remove('hidden');
+                btn.disabled = false;
+                btn.innerText = state.otpHash ? 'Resend Code' : 'Send Verification Code';
+            }
         }
 
         // --- Submission ---
@@ -1048,7 +1129,9 @@
                 businessName: document.getElementById('input-business').value,
                 industry: document.getElementById('input-industry').value === 'other' ? document.getElementById('input-industry-other').value : document.getElementById('input-industry').value,
                 targetCountry: document.getElementById('input-country').value === 'other' ? document.getElementById('input-country-other').value : document.getElementById('input-country').value,
-                paymentMethod: state.plan === 'basic' ? 'none' : state.paymentMethod
+                paymentMethod: state.plan === 'basic' ? 'none' : state.paymentMethod,
+                otp: document.getElementById('input-otp') ? document.getElementById('input-otp').value : '',
+                otpHash: state.otpHash
             };
 
             // Hide Form

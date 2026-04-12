@@ -123,10 +123,10 @@ const MembershipForm: React.FC<Props> = ({ initialPlanId, onClose }) => {
     if (saved) {
       try {
         const parsed = JSON.parse(saved);
-        return parsed.formData || { planId: initialPlanId || '', fullName: '', cnic: '', email: '', whatsapp: '' };
+        return parsed.formData || { planId: initialPlanId || '', fullName: '', cnic: '', email: '', whatsapp: '', otp: '', otpHash: null };
       } catch (e) { console.error(e); }
     }
-    return { planId: initialPlanId || '', fullName: '', cnic: '', email: '', whatsapp: '' };
+    return { planId: initialPlanId || '', fullName: '', cnic: '', email: '', whatsapp: '', otp: '', otpHash: null };
   });
 
   const [step, setStep] = useState<FormStep>(() => {
@@ -165,6 +165,12 @@ const MembershipForm: React.FC<Props> = ({ initialPlanId, onClose }) => {
   const [isSubmitted, setIsSubmitted] = useState(false);
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [error, setError] = useState<string | null>(null);
+  
+  // OTP States
+  const [otpSent, setOtpSent] = useState(false);
+  const [otpLoading, setOtpLoading] = useState(false);
+  const [otpMessage, setOtpMessage] = useState('');
+  const [otpError, setOtpError] = useState('');
   
   // New state for exit confirmation
   const [showExitConfirm, setShowExitConfirm] = useState(false);
@@ -284,9 +290,9 @@ const MembershipForm: React.FC<Props> = ({ initialPlanId, onClose }) => {
     setTouchedFields(newTouched);
     
     if (!hasErrors) {
-      if (step === 4) {
-        setStep(5);
-      } else if (step < 5) {
+      if (step === 5) {
+        setStep(6);
+      } else if (step < 6) {
         setStep((prev) => (prev + 1) as FormStep);
       }
     }
@@ -328,6 +334,31 @@ const MembershipForm: React.FC<Props> = ({ initialPlanId, onClose }) => {
     }
   };
 
+  const handleSendOTP = async () => {
+    setOtpLoading(true);
+    setOtpError('');
+    setOtpMessage('');
+    try {
+      const response = await fetch('/api/send-otp', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ email: formData.email, fullName: formData.fullName })
+      });
+      const data = await response.json();
+      if (data.success) {
+        setFormData(prev => ({ ...prev, otpHash: data.hash }));
+        setOtpSent(true);
+        setOtpMessage('Code sent successfully!');
+      } else {
+        throw new Error(data.error || 'Failed to send code');
+      }
+    } catch (err: any) {
+      setOtpError(err.message);
+    } finally {
+      setOtpLoading(false);
+    }
+  };
+
   const isStepValid = () => {
     if (step === 1) return !!formData.planId;
     if (step === 2) return !validateField('fullName', formData.fullName || '') && !validateField('cnic', formData.cnic || '') && !validateField('email', formData.email || '') && !validateField('whatsapp', formData.whatsapp || '');
@@ -337,7 +368,8 @@ const MembershipForm: React.FC<Props> = ({ initialPlanId, onClose }) => {
       if (formData.planId === 'professional') return !!formData.experience && !!formData.targetCountry;
     }
     if (step === 4) return termsAccepted;
-    if (step === 5) return !!formData.paymentMethod;
+    if (step === 5) return formData.otp?.length === 6 && !!formData.otpHash;
+    if (step === 6) return !!formData.paymentMethod;
     return false;
   };
 
@@ -436,10 +468,10 @@ const MembershipForm: React.FC<Props> = ({ initialPlanId, onClose }) => {
             <motion.div 
               className="absolute top-1/2 left-0 h-0.5 bg-pakistan-green -translate-y-1/2 -z-10" 
               initial={{ width: 0 }}
-              animate={{ width: `${((step - 1) / 4) * 100}%` }}
+              animate={{ width: `${((step - 1) / 5) * 100}%` }}
               transition={{ duration: 0.5 }}
             />
-            {[1,2,3,4,5].map(n => (
+            {[1,2,3,4,5,6].map(n => (
               <motion.div key={n} className="flex flex-col items-center" initial={{ scale: 0.8 }} animate={{ scale: step >= n ? 1 : 0.9 }}>
                 <div className={`w-8 h-8 rounded-full flex items-center justify-center text-[10px] font-lemon transition-all border-2 ${step >= n ? 'bg-pakistan-green border-pakistan-green text-white' : 'bg-white dark:bg-gray-900 border-gray-200 text-gray-400'}`}>{n}</div>
               </motion.div>
@@ -495,6 +527,40 @@ const MembershipForm: React.FC<Props> = ({ initialPlanId, onClose }) => {
             </div>
               )}
               {step === 3 && (
+                <div className="p-6 text-center">
+                  <div className="w-16 h-16 bg-green-50 dark:bg-green-900/20 rounded-full flex items-center justify-center mx-auto mb-4 text-pakistan-green">
+                    <i className="fa-solid fa-envelope-circle-check text-2xl"></i>
+                  </div>
+                  <h3 className="text-xl font-bold text-gray-900 dark:text-white mb-2">Email Verification</h3>
+                  <p className="text-sm text-gray-600 dark:text-gray-400 mb-6 max-w-xs mx-auto">
+                    Please verify your email (<span className="font-semibold text-pakistan-green">{formData.email}</span>) to proceed.
+                  </p>
+                  
+                  <div className="flex flex-col gap-3 items-center w-full">
+                    <div className="flex flex-col items-center gap-3 w-full">
+                      <input 
+                        type="text" 
+                        maxLength={6} 
+                        placeholder="------" 
+                        value={formData.otp || ''}
+                        onChange={(e) => setFormData(prev => ({ ...prev, otp: e.target.value }))}
+                        className="text-center tracking-[0.5em] font-mono text-lg w-full max-w-[200px] px-4 py-4 rounded-2xl border-2 border-gray-100 dark:border-gray-700 bg-white dark:bg-gray-900 focus:border-pakistan-green outline-none dark:text-white" 
+                      />
+                      <button 
+                        type="button" 
+                        onClick={handleSendOTP} 
+                        disabled={otpLoading}
+                        className={`w-full max-w-xs py-3 ${otpSent ? 'bg-transparent text-pakistan-green underline' : 'bg-gray-100 hover:bg-gray-200 dark:bg-gray-700 dark:hover:bg-gray-600 text-gray-800 dark:text-white'} text-xs rounded-2xl transition-colors font-lemon tracking-widest uppercase disabled:opacity-50`}
+                      >
+                        {otpLoading ? 'Sending...' : (otpSent ? 'Resend Code' : 'Send Verification Code')}
+                      </button>
+                      {otpMessage && <p className="text-xs text-green-600">{otpMessage}</p>}
+                      {otpError && <p className="text-xs text-red-500">{otpError}</p>}
+                    </div>
+                  </div>
+                </div>
+              )}
+              {step === 4 && (
                 <div className="space-y-6">
               {formData.planId === 'student' && (
                 <div className="space-y-6">
@@ -530,7 +596,7 @@ const MembershipForm: React.FC<Props> = ({ initialPlanId, onClose }) => {
               )}
             </div>
               )}
-              {step === 4 && (
+              {step === 5 && (
                 <div className="space-y-8">
               <div className="bg-green-50/50 dark:bg-green-900/10 p-6 rounded-[1.5rem] border border-green-100 dark:border-green-800/50 relative overflow-hidden">
                 <h4 className="font-lemon text-[10px] text-pakistan-green dark:text-green-400 mb-6 uppercase tracking-widest">Application Review</h4>
@@ -545,7 +611,7 @@ const MembershipForm: React.FC<Props> = ({ initialPlanId, onClose }) => {
               </label>
             </div>
               )}
-              {step === 5 && (
+              {step === 6 && (
                 <div className="space-y-6">
                   <div className="text-center mb-6">
                     <div className="w-16 h-16 bg-green-50 dark:bg-green-900/20 rounded-full flex items-center justify-center mx-auto mb-4 text-pakistan-green">
@@ -614,7 +680,7 @@ const MembershipForm: React.FC<Props> = ({ initialPlanId, onClose }) => {
           )}
           <div className="flex gap-4">
             {step > 1 && <button type="button" onClick={prevStep} className="px-6 py-4 rounded-2xl font-lemon text-[10px] border border-gray-200 text-gray-500">Back</button>}
-            <button type="button" onClick={step === 5 ? (e) => handleSubmit(e as any) : nextStep} disabled={!isStepValid()} className={`flex-grow py-4 rounded-2xl font-lemon text-[10px] tracking-widest text-white transition-all ${!isStepValid() ? 'bg-gray-200 cursor-not-allowed' : 'bg-pakistan-green shadow-lg'}`}>{step === 5 ? 'Submit Payment' : 'Continue'}</button>
+            <button type="button" onClick={step === 6 ? (e) => handleSubmit(e as any) : nextStep} disabled={!isStepValid()} className={`flex-grow py-4 rounded-2xl font-lemon text-[10px] tracking-widest text-white transition-all ${!isStepValid() ? 'bg-gray-200 cursor-not-allowed' : 'bg-pakistan-green shadow-lg'}`}>{step === 6 ? 'Submit Payment' : 'Continue'}</button>
           </div>
         </div>
       </div>

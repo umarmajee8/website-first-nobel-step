@@ -1,5 +1,6 @@
 import { google } from 'googleapis';
 import nodemailer from 'nodemailer';
+import crypto from 'crypto';
 
 export default async function handler(req: any, res: any) {
   // CORS Headers
@@ -19,10 +20,22 @@ export default async function handler(req: any, res: any) {
   console.log('Received request to submit membership:', req.body);
   try {
     const formData = req.body;
-    const { fullName, cnic, email: rawEmail, whatsapp, planId, institute, degree, businessName, industry, experience, targetCountry, paymentMethod } = formData;
+    const { fullName, cnic, email: rawEmail, whatsapp, planId, institute, degree, businessName, industry, experience, targetCountry, paymentMethod, otp, otpHash } = formData;
 
     if (!rawEmail) return res.status(400).json({ success: false, error: 'Email is required' });
     const email = rawEmail.toLowerCase().trim();
+
+    // Verify OTP if it's not a basic plan
+    if (planId !== 'basic') {
+      if (!otp || !otpHash) {
+        return res.status(400).json({ success: false, error: 'Email verification is required.' });
+      }
+      const secret = process.env.GOOGLE_PRIVATE_KEY || 'fallback_secret';
+      const expectedHash = crypto.createHash('sha256').update(otp + email + secret).digest('hex');
+      if (expectedHash !== otpHash) {
+        return res.status(400).json({ success: false, error: 'Invalid verification code. Please try again.' });
+      }
+    }
 
     // Check for required environment variables
     if (!process.env.GOOGLE_SHEET_ID || !process.env.GOOGLE_SERVICE_ACCOUNT_EMAIL || !process.env.GOOGLE_PRIVATE_KEY) {
