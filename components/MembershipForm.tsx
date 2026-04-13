@@ -345,6 +345,27 @@ const MembershipForm: React.FC<Props> = ({ initialPlanId, onClose }) => {
         throw new Error(data.error || "Failed to submit application. Please try again later.");
       }
 
+      if (formData.planId !== 'basic') {
+        const paymentResponse = await fetch('/api/create-fastpay-checkout', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            amount: formData.planId === 'standard' ? 2499 : (formData.planId === 'professional_pkg' ? 6999 : 50000),
+            paymentMethod: formData.paymentMethod,
+            email: formData.email,
+            fullName: formData.fullName
+          })
+        });
+        
+        const paymentData = await paymentResponse.json();
+        if (!paymentResponse.ok || !paymentData.success) {
+          throw new Error(paymentData.error || 'Failed to initialize payment gateway.');
+        }
+        
+        window.location.href = paymentData.checkoutUrl;
+        return;
+      }
+
       localStorage.removeItem(STORAGE_KEY);
       setIsSubmitted(true);
     } catch (err: any) {
@@ -354,6 +375,22 @@ const MembershipForm: React.FC<Props> = ({ initialPlanId, onClose }) => {
       setIsSubmitting(false);
     }
   };
+
+  useEffect(() => {
+    const urlParams = new URLSearchParams(window.location.search);
+    const paymentStatus = urlParams.get('payment_status');
+    
+    if (paymentStatus) {
+      if (paymentStatus === 'success') {
+        setIsSubmitted(true);
+        localStorage.removeItem(STORAGE_KEY);
+      } else {
+        setError('Your payment could not be processed. Please try again.');
+        setStep(6);
+      }
+      window.history.replaceState({}, document.title, window.location.pathname);
+    }
+  }, []);
 
   useEffect(() => {
     if (step === 3 && !otpSent && !otpLoading && !otpError) {
@@ -652,36 +689,27 @@ const MembershipForm: React.FC<Props> = ({ initialPlanId, onClose }) => {
                   </div>
                   
                   <div className="grid grid-cols-1 gap-4">
-                    <label onClick={() => setFormData(prev => ({ ...prev, paymentMethod: 'easypaisa' }))} className={`flex items-center gap-4 p-5 rounded-2xl border-2 transition-all cursor-pointer ${formData.paymentMethod === 'easypaisa' ? 'border-pakistan-green bg-green-50 dark:bg-green-900/10' : 'border-gray-100 dark:border-gray-800 hover:border-green-100'}`}>
-                      <div className="w-16 h-12 rounded-xl flex items-center justify-center bg-[#00A94F] shadow-sm">
-                        <span className="text-white text-[10px] font-bold tracking-wider">easypaisa</span>
-                      </div>
-                      <div className="flex-grow">
-                        <h4 className="font-bold text-sm dark:text-white">Easypaisa</h4>
+                    <label onClick={() => setFormData(prev => ({ ...prev, paymentMethod: 'easypaisa' }))} className={`flex items-center justify-between p-5 rounded-2xl border-2 transition-all cursor-pointer ${formData.paymentMethod === 'easypaisa' ? 'border-pakistan-green bg-green-50 dark:bg-green-900/10' : 'border-gray-100 dark:border-gray-800 hover:border-green-100'}`}>
+                      <div className="flex items-center">
+                        <h4 className="font-bold text-base dark:text-white">Easypaisa</h4>
                       </div>
                       <div className={`w-5 h-5 rounded-full border-2 flex items-center justify-center ${formData.paymentMethod === 'easypaisa' ? 'border-pakistan-green bg-pakistan-green text-white' : 'border-gray-200'}`}>
                         {formData.paymentMethod === 'easypaisa' && <i className="fa-solid fa-check text-[10px]"></i>}
                       </div>
                     </label>
 
-                    <label onClick={() => setFormData(prev => ({ ...prev, paymentMethod: 'jazzcash' }))} className={`flex items-center gap-4 p-5 rounded-2xl border-2 transition-all cursor-pointer ${formData.paymentMethod === 'jazzcash' ? 'border-pakistan-green bg-green-50 dark:bg-green-900/10' : 'border-gray-100 dark:border-gray-800 hover:border-green-100'}`}>
-                      <div className="w-16 h-12 rounded-xl flex items-center justify-center bg-[#ED1C24] shadow-sm">
-                        <span className="text-white text-[11px] font-bold tracking-wider">JazzCash</span>
-                      </div>
-                      <div className="flex-grow">
-                        <h4 className="font-bold text-sm dark:text-white">JazzCash</h4>
+                    <label onClick={() => setFormData(prev => ({ ...prev, paymentMethod: 'jazzcash' }))} className={`flex items-center justify-between p-5 rounded-2xl border-2 transition-all cursor-pointer ${formData.paymentMethod === 'jazzcash' ? 'border-pakistan-green bg-green-50 dark:bg-green-900/10' : 'border-gray-100 dark:border-gray-800 hover:border-green-100'}`}>
+                      <div className="flex items-center">
+                        <h4 className="font-bold text-base dark:text-white">JazzCash</h4>
                       </div>
                       <div className={`w-5 h-5 rounded-full border-2 flex items-center justify-center ${formData.paymentMethod === 'jazzcash' ? 'border-pakistan-green bg-pakistan-green text-white' : 'border-gray-200'}`}>
                         {formData.paymentMethod === 'jazzcash' && <i className="fa-solid fa-check text-[10px]"></i>}
                       </div>
                     </label>
 
-                    <label onClick={() => setFormData(prev => ({ ...prev, paymentMethod: 'card' }))} className={`flex items-center gap-4 p-5 rounded-2xl border-2 transition-all cursor-pointer ${formData.paymentMethod === 'card' ? 'border-pakistan-green bg-green-50 dark:bg-green-900/10' : 'border-gray-100 dark:border-gray-800 hover:border-green-100'}`}>
-                      <div className="w-16 h-12 rounded-xl flex items-center justify-center bg-gray-800 shadow-sm">
-                        <i className="fa-regular fa-credit-card text-white text-xl"></i>
-                      </div>
-                      <div className="flex-grow">
-                        <h4 className="font-bold text-sm dark:text-white">Credit / Debit Card</h4>
+                    <label onClick={() => setFormData(prev => ({ ...prev, paymentMethod: 'card' }))} className={`flex items-center justify-between p-5 rounded-2xl border-2 transition-all cursor-pointer ${formData.paymentMethod === 'card' ? 'border-pakistan-green bg-green-50 dark:bg-green-900/10' : 'border-gray-100 dark:border-gray-800 hover:border-green-100'}`}>
+                      <div className="flex items-center">
+                        <h4 className="font-bold text-base dark:text-white">Credit / Debit Card</h4>
                       </div>
                       <div className={`w-5 h-5 rounded-full border-2 flex items-center justify-center ${formData.paymentMethod === 'card' ? 'border-pakistan-green bg-pakistan-green text-white' : 'border-gray-200'}`}>
                         {formData.paymentMethod === 'card' && <i className="fa-solid fa-check text-[10px]"></i>}

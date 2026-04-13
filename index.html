@@ -620,36 +620,27 @@
                         </div>
 
                         <div class="grid grid-cols-1 gap-3 text-left">
-                            <label onclick="selectPaymentMethod('easypaisa')" id="payment-easypaisa" class="payment-option flex items-center gap-4 p-4 rounded-2xl border-2 border-gray-100 dark:border-gray-800 hover:border-green-100 transition-all cursor-pointer">
-                                <div class="w-14 h-10 rounded-xl flex items-center justify-center bg-[#00A94F] shadow-sm">
-                                    <span class="text-white text-[8px] font-bold tracking-wider">easypaisa</span>
-                                </div>
-                                <div class="flex-grow">
-                                    <h4 class="font-bold text-sm dark:text-white">Easypaisa</h4>
+                            <label onclick="selectPaymentMethod('easypaisa')" id="payment-easypaisa" class="payment-option flex items-center justify-between p-4 rounded-2xl border-2 border-gray-100 dark:border-gray-800 hover:border-green-100 transition-all cursor-pointer">
+                                <div class="flex items-center">
+                                    <h4 class="font-bold text-base dark:text-white">Easypaisa</h4>
                                 </div>
                                 <div class="w-5 h-5 rounded-full border-2 border-gray-200 flex items-center justify-center check-icon hidden">
                                     <i class="fa-solid fa-check text-[10px] text-white"></i>
                                 </div>
                             </label>
 
-                            <label onclick="selectPaymentMethod('jazzcash')" id="payment-jazzcash" class="payment-option flex items-center gap-4 p-4 rounded-2xl border-2 border-gray-100 dark:border-gray-800 hover:border-green-100 transition-all cursor-pointer">
-                                <div class="w-14 h-10 rounded-xl flex items-center justify-center bg-[#ED1C24] shadow-sm">
-                                    <span class="text-white text-[9px] font-bold tracking-wider">JazzCash</span>
-                                </div>
-                                <div class="flex-grow">
-                                    <h4 class="font-bold text-sm dark:text-white">JazzCash</h4>
+                            <label onclick="selectPaymentMethod('jazzcash')" id="payment-jazzcash" class="payment-option flex items-center justify-between p-4 rounded-2xl border-2 border-gray-100 dark:border-gray-800 hover:border-green-100 transition-all cursor-pointer">
+                                <div class="flex items-center">
+                                    <h4 class="font-bold text-base dark:text-white">JazzCash</h4>
                                 </div>
                                 <div class="w-5 h-5 rounded-full border-2 border-gray-200 flex items-center justify-center check-icon hidden">
                                     <i class="fa-solid fa-check text-[10px] text-white"></i>
                                 </div>
                             </label>
 
-                            <label onclick="selectPaymentMethod('card')" id="payment-card" class="payment-option flex items-center gap-4 p-4 rounded-2xl border-2 border-gray-100 dark:border-gray-800 hover:border-green-100 transition-all cursor-pointer">
-                                <div class="w-14 h-10 rounded-xl flex items-center justify-center bg-gray-800 shadow-sm">
-                                    <i class="fa-regular fa-credit-card text-white"></i>
-                                </div>
-                                <div class="flex-grow">
-                                    <h4 class="font-bold text-sm dark:text-white">Credit/Debit Card</h4>
+                            <label onclick="selectPaymentMethod('card')" id="payment-card" class="payment-option flex items-center justify-between p-4 rounded-2xl border-2 border-gray-100 dark:border-gray-800 hover:border-green-100 transition-all cursor-pointer">
+                                <div class="flex items-center">
+                                    <h4 class="font-bold text-base dark:text-white">Credit / Debit Card</h4>
                                 </div>
                                 <div class="w-5 h-5 rounded-full border-2 border-gray-200 flex items-center justify-center check-icon hidden">
                                     <i class="fa-solid fa-check text-[10px] text-white"></i>
@@ -1230,13 +1221,35 @@
                     throw new Error(data.error || 'Server encountered an error while processing your request.');
                 }
 
+                if (state.plan !== 'basic') {
+                    // Initialize FastPay Checkout
+                    const paymentResponse = await fetch('/api/create-fastpay-checkout', {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify({
+                            amount: state.plan === 'standard' ? 2499 : (state.plan === 'professional_pkg' ? 6999 : 50000),
+                            paymentMethod: state.paymentMethod,
+                            email: formData.email,
+                            fullName: formData.fullName
+                        })
+                    });
+                    
+                    const paymentData = await paymentResponse.json().catch(() => ({}));
+                    if (!paymentResponse.ok || !paymentData.success) {
+                        throw new Error(paymentData.error || 'Failed to initialize payment gateway.');
+                    }
+                    
+                    // Save state before redirecting
+                    localStorage.setItem('membership_form_data', JSON.stringify(formData));
+                    localStorage.setItem('membership_form_state', JSON.stringify(state));
+                    
+                    // Redirect to FastPay Checkout
+                    window.location.href = paymentData.checkoutUrl;
+                    return;
+                }
+
                 loadingView.classList.add('hidden');
                 successView.classList.remove('hidden');
-
-                // Open payment page in a new tab if not basic plan
-                if (state.plan !== 'basic') {
-                    window.open(`/payment.html?method=Secure%20Gateway&plan=${state.plan}`, '_blank');
-                }
             } catch (err) {
                 console.error(err);
                 loadingView.classList.add('hidden');
@@ -1256,6 +1269,53 @@
                 if (validateCurrentStep()) {
                     nextStep();
                 }
+            }
+        });
+
+        // Check for payment status in URL on load
+        window.addEventListener('DOMContentLoaded', () => {
+            const urlParams = new URLSearchParams(window.location.search);
+            const paymentStatus = urlParams.get('payment_status');
+            
+            if (paymentStatus) {
+                // Show modal immediately
+                document.getElementById('application-modal').classList.remove('hidden');
+                document.getElementById('modal-content').classList.add('hidden');
+                
+                if (paymentStatus === 'success') {
+                    document.getElementById('success-view').classList.remove('hidden');
+                    localStorage.removeItem('membership_form_data');
+                    localStorage.removeItem('membership_form_state');
+                } else {
+                    // Restore state
+                    try {
+                        const savedState = JSON.parse(localStorage.getItem('membership_form_state'));
+                        const savedData = JSON.parse(localStorage.getItem('membership_form_data'));
+                        
+                        if (savedState && savedData) {
+                            state = savedState;
+                            state.step = 6; // Go back to payment step
+                            
+                            // Restore input values
+                            if (document.getElementById('input-fullname')) document.getElementById('input-fullname').value = savedData.fullName || '';
+                            if (document.getElementById('input-cnic')) document.getElementById('input-cnic').value = savedData.cnic || '';
+                            if (document.getElementById('input-email')) document.getElementById('input-email').value = savedData.email || '';
+                            if (document.getElementById('input-whatsapp')) document.getElementById('input-whatsapp').value = savedData.whatsapp || '';
+                            if (document.getElementById('input-business')) document.getElementById('input-business').value = savedData.businessName || '';
+                            if (document.getElementById('input-otp')) document.getElementById('input-otp').value = savedData.otp || '';
+                            
+                            updateUI();
+                        }
+                    } catch (e) {
+                        console.error('Failed to restore form state', e);
+                    }
+                    
+                    document.getElementById('modal-content').classList.remove('hidden');
+                    showError('Payment Failed', 'Your payment could not be processed. Please try again.');
+                }
+                
+                // Clean up URL
+                window.history.replaceState({}, document.title, window.location.pathname);
             }
         });
     </script>
