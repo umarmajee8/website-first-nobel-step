@@ -126,46 +126,6 @@ async function startServer() {
     }
   });
 
-  // API endpoint to create FastPay checkout session
-  app.post('/api/create-fastpay-checkout', async (req, res) => {
-    try {
-      const { amount, paymentMethod, email, fullName } = req.body;
-      
-      // TODO: Replace with actual FastPay API call when Merchant ID and Secret Key are available
-      // Example:
-      // const payload = { merchant_id: process.env.FASTPAY_MERCHANT_ID, amount, ... };
-      // const signature = generateSignature(payload, process.env.FASTPAY_SECRET);
-      // const response = await axios.post('https://api.fastpay.com/v1/checkout', payload);
-      
-      // Simulating the FastPay API response
-      const txnId = 'FP-' + Math.random().toString(36).substr(2, 9).toUpperCase();
-      
-      // In a real scenario, this would be the FastPay hosted checkout URL
-      // For simulation, we route through our callback endpoint to mimic the redirect flow
-      const checkoutUrl = `/api/payment-callback?status=success&txn_id=${txnId}`;
-      
-      res.status(200).json({ success: true, checkoutUrl });
-    } catch (error: any) {
-      console.error('FastPay Checkout Error:', error);
-      res.status(500).json({ success: false, error: 'Failed to initialize payment gateway.' });
-    }
-  });
-
-  // API endpoint to handle FastPay callback
-  app.get('/api/payment-callback', (req, res) => {
-    const { status, txn_id } = req.query;
-    
-    // In a real integration, you would verify the FastPay signature here to ensure the payment is valid
-    
-    if (status === 'success') {
-      // Redirect back to the app with success status
-      res.redirect(`/?payment_status=success&txn_id=${txn_id}`);
-    } else {
-      // Redirect back to the app with failure status
-      res.redirect(`/?payment_status=failed`);
-    }
-  });
-
   // API endpoint to submit form data
   app.post('/api/submit-membership', async (req, res) => {
     console.log('Received request to submit membership:', req.body);

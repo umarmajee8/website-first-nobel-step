@@ -8,6 +8,9 @@
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     
+    <!-- Confetti Library -->
+    <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.9.3/dist/confetti.browser.min.js"></script>
+
     <!-- Load Premium Typography: Inter -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -139,7 +142,7 @@
                 <img src="https://lh3.googleusercontent.com/d/1xVMY-y5IXHSBSQF6l3EkKaSKKWTNFNMA" alt="Logo" class="h-full w-auto" referrerPolicy="no-referrer" />
                 <div class="flex flex-col">
                     <span class="font-lemon text-base tracking-tight leading-none text-gray-900 dark:text-white">First Nobel Step</span>
-                    <span class="text-[9px] font-bold tracking-[0.25em] leading-none mt-1.5 text-pakistan-green dark:text-green-500">(PRIVATE) LIMITED</span>
+                    <span class="text-[9px] font-bold tracking-[0.25em] leading-none mt-1.5 text-[#01411C]">(PRIVATE) LIMITED</span>
                 </div>
             </div>
             
@@ -526,7 +529,10 @@
                             <div class="flex flex-col items-center gap-3 w-full">
                                 <p id="otp-status" class="text-xs text-gray-500 hidden">Sending verification code...</p>
                                 <input type="text" id="input-otp" maxlength="6" placeholder="------" class="text-center tracking-[0.5em] font-mono text-lg w-full max-w-[200px] px-4 py-4 rounded-2xl border-2 border-gray-100 dark:border-gray-700 bg-white dark:bg-gray-900 focus:border-pakistan-green outline-none dark:text-white" oninput="validateStep3()">
-                                <button type="button" id="btn-send-otp" onclick="sendOTP()" class="hidden w-full max-w-xs py-3 bg-transparent text-pakistan-green underline hover:text-green-700 text-xs rounded-2xl transition-colors font-lemon tracking-widest uppercase disabled:opacity-50">Resend Code</button>
+                                <button type="button" id="btn-send-otp" onclick="sendOTP()" class="hidden w-full max-w-xs py-3 bg-transparent text-pakistan-green underline hover:text-green-700 text-xs rounded-2xl transition-colors font-lemon tracking-widest uppercase disabled:opacity-50 flex items-center justify-center gap-2 mx-auto">
+                                    <i class="fa-solid fa-circle-notch fa-spin hidden" id="btn-send-otp-spinner"></i>
+                                    <span id="btn-send-otp-text">Resend Code</span>
+                                </button>
                                 <p id="otp-message" class="text-xs text-green-600 hidden">Code sent successfully!</p>
                                 <p id="otp-error" class="text-xs text-red-500 hidden"></p>
                             </div>
@@ -639,7 +645,8 @@
                             </label>
 
                             <label onclick="selectPaymentMethod('card')" id="payment-card" class="payment-option flex items-center justify-between p-4 rounded-2xl border-2 border-gray-100 dark:border-gray-800 hover:border-green-100 transition-all cursor-pointer">
-                                <div class="flex items-center">
+                                <div class="flex items-center gap-3">
+                                    <i class="fa-solid fa-credit-card text-gray-400 text-xl"></i>
                                     <h4 class="font-bold text-base dark:text-white">Credit / Debit Card</h4>
                                 </div>
                                 <div class="w-5 h-5 rounded-full border-2 border-gray-200 flex items-center justify-center check-icon hidden">
@@ -655,12 +662,17 @@
                     </div>
                 </div>
 
+
+
             </div>
 
             <!-- Footer Buttons -->
             <div class="px-8 pb-8 pt-4 flex gap-4 border-t border-gray-100 dark:border-gray-800">
                 <button id="btn-back" type="button" onclick="prevStep()" class="hidden px-6 py-4 rounded-2xl font-lemon text-[10px] border border-gray-200 dark:border-gray-700 text-gray-500 hover:bg-gray-50 dark:hover:bg-gray-800">Back</button>
-                <button id="btn-next" type="button" onclick="nextStep()" disabled class="flex-grow py-4 rounded-2xl font-lemon text-[10px] tracking-widest text-white transition-all bg-gray-200 dark:bg-gray-700 cursor-not-allowed">Continue</button>
+                <button id="btn-next" type="button" onclick="nextStep()" disabled class="flex-grow py-4 rounded-2xl font-lemon text-[10px] tracking-widest text-white transition-all bg-gray-200 dark:bg-gray-700 cursor-not-allowed flex items-center justify-center gap-2">
+                    <i class="fa-solid fa-circle-notch fa-spin hidden" id="btn-next-spinner"></i>
+                    <span id="btn-next-text">Continue</span>
+                </button>
             </div>
         </div>
 
@@ -928,18 +940,21 @@
             
             // Update UI
             document.querySelectorAll('.payment-option').forEach(el => {
+                const checkIcon = el.querySelector('.check-icon');
                 if (el.id === 'payment-' + method) {
                     el.classList.add('border-pakistan-green', 'bg-green-50', 'dark:bg-green-900/10');
                     el.classList.remove('border-gray-100', 'dark:border-gray-800');
-                    el.querySelector('.check-icon').classList.remove('hidden');
+                    checkIcon.classList.remove('hidden', 'border-gray-200');
+                    checkIcon.classList.add('bg-pakistan-green', 'border-pakistan-green', 'text-white');
                 } else {
                     el.classList.remove('border-pakistan-green', 'bg-green-50', 'dark:bg-green-900/10');
                     el.classList.add('border-gray-100', 'dark:border-gray-800');
-                    el.querySelector('.check-icon').classList.add('hidden');
+                    checkIcon.classList.add('hidden', 'border-gray-200');
+                    checkIcon.classList.remove('bg-pakistan-green', 'border-pakistan-green', 'text-white');
                 }
             });
             
-            validateCurrentStep();
+            if (state.step === 6) validateCurrentStep();
         }
 
         async function nextStep() {
@@ -950,9 +965,12 @@
                 const email = document.getElementById('input-email').value.trim();
                 const errorEl = document.getElementById('otp-error');
                 const btnNext = document.getElementById('btn-next');
+                const btnNextText = document.getElementById('btn-next-text');
+                const btnNextSpinner = document.getElementById('btn-next-spinner');
                 
                 btnNext.disabled = true;
-                btnNext.innerText = 'Verifying...';
+                btnNextText.innerText = 'Verifying...';
+                btnNextSpinner.classList.remove('hidden');
                 errorEl.classList.add('hidden');
 
                 try {
@@ -973,7 +991,8 @@
                     errorEl.classList.remove('hidden');
                 } finally {
                     btnNext.disabled = false;
-                    btnNext.innerText = 'Continue';
+                    btnNextText.innerText = 'Continue';
+                    btnNextSpinner.classList.add('hidden');
                 }
                 return;
             }
@@ -1007,20 +1026,24 @@
             // Update Indicators
             for (let i = 1; i <= 6; i++) {
                 const el = document.getElementById(`step-${i}-indicator`);
-                if (i <= state.step) {
-                    el.classList.add('bg-pakistan-green', 'border-pakistan-green', 'text-white');
-                    el.classList.remove('bg-white', 'dark:bg-gray-900', 'border-gray-200', 'dark:border-gray-700', 'text-gray-400', 'dark:text-gray-500');
-                } else {
-                    el.classList.remove('bg-pakistan-green', 'border-pakistan-green', 'text-white');
-                    el.classList.add('bg-white', 'dark:bg-gray-900', 'border-gray-200', 'dark:border-gray-700', 'text-gray-400', 'dark:text-gray-500');
+                if (el) {
+                    if (i <= state.step) {
+                        el.classList.add('bg-pakistan-green', 'border-pakistan-green', 'text-white');
+                        el.classList.remove('bg-white', 'dark:bg-gray-900', 'border-gray-200', 'dark:border-gray-700', 'text-gray-400', 'dark:text-gray-500');
+                    } else {
+                        el.classList.remove('bg-pakistan-green', 'border-pakistan-green', 'text-white');
+                        el.classList.add('bg-white', 'dark:bg-gray-900', 'border-gray-200', 'dark:border-gray-700', 'text-gray-400', 'dark:text-gray-500');
+                    }
                 }
             }
 
             // Show/Hide Steps
             for (let i = 1; i <= 6; i++) {
                 const el = document.getElementById(`step-${i}`);
-                if (i === state.step) el.classList.remove('hidden');
-                else el.classList.add('hidden');
+                if (el) {
+                    if (i === state.step) el.classList.remove('hidden');
+                    else el.classList.add('hidden');
+                }
             }
 
             // Update Email Verification
@@ -1056,10 +1079,11 @@
 
             // Update Buttons
             btnBack.classList.toggle('hidden', state.step === 1);
+            const btnNextText = document.getElementById('btn-next-text');
             if (state.step === 5 && state.plan === 'basic') {
-                btnNext.innerText = 'Submit Application';
+                btnNextText.innerText = 'Submit Application';
             } else {
-                btnNext.innerText = state.step === 6 ? 'Submit Payment' : 'Continue';
+                btnNextText.innerText = state.step === 6 ? 'Submit Payment' : 'Continue';
             }
             
             // Validate Current Step to Enable Next
@@ -1149,14 +1173,17 @@
             const email = document.getElementById('input-email').value.trim();
             const fullName = document.getElementById('input-fullname').value.trim();
             const btn = document.getElementById('btn-send-otp');
+            const btnText = document.getElementById('btn-send-otp-text');
+            const btnSpinner = document.getElementById('btn-send-otp-spinner');
             const errorEl = document.getElementById('otp-error');
             const msgEl = document.getElementById('otp-message');
             const statusEl = document.getElementById('otp-status');
 
             btn.disabled = true;
-            btn.classList.add('hidden');
-            statusEl.classList.remove('hidden');
-            statusEl.innerText = 'Sending verification code...';
+            btn.classList.remove('hidden');
+            btnText.innerText = 'Sending...';
+            btnSpinner.classList.remove('hidden');
+            statusEl.classList.add('hidden');
             errorEl.classList.add('hidden');
             msgEl.classList.add('hidden');
 
@@ -1171,8 +1198,8 @@
                 if (data.success) {
                     state.otpHash = data.hash;
                     btn.disabled = false;
-                    btn.classList.remove('hidden');
-                    statusEl.classList.add('hidden');
+                    btnText.innerText = 'Resend Code';
+                    btnSpinner.classList.add('hidden');
                     msgEl.classList.remove('hidden');
                 } else {
                     throw new Error(data.error || 'Failed to send code');
@@ -1182,7 +1209,8 @@
                 errorEl.innerText = err.message;
                 errorEl.classList.remove('hidden');
                 btn.disabled = false;
-                btn.classList.remove('hidden');
+                btnText.innerText = 'Resend Code';
+                btnSpinner.classList.add('hidden');
             }
         }
 
@@ -1222,34 +1250,17 @@
                 }
 
                 if (state.plan !== 'basic') {
-                    // Initialize FastPay Checkout
-                    const paymentResponse = await fetch('/api/create-fastpay-checkout', {
-                        method: 'POST',
-                        headers: { 'Content-Type': 'application/json' },
-                        body: JSON.stringify({
-                            amount: state.plan === 'standard' ? 2499 : (state.plan === 'professional_pkg' ? 6999 : 50000),
-                            paymentMethod: state.paymentMethod,
-                            email: formData.email,
-                            fullName: formData.fullName
-                        })
-                    });
-                    
-                    const paymentData = await paymentResponse.json().catch(() => ({}));
-                    if (!paymentResponse.ok || !paymentData.success) {
-                        throw new Error(paymentData.error || 'Failed to initialize payment gateway.');
-                    }
-                    
-                    // Save state before redirecting
-                    localStorage.setItem('membership_form_data', JSON.stringify(formData));
-                    localStorage.setItem('membership_form_state', JSON.stringify(state));
-                    
-                    // Redirect to FastPay Checkout
-                    window.location.href = paymentData.checkoutUrl;
+                    // Temporarily bypassing FastPay integration
+                    // Just show success view directly
+                    loadingView.classList.add('hidden');
+                    successView.classList.remove('hidden');
+                    triggerSuccessAnimation();
                     return;
                 }
 
                 loadingView.classList.add('hidden');
                 successView.classList.remove('hidden');
+                triggerSuccessAnimation();
             } catch (err) {
                 console.error(err);
                 loadingView.classList.add('hidden');
@@ -1272,51 +1283,39 @@
             }
         });
 
-        // Check for payment status in URL on load
-        window.addEventListener('DOMContentLoaded', () => {
-            const urlParams = new URLSearchParams(window.location.search);
-            const paymentStatus = urlParams.get('payment_status');
-            
-            if (paymentStatus) {
-                // Show modal immediately
-                document.getElementById('application-modal').classList.remove('hidden');
-                document.getElementById('modal-content').classList.add('hidden');
-                
-                if (paymentStatus === 'success') {
-                    document.getElementById('success-view').classList.remove('hidden');
-                    localStorage.removeItem('membership_form_data');
-                    localStorage.removeItem('membership_form_state');
-                } else {
-                    // Restore state
-                    try {
-                        const savedState = JSON.parse(localStorage.getItem('membership_form_state'));
-                        const savedData = JSON.parse(localStorage.getItem('membership_form_data'));
-                        
-                        if (savedState && savedData) {
-                            state = savedState;
-                            state.step = 6; // Go back to payment step
-                            
-                            // Restore input values
-                            if (document.getElementById('input-fullname')) document.getElementById('input-fullname').value = savedData.fullName || '';
-                            if (document.getElementById('input-cnic')) document.getElementById('input-cnic').value = savedData.cnic || '';
-                            if (document.getElementById('input-email')) document.getElementById('input-email').value = savedData.email || '';
-                            if (document.getElementById('input-whatsapp')) document.getElementById('input-whatsapp').value = savedData.whatsapp || '';
-                            if (document.getElementById('input-business')) document.getElementById('input-business').value = savedData.businessName || '';
-                            if (document.getElementById('input-otp')) document.getElementById('input-otp').value = savedData.otp || '';
-                            
-                            updateUI();
-                        }
-                    } catch (e) {
-                        console.error('Failed to restore form state', e);
-                    }
-                    
-                    document.getElementById('modal-content').classList.remove('hidden');
-                    showError('Payment Failed', 'Your payment could not be processed. Please try again.');
-                }
-                
-                // Clean up URL
-                window.history.replaceState({}, document.title, window.location.pathname);
+        // --- Success Animation ---
+        function triggerSuccessAnimation() {
+            var duration = 3 * 1000;
+            var animationEnd = Date.now() + duration;
+            var defaults = { startVelocity: 30, spread: 360, ticks: 60, zIndex: 10000 };
+
+            function randomInRange(min, max) {
+              return Math.random() * (max - min) + min;
             }
+
+            var interval = setInterval(function() {
+              var timeLeft = animationEnd - Date.now();
+
+              if (timeLeft <= 0) {
+                return clearInterval(interval);
+              }
+
+              var particleCount = 50 * (timeLeft / duration);
+              // since particles fall down, start a bit higher than random
+              confetti({
+                ...defaults, particleCount,
+                origin: { x: randomInRange(0.1, 0.3), y: Math.random() - 0.2 }
+              });
+              confetti({
+                ...defaults, particleCount,
+                origin: { x: randomInRange(0.7, 0.9), y: Math.random() - 0.2 }
+              });
+            }, 250);
+        }
+
+        // Check for payment status in URL on load (FastPay temporarily removed)
+        window.addEventListener('DOMContentLoaded', () => {
+            // FastPay logic removed
         });
     </script>
 <script type="module" src="/index.tsx"></script>
