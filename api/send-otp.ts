@@ -1,11 +1,14 @@
 import nodemailer from 'nodemailer';
-import crypto from 'crypto';
+import {
+  generateOtp,
+  signOtp,
+  rateLimit,
+  getClientIp,
+  applyCors,
+} from './_lib/otp';
 
 export default async function handler(req: any, res: any) {
-  // CORS Headers
-  res.setHeader('Access-Control-Allow-Origin', '*');
-  res.setHeader('Access-Control-Allow-Methods', 'POST, OPTIONS');
-  res.setHeader('Access-Control-Allow-Headers', 'Content-Type');
+  applyCors(req, res);
 
   if (req.method === 'OPTIONS') {
     return res.status(200).end();
@@ -16,48 +19,75 @@ export default async function handler(req: any, res: any) {
   }
 
   try {
-    const { email: rawEmail, fullName } = req.body;
-    if (!rawEmail) return res.status(400).json({ success: false, error: 'Email is required' });
-    
-    const email = rawEmail.toLowerCase().trim();
-    const otp = Math.floor(100000 + Math.random() * 900000).toString();
-    const secret = process.env.GOOGLE_PRIVATE_KEY || 'fallback_secret';
-    const hash = crypto.createHash('sha256').update(otp + email + secret).digest('hex');
-
-    if (process.env.SMTP_USER && process.env.SMTP_PASS) {
-      const transporter = nodemailer.createTransport({
-        service: 'gmail',
-        auth: {
-          user: process.env.SMTP_USER,
-          pass: process.env.SMTP_PASS,
-        },
-      });
-
-      const mailOptions = {
-        from: `"First Nobel Step" <${process.env.SMTP_USER}>`,
-        to: email,
-        subject: 'Your Verification Code - First Nobel Step',
-        html: `
-          <div style="font-family: Arial, sans-serif; padding: 20px; color: #333; max-width: 500px; margin: 0 auto; border: 1px solid #e5e7eb; border-radius: 8px;">
-            <h2 style="color: #01411C; border-bottom: 2px solid #01411C; padding-bottom: 10px;">Email Verification</h2>
-            <p>Dear ${fullName || 'Applicant'},</p>
-            <p>Your verification code for the First Nobel Step membership application is:</p>
-            <div style="text-align: center; margin: 30px 0;">
-                <span style="font-size: 32px; letter-spacing: 5px; color: #01411C; background: #f0f4f9; padding: 15px 25px; border-radius: 8px; font-weight: bold;">${otp}</span>
-            </div>
-            <p>Please enter this code in the application form to proceed with your payment.</p>
-            <p style="font-size: 12px; color: #666; margin-top: 30px;">If you did not request this code, please ignore this email.</p>
-          </div>
-        `
-      };
-
-      await transporter.sendMail(mailOptions);
-      return res.status(200).json({ success: true, hash });
-    } else {
-      return res.status(500).json({ success: false, error: 'Email service not configured' });
+    const { email: rawEmail, fullName } = req.body || {};
+    if (!rawEmail || typeof rawEmail !== 'string') {
+      return res.status(400).json({ success: false, error: 'Email is required' });
     }
+
+    const email = rawEmail.toLowerCase().trim();
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    if (!emailRegex.test(email)) {
+      return res.status(400).json({ success: false, error: 'Invalid email address' });
+    }
+
+    // Rate limit: max 3 sends per 15 minutes, per email + IP.
+    const ip = getClientIp(req);
+    const rl = rateLimit(`send:${email}:${ip}`, 3, 15 * 60 * 1000);
+    if (!rl.allowed) {
+      res.setHeader('Retry-After', String(rl.retryAfterSec));
+      return res.status(429).json({
+        success: false,
+        error: `Too many verification requests. Try again in ${Math.ceil(
+          rl.retryAfterSec / 60,
+        )} minute(s).`,
+      });
+    }
+
+    if (!process.env.SMTP_USER || !process.env.SMTP_PASS) {
+      return res
+        .status(500)
+        .json({ success: false, error: 'Email service is not configured.' });
+    }
+
+    const otp = generateOtp();
+    const { hash, bucket } = signOtp(otp, email);
+
+    const transporter = nodemailer.createTransport({
+      service: 'gmail',
+      auth: {
+        user: process.env.SMTP_USER,
+        pass: process.env.SMTP_PASS,
+      },
+    });
+
+    const safeName = String(fullName || 'Applicant').replace(/[<>]/g, '');
+
+    await transporter.sendMail({
+      from: `"First Nobel Step" <${process.env.SMTP_USER}>`,
+      to: email,
+      subject: 'Your Verification Code - First Nobel Step',
+      html: `
+        <div style="font-family: 'Inter', Arial, sans-serif; padding: 32px 20px; color: #1f2937; background: #f6faf7; margin: 0;">
+          <div style="max-width: 480px; margin: 0 auto; background: #ffffff; border: 1px solid #e5e7eb; border-radius: 16px; padding: 32px;">
+            <h2 style="color: #01411C; margin: 0 0 4px 0; font-size: 20px; letter-spacing: -0.01em;">First Nobel Step</h2>
+            <p style="margin: 0 0 24px 0; font-size: 12px; color: #6b7280; text-transform: uppercase; letter-spacing: 0.18em;">Email Verification</p>
+            <p style="font-size: 15px; line-height: 1.6; margin: 0 0 8px 0;">Dear ${safeName},</p>
+            <p style="font-size: 15px; line-height: 1.6; margin: 0 0 24px 0;">Use the verification code below to continue your membership application.</p>
+            <div style="text-align: center; margin: 28px 0;">
+              <span style="display: inline-block; font-size: 30px; letter-spacing: 8px; color: #01411C; background: #ecf6ef; padding: 16px 28px; border-radius: 12px; font-weight: 700; font-family: 'Courier New', monospace;">${otp}</span>
+            </div>
+            <p style="font-size: 13px; color: #6b7280; line-height: 1.6; margin: 0;">This code expires in about 5 minutes. If you didn't request it, you can safely ignore this email.</p>
+          </div>
+          <p style="max-width: 480px; margin: 16px auto 0; text-align: center; font-size: 11px; color: #9ca3af;">&copy; ${new Date().getFullYear()} First Nobel Step (Pvt.) Ltd.</p>
+        </div>
+      `,
+    });
+
+    return res.status(200).json({ success: true, hash, bucket });
   } catch (error: any) {
-    console.error('Error sending OTP:', error);
-    return res.status(500).json({ success: false, error: 'Failed to send verification code' });
+    console.error('[send-otp] error:', error);
+    return res
+      .status(500)
+      .json({ success: false, error: 'Failed to send verification code.' });
   }
 }

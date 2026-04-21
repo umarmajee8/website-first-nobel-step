@@ -1,0 +1,15 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" role="img" aria-label="First Nobel Step">
+  <defs>
+    <linearGradient id="fns-g" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0%" stop-color="#0a5a2a"/>
+      <stop offset="100%" stop-color="#01411C"/>
+    </linearGradient>
+  </defs>
+  <rect width="64" height="64" rx="14" fill="url(#fns-g)"/>
+  <!-- Crescent moon -->
+  <path d="M20 20a12 12 0 1 0 0 24 10 10 0 1 1 0-24z" fill="#ecf6ef" opacity="0.95"/>
+  <!-- Star -->
+  <path d="M44 24l1.6 3.4 3.7.5-2.7 2.6.7 3.7-3.3-1.8-3.3 1.8.7-3.7-2.7-2.6 3.7-.5z" fill="#ecf6ef"/>
+  <!-- Step arrow mark -->
+  <path d="M24 46l10-8 10 8" stroke="#ecf6ef" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" fill="none"/>
+</svg>

@@ -4,13 +4,90 @@ import dotenv from 'dotenv';
 import path from 'path';
 import { fileURLToPath } from 'url';
 import { createServer as createViteServer } from 'vite';
-import PDFDocument from 'pdfkit';
 import nodemailer from 'nodemailer';
-import Stripe from 'stripe';
+import crypto from 'crypto';
 
 dotenv.config();
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
+
+/**
+ * Local dev server that mirrors the Vercel serverless functions under /api.
+ * Production uses `/api/*.ts` directly via Vercel; this file exists so
+ * `npm run dev` can run the whole site on port 3000.
+ */
+
+/* ---------------- OTP helpers (mirrored from api/_lib/otp.ts) ---------------- */
+
+const BUCKET_MS = 5 * 60 * 1000;
+const ALLOWED_SKEW_BUCKETS = 1;
+
+function resolveOtpSecret(): string {
+  return (
+    process.env.OTP_SECRET ||
+    (process.env.GOOGLE_PRIVATE_KEY
+      ? crypto
+          .createHash('sha256')
+          .update('fns-otp:' + process.env.GOOGLE_PRIVATE_KEY)
+          .digest('hex')
+      : 'fns-dev-otp-fallback-secret-change-me')
+  );
+}
+
+function currentBucket(now = Date.now()) {
+  return Math.floor(now / BUCKET_MS);
+}
+
+function signOtp(otp: string, email: string, bucket: number) {
+  return crypto
+    .createHmac('sha256', resolveOtpSecret())
+    .update(`${otp}|${email}|${bucket}`)
+    .digest('hex');
+}
+
+function verifyOtp(otp: string, email: string, hash: string, bucket: number) {
+  if (typeof bucket !== 'number' || !Number.isFinite(bucket)) {
+    return { ok: false as const, reason: 'invalid' as const };
+  }
+  const now = currentBucket();
+  if (bucket < now - ALLOWED_SKEW_BUCKETS || bucket > now + 1) {
+    return { ok: false as const, reason: 'expired' as const };
+  }
+  const expected = signOtp(otp, email, bucket);
+  const a = Buffer.from(expected, 'hex');
+  const b = Buffer.from(hash, 'hex');
+  if (a.length !== b.length) return { ok: false as const, reason: 'invalid' as const };
+  return crypto.timingSafeEqual(a, b)
+    ? { ok: true as const }
+    : { ok: false as const, reason: 'invalid' as const };
+}
+
+/* Rate limiting (best effort, in-memory) */
+type RL = { count: number; windowStart: number };
+const rlStore = new Map<string, RL>();
+function rateLimit(key: string, max: number, windowMs: number) {
+  const now = Date.now();
+  const entry = rlStore.get(key);
+  if (!entry || now - entry.windowStart > windowMs) {
+    rlStore.set(key, { count: 1, windowStart: now });
+    return { allowed: true, retryAfterSec: 0 };
+  }
+  if (entry.count >= max) {
+    return {
+      allowed: false,
+      retryAfterSec: Math.ceil((windowMs - (now - entry.windowStart)) / 1000),
+    };
+  }
+  entry.count++;
+  return { allowed: true, retryAfterSec: 0 };
+}
+
+function clientIp(req: express.Request) {
+  const fwd = (req.headers['x-forwarded-for'] || '') as string;
+  return fwd.split(',')[0]?.trim() || req.socket.remoteAddress || 'unknown';
+}
+
+/* ---------------- Server ---------------- */
 
 async function startServer() {
   const app = express();
@@ -18,29 +95,10 @@ async function startServer() {
 
   app.use(express.json());
 
-  // Google Sheets API setup
-  const stripe = new Stripe(process.env.STRIPE_SECRET_KEY || '');
-
-  // API endpoint to create a payment intent
-  app.post('/api/create-payment-intent', async (req, res) => {
-    try {
-      const { amount, currency } = req.body;
-      const paymentIntent = await stripe.paymentIntents.create({
-        amount: amount, // amount in cents
-        currency: currency || 'pkr',
-      });
-      res.status(200).json({ clientSecret: paymentIntent.client_secret });
-    } catch (error: any) {
-      console.error('Error creating payment intent:', error);
-      res.status(500).json({ success: false, error: error.message });
-    }
-  });
   let privateKey = process.env.GOOGLE_PRIVATE_KEY || '';
-  // Remove surrounding quotes if user accidentally pasted them
   if (privateKey.startsWith('"') && privateKey.endsWith('"')) {
     privateKey = privateKey.slice(1, -1);
   }
-  // Handle literal \n strings
   privateKey = privateKey.replace(/\\n/g, '\n');
 
   const auth = new google.auth.GoogleAuth({
@@ -50,182 +108,244 @@ async function startServer() {
     },
     scopes: ['https://www.googleapis.com/auth/spreadsheets'],
   });
-
   const sheets = google.sheets({ version: 'v4', auth });
 
-  // API endpoint to send OTP
+  /* ---------- send-otp ---------- */
   app.post('/api/send-otp', async (req, res) => {
     try {
-      const { email: rawEmail, fullName } = req.body;
-      if (!rawEmail) return res.status(400).json({ success: false, error: 'Email is required' });
-      
-      const email = rawEmail.toLowerCase().trim();
-      const otp = Math.floor(100000 + Math.random() * 900000).toString();
-      const crypto = await import('crypto');
-      const secret = process.env.GOOGLE_PRIVATE_KEY || 'fallback_secret';
-      const hash = crypto.createHash('sha256').update(otp + email + secret).digest('hex');
-
-      if (process.env.SMTP_USER && process.env.SMTP_PASS) {
-        const transporter = nodemailer.createTransport({
-          service: 'gmail',
-          auth: {
-            user: process.env.SMTP_USER,
-            pass: process.env.SMTP_PASS,
-          },
-        });
-
-        const mailOptions = {
-          from: `"First Nobel Step" <${process.env.SMTP_USER}>`,
-          to: email,
-          subject: 'Your Verification Code - First Nobel Step',
-          html: `
-            <div style="font-family: Arial, sans-serif; padding: 20px; color: #333; max-width: 500px; margin: 0 auto; border: 1px solid #e5e7eb; border-radius: 8px;">
-              <h2 style="color: #01411C; border-bottom: 2px solid #01411C; padding-bottom: 10px;">Email Verification</h2>
-              <p>Dear ${fullName || 'Applicant'},</p>
-              <p>Your verification code for the First Nobel Step membership application is:</p>
-              <div style="text-align: center; margin: 30px 0;">
-                  <span style="font-size: 32px; letter-spacing: 5px; color: #01411C; background: #f0f4f9; padding: 15px 25px; border-radius: 8px; font-weight: bold;">${otp}</span>
-              </div>
-              <p>Please enter this code in the application form to proceed with your payment.</p>
-              <p style="font-size: 12px; color: #666; margin-top: 30px;">If you did not request this code, please ignore this email.</p>
-            </div>
-          `
-        };
-
-        await transporter.sendMail(mailOptions);
-        return res.status(200).json({ success: true, hash });
-      } else {
-        return res.status(500).json({ success: false, error: 'Email service not configured. Please check SMTP settings.' });
+      const { email: rawEmail, fullName } = req.body || {};
+      if (!rawEmail) {
+        return res.status(400).json({ success: false, error: 'Email is required' });
       }
-    } catch (error: any) {
-      console.error('Error sending OTP:', error);
-      return res.status(500).json({ success: false, error: error.message || 'Failed to send verification code' });
+      const email = String(rawEmail).toLowerCase().trim();
+      const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+      if (!emailRegex.test(email)) {
+        return res
+          .status(400)
+          .json({ success: false, error: 'Invalid email address' });
+      }
+
+      const rl = rateLimit(`send:${email}:${clientIp(req)}`, 3, 15 * 60 * 1000);
+      if (!rl.allowed) {
+        res.setHeader('Retry-After', String(rl.retryAfterSec));
+        return res.status(429).json({
+          success: false,
+          error: `Too many verification requests. Try again in ${Math.ceil(
+            rl.retryAfterSec / 60,
+          )} minute(s).`,
+        });
+      }
+
+      if (!process.env.SMTP_USER || !process.env.SMTP_PASS) {
+        return res
+          .status(500)
+          .json({ success: false, error: 'Email service is not configured.' });
+      }
+
+      const otp = crypto.randomInt(0, 1_000_000).toString().padStart(6, '0');
+      const bucket = currentBucket();
+      const hash = signOtp(otp, email, bucket);
+
+      const transporter = nodemailer.createTransport({
+        service: 'gmail',
+        auth: {
+          user: process.env.SMTP_USER,
+          pass: process.env.SMTP_PASS,
+        },
+      });
+      const safeName = String(fullName || 'Applicant').replace(/[<>]/g, '');
+
+      await transporter.sendMail({
+        from: `"First Nobel Step" <${process.env.SMTP_USER}>`,
+        to: email,
+        subject: 'Your Verification Code - First Nobel Step',
+        html: `
+          <div style="font-family: 'Inter', Arial, sans-serif; padding: 32px 20px; color: #1f2937; background: #f6faf7;">
+            <div style="max-width: 480px; margin: 0 auto; background: #ffffff; border: 1px solid #e5e7eb; border-radius: 16px; padding: 32px;">
+              <h2 style="color: #01411C; margin: 0 0 4px 0; font-size: 20px;">First Nobel Step</h2>
+              <p style="margin: 0 0 24px 0; font-size: 12px; color: #6b7280; text-transform: uppercase; letter-spacing: 0.18em;">Email Verification</p>
+              <p style="font-size: 15px; line-height: 1.6; margin: 0 0 8px 0;">Dear ${safeName},</p>
+              <p style="font-size: 15px; line-height: 1.6; margin: 0 0 24px 0;">Use the verification code below to continue your membership application.</p>
+              <div style="text-align: center; margin: 28px 0;">
+                <span style="display: inline-block; font-size: 30px; letter-spacing: 8px; color: #01411C; background: #ecf6ef; padding: 16px 28px; border-radius: 12px; font-weight: 700;">${otp}</span>
+              </div>
+              <p style="font-size: 13px; color: #6b7280; line-height: 1.6; margin: 0;">This code expires in about 5 minutes.</p>
+            </div>
+          </div>
+        `,
+      });
+
+      return res.status(200).json({ success: true, hash, bucket });
+    } catch (err: any) {
+      console.error('send-otp error:', err);
+      return res
+        .status(500)
+        .json({ success: false, error: 'Failed to send verification code' });
     }
   });
 
-  // API endpoint to verify OTP
+  /* ---------- verify-otp ---------- */
   app.post('/api/verify-otp', async (req, res) => {
     try {
-      const { email: rawEmail, otp, otpHash } = req.body;
-      if (!rawEmail || !otp || !otpHash) {
-        return res.status(400).json({ success: false, error: 'Missing parameters' });
+      const { email: rawEmail, otp, otpHash, otpBucket } = req.body || {};
+      if (!rawEmail || !otp || !otpHash || otpBucket === undefined) {
+        return res
+          .status(400)
+          .json({ success: false, error: 'Missing parameters' });
       }
-      
-      const email = rawEmail.toLowerCase().trim();
-      const crypto = await import('crypto');
-      const secret = process.env.GOOGLE_PRIVATE_KEY || 'fallback_secret';
-      const expectedHash = crypto.createHash('sha256').update(otp + email + secret).digest('hex');
-
-      if (expectedHash === otpHash) {
-        return res.status(200).json({ success: true });
-      } else {
-        return res.status(400).json({ success: false, error: 'Invalid verification code' });
+      const email = String(rawEmail).toLowerCase().trim();
+      const rl = rateLimit(`verify:${email}:${clientIp(req)}`, 5, 15 * 60 * 1000);
+      if (!rl.allowed) {
+        return res.status(429).json({
+          success: false,
+          error: 'Too many attempts. Please request a new code and try again later.',
+        });
       }
-    } catch (error: any) {
+      const result = verifyOtp(
+        String(otp),
+        email,
+        String(otpHash),
+        Number(otpBucket),
+      );
+      if (result.ok) return res.status(200).json({ success: true });
+      return res.status(400).json({
+        success: false,
+        error:
+          result.reason === 'expired'
+            ? 'Verification code has expired. Please request a new one.'
+            : 'Invalid verification code.',
+      });
+    } catch {
       return res.status(500).json({ success: false, error: 'Server error' });
     }
   });
 
-  // API endpoint to create FastPay checkout session
+  /* ---------- create-fastpay-checkout (simulated) ---------- */
   app.post('/api/create-fastpay-checkout', async (req, res) => {
     try {
-      const { amount, paymentMethod, email, fullName } = req.body;
-      
-      // TODO: Replace with actual FastPay API call when Merchant ID and Secret Key are available
-      // Example:
-      // const payload = { merchant_id: process.env.FASTPAY_MERCHANT_ID, amount, ... };
-      // const signature = generateSignature(payload, process.env.FASTPAY_SECRET);
-      // const response = await axios.post('https://api.fastpay.com/v1/checkout', payload);
-      
-      // Simulating the FastPay API response
-      const txnId = 'FP-' + Math.random().toString(36).substr(2, 9).toUpperCase();
-      
-      // In a real scenario, this would be the FastPay hosted checkout URL
-      // For simulation, we route through our callback endpoint to mimic the redirect flow
-      const checkoutUrl = `/api/payment-callback?status=success&txn_id=${txnId}`;
-      
-      res.status(200).json({ success: true, checkoutUrl });
-    } catch (error: any) {
-      console.error('FastPay Checkout Error:', error);
-      res.status(500).json({ success: false, error: 'Failed to initialize payment gateway.' });
+      const { amount, paymentMethod, email } = req.body || {};
+      if (typeof amount !== 'number' || amount <= 0) {
+        return res.status(400).json({ success: false, error: 'Invalid amount' });
+      }
+      if (!paymentMethod || !email) {
+        return res
+          .status(400)
+          .json({ success: false, error: 'Missing payment details' });
+      }
+      const txnId = 'FP-' + crypto.randomBytes(6).toString('hex').toUpperCase();
+      const checkoutUrl = `/api/payment-callback?status=success&txn_id=${encodeURIComponent(
+        txnId,
+      )}`;
+      return res.status(200).json({ success: true, checkoutUrl, txnId });
+    } catch {
+      return res
+        .status(500)
+        .json({ success: false, error: 'Failed to initialize payment gateway.' });
     }
   });
 
-  // API endpoint to handle FastPay callback
+  /* ---------- payment-callback ---------- */
   app.get('/api/payment-callback', (req, res) => {
-    const { status, txn_id } = req.query;
-    
-    // In a real integration, you would verify the FastPay signature here to ensure the payment is valid
-    
+    const status = req.query.status === 'success' ? 'success' : 'failed';
+    const txn = String(req.query.txn_id || '').replace(/[^a-zA-Z0-9-]/g, '');
     if (status === 'success') {
-      // Redirect back to the app with success status
-      res.redirect(`/?payment_status=success&txn_id=${txn_id}`);
-    } else {
-      // Redirect back to the app with failure status
-      res.redirect(`/?payment_status=failed`);
+      return res.redirect(`/?payment_status=success&txn_id=${encodeURIComponent(txn)}`);
     }
+    return res.redirect(`/?payment_status=failed`);
   });
 
-  // API endpoint to submit form data
+  /* ---------- submit-membership ---------- */
   app.post('/api/submit-membership', async (req, res) => {
-    console.log('Received request to submit membership:', req.body);
     try {
-      const formData = req.body;
-      const { fullName, cnic, email: rawEmail, whatsapp, planId, institute, degree, businessName, industry, experience, targetCountry, paymentMethod } = formData;
+      const formData = req.body || {};
+      const {
+        fullName,
+        cnic,
+        email: rawEmail,
+        whatsapp,
+        planId,
+        status,
+        institute,
+        degree,
+        businessName,
+        industry,
+        experience,
+        targetCountry,
+        paymentMethod,
+        otp,
+        otpHash,
+        otpBucket,
+      } = formData;
 
-      if (!rawEmail) return res.status(400).json({ success: false, error: 'Email is required' });
-      const email = rawEmail.toLowerCase().trim();
+      if (!rawEmail) {
+        return res.status(400).json({ success: false, error: 'Email is required' });
+      }
+      const email = String(rawEmail).toLowerCase().trim();
 
-      if (!process.env.GOOGLE_SHEET_ID || !process.env.GOOGLE_SERVICE_ACCOUNT_EMAIL || !process.env.GOOGLE_PRIVATE_KEY) {
-        return res.status(500).json({ success: false, error: 'Server configuration error: Missing Google Sheets credentials in Environment Variables. Please set GOOGLE_SHEET_ID, GOOGLE_SERVICE_ACCOUNT_EMAIL, and GOOGLE_PRIVATE_KEY.' });
+      if (planId !== 'basic') {
+        if (!otp || !otpHash || otpBucket === undefined) {
+          return res
+            .status(400)
+            .json({ success: false, error: 'Email verification is required.' });
+        }
+        const result = verifyOtp(
+          String(otp),
+          email,
+          String(otpHash),
+          Number(otpBucket),
+        );
+        if (!result.ok) {
+          return res.status(400).json({
+            success: false,
+            error:
+              result.reason === 'expired'
+                ? 'Your verification code has expired. Please restart the application.'
+                : 'Invalid verification code.',
+          });
+        }
       }
 
-      let sheetSuccess = false;
-      try {
-        console.log('Submitting to Sheet ID:', process.env.GOOGLE_SHEET_ID);
-        
-        // Format date to a readable format (e.g., DD/MM/YYYY, HH:MM:SS AM/PM in Pakistan Time)
-        const formattedDate = new Date().toLocaleString('en-PK', { 
-          timeZone: 'Asia/Karachi',
-          dateStyle: 'short',
-          timeStyle: 'medium'
+      if (
+        !process.env.GOOGLE_SHEET_ID ||
+        !process.env.GOOGLE_SERVICE_ACCOUNT_EMAIL ||
+        !process.env.GOOGLE_PRIVATE_KEY
+      ) {
+        return res.status(500).json({
+          success: false,
+          error:
+            'Server configuration error: missing Google Sheets credentials.',
         });
-
-        // Ensure the order matches the expected columns in the Google Sheet
-        const values = [[
-          formattedDate || '',
-          fullName || '',
-          cnic || '',
-          email || '',
-          whatsapp || '',
-          planId || '',
-          paymentMethod || '',
-          institute || '',
-          degree || '',
-          businessName || '',
-          industry || '',
-          experience || '',
-          targetCountry || ''
-        ]];
-        
-        console.log('Values to append:', values);
-
-        const result = await sheets.spreadsheets.values.append({
-          spreadsheetId: process.env.GOOGLE_SHEET_ID,
-          range: 'Sheet1!A:M',
-          valueInputOption: 'USER_ENTERED',
-          requestBody: {
-            values: values,
-          },
-        });
-        console.log('Data successfully appended to Google Sheets. Result:', JSON.stringify(result.data));
-        sheetSuccess = true;
-      } catch (sheetError: any) {
-        console.error('Error appending to Google Sheets:', sheetError);
-        // We continue even if sheet fails, or we can choose to fail here. 
       }
 
-      // Send welcome email
+      const formattedDate = new Date().toLocaleString('en-PK', {
+        timeZone: 'Asia/Karachi',
+        dateStyle: 'short',
+        timeStyle: 'medium',
+      });
+
+      const values = [[
+        formattedDate || '',
+        fullName || '',
+        cnic || '',
+        email || '',
+        whatsapp || '',
+        planId || '',
+        paymentMethod || '',
+        status || institute || '',
+        degree || '',
+        businessName || '',
+        industry || '',
+        experience || '',
+        targetCountry || '',
+      ]];
+
+      await sheets.spreadsheets.values.append({
+        spreadsheetId: process.env.GOOGLE_SHEET_ID,
+        range: 'Sheet1!A:M',
+        valueInputOption: 'USER_ENTERED',
+        requestBody: { values },
+      });
+
       if (email && process.env.SMTP_USER && process.env.SMTP_PASS) {
         try {
           const transporter = nodemailer.createTransport({
@@ -235,53 +355,28 @@ async function startServer() {
               pass: process.env.SMTP_PASS,
             },
           });
-
-          const mailOptions = {
+          await transporter.sendMail({
             from: `"First Nobel Step" <${process.env.SMTP_USER}>`,
             to: email,
-            subject: 'Welcome to First Nobel Step - Membership Application Received',
-            text: `Dear ${fullName},\n\nThank you for submitting your membership application to First Nobel Step (Pvt.) Ltd.\n\nWe have successfully received your details and our team will review them shortly. Please find the attached Disclaimer document for your reference.\n\nBest regards,\nFirst Nobel Step Team\nsupport@firstnoblestep.com`,
-            html: `
-              <div style="font-family: Arial, sans-serif; color: #333; line-height: 1.6; max-w: 600px; margin: 0 auto; padding: 20px; border: 1px solid #e5e7eb; border-radius: 8px;">
-                <h2 style="color: #01411C; border-bottom: 2px solid #01411C; padding-bottom: 10px;">Welcome to First Nobel Step!</h2>
-                <p>Dear <strong>${fullName}</strong>,</p>
-                <p>Thank you for submitting your membership application to First Nobel Step (Pvt.) Ltd.</p>
-                <p>We have successfully received your details and our team will review them shortly.</p>
-                <p>Please find the attached <strong>Disclaimer</strong> document for your reference.</p>
-                <br/>
-                <p>Best regards,</p>
-                <p><strong>First Nobel Step Team</strong><br/>
-                <a href="mailto:support@firstnoblestep.com" style="color: #01411C;">support@firstnoblestep.com</a></p>
-              </div>
-            `,
-            attachments: [
-              {
-                filename: 'Disclaimer_First_Noble_Step.pdf',
-                path: path.join(__dirname, 'Disclaimer.pdf')
-              }
-            ]
-          };
-
-          await transporter.sendMail(mailOptions);
-          console.log(`Welcome email sent to ${email}`);
-        } catch (emailError: any) {
-          console.error('Error sending welcome email:', emailError);
+            subject: 'Welcome to First Nobel Step - Application Received',
+            text: `Dear ${fullName || 'Applicant'},\n\nThank you for applying to First Nobel Step.`,
+          });
+        } catch (e) {
+          console.error('welcome email failed', e);
         }
       }
 
       return res.status(200).json({ success: true });
     } catch (error: any) {
-      console.error('Error submitting form:', error);
-      const errorMessage = error.response?.data?.error?.message || error.message || 'Failed to submit data';
-      if (!res.headersSent) {
-        return res.status(500).json({ success: false, error: `Error: ${errorMessage}` });
-      }
+      console.error('submit-membership error:', error);
+      return res.status(500).json({
+        success: false,
+        error: error?.message || 'Failed to submit data',
+      });
     }
   });
 
-  // Vite middleware for development
-
-  // Vite middleware for development
+  /* ---------- Vite middleware for dev / static in prod ---------- */
   if (process.env.NODE_ENV !== 'production') {
     const vite = await createViteServer({
       server: { middlewareMode: true },
@@ -291,7 +386,7 @@ async function startServer() {
   } else {
     const distPath = path.join(__dirname, 'dist');
     app.use(express.static(distPath));
-    app.get('*all', (req, res) => {
+    app.get('*all', (_req, res) => {
       res.sendFile(path.join(distPath, 'index.html'));
     });
   }

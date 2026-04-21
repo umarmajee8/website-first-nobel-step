@@ -1,7 +1,7 @@
 {
-  "name": "first-million-step-portal",
+  "name": "first-nobel-step-portal",
   "private": true,
-  "version": "0.0.0",
+  "version": "1.0.0",
   "type": "module",
   "scripts": {
     "dev": "tsx server.ts",
@@ -10,23 +10,16 @@
     "preview": "vite preview"
   },
   "dependencies": {
-    "@stripe/react-stripe-js": "^5.6.1",
-    "@stripe/stripe-js": "^8.11.0",
     "dotenv": "^17.3.1",
     "express": "^5.2.1",
     "googleapis": "^171.4.0",
-    "motion": "^12.38.0",
     "nodemailer": "^8.0.2",
-    "pdfkit": "^0.17.2",
-    "react": "^19.2.3",
-    "react-dom": "^19.2.4",
-    "stripe": "^20.4.1"
+    "pdfkit": "^0.17.2"
   },
   "devDependencies": {
     "@types/node": "^22.14.0",
     "@types/nodemailer": "^7.0.11",
     "@types/pdfkit": "^0.17.5",
-    "@vitejs/plugin-react": "^5.0.0",
     "tsx": "^4.21.0",
     "typescript": "~5.8.2",
     "vite": "^6.2.0"

@@ -1,714 +1,1138 @@
-
 <!DOCTYPE html>
 <html lang="en" class="scroll-smooth">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>First Nobel Step | Official Portal</title>
-    <script src="https://cdn.tailwindcss.com"></script>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    
-    <!-- Load Premium Typography: Inter -->
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@100..900&display=swap" rel="stylesheet">
-    
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="theme-color" content="#01411C" media="(prefers-color-scheme: light)" />
+    <meta name="theme-color" content="#0a2415" media="(prefers-color-scheme: dark)" />
+
+    <title>First Nobel Step | Global Opportunities for Pakistan</title>
+    <meta name="description" content="First Nobel Step (Pvt.) Ltd. is the official membership portal guiding Pakistani students, professionals, and entrepreneurs toward global careers, studies, and business opportunities." />
+    <link rel="canonical" href="https://firstnoblestep.com/" />
+
+    <!-- Open Graph -->
+    <meta property="og:type" content="website" />
+    <meta property="og:url" content="https://firstnoblestep.com/" />
+    <meta property="og:title" content="First Nobel Step | Global Opportunities for Pakistan" />
+    <meta property="og:description" content="Guided pathways abroad for Pakistani students, professionals, and entrepreneurs. Apply to the official First Nobel Step (Pvt.) Ltd. membership today." />
+    <meta property="og:image" content="https://firstnoblestep.com/og.jpg" />
+    <meta property="og:image:width" content="1200" />
+    <meta property="og:image:height" content="630" />
+    <meta property="og:locale" content="en_PK" />
+    <meta property="og:site_name" content="First Nobel Step" />
+
+    <!-- Twitter -->
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:title" content="First Nobel Step | Global Opportunities for Pakistan" />
+    <meta name="twitter:description" content="Your first step abroad, guided every mile. Official First Nobel Step (Pvt.) Ltd. membership portal." />
+    <meta name="twitter:image" content="https://firstnoblestep.com/og.jpg" />
+
+    <!-- Icons & manifest -->
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+    <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png" />
+    <link rel="manifest" href="/site.webmanifest" />
+
+    <!-- Performance: prioritize hero image -->
+    <link rel="preload" as="image" href="/hero.jpg" fetchpriority="high" />
+
+    <!-- Fonts (self-hosted via Google Fonts display=swap) -->
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&family=Instrument+Serif:ital@0;1&display=swap" rel="stylesheet" />
+
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
+
+    <!-- Tailwind (note: still CDN for now; swap to a compiled build once the asset pipeline is wired) -->
+    <script src="https://cdn.tailwindcss.com?plugins=forms,typography"></script>
     <script>
-        tailwind.config = {
-            darkMode: 'class',
-            theme: {
-                extend: {
-                    fontFamily: {
-                        sans: ['"Inter"', 'ui-sans-serif', 'system-ui', 'sans-serif'],
-                        display: ['"Inter"', 'sans-serif'],
-                        lemon: ['"Inter"', 'sans-serif'],
-                    },
-                    colors: {
-                        'pakistan-green': '#01411C',
-                        'whatsapp-green': '#25D366',
-                    },
-                    animation: {
-                        'spin-slow': 'spin 20s linear infinite',
-                        'float': 'float 6s ease-in-out infinite',
-                    },
-                    keyframes: {
-                        float: {
-                            '0%, 100%': { transform: 'translateY(0px)' },
-                            '50%': { transform: 'translateY(-10px)' },
-                        }
-                    }
-                }
-            }
-        }
+      // Tailwind theme extension: a single source of truth for brand tokens.
+      tailwind.config = {
+        darkMode: 'class',
+        theme: {
+          extend: {
+            fontFamily: {
+              sans: ['Inter', 'ui-sans-serif', 'system-ui', 'sans-serif'],
+              display: ['Inter', 'sans-serif'],
+              serif: ['"Instrument Serif"', 'ui-serif', 'Georgia', 'serif'],
+            },
+            colors: {
+              brand: {
+                DEFAULT: '#01411C',
+                50: '#ecf6ef',
+                100: '#d3ead9',
+                200: '#a7d5b3',
+                300: '#7bc08c',
+                500: '#10703a',
+                600: '#0a5a2a',
+                700: '#074922',
+                800: '#04321a',
+                900: '#01411C',
+                950: '#0a2415',
+              },
+              accent: {
+                gold: '#b9924f',
+                softgold: '#e8dcb9',
+              },
+            },
+            borderRadius: {
+              xl2: '1.25rem',
+              '2xl2': '1.5rem',
+            },
+            boxShadow: {
+              brand: '0 10px 30px -10px rgba(1,65,28,0.18)',
+              brandLg: '0 25px 60px -25px rgba(1,65,28,0.32)',
+            },
+            keyframes: {
+              floaty: { '0%,100%': { transform: 'translateY(0)' }, '50%': { transform: 'translateY(-8px)' } },
+              pulseDot: { '0%,100%': { opacity: '1' }, '50%': { opacity: '.5' } },
+              marquee: { '0%': { transform: 'translateX(0)' }, '100%': { transform: 'translateX(-50%)' } },
+            },
+            animation: {
+              floaty: 'floaty 6s ease-in-out infinite',
+              pulseDot: 'pulseDot 1.8s ease-in-out infinite',
+              marquee: 'marquee 30s linear infinite',
+            },
+          },
+        },
+      };
     </script>
+
     <style>
-        body {
-            font-family: 'Inter', sans-serif;
-            -webkit-font-smoothing: antialiased;
-            -moz-osx-font-smoothing: grayscale;
-            text-rendering: optimizeLegibility;
-            letter-spacing: -0.01em;
-        }
-        
-        .font-lemon {
-            font-family: 'Inter', sans-serif;
-            text-transform: uppercase;
-            letter-spacing: 0.05em;
-            font-weight: 700;
-        }
+      :root {
+        --brand: #01411C;
+        --brand-600: #0a5a2a;
+        --brand-50: #ecf6ef;
+        --accent-gold: #b9924f;
+        --container-max: 72rem;
+      }
+      html { -webkit-text-size-adjust: 100%; }
+      body {
+        font-family: 'Inter', ui-sans-serif, system-ui, sans-serif;
+        -webkit-font-smoothing: antialiased;
+        -moz-osx-font-smoothing: grayscale;
+        text-rendering: optimizeLegibility;
+        letter-spacing: -0.01em;
+      }
 
-        h1, h2, h3 {
-            font-family: 'Inter', sans-serif;
-            font-weight: 800;
-            letter-spacing: -0.03em;
+      /* Reduced motion */
+      @media (prefers-reduced-motion: reduce) {
+        *, *::before, *::after {
+          animation-duration: 0.001ms !important;
+          animation-iteration-count: 1 !important;
+          transition-duration: 0.001ms !important;
+          scroll-behavior: auto !important;
         }
+      }
 
-        .hero-title {
-            font-family: 'Inter', sans-serif;
-            font-weight: 900;
-            line-height: 0.95;
-            letter-spacing: -0.04em;
-        }
+      /* Accessible focus ring */
+      :focus-visible {
+        outline: 2px solid #01411C;
+        outline-offset: 2px;
+        border-radius: 6px;
+      }
+      .dark :focus-visible { outline-color: #7bc08c; }
 
-        /* Custom Scrollbar */
-        .custom-scrollbar::-webkit-scrollbar {
-            width: 5px;
-        }
-        .custom-scrollbar::-webkit-scrollbar-track {
-            background: transparent;
-        }
-        .custom-scrollbar::-webkit-scrollbar-thumb {
-            background: #01411C;
-            border-radius: 10px;
-        }
+      /* Eyebrow label */
+      .eyebrow {
+        display: inline-block;
+        font-size: 0.75rem;
+        font-weight: 700;
+        letter-spacing: 0.22em;
+        text-transform: uppercase;
+        color: var(--brand);
+      }
+      .dark .eyebrow { color: #7bc08c; }
 
-        .seal-animation {
-            animation: seal-float-glow 4s infinite ease-in-out;
-        }
-        @keyframes seal-float-glow {
-            0%, 100% { 
-                transform: translateY(0) scale(1);
-                box-shadow: 0 0 20px rgba(1, 65, 28, 0.1);
-            }
-            50% { 
-                transform: translateY(-8px) scale(1.03);
-                box-shadow: 0 10px 40px rgba(1, 65, 28, 0.3);
-            }
-        }
-        @keyframes slow-rotate {
-            from { transform: rotate(0deg); }
-            to { transform: rotate(360deg); }
-        }
-        .animate-slow-rotate {
-            animation: slow-rotate 15s linear infinite;
-        }
+      /* Display headlines */
+      .display {
+        font-family: 'Inter', sans-serif;
+        font-weight: 900;
+        letter-spacing: -0.035em;
+        line-height: 0.98;
+      }
+      .serif-accent {
+        font-family: 'Instrument Serif', Georgia, serif;
+        font-style: italic;
+        font-weight: 400;
+        letter-spacing: -0.01em;
+      }
 
-        /* Modal Transitions */
-        .modal-enter { opacity: 0; transform: scale(0.95); }
-        .modal-enter-active { opacity: 1; transform: scale(1); transition: opacity 300ms, transform 300ms; }
-        .modal-exit { opacity: 1; transform: scale(1); }
-        .modal-exit-active { opacity: 0; transform: scale(0.95); transition: opacity 200ms, transform 200ms; }
-        
-        .hidden-important { display: none !important; }
+      /* Decorative background pattern */
+      .bg-topo {
+        background-image:
+          radial-gradient(circle at 20% 20%, rgba(1,65,28,0.08) 0px, transparent 60px),
+          radial-gradient(circle at 80% 60%, rgba(1,65,28,0.06) 0px, transparent 80px),
+          radial-gradient(circle at 50% 90%, rgba(1,65,28,0.05) 0px, transparent 70px);
+      }
+      .dark .bg-topo {
+        background-image:
+          radial-gradient(circle at 20% 20%, rgba(123,192,140,0.07) 0px, transparent 60px),
+          radial-gradient(circle at 80% 60%, rgba(123,192,140,0.06) 0px, transparent 80px),
+          radial-gradient(circle at 50% 90%, rgba(123,192,140,0.05) 0px, transparent 70px);
+      }
+
+      /* Custom scrollbar (modal) */
+      .custom-scrollbar::-webkit-scrollbar { width: 6px; }
+      .custom-scrollbar::-webkit-scrollbar-track { background: transparent; }
+      .custom-scrollbar::-webkit-scrollbar-thumb { background: var(--brand); border-radius: 8px; opacity: 0.6; }
+
+      /* Marquee container */
+      .marquee-mask {
+        mask-image: linear-gradient(to right, transparent 0, black 8%, black 92%, transparent 100%);
+      }
+
+      /* Accordion arrow rotation */
+      details[open] > summary .fa-chevron-down { transform: rotate(180deg); }
+      summary::-webkit-details-marker { display: none; }
+      summary { list-style: none; }
+
+      /* Count-up reveal */
+      .count-up { font-variant-numeric: tabular-nums; }
+
+      /* Hide utility used by JS */
+      .hidden-important { display: none !important; }
+
+      /* Payment radio focus ring */
+      .payment-label:has(input:focus-visible) {
+        outline: 2px solid var(--brand);
+        outline-offset: 2px;
+      }
+
+      /* Smooth anchor-jump offset for the sticky header */
+      main section[id] { scroll-margin-top: 5rem; }
     </style>
-<script type="importmap">
-{
-  "imports": {
-    "react/": "https://esm.sh/react@^19.2.3/",
-    "react": "https://esm.sh/react@^19.2.3"
-  }
-}
-</script>
-<script>
-    // Prevent FOUC
-    if (localStorage.theme === 'dark' || (!('theme' in localStorage) && window.matchMedia('(prefers-color-scheme: dark)').matches)) {
-        document.documentElement.classList.add('dark');
-    } else {
-        document.documentElement.classList.remove('dark');
-    }
-</script>
-<link rel="stylesheet" href="/index.css">
-</head>
-<body class="bg-white dark:bg-gray-900 text-gray-900 dark:text-white transition-colors duration-300 selection:bg-green-100 selection:text-pakistan-green">
 
-    <!-- HEADER -->
-    <header class="sticky top-0 z-50 bg-white/80 dark:bg-gray-900/80 backdrop-blur-md border-b border-gray-100 dark:border-gray-800 transition-colors duration-300">
-        <div class="max-w-7xl mx-auto px-4 h-16 flex items-center justify-between">
-            <!-- Logo -->
-            <div class="group cursor-pointer flex items-center gap-3 h-10">
-                <img src="https://lh3.googleusercontent.com/d/1xVMY-y5IXHSBSQF6l3EkKaSKKWTNFNMA" alt="Logo" class="h-full w-auto" referrerPolicy="no-referrer" />
-                <div class="flex flex-col">
-                    <span class="font-lemon text-base tracking-tight leading-none text-gray-900 dark:text-white">First Nobel Step</span>
-                    <span class="text-[9px] font-bold tracking-[0.25em] leading-none mt-1.5 text-pakistan-green dark:text-green-500">(PRIVATE) LIMITED</span>
-                </div>
-            </div>
-            
-            <div class="flex items-center gap-4">
-                <button id="theme-toggle" class="flex items-center justify-center gap-1 w-[76px] px-1.5 py-1 rounded-full transition-all duration-300 bg-gray-200 dark:bg-black border border-gray-300 dark:border-gray-700">
-                    <span id="theme-text" class="text-[8px] font-bold text-gray-900 dark:text-white order-1 whitespace-nowrap">DAY MODE</span>
-                    <i id="theme-icon" class="fa-solid fa-sun text-[10px] text-gray-900 dark:text-white order-2"></i>
-                </button>
-                <button onclick="openForm()" class="group relative inline-flex items-center justify-center overflow-hidden bg-pakistan-green text-white px-5 py-2 rounded-lg font-lemon text-[10px] tracking-widest hover:bg-green-800 transition-all shadow-[0_10px_20px_-5px_rgba(1,65,28,0.4)] active:scale-95 text-center">
-                    <span class="transition-all duration-300 group-hover:-translate-x-2">Apply Now</span>
-                    <i class="fa-solid fa-arrow-right absolute right-3 translate-x-4 opacity-0 transition-all duration-300 group-hover:translate-x-0 group-hover:opacity-100"></i>
-                </button>
-            </div>
+    <!-- JSON-LD structured data -->
+    <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "Organization",
+      "name": "First Nobel Step (Pvt.) Ltd.",
+      "alternateName": "First Nobel Step",
+      "url": "https://firstnoblestep.com/",
+      "logo": "https://firstnoblestep.com/logo.svg",
+      "description": "Official membership portal helping Pakistanis pursue global careers, studies, and business opportunities.",
+      "address": {
+        "@type": "PostalAddress",
+        "streetAddress": "129 CCA-3, Block-X, DHA Phase 7",
+        "addressLocality": "Lahore",
+        "addressCountry": "PK"
+      },
+      "contactPoint": [{
+        "@type": "ContactPoint",
+        "telephone": "+92-333-2288877",
+        "contactType": "customer support",
+        "email": "support@firstnoblestep.com",
+        "areaServed": "PK",
+        "availableLanguage": ["English", "Urdu"]
+      }],
+      "sameAs": [
+        "https://www.facebook.com/share/1B1TCCWqH2/",
+        "https://www.instagram.com/firstnoblestep",
+        "https://www.linkedin.com/company/firstnoblestep",
+        "https://x.com/FirstNobelStep"
+      ]
+    }
+    </script>
+
+    <!-- Prevent theme FOUC: runs before any CSS paints -->
+    <script>
+      (function () {
+        try {
+          var saved = localStorage.theme;
+          var prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
+          var isDark = saved === 'dark' || (!saved && prefersDark);
+          document.documentElement.classList.toggle('dark', isDark);
+        } catch (e) {}
+      })();
+    </script>
+</head>
+
+<body class="bg-white dark:bg-brand-950 text-gray-900 dark:text-gray-100 transition-colors duration-300 selection:bg-brand-100 selection:text-brand-900">
+
+    <!-- Skip link for keyboard users -->
+    <a href="#main" class="sr-only focus:not-sr-only focus:fixed focus:top-4 focus:left-4 focus:z-[200] focus:px-4 focus:py-2 focus:bg-brand focus:text-white focus:rounded-lg focus:shadow-brandLg">
+      Skip to main content
+    </a>
+
+    <!-- ================= HEADER ================= -->
+    <header class="sticky top-0 z-40 bg-white/75 dark:bg-brand-950/80 backdrop-blur-md border-b border-gray-100 dark:border-white/5 transition-colors duration-300">
+      <div class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 h-16 flex items-center justify-between gap-4">
+        <a href="#" aria-label="First Nobel Step — home" class="flex items-center gap-3 group">
+          <img src="/logo.svg" alt="" aria-hidden="true" class="h-9 w-9" width="36" height="36" />
+          <span class="flex flex-col leading-none">
+            <span class="font-semibold tracking-tight text-gray-900 dark:text-white text-[15px]">First Nobel Step</span>
+            <span class="text-[10px] font-semibold tracking-[0.22em] text-brand dark:text-brand-300 mt-1">PRIVATE LIMITED</span>
+          </span>
+        </a>
+
+        <nav aria-label="Primary" class="hidden md:flex items-center gap-7 text-sm font-medium text-gray-700 dark:text-gray-300">
+          <a href="#membership" class="hover:text-brand dark:hover:text-brand-300 transition-colors">Membership</a>
+          <a href="#process" class="hover:text-brand dark:hover:text-brand-300 transition-colors">How it works</a>
+          <a href="#testimonials" class="hover:text-brand dark:hover:text-brand-300 transition-colors">Stories</a>
+          <a href="#faq" class="hover:text-brand dark:hover:text-brand-300 transition-colors">FAQ</a>
+        </nav>
+
+        <div class="flex items-center gap-2 sm:gap-3">
+          <button id="theme-toggle" type="button" aria-label="Toggle color theme" aria-pressed="false"
+                  class="h-9 w-9 rounded-full border border-gray-200 dark:border-white/10 bg-white dark:bg-white/5 text-gray-700 dark:text-gray-200 hover:bg-gray-50 dark:hover:bg-white/10 transition flex items-center justify-center">
+            <i id="theme-icon" class="fa-solid fa-sun text-sm" aria-hidden="true"></i>
+          </button>
+          <button type="button" onclick="openForm()"
+                  class="inline-flex items-center gap-2 bg-brand text-white px-4 sm:px-5 py-2.5 rounded-full text-sm font-semibold tracking-tight shadow-brand hover:bg-brand-600 active:scale-[0.98] transition">
+            <span>Start Application</span>
+            <i class="fa-solid fa-arrow-right text-xs" aria-hidden="true"></i>
+          </button>
         </div>
+      </div>
     </header>
 
-    <main>
-        <!-- HERO SECTION -->
-        <section class="relative bg-white dark:bg-gray-900 text-gray-900 dark:text-white py-12 lg:py-20 overflow-hidden border-b border-gray-100 dark:border-gray-800 transition-colors duration-300">
-            <div class="absolute top-0 right-0 w-1/2 h-full opacity-5 pointer-events-none">
-                <div class="w-full h-full bg-gradient-to-l from-pakistan-green to-transparent"></div>
-            </div>
-            
-            <div class="max-w-7xl mx-auto px-4 relative z-10">
-                <div class="flex flex-col lg:flex-row items-center gap-8 lg:gap-16">
-                    <div class="flex-1 text-center lg:text-left">
-                        <div class="inline-flex items-center gap-2 px-4 py-1.5 bg-green-50 dark:bg-green-900/20 border border-green-200 dark:border-green-800 rounded-full mb-6">
-                            <span class="w-2 h-2 bg-green-500 rounded-full animate-pulse"></span>
-                            <span class="text-[10px] font-lemon text-pakistan-green dark:text-green-400 tracking-[0.2em]">Enrollment Currently Open</span>
-                        </div>
-                        
-                        <h1 class="hero-title text-5xl md:text-7xl lg:text-8xl mb-6">
-                            YOUR FIRST <br />
-                            <span class="text-pakistan-green dark:text-green-500">MILLION</span> STEP.
-                        </h1>
-                        
-                        <p class="text-lg md:text-xl text-gray-600 dark:text-gray-400 mb-10 leading-relaxed max-w-2xl font-medium tracking-tight">
-                            Empowering Pakistan's Entrepreneurs, Students, and Job Professionals. Official membership of First Nobel Step (Pvt.) Ltd. is your gateway to global opportunities.
-                        </p>
-                        
-                        <div class="flex flex-col sm:flex-row gap-5 items-center justify-center lg:justify-start">
-                            <button onclick="openForm()" class="group relative w-full sm:w-auto inline-flex items-center justify-center overflow-hidden bg-pakistan-green text-white px-12 py-5 rounded-2xl font-lemon text-lg text-center hover:bg-green-900 hover:scale-[1.02] transition-all shadow-[0_20px_50px_-15px_rgba(1,65,28,0.5)] active:scale-95">
-                                <span class="transition-all duration-300 group-hover:-translate-x-4">Apply Now</span>
-                                <i class="fa-solid fa-arrow-right absolute right-8 translate-x-8 opacity-0 transition-all duration-300 group-hover:translate-x-0 group-hover:opacity-100"></i>
-                            </button>
-                            
-                            <div class="flex items-center gap-4 px-6 py-4 bg-gray-50 dark:bg-gray-800 rounded-2xl border border-gray-100 dark:border-gray-700">
-                                <i class="fa-solid fa-certificate text-pakistan-green dark:text-green-500 text-2xl"></i>
-                                <div class="flex flex-col text-left">
-                                    <span class="text-[9px] font-lemon tracking-[0.2em] text-gray-400">Official Status</span>
-                                    <span class="text-sm font-extrabold text-pakistan-green dark:text-green-400 font-display">Private Limited Company</span>
-                                </div>
-                            </div>
-                        </div>
-                        
-                        <div class="mt-12 flex justify-center lg:justify-start gap-12 opacity-30 dark:opacity-50 grayscale hover:grayscale-0 transition-all duration-700 text-gray-900 dark:text-white">
-                            <div class="flex items-center gap-2.5 font-lemon text-[9px] tracking-[0.3em]">
-                                <i class="fa-solid fa-shield-halved text-xl"></i> Secure
-                            </div>
-                            <div class="flex items-center gap-2.5 font-lemon text-[9px] tracking-[0.3em]">
-                                <i class="fa-solid fa-earth-americas text-xl"></i> Global
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </section>
+    <main id="main">
+      <!-- ================= HERO ================= -->
+      <section aria-labelledby="hero-title" class="relative overflow-hidden bg-white dark:bg-brand-950 border-b border-gray-100 dark:border-white/5">
+        <div class="absolute inset-0 bg-topo pointer-events-none" aria-hidden="true"></div>
+        <div class="absolute -top-24 -right-24 w-[520px] h-[520px] rounded-full bg-brand-50 dark:bg-brand-900/30 blur-3xl opacity-70 pointer-events-none" aria-hidden="true"></div>
 
-        <!-- MEMBERSHIP SECTION -->
-        <section id="membership" class="py-20 bg-gray-50 dark:bg-gray-800 transition-colors duration-300">
-            <div class="max-w-7xl mx-auto px-4">
-                <div class="text-center mb-16">
-                    <div class="inline-block px-5 py-2 bg-green-100 dark:bg-green-900/30 text-pakistan-green dark:text-green-400 rounded-full text-[9px] font-lemon tracking-[0.3em] mb-4">
-                        Unlock Your Potential
-                    </div>
-                    <h2 class="text-4xl lg:text-5xl font-display font-extrabold mb-6 tracking-tight dark:text-white">Official Membership Programs</h2>
-                    <p class="text-gray-500 dark:text-gray-400 max-w-2xl mx-auto text-lg font-medium leading-relaxed tracking-tight">
-                        Legally structured pathways for your global career and business success. Choose the path that matches your ambition.
-                    </p>
-                </div>
-                
-                <div class="grid grid-cols-1 lg:grid-cols-2 gap-8 items-stretch">
-                    <!-- Students & Professionals Section -->
-                    <div class="flex flex-col">
-                        <h3 class="font-lemon text-xs tracking-[0.3em] text-pakistan-green dark:text-green-400 mb-4 flex items-center gap-3">
-                            <span class="w-8 h-px bg-pakistan-green/20"></span> Career & Academic Path
-                        </h3>
-                        <div class="relative bg-white dark:bg-gray-900 flex flex-col p-8 rounded-[2.5rem] border border-gray-100 dark:border-gray-700 shadow-sm hover:border-pakistan-green/30 transition-all duration-500 h-full group">
-                            <div class="mb-6 text-center sm:text-left">
-                                <div class="flex gap-3 justify-center sm:justify-start mb-4">
-                                    <div class="w-12 h-12 rounded-xl flex items-center justify-center bg-green-50 dark:bg-green-900/30 text-pakistan-green dark:text-green-400 group-hover:bg-pakistan-green group-hover:text-white transition-colors">
-                                        <i class="fa-solid fa-briefcase text-xl"></i>
-                                    </div>
-                                    <div class="w-12 h-12 rounded-xl flex items-center justify-center bg-green-50 dark:bg-green-900/30 text-pakistan-green dark:text-green-400 group-hover:bg-pakistan-green group-hover:text-white transition-colors">
-                                        <i class="fa-solid fa-graduation-cap text-xl"></i>
-                                    </div>
-                                </div>
-                                <h3 class="text-lg font-lemon mb-1 tracking-tight dark:text-white">Students & Professionals</h3>
-                                <p class="text-gray-500 dark:text-gray-400 text-xs leading-relaxed">Academic excellence and direct access to fully sponsored international career opportunities.</p>
-                            </div>
-                            <div class="h-px bg-gray-100 dark:bg-gray-800 w-full mb-6"></div>
-                            <div class="mb-3 text-[10px] font-lemon text-pakistan-green dark:text-green-400 tracking-widest">Available Packages:</div>
-                            <ul class="space-y-3 mb-6 flex-grow">
-                                <li class="flex items-start gap-2.5 text-sm"><i class="fa-solid fa-circle text-green-500 text-[6px] mt-1.5"></i> <span class="text-gray-700 dark:text-gray-300 font-medium text-xs"><strong>Basic Package</strong> (Free) - Initial advice & guidance</span></li>
-                                <li class="flex items-start gap-2.5 text-sm"><i class="fa-solid fa-circle text-blue-500 text-[6px] mt-1.5"></i> <span class="text-gray-700 dark:text-gray-300 font-medium text-xs"><strong>Standard Package</strong> (PKR 2,499) - Detailed evaluation & support</span></li>
-                                <li class="flex items-start gap-2.5 text-sm"><i class="fa-solid fa-circle text-purple-500 text-[6px] mt-1.5"></i> <span class="text-gray-700 dark:text-gray-300 font-medium text-xs"><strong>Professional Package</strong> (PKR 6,999) - Premium advisory & global exposure</span></li>
-                            </ul>
-                            <div class="flex flex-col gap-3 mt-auto">
-                                <button onclick="openForm()" class="w-full py-4 rounded-xl font-lemon text-[10px] tracking-widest bg-pakistan-green text-white shadow-xl shadow-green-900/10 hover:bg-green-900 uppercase transition-all hover:scale-[1.02] active:scale-95">
-                                    Explore Packages
-                                </button>
-                            </div>
-                        </div>
-                    </div>
+        <div class="relative max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 pt-14 pb-16 lg:pt-24 lg:pb-24">
+          <div class="grid grid-cols-1 lg:grid-cols-12 gap-10 lg:gap-16 items-center">
+            <div class="lg:col-span-7">
+              <div class="inline-flex items-center gap-2 px-3 py-1.5 bg-brand-50 dark:bg-brand-900/40 border border-brand-100 dark:border-brand-800 rounded-full mb-6">
+                <span class="w-2 h-2 bg-brand-500 rounded-full animate-pulseDot" aria-hidden="true"></span>
+                <span class="text-[11px] font-semibold tracking-[0.2em] text-brand dark:text-brand-300 uppercase">Enrollment Open</span>
+              </div>
 
-                    <!-- Business Section -->
-                    <div class="flex flex-col">
-                        <h3 class="font-lemon text-xs tracking-[0.3em] text-pakistan-green dark:text-green-400 mb-4 flex items-center gap-3">
-                            <span class="w-8 h-px bg-pakistan-green/20"></span> Business Growth
-                        </h3>
-                        <div class="relative bg-white dark:bg-gray-900 flex flex-col p-8 rounded-[2.5rem] border border-pakistan-green dark:border-green-600 ring-4 ring-green-50 dark:ring-green-900/20 shadow-[0_25px_60px_-15px_rgba(1,65,28,0.3)] h-full transition-all duration-500">
-                            <div class="absolute top-0 left-1/2 -translate-x-1/2 -translate-y-1/2 bg-pakistan-green text-white text-[9px] font-lemon px-5 py-1.5 rounded-full tracking-widest shadow-lg whitespace-nowrap">
-                                Premium Choice
-                            </div>
-                            <div class="mb-6 text-center sm:text-left">
-                                <div class="w-12 h-12 rounded-xl flex items-center justify-center mb-4 bg-pakistan-green text-white">
-                                    <i class="fa-solid fa-rocket text-xl"></i>
-                                </div>
-                                <h3 class="text-lg font-lemon mb-1 tracking-tight dark:text-white">Entrepreneurs</h3>
-                                <p class="text-gray-500 dark:text-gray-400 text-xs leading-relaxed">Transform your vision into a funded reality with expert mentorship.</p>
-                            </div>
-                            <div class="h-px bg-gray-100 dark:bg-gray-800 w-full mb-6"></div>
-                            <div class="mb-3 text-[10px] font-lemon text-pakistan-green dark:text-green-400 tracking-widest">What You Unlock:</div>
-                            <ul class="space-y-3 mb-6 flex-grow">
-                                <li class="flex items-start gap-2.5 text-sm"><i class="fa-solid fa-check text-pakistan-green dark:text-green-400 text-[9px] mt-1 bg-green-50 dark:bg-green-900/40 p-1 rounded-full"></i> <span class="text-gray-700 dark:text-gray-300 font-medium text-xs">Turn your idea into funded reality</span></li>
-                                <li class="flex items-start gap-2.5 text-sm"><i class="fa-solid fa-check text-pakistan-green dark:text-green-400 text-[9px] mt-1 bg-green-50 dark:bg-green-900/40 p-1 rounded-full"></i> <span class="text-gray-700 dark:text-gray-300 font-medium text-xs">Strategic feedback from leaders</span></li>
-                                <li class="flex items-start gap-2.5 text-sm"><i class="fa-solid fa-check text-pakistan-green dark:text-green-400 text-[9px] mt-1 bg-green-50 dark:bg-green-900/40 p-1 rounded-full"></i> <span class="text-gray-700 dark:text-gray-300 font-medium text-xs">Powerful Business Networking</span></li>
-                            </ul>
-                            <button onclick="openForm('entrepreneur')" class="w-full py-4 rounded-xl font-lemon text-[10px] tracking-widest bg-pakistan-green text-white shadow-xl shadow-green-900/10 hover:bg-green-900 uppercase transition-all hover:scale-[1.02] active:scale-95">
-                                Join Entrepreneurs
-                            </button>
-                        </div>
-                    </div>
+              <h1 id="hero-title" class="display text-5xl sm:text-6xl lg:text-7xl text-gray-900 dark:text-white mb-6 text-balance">
+                Your first<br />
+                <span class="text-brand dark:text-brand-300">nobel</span> <span class="serif-accent text-gray-700 dark:text-gray-200">step</span><br />
+                abroad.
+              </h1>
+
+              <p class="text-base sm:text-lg text-gray-600 dark:text-gray-400 leading-relaxed max-w-xl mb-8">
+                First Nobel Step (Pvt.) Ltd. is the official membership that guides Pakistani students, professionals, and entrepreneurs toward global careers, studies, and funded business opportunities.
+              </p>
+
+              <div class="flex flex-col sm:flex-row items-stretch sm:items-center gap-3 sm:gap-4 mb-10">
+                <button type="button" onclick="openForm()"
+                        class="inline-flex items-center justify-center gap-2 bg-brand text-white px-7 py-4 rounded-2xl font-semibold tracking-tight shadow-brandLg hover:bg-brand-600 active:scale-[0.98] transition">
+                  <span>Start your application</span>
+                  <i class="fa-solid fa-arrow-right text-sm" aria-hidden="true"></i>
+                </button>
+                <a href="#membership"
+                   class="inline-flex items-center justify-center gap-2 px-7 py-4 rounded-2xl font-semibold text-gray-800 dark:text-gray-100 border border-gray-200 dark:border-white/10 hover:bg-gray-50 dark:hover:bg-white/5 transition">
+                  See packages
+                </a>
+              </div>
+
+              <!-- Trust badges -->
+              <dl class="grid grid-cols-3 gap-6 max-w-md">
+                <div>
+                  <dt class="text-xs font-semibold tracking-[0.18em] text-gray-500 dark:text-gray-400 uppercase mb-1">Official</dt>
+                  <dd class="text-sm font-semibold text-gray-900 dark:text-white">Pvt. Ltd.</dd>
                 </div>
+                <div>
+                  <dt class="text-xs font-semibold tracking-[0.18em] text-gray-500 dark:text-gray-400 uppercase mb-1">Countries</dt>
+                  <dd class="text-sm font-semibold text-gray-900 dark:text-white">15+</dd>
+                </div>
+                <div>
+                  <dt class="text-xs font-semibold tracking-[0.18em] text-gray-500 dark:text-gray-400 uppercase mb-1">Support</dt>
+                  <dd class="text-sm font-semibold text-gray-900 dark:text-white">24/7</dd>
+                </div>
+              </dl>
             </div>
-        </section>
+
+            <div class="lg:col-span-5 relative">
+              <div class="relative rounded-[2rem] overflow-hidden shadow-brandLg ring-1 ring-black/5 dark:ring-white/10 aspect-[4/5] bg-brand-50 dark:bg-brand-900/30">
+                <img src="/hero.jpg" alt="Editorial flat-lay of a green passport, paper airplane, brass compass, and olive leaves — symbols of the First Nobel Step journey." class="absolute inset-0 w-full h-full object-cover" width="720" height="900" decoding="async" />
+                <div class="absolute inset-0 bg-gradient-to-t from-black/15 via-transparent to-transparent" aria-hidden="true"></div>
+              </div>
+
+              <!-- Floating trust card -->
+              <div class="absolute -left-4 sm:-left-8 bottom-8 bg-white dark:bg-brand-900/80 dark:backdrop-blur border border-gray-100 dark:border-white/10 rounded-2xl shadow-brandLg p-4 flex items-center gap-3 max-w-[240px]">
+                <div class="w-10 h-10 rounded-xl bg-brand-50 dark:bg-brand-800/60 flex items-center justify-center text-brand dark:text-brand-300">
+                  <i class="fa-solid fa-shield-halved" aria-hidden="true"></i>
+                </div>
+                <div class="text-left">
+                  <p class="text-xs font-semibold tracking-[0.15em] text-gray-500 dark:text-gray-400 uppercase">Verified</p>
+                  <p class="text-sm font-semibold text-gray-900 dark:text-white">SECP-registered</p>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- ================= STATS BAND ================= -->
+      <section aria-label="Key statistics" class="bg-brand text-white">
+        <div class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-10 grid grid-cols-2 md:grid-cols-4 gap-8">
+          <div class="text-center md:text-left">
+            <div class="display text-3xl sm:text-4xl mb-1 count-up" data-count-to="2500" data-count-suffix="+">0+</div>
+            <p class="text-xs sm:text-sm text-white/70 font-medium tracking-wide">Applicants guided</p>
+          </div>
+          <div class="text-center md:text-left">
+            <div class="display text-3xl sm:text-4xl mb-1 count-up" data-count-to="15" data-count-suffix="+">0+</div>
+            <p class="text-xs sm:text-sm text-white/70 font-medium tracking-wide">Countries supported</p>
+          </div>
+          <div class="text-center md:text-left">
+            <div class="display text-3xl sm:text-4xl mb-1 count-up" data-count-to="94" data-count-suffix="%">0%</div>
+            <p class="text-xs sm:text-sm text-white/70 font-medium tracking-wide">Case success rate</p>
+          </div>
+          <div class="text-center md:text-left">
+            <div class="display text-3xl sm:text-4xl mb-1 count-up" data-count-to="8" data-count-suffix="+">0+</div>
+            <p class="text-xs sm:text-sm text-white/70 font-medium tracking-wide">Years of experience</p>
+          </div>
+        </div>
+      </section>
+
+      <!-- ================= HOW IT WORKS ================= -->
+      <section id="process" aria-labelledby="process-title" class="py-20 lg:py-28 bg-white dark:bg-brand-950">
+        <div class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div class="max-w-2xl mb-14">
+            <span class="eyebrow mb-3">How it works</span>
+            <h2 id="process-title" class="display text-3xl sm:text-4xl lg:text-5xl text-gray-900 dark:text-white mb-4 text-balance">
+              A clear path from <span class="serif-accent text-brand dark:text-brand-300">here</span> to abroad.
+            </h2>
+            <p class="text-base text-gray-600 dark:text-gray-400 leading-relaxed">
+              Four focused steps. Every applicant gets the same structured review, whether you're a student, a working professional, or a founder.
+            </p>
+          </div>
+
+          <ol class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+            <li class="relative p-6 rounded-3xl bg-gray-50 dark:bg-white/5 border border-gray-100 dark:border-white/5">
+              <div class="w-10 h-10 rounded-xl bg-brand text-white flex items-center justify-center font-bold mb-5">1</div>
+              <h3 class="text-lg font-semibold text-gray-900 dark:text-white mb-2">Apply online</h3>
+              <p class="text-sm text-gray-600 dark:text-gray-400 leading-relaxed">Submit your details through our guided 6-step portal in under 10 minutes.</p>
+            </li>
+            <li class="relative p-6 rounded-3xl bg-gray-50 dark:bg-white/5 border border-gray-100 dark:border-white/5">
+              <div class="w-10 h-10 rounded-xl bg-brand text-white flex items-center justify-center font-bold mb-5">2</div>
+              <h3 class="text-lg font-semibold text-gray-900 dark:text-white mb-2">Verify &amp; review</h3>
+              <p class="text-sm text-gray-600 dark:text-gray-400 leading-relaxed">We verify your email, CNIC, and documents, then your case enters the advisory queue.</p>
+            </li>
+            <li class="relative p-6 rounded-3xl bg-gray-50 dark:bg-white/5 border border-gray-100 dark:border-white/5">
+              <div class="w-10 h-10 rounded-xl bg-brand text-white flex items-center justify-center font-bold mb-5">3</div>
+              <h3 class="text-lg font-semibold text-gray-900 dark:text-white mb-2">Consult</h3>
+              <p class="text-sm text-gray-600 dark:text-gray-400 leading-relaxed">Meet a senior advisor for a personalised strategy — career path, target country, or funded business plan.</p>
+            </li>
+            <li class="relative p-6 rounded-3xl bg-brand text-white border border-brand-600">
+              <div class="w-10 h-10 rounded-xl bg-white/15 text-white flex items-center justify-center font-bold mb-5">4</div>
+              <h3 class="text-lg font-semibold mb-2">Take off</h3>
+              <p class="text-sm text-white/80 leading-relaxed">Execute the plan with ongoing support — applications, documents, interviews, and post-arrival help.</p>
+            </li>
+          </ol>
+        </div>
+      </section>
+
+      <!-- ================= MEMBERSHIP ================= -->
+      <section id="membership" aria-labelledby="membership-title" class="py-20 lg:py-28 bg-gray-50 dark:bg-brand-900/20 border-y border-gray-100 dark:border-white/5">
+        <div class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div class="max-w-2xl mb-14">
+            <span class="eyebrow mb-3">Membership</span>
+            <h2 id="membership-title" class="display text-3xl sm:text-4xl lg:text-5xl text-gray-900 dark:text-white mb-4 text-balance">
+              Choose the path that matches your <span class="serif-accent text-brand dark:text-brand-300">ambition</span>.
+            </h2>
+            <p class="text-base text-gray-600 dark:text-gray-400 leading-relaxed">
+              Two tracks, clearly priced. Start with what fits — you can upgrade any time.
+            </p>
+          </div>
+
+          <div class="grid grid-cols-1 lg:grid-cols-2 gap-8">
+            <!-- Students & Professionals -->
+            <article class="group relative flex flex-col p-8 sm:p-10 rounded-3xl bg-white dark:bg-brand-950 border border-gray-100 dark:border-white/10 shadow-brand hover:shadow-brandLg transition-all duration-500">
+              <header class="mb-6">
+                <p class="eyebrow mb-3">Career &amp; Academic</p>
+                <h3 class="text-2xl font-bold text-gray-900 dark:text-white mb-2">Students &amp; Professionals</h3>
+                <p class="text-sm text-gray-600 dark:text-gray-400 leading-relaxed">Structured evaluation and sponsored international career opportunities — from advisory to placement.</p>
+              </header>
+
+              <div class="h-px bg-gray-100 dark:bg-white/10 mb-6"></div>
+
+              <p class="eyebrow text-xs mb-4">Packages</p>
+              <ul class="space-y-4 mb-8 flex-grow text-sm">
+                <li class="flex items-start gap-3">
+                  <span class="mt-1 w-2 h-2 rounded-full bg-brand-300" aria-hidden="true"></span>
+                  <div>
+                    <span class="font-semibold text-gray-900 dark:text-white">Basic</span>
+                    <span class="text-gray-500 dark:text-gray-400"> — Free · Initial advice &amp; guidance</span>
+                  </div>
+                </li>
+                <li class="flex items-start gap-3">
+                  <span class="mt-1 w-2 h-2 rounded-full bg-brand-500" aria-hidden="true"></span>
+                  <div>
+                    <span class="font-semibold text-gray-900 dark:text-white">Standard</span>
+                    <span class="text-gray-500 dark:text-gray-400"> — PKR 2,499 · Detailed evaluation &amp; priority review</span>
+                  </div>
+                </li>
+                <li class="flex items-start gap-3">
+                  <span class="mt-1 w-2 h-2 rounded-full bg-brand" aria-hidden="true"></span>
+                  <div>
+                    <span class="font-semibold text-gray-900 dark:text-white">Professional</span>
+                    <span class="text-gray-500 dark:text-gray-400"> — PKR 6,999 · Premium advisory &amp; global exposure</span>
+                  </div>
+                </li>
+              </ul>
+
+              <button type="button" onclick="openForm()"
+                      class="w-full py-4 rounded-2xl bg-brand text-white font-semibold tracking-tight shadow-brand hover:bg-brand-600 active:scale-[0.98] transition">
+                Explore packages
+              </button>
+            </article>
+
+            <!-- Entrepreneurs -->
+            <article class="group relative flex flex-col p-8 sm:p-10 rounded-3xl bg-white dark:bg-brand-950 border-2 border-brand ring-4 ring-brand/10 dark:ring-brand/20 shadow-brandLg transition-all duration-500">
+              <span class="absolute top-0 right-8 -translate-y-1/2 inline-flex items-center gap-1.5 bg-accent-gold text-brand-900 text-[11px] font-bold tracking-[0.2em] uppercase px-3 py-1.5 rounded-full shadow-lg">
+                <i class="fa-solid fa-star text-[10px]" aria-hidden="true"></i> Most Popular
+              </span>
+
+              <header class="mb-6">
+                <p class="eyebrow mb-3">Business Growth</p>
+                <h3 class="text-2xl font-bold text-gray-900 dark:text-white mb-2">Entrepreneurs</h3>
+                <p class="text-sm text-gray-600 dark:text-gray-400 leading-relaxed">Turn your idea into a funded reality. Mentorship, networks, and investor exposure for serious founders.</p>
+              </header>
+
+              <div class="h-px bg-gray-100 dark:bg-white/10 mb-6"></div>
+
+              <p class="eyebrow text-xs mb-4">What you unlock</p>
+              <ul class="space-y-3 mb-8 flex-grow text-sm">
+                <li class="flex items-start gap-3">
+                  <i class="fa-solid fa-check text-brand dark:text-brand-300 mt-0.5" aria-hidden="true"></i>
+                  <span class="text-gray-700 dark:text-gray-300">Pathway from idea to funded business</span>
+                </li>
+                <li class="flex items-start gap-3">
+                  <i class="fa-solid fa-check text-brand dark:text-brand-300 mt-0.5" aria-hidden="true"></i>
+                  <span class="text-gray-700 dark:text-gray-300">Strategic feedback from industry leaders</span>
+                </li>
+                <li class="flex items-start gap-3">
+                  <i class="fa-solid fa-check text-brand dark:text-brand-300 mt-0.5" aria-hidden="true"></i>
+                  <span class="text-gray-700 dark:text-gray-300">Investor pitch opportunities</span>
+                </li>
+                <li class="flex items-start gap-3">
+                  <i class="fa-solid fa-check text-brand dark:text-brand-300 mt-0.5" aria-hidden="true"></i>
+                  <span class="text-gray-700 dark:text-gray-300">Powerful business networking</span>
+                </li>
+              </ul>
+
+              <button type="button" onclick="openForm('entrepreneur')"
+                      class="w-full py-4 rounded-2xl bg-brand text-white font-semibold tracking-tight shadow-brand hover:bg-brand-600 active:scale-[0.98] transition">
+                Join entrepreneurs
+              </button>
+            </article>
+          </div>
+        </div>
+      </section>
+
+      <!-- ================= TESTIMONIALS ================= -->
+      <section id="testimonials" aria-labelledby="testimonials-title" class="py-20 lg:py-28 bg-white dark:bg-brand-950">
+        <div class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div class="max-w-2xl mb-14">
+            <span class="eyebrow mb-3">Stories</span>
+            <h2 id="testimonials-title" class="display text-3xl sm:text-4xl lg:text-5xl text-gray-900 dark:text-white mb-4 text-balance">
+              People who took their <span class="serif-accent text-brand dark:text-brand-300">step</span>.
+            </h2>
+          </div>
+
+          <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+            <figure class="p-8 rounded-3xl bg-gray-50 dark:bg-white/5 border border-gray-100 dark:border-white/5">
+              <blockquote class="text-gray-800 dark:text-gray-200 text-base leading-relaxed mb-6">
+                "The advisors mapped out a clean path to my Master's in Canada — I honestly didn't know the Standard package existed when I started. Worth every rupee."
+              </blockquote>
+              <figcaption class="flex items-center gap-3">
+                <img src="/avatars/avatar-1.jpg" alt="" class="w-11 h-11 rounded-full object-cover" width="44" height="44" loading="lazy" decoding="async" />
+                <div>
+                  <p class="text-sm font-semibold text-gray-900 dark:text-white">Ahmed R.</p>
+                  <p class="text-xs text-gray-500 dark:text-gray-400">Student · Toronto, Canada</p>
+                </div>
+              </figcaption>
+            </figure>
+
+            <figure class="p-8 rounded-3xl bg-brand text-white border border-brand-600">
+              <blockquote class="text-white/95 text-base leading-relaxed mb-6">
+                "I was stuck as a mid-level engineer in Lahore. Six months later I was onboarding at a firm in Dubai. The review process was surprisingly structured."
+              </blockquote>
+              <figcaption class="flex items-center gap-3">
+                <img src="/avatars/avatar-2.jpg" alt="" class="w-11 h-11 rounded-full object-cover ring-2 ring-white/30" width="44" height="44" loading="lazy" decoding="async" />
+                <div>
+                  <p class="text-sm font-semibold text-white">Mahnoor K.</p>
+                  <p class="text-xs text-white/70">Professional · Dubai, UAE</p>
+                </div>
+              </figcaption>
+            </figure>
+
+            <figure class="p-8 rounded-3xl bg-gray-50 dark:bg-white/5 border border-gray-100 dark:border-white/5">
+              <blockquote class="text-gray-800 dark:text-gray-200 text-base leading-relaxed mb-6">
+                "The Entrepreneur track put me in front of two investors willing to hear a serious pitch. We closed our seed round last quarter."
+              </blockquote>
+              <figcaption class="flex items-center gap-3">
+                <img src="/avatars/avatar-3.jpg" alt="" class="w-11 h-11 rounded-full object-cover" width="44" height="44" loading="lazy" decoding="async" />
+                <div>
+                  <p class="text-sm font-semibold text-gray-900 dark:text-white">Bilal S.</p>
+                  <p class="text-xs text-gray-500 dark:text-gray-400">Founder · Lahore, Pakistan</p>
+                </div>
+              </figcaption>
+            </figure>
+          </div>
+        </div>
+      </section>
+
+      <!-- ================= FAQ ================= -->
+      <section id="faq" aria-labelledby="faq-title" class="py-20 lg:py-28 bg-gray-50 dark:bg-brand-900/20 border-y border-gray-100 dark:border-white/5">
+        <div class="max-w-3xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div class="text-center mb-12">
+            <span class="eyebrow mb-3">Frequently asked</span>
+            <h2 id="faq-title" class="display text-3xl sm:text-4xl lg:text-5xl text-gray-900 dark:text-white mb-4 text-balance">
+              Questions, <span class="serif-accent text-brand dark:text-brand-300">answered</span>.
+            </h2>
+          </div>
+
+          <div class="space-y-3">
+            <details class="group rounded-2xl bg-white dark:bg-white/5 border border-gray-100 dark:border-white/5 overflow-hidden">
+              <summary class="flex items-center justify-between gap-4 p-5 cursor-pointer">
+                <span class="font-semibold text-gray-900 dark:text-white">Who is eligible to apply?</span>
+                <i class="fa-solid fa-chevron-down text-brand dark:text-brand-300 text-sm transition-transform" aria-hidden="true"></i>
+              </summary>
+              <div class="px-5 pb-5 text-sm text-gray-600 dark:text-gray-400 leading-relaxed">
+                Any Pakistani national with a valid CNIC, a working email, and a WhatsApp number. Students, employed professionals, and registered founders are all welcome.
+              </div>
+            </details>
+
+            <details class="group rounded-2xl bg-white dark:bg-white/5 border border-gray-100 dark:border-white/5 overflow-hidden">
+              <summary class="flex items-center justify-between gap-4 p-5 cursor-pointer">
+                <span class="font-semibold text-gray-900 dark:text-white">How long does the process take?</span>
+                <i class="fa-solid fa-chevron-down text-brand dark:text-brand-300 text-sm transition-transform" aria-hidden="true"></i>
+              </summary>
+              <div class="px-5 pb-5 text-sm text-gray-600 dark:text-gray-400 leading-relaxed">
+                Your application reaches the advisory queue immediately. Initial feedback typically arrives within 3–5 working days for Basic, 48 hours for Standard, and within 24 hours for Professional and Entrepreneur members.
+              </div>
+            </details>
+
+            <details class="group rounded-2xl bg-white dark:bg-white/5 border border-gray-100 dark:border-white/5 overflow-hidden">
+              <summary class="flex items-center justify-between gap-4 p-5 cursor-pointer">
+                <span class="font-semibold text-gray-900 dark:text-white">Which countries do you support?</span>
+                <i class="fa-solid fa-chevron-down text-brand dark:text-brand-300 text-sm transition-transform" aria-hidden="true"></i>
+              </summary>
+              <div class="px-5 pb-5 text-sm text-gray-600 dark:text-gray-400 leading-relaxed">
+                The United States, United Kingdom, Canada, UAE and wider Gulf, Schengen Europe, and select Asia-Pacific destinations. If your target country isn't listed, pick "Other" in the application — many cases are handled bespoke.
+              </div>
+            </details>
+
+            <details class="group rounded-2xl bg-white dark:bg-white/5 border border-gray-100 dark:border-white/5 overflow-hidden">
+              <summary class="flex items-center justify-between gap-4 p-5 cursor-pointer">
+                <span class="font-semibold text-gray-900 dark:text-white">What does the fee cover?</span>
+                <i class="fa-solid fa-chevron-down text-brand dark:text-brand-300 text-sm transition-transform" aria-hidden="true"></i>
+              </summary>
+              <div class="px-5 pb-5 text-sm text-gray-600 dark:text-gray-400 leading-relaxed">
+                Your package fee covers the full advisory review, case handling, and platform access for the tier you selected. Any third-party fees (visa, exam, institution) are your own responsibility and are clearly called out upfront.
+              </div>
+            </details>
+
+            <details class="group rounded-2xl bg-white dark:bg-white/5 border border-gray-100 dark:border-white/5 overflow-hidden">
+              <summary class="flex items-center justify-between gap-4 p-5 cursor-pointer">
+                <span class="font-semibold text-gray-900 dark:text-white">Is my data secure?</span>
+                <i class="fa-solid fa-chevron-down text-brand dark:text-brand-300 text-sm transition-transform" aria-hidden="true"></i>
+              </summary>
+              <div class="px-5 pb-5 text-sm text-gray-600 dark:text-gray-400 leading-relaxed">
+                Yes. Data is transmitted over HTTPS, email is verified with a time-bound code, and your application is stored in access-controlled systems. Read our <a href="https://drive.google.com/file/d/1NwKfofJT-kQ5veAhZVj0ebYeB6Tauk4I/view?usp=drivesdk" target="_blank" rel="noopener noreferrer" class="text-brand dark:text-brand-300 underline hover:opacity-80">Privacy Policy</a> for details.
+              </div>
+            </details>
+
+            <details class="group rounded-2xl bg-white dark:bg-white/5 border border-gray-100 dark:border-white/5 overflow-hidden">
+              <summary class="flex items-center justify-between gap-4 p-5 cursor-pointer">
+                <span class="font-semibold text-gray-900 dark:text-white">Can I upgrade my package later?</span>
+                <i class="fa-solid fa-chevron-down text-brand dark:text-brand-300 text-sm transition-transform" aria-hidden="true"></i>
+              </summary>
+              <div class="px-5 pb-5 text-sm text-gray-600 dark:text-gray-400 leading-relaxed">
+                Absolutely. Many members start on Basic or Standard and upgrade once their case progresses. Write to support@firstnoblestep.com and we'll credit your earlier fee against the new tier.
+              </div>
+            </details>
+          </div>
+        </div>
+      </section>
+
+      <!-- ================= CTA BAND ================= -->
+      <section aria-label="Get started" class="bg-brand text-white">
+        <div class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-16 lg:py-20 text-center">
+          <h2 class="display text-3xl sm:text-4xl lg:text-5xl text-balance mb-4">
+            Ready for your first <span class="serif-accent text-accent-softgold">nobel step</span>?
+          </h2>
+          <p class="text-white/80 text-base sm:text-lg mb-8 max-w-xl mx-auto leading-relaxed">
+            Applications take about 10 minutes. No credit card needed for the free Basic tier.
+          </p>
+          <button type="button" onclick="openForm()"
+                  class="inline-flex items-center gap-3 bg-white text-brand px-8 py-4 rounded-2xl font-semibold tracking-tight shadow-xl hover:bg-gray-50 active:scale-[0.98] transition">
+            <span>Start application</span>
+            <i class="fa-solid fa-arrow-right text-sm" aria-hidden="true"></i>
+          </button>
+        </div>
+      </section>
     </main>
 
-    <!-- FOOTER -->
-    <footer class="bg-green-50 dark:bg-gray-950 text-gray-700 dark:text-gray-400 py-12 border-t border-green-100 dark:border-gray-800 transition-colors duration-300">
-        <div class="max-w-7xl mx-auto px-4">
-            <div class="grid grid-cols-1 md:grid-cols-3 gap-8 mb-10">
-                <div class="md:col-span-1">
-                    <div class="flex items-center gap-3 h-8 mb-6">
-                        <img src="https://lh3.googleusercontent.com/d/1xVMY-y5IXHSBSQF6l3EkKaSKKWTNFNMA" alt="Logo" class="h-full w-auto" referrerPolicy="no-referrer" />
-                        <span class="font-lemon text-base tracking-tight leading-none text-gray-900 dark:text-white">First Nobel Step</span>
-                    </div>
-                    <p class="text-xs leading-relaxed mb-6">
-                        The official membership portal of First Nobel Step (Pvt.) Ltd.
-                    </p>
-                    <div class="flex gap-3">
-                        <a href="https://www.facebook.com/share/1B1TCCWqH2/" target="_blank" rel="noopener noreferrer" class="w-9 h-9 bg-white dark:bg-gray-800 border border-green-200 dark:border-gray-700 text-pakistan-green dark:text-green-400 rounded-full flex items-center justify-center hover:bg-pakistan-green hover:text-white transition-all shadow-sm"><i class="fa-brands fa-facebook-f text-sm"></i></a>
-                        <a href="https://www.instagram.com/firstnoblestep?igsh=MWQ5ODJvZGo3enc5Mg==" target="_blank" rel="noopener noreferrer" class="w-9 h-9 bg-white dark:bg-gray-800 border border-green-200 dark:border-gray-700 text-pakistan-green dark:text-green-400 rounded-full flex items-center justify-center hover:bg-pakistan-green hover:text-white transition-all shadow-sm"><i class="fa-brands fa-instagram text-sm"></i></a>
-                        <a href="https://www.linkedin.com/company/firstnoblestep" target="_blank" rel="noopener noreferrer" class="w-9 h-9 bg-white dark:bg-gray-800 border border-green-200 dark:border-gray-700 text-pakistan-green dark:text-green-400 rounded-full flex items-center justify-center hover:bg-pakistan-green hover:text-white transition-all shadow-sm"><i class="fa-brands fa-linkedin-in text-sm"></i></a>
-                        <a href="https://x.com/FirstNobelStep" target="_blank" rel="noopener noreferrer" class="w-9 h-9 bg-white dark:bg-gray-800 border border-green-200 dark:border-gray-700 text-pakistan-green dark:text-green-400 rounded-full flex items-center justify-center hover:bg-pakistan-green hover:text-white transition-all shadow-sm">
-                            <img src="https://upload.wikimedia.org/wikipedia/commons/c/ce/X_logo_2023.svg" alt="X" class="w-4 h-4 dark:invert">
-                        </a>
-                    </div>
-                </div>
-                <div>
-                    <h4 class="text-pakistan-green dark:text-green-500 font-lemon tracking-widest text-[9px] mb-4">Resources</h4>
-                    <ul class="space-y-3 text-xs font-bold">
-                        <li><a href="tel:+923332288877" class="flex items-center gap-2.5 hover:text-green-600 dark:hover:text-green-400"><i class="fa-solid fa-phone text-base opacity-70 w-5 text-center"></i> Help Center</a></li>
-                        <li><a href="https://drive.google.com/file/d/1dESuKrtxrnFmni4zhMsbShdKlkKRc2vo/view?usp=drivesdk" target="_blank" rel="noopener noreferrer" class="flex items-center gap-2.5 hover:text-green-600 dark:hover:text-green-400"><i class="fa-regular fa-clipboard text-base opacity-70 w-5 text-center"></i> Terms & Conditions</a></li>
-                        <li><a href="https://drive.google.com/file/d/1NwKfofJT-kQ5veAhZVj0ebYeB6Tauk4I/view?usp=drivesdk" target="_blank" rel="noopener noreferrer" class="flex items-center gap-2.5 hover:text-green-600 dark:hover:text-green-400 transition-colors cursor-pointer"><i class="fa-solid fa-shield-halved text-base opacity-70 w-5 text-center"></i> Privacy Policy</a></li>
-                    </ul>
-                </div>
-                <div>
-                    <h4 class="text-pakistan-green dark:text-green-500 font-lemon tracking-widest text-[9px] mb-4">Contact</h4>
-                    <ul class="space-y-2.5 text-xs">
-                        <li class="flex gap-3"><i class="fa-solid fa-location-dot mt-0.5 text-pakistan-green dark:text-green-500"></i> <a href="https://maps.google.com/?q=129+CCA-3,+Block-X,+DHA+Phase+7,+Lahore" target="_blank" rel="noopener noreferrer" class="font-bold text-gray-900 dark:text-gray-200 hover:text-pakistan-green dark:hover:text-green-400 transition-colors">Headquarters: 129 CCA-3, Block-X, <br />DHA Phase 7, Lahore</a></li>
-                        <li class="flex gap-3"><i class="fa-solid fa-phone mt-0.5 text-pakistan-green dark:text-green-500"></i> <a href="tel:+923332288877" class="font-bold text-gray-900 dark:text-gray-200 hover:text-pakistan-green dark:hover:text-green-400 transition-colors">+92 3332288877</a></li>
-                        <li class="flex gap-3"><i class="fa-solid fa-envelope mt-0.5 text-pakistan-green dark:text-green-500"></i> <a href="mailto:support@firstnoblestep.com" class="font-bold text-gray-900 dark:text-gray-200 hover:text-pakistan-green dark:hover:text-green-400 transition-colors">support@firstnoblestep.com</a></li>
-                    </ul>
-                </div>
+    <!-- ================= FOOTER ================= -->
+    <footer class="bg-brand-50 dark:bg-brand-950 text-gray-700 dark:text-gray-400 border-t border-brand-100 dark:border-white/5">
+      <div class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-14">
+        <div class="grid grid-cols-1 md:grid-cols-4 gap-10 mb-10">
+          <div class="md:col-span-2">
+            <div class="flex items-center gap-3 mb-5">
+              <img src="/logo.svg" alt="" aria-hidden="true" class="h-10 w-10" width="40" height="40" />
+              <div class="flex flex-col leading-none">
+                <span class="font-bold text-gray-900 dark:text-white text-base">First Nobel Step</span>
+                <span class="text-[10px] font-semibold tracking-[0.22em] text-brand dark:text-brand-300 mt-1">PRIVATE LIMITED</span>
+              </div>
             </div>
-            
-            <div class="pt-8 border-t border-green-200 dark:border-gray-800 flex flex-col items-center gap-4">
-                <p class="text-[9px] font-bold uppercase tracking-[0.2em] text-gray-500 dark:text-gray-600">© 2026 First Nobel Step (Pvt.) Ltd.</p>
+            <p class="text-sm leading-relaxed max-w-sm mb-6">
+              The official membership portal guiding Pakistani students, professionals, and entrepreneurs toward global opportunities.
+            </p>
+            <div class="flex gap-2">
+              <a href="https://www.facebook.com/share/1B1TCCWqH2/" target="_blank" rel="noopener noreferrer" aria-label="Facebook" class="w-10 h-10 bg-white dark:bg-white/5 border border-brand-100 dark:border-white/10 text-brand dark:text-brand-300 rounded-full flex items-center justify-center hover:bg-brand hover:text-white dark:hover:bg-brand dark:hover:text-white transition">
+                <i class="fa-brands fa-facebook-f text-sm" aria-hidden="true"></i>
+              </a>
+              <a href="https://www.instagram.com/firstnoblestep" target="_blank" rel="noopener noreferrer" aria-label="Instagram" class="w-10 h-10 bg-white dark:bg-white/5 border border-brand-100 dark:border-white/10 text-brand dark:text-brand-300 rounded-full flex items-center justify-center hover:bg-brand hover:text-white dark:hover:bg-brand dark:hover:text-white transition">
+                <i class="fa-brands fa-instagram text-sm" aria-hidden="true"></i>
+              </a>
+              <a href="https://www.linkedin.com/company/firstnoblestep" target="_blank" rel="noopener noreferrer" aria-label="LinkedIn" class="w-10 h-10 bg-white dark:bg-white/5 border border-brand-100 dark:border-white/10 text-brand dark:text-brand-300 rounded-full flex items-center justify-center hover:bg-brand hover:text-white dark:hover:bg-brand dark:hover:text-white transition">
+                <i class="fa-brands fa-linkedin-in text-sm" aria-hidden="true"></i>
+              </a>
+              <a href="https://x.com/FirstNobelStep" target="_blank" rel="noopener noreferrer" aria-label="X (Twitter)" class="w-10 h-10 bg-white dark:bg-white/5 border border-brand-100 dark:border-white/10 text-brand dark:text-brand-300 rounded-full flex items-center justify-center hover:bg-brand hover:text-white dark:hover:bg-brand dark:hover:text-white transition">
+                <i class="fa-brands fa-x-twitter text-sm" aria-hidden="true"></i>
+              </a>
             </div>
+          </div>
+
+          <div>
+            <h3 class="text-xs font-bold tracking-[0.2em] text-brand dark:text-brand-300 uppercase mb-4">Company</h3>
+            <ul class="space-y-3 text-sm">
+              <li><a href="#membership" class="hover:text-brand dark:hover:text-brand-300 transition-colors">Membership</a></li>
+              <li><a href="#process" class="hover:text-brand dark:hover:text-brand-300 transition-colors">How it works</a></li>
+              <li><a href="#testimonials" class="hover:text-brand dark:hover:text-brand-300 transition-colors">Stories</a></li>
+              <li><a href="#faq" class="hover:text-brand dark:hover:text-brand-300 transition-colors">FAQ</a></li>
+              <li><a href="https://drive.google.com/file/d/1dESuKrtxrnFmni4zhMsbShdKlkKRc2vo/view?usp=drivesdk" target="_blank" rel="noopener noreferrer" class="hover:text-brand dark:hover:text-brand-300 transition-colors">Terms &amp; Conditions</a></li>
+              <li><a href="https://drive.google.com/file/d/1NwKfofJT-kQ5veAhZVj0ebYeB6Tauk4I/view?usp=drivesdk" target="_blank" rel="noopener noreferrer" class="hover:text-brand dark:hover:text-brand-300 transition-colors">Privacy Policy</a></li>
+            </ul>
+          </div>
+
+          <div>
+            <h3 class="text-xs font-bold tracking-[0.2em] text-brand dark:text-brand-300 uppercase mb-4">Contact</h3>
+            <ul class="space-y-3 text-sm">
+              <li class="flex gap-3">
+                <i class="fa-solid fa-location-dot text-brand dark:text-brand-300 mt-0.5 w-4 text-center" aria-hidden="true"></i>
+                <a href="https://maps.google.com/?q=129+CCA-3,+Block-X,+DHA+Phase+7,+Lahore" target="_blank" rel="noopener noreferrer" class="hover:text-brand dark:hover:text-brand-300 transition-colors">129 CCA-3, Block-X,<br />DHA Phase 7, Lahore</a>
+              </li>
+              <li class="flex gap-3">
+                <i class="fa-solid fa-phone text-brand dark:text-brand-300 mt-0.5 w-4 text-center" aria-hidden="true"></i>
+                <a href="tel:+923332288877" class="hover:text-brand dark:hover:text-brand-300 transition-colors">+92 333 2288877</a>
+              </li>
+              <li class="flex gap-3">
+                <i class="fa-solid fa-envelope text-brand dark:text-brand-300 mt-0.5 w-4 text-center" aria-hidden="true"></i>
+                <a href="mailto:support@firstnoblestep.com" class="hover:text-brand dark:hover:text-brand-300 transition-colors">support@firstnoblestep.com</a>
+              </li>
+            </ul>
+          </div>
         </div>
+
+        <div class="pt-6 border-t border-brand-100 dark:border-white/5 flex flex-col sm:flex-row items-center justify-between gap-3">
+          <p class="text-xs text-gray-500 dark:text-gray-500">&copy; <span id="year"></span> First Nobel Step (Pvt.) Ltd. All rights reserved.</p>
+          <p class="text-xs text-gray-500 dark:text-gray-500 flex items-center gap-2">
+            <span class="inline-block w-4 h-px bg-brand-200 dark:bg-white/20"></span>
+            Proudly built in Pakistan
+          </p>
+        </div>
+      </div>
     </footer>
 
-    <!-- MODAL OVERLAY -->
-    <div id="modal-overlay" class="hidden fixed inset-0 z-[100] flex items-center justify-center p-4 bg-black/60 backdrop-blur-sm overflow-y-auto transition-opacity duration-300">
-        
-        <!-- EXIT CONFIRMATION -->
-        <div id="exit-confirm" class="hidden absolute inset-0 z-[110] flex items-center justify-center p-6 bg-black/20 backdrop-blur-[2px]">
-             <div class="bg-white dark:bg-gray-800 rounded-3xl p-6 w-full max-w-xs text-center shadow-[0_20px_50px_rgba(0,0,0,0.3)] border border-gray-100 dark:border-gray-700 transform scale-100">
-                <div class="w-12 h-12 bg-red-50 dark:bg-red-900/20 rounded-full flex items-center justify-center mx-auto mb-4 text-red-500">
-                    <i class="fa-solid fa-triangle-exclamation text-xl"></i>
-                </div>
-                <h3 class="text-base font-bold text-gray-900 dark:text-white mb-2">Discard Changes?</h3>
-                <p class="text-xs text-gray-500 dark:text-gray-400 mb-6 leading-relaxed">
-                    You have unsaved progress. Are you sure you want to leave?
-                </p>
-                <div class="flex flex-col gap-2">
-                    <button onclick="hideExitConfirm()" class="w-full py-3 bg-gray-100 dark:bg-gray-700 hover:bg-gray-200 dark:hover:bg-gray-600 text-gray-900 dark:text-white rounded-xl font-bold text-xs transition-colors">
-                        No, Keep Editing
-                    </button>
-                    <button onclick="forceCloseForm()" class="w-full py-3 bg-transparent text-red-500 hover:bg-red-50 dark:hover:bg-red-900/20 rounded-xl font-bold text-xs transition-colors">
-                        Yes, Discard & Exit
-                    </button>
-                </div>
-            </div>
+    <!-- ================= APPLICATION MODAL ================= -->
+    <div id="modal-overlay"
+         class="hidden fixed inset-0 z-[100] items-start sm:items-center justify-center p-3 sm:p-6 bg-black/60 backdrop-blur-sm overflow-y-auto"
+         role="dialog" aria-modal="true" aria-labelledby="modal-title">
+
+      <!-- Exit confirmation -->
+      <div id="exit-confirm" class="hidden absolute inset-0 z-[110] flex items-center justify-center p-6 bg-black/30 backdrop-blur-sm">
+        <div class="bg-white dark:bg-brand-900 rounded-3xl p-6 w-full max-w-xs text-center shadow-brandLg border border-gray-100 dark:border-white/10">
+          <div class="w-12 h-12 bg-red-50 dark:bg-red-900/30 rounded-full flex items-center justify-center mx-auto mb-4 text-red-500">
+            <i class="fa-solid fa-triangle-exclamation text-xl" aria-hidden="true"></i>
+          </div>
+          <h3 class="text-base font-bold text-gray-900 dark:text-white mb-2">Discard changes?</h3>
+          <p class="text-sm text-gray-500 dark:text-gray-400 mb-6 leading-relaxed">You have unsaved progress. Are you sure you want to leave?</p>
+          <div class="flex flex-col gap-2">
+            <button type="button" onclick="hideExitConfirm()" class="w-full py-3 bg-gray-100 dark:bg-white/5 hover:bg-gray-200 dark:hover:bg-white/10 text-gray-900 dark:text-white rounded-xl font-semibold text-sm transition">Keep editing</button>
+            <button type="button" onclick="forceCloseForm()" class="w-full py-3 text-red-500 hover:bg-red-50 dark:hover:bg-red-900/20 rounded-xl font-semibold text-sm transition">Discard &amp; exit</button>
+          </div>
+        </div>
+      </div>
+
+      <!-- Main modal -->
+      <div id="modal-content" class="bg-white dark:bg-brand-900 rounded-3xl w-full max-w-3xl shadow-brandLg border border-gray-100 dark:border-white/10 flex flex-col max-h-[95vh] sm:max-h-[90vh] relative overflow-hidden transition-all duration-300 transform scale-95 opacity-0">
+
+        <!-- Header -->
+        <div class="px-6 sm:px-8 pt-6 sm:pt-8 pb-4 flex items-start justify-between gap-4 border-b border-gray-100 dark:border-white/10">
+          <div>
+            <h2 id="modal-title" class="text-xl sm:text-2xl font-bold text-gray-900 dark:text-white">Membership application</h2>
+            <p class="text-xs font-semibold tracking-[0.2em] text-brand dark:text-brand-300 uppercase mt-1">Official portal</p>
+          </div>
+          <button type="button" onclick="attemptCloseForm()" aria-label="Close" class="w-9 h-9 flex items-center justify-center rounded-full text-gray-400 hover:text-gray-700 dark:hover:text-white hover:bg-gray-100 dark:hover:bg-white/10 transition">
+            <i class="fa-solid fa-times" aria-hidden="true"></i>
+          </button>
         </div>
 
-        <!-- MAIN FORM MODAL -->
-        <div id="modal-content" class="bg-white dark:bg-gray-900 rounded-[2rem] w-full max-w-2xl shadow-2xl border border-gray-100 dark:border-gray-800 flex flex-col max-h-[90vh] relative overflow-hidden transition-all duration-300 transform scale-95 opacity-0">
-            
-            <!-- Modal Header -->
-            <div class="px-8 pt-8 pb-4 flex items-center justify-between">
-                <div><h2 class="text-2xl font-lemon tracking-tight dark:text-white">Membership Application</h2><p class="text-[10px] font-lemon text-pakistan-green dark:text-green-400 tracking-widest mt-1">Official Portal</p></div>
-                <button onclick="attemptCloseForm()" class="w-10 h-10 flex items-center justify-center rounded-full hover:bg-gray-100 dark:hover:bg-gray-800 transition-colors"><i class="fa-solid fa-times text-gray-400"></i></button>
-            </div>
-
-            <!-- Error Banner -->
-            <div id="form-error-banner" class="hidden mx-8 mt-2 p-4 bg-red-50 dark:bg-red-900/20 border border-red-200 dark:border-red-800/30 rounded-xl flex items-start gap-3 text-red-600 dark:text-red-400 transition-all">
-                <i class="fa-solid fa-circle-exclamation mt-0.5"></i>
-                <div class="flex-grow">
-                    <h4 class="text-xs font-bold mb-1" id="form-error-title">Error</h4>
-                    <p class="text-[10px] leading-relaxed" id="form-error-message">Something went wrong.</p>
-                </div>
-                <button type="button" onclick="hideError()" class="text-red-400 hover:text-red-600 dark:hover:text-red-300"><i class="fa-solid fa-times"></i></button>
-            </div>
-
-            <!-- Progress Bar -->
-            <nav id="form-progress" class="px-8 py-4">
-                <div class="flex items-center justify-between relative">
-                    <div class="absolute top-1/2 left-0 w-full h-0.5 bg-gray-100 dark:bg-gray-800 -translate-y-1/2 -z-10"></div>
-                    <div id="progress-line" class="absolute top-1/2 left-0 h-0.5 bg-pakistan-green transition-all duration-500 -translate-y-1/2 -z-10" style="width: 0%"></div>
-                    <!-- Steps will be generated by JS or static below -->
-                    <div class="flex flex-col items-center"><div id="step-1-indicator" class="w-8 h-8 rounded-full flex items-center justify-center text-[10px] font-lemon transition-all border-2 bg-pakistan-green border-pakistan-green text-white">1</div></div>
-                    <div class="flex flex-col items-center"><div id="step-2-indicator" class="w-8 h-8 rounded-full flex items-center justify-center text-[10px] font-lemon transition-all border-2 bg-white dark:bg-gray-900 border-gray-200 dark:border-gray-700 text-gray-400 dark:text-gray-500">2</div></div>
-                    <div class="flex flex-col items-center"><div id="step-3-indicator" class="w-8 h-8 rounded-full flex items-center justify-center text-[10px] font-lemon transition-all border-2 bg-white dark:bg-gray-900 border-gray-200 dark:border-gray-700 text-gray-400 dark:text-gray-500">3</div></div>
-                    <div class="flex flex-col items-center"><div id="step-4-indicator" class="w-8 h-8 rounded-full flex items-center justify-center text-[10px] font-lemon transition-all border-2 bg-white dark:bg-gray-900 border-gray-200 dark:border-gray-700 text-gray-400 dark:text-gray-500">4</div></div>
-                    <div class="flex flex-col items-center"><div id="step-5-indicator" class="w-8 h-8 rounded-full flex items-center justify-center text-[10px] font-lemon transition-all border-2 bg-white dark:bg-gray-900 border-gray-200 dark:border-gray-700 text-gray-400 dark:text-gray-500">5</div></div>
-                    <div class="flex flex-col items-center"><div id="step-6-indicator" class="w-8 h-8 rounded-full flex items-center justify-center text-[10px] font-lemon transition-all border-2 bg-white dark:bg-gray-900 border-gray-200 dark:border-gray-700 text-gray-400 dark:text-gray-500">6</div></div>
-                </div>
-            </nav>
-
-            <!-- Form Content -->
-            <div id="form-body" class="flex-grow overflow-y-auto px-8 py-6 custom-scrollbar">
-                
-                <!-- STEP 1: Plan Selection -->
-                <div id="step-1" class="space-y-8">
-                    <div class="bg-gray-50 dark:bg-gray-800/30 p-6 rounded-[2rem] border border-gray-100 dark:border-gray-700">
-                        <h4 class="text-[10px] font-lemon tracking-[0.2em] text-pakistan-green mb-6 uppercase flex items-center gap-3">
-                            <span class="w-6 h-px bg-pakistan-green/20"></span> Students & Professionals
-                        </h4>
-                        <div class="grid grid-cols-1 sm:grid-cols-3 gap-4">
-                            <div onclick="selectPlan('basic')" id="plan-basic" class="plan-card flex flex-col gap-3 p-4 rounded-2xl border-2 transition-all cursor-pointer border-gray-100 dark:border-gray-800 hover:border-green-100 relative overflow-hidden">
-                                <div class="flex items-center justify-between w-full mb-2">
-                                    <div class="w-8 h-8 rounded-lg flex items-center justify-center bg-green-100 text-green-600 icon-box"><i class="fa-solid fa-leaf"></i></div>
-                                    <div class="w-5 h-5 rounded-full border-2 flex items-center justify-center border-gray-200 check-circle"></div>
-                                </div>
-                                <div>
-                                    <h4 class="font-lemon text-[10px] dark:text-white">Basic Package</h4>
-                                    <p class="text-[10px] text-gray-500 font-bold mt-0.5">Free</p>
-                                </div>
-                            </div>
-                            <div onclick="selectPlan('standard')" id="plan-standard" class="plan-card flex flex-col gap-3 p-4 rounded-2xl border-2 transition-all cursor-pointer border-gray-100 dark:border-gray-800 hover:border-blue-100 relative overflow-hidden">
-                                <div class="flex items-center justify-between w-full mb-2">
-                                    <div class="w-8 h-8 rounded-lg flex items-center justify-center bg-blue-100 text-blue-600 icon-box"><i class="fa-solid fa-star"></i></div>
-                                    <div class="w-5 h-5 rounded-full border-2 flex items-center justify-center border-gray-200 check-circle"></div>
-                                </div>
-                                <div>
-                                    <h4 class="font-lemon text-[10px] dark:text-white">Standard Package</h4>
-                                    <p class="text-[10px] text-blue-600 font-bold mt-0.5">PKR 2,499</p>
-                                </div>
-                            </div>
-                            <div onclick="selectPlan('professional_pkg')" id="plan-professional_pkg" class="plan-card flex flex-col gap-3 p-4 rounded-2xl border-2 transition-all cursor-pointer border-gray-100 dark:border-gray-800 hover:border-purple-100 relative overflow-hidden">
-                                <div class="flex items-center justify-between w-full mb-2">
-                                    <div class="w-8 h-8 rounded-lg flex items-center justify-center bg-purple-100 text-purple-600 icon-box"><i class="fa-solid fa-crown"></i></div>
-                                    <div class="w-5 h-5 rounded-full border-2 flex items-center justify-center border-gray-200 check-circle"></div>
-                                </div>
-                                <div>
-                                    <h4 class="font-lemon text-[10px] dark:text-white">Professional Package</h4>
-                                    <p class="text-[10px] text-purple-600 font-bold mt-0.5">PKR 6,999</p>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-
-                    <div class="p-6">
-                        <h4 class="text-[10px] font-lemon tracking-[0.2em] text-pakistan-green mb-6 uppercase flex items-center gap-3">
-                            <span class="w-6 h-px bg-pakistan-green/20"></span> Business Growth
-                        </h4>
-                        <div onclick="selectPlan('entrepreneur')" id="plan-entrepreneur" class="plan-card flex items-center gap-4 p-5 rounded-2xl border-2 transition-all cursor-pointer border-gray-100 dark:border-gray-800 hover:border-green-100">
-                            <div class="w-10 h-10 rounded-xl flex items-center justify-center bg-gray-50 dark:bg-gray-800 text-gray-400 icon-box"><i class="fa-solid fa-rocket"></i></div>
-                            <div>
-                                <h4 class="font-lemon text-[10px] dark:text-white">Entrepreneur</h4>
-                                <p class="text-[10px] text-green-600 font-bold mt-0.5">PKR 50,000</p>
-                            </div>
-                            <div class="ml-auto w-5 h-5 rounded-full border-2 flex items-center justify-center border-gray-200 check-circle"></div>
-                        </div>
-                    </div>
-
-                    <!-- Package Details Container -->
-                    <div id="package-details-container" class="hidden p-5 bg-white dark:bg-gray-900 rounded-2xl border border-gray-100 dark:border-gray-800 transition-all">
-                        <h5 id="package-details-title" class="font-lemon text-[10px] text-pakistan-green uppercase tracking-widest mb-4">Package Details</h5>
-                        <ul id="package-details-list" class="space-y-2.5 text-xs text-gray-600 dark:text-gray-400">
-                            <!-- Bullets injected via JS -->
-                        </ul>
-                    </div>
-                </div>
-
-                <!-- STEP 2: Personal Info -->
-                <div id="step-2" class="hidden grid grid-cols-1 md:grid-cols-2 gap-6">
-                    <div class="w-full group">
-                        <div class="flex items-center justify-between mb-2.5">
-                            <label class="block text-[10px] font-lemon tracking-widest text-gray-500 dark:text-gray-400">Full Name (As per CNIC)</label>
-                            <div class="relative group/tooltip">
-                                <i class="fa-solid fa-circle-info text-[10px] text-gray-400 hover:text-pakistan-green transition-colors cursor-help"></i>
-                                <div class="absolute bottom-full right-0 mb-2 w-48 p-2 bg-gray-900 text-white text-[9px] rounded-lg opacity-0 group-hover/tooltip:opacity-100 pointer-events-none transition-opacity z-50 shadow-xl border border-white/10">
-                                    <div class="relative z-10">Enter your full name exactly as it appears on your CNIC.</div>
-                                    <div class="absolute top-full right-2 -mt-1 w-2 h-2 bg-gray-900 rotate-45"></div>
-                                </div>
-                            </div>
-                        </div>
-                        <input type="text" id="input-fullname" oninput="validateStep2()" class="w-full px-5 py-4 rounded-2xl bg-gray-50 dark:bg-gray-800/50 border-2 border-gray-100 dark:border-gray-700 focus:border-pakistan-green outline-none text-sm dark:text-white transition-all" placeholder="Enter Full Name">
-                    </div>
-                    <div class="w-full group">
-                        <div class="flex items-center justify-between mb-2.5">
-                            <label class="block text-[10px] font-lemon tracking-widest text-gray-500 dark:text-gray-400">CNIC Number</label>
-                            <div class="relative group/tooltip">
-                                <i class="fa-solid fa-circle-info text-[10px] text-gray-400 hover:text-pakistan-green transition-colors cursor-help"></i>
-                                <div class="absolute bottom-full right-0 mb-2 w-48 p-2 bg-gray-900 text-white text-[9px] rounded-lg opacity-0 group-hover/tooltip:opacity-100 pointer-events-none transition-opacity z-50 shadow-xl border border-white/10">
-                                    <div class="relative z-10">Enter your 13-digit CNIC number in the format: 12345-1234567-1</div>
-                                    <div class="absolute top-full right-2 -mt-1 w-2 h-2 bg-gray-900 rotate-45"></div>
-                                </div>
-                            </div>
-                        </div>
-                        <input type="text" id="input-cnic" oninput="formatCNIC(this); validateStep2()" class="w-full px-5 py-4 rounded-2xl bg-gray-50 dark:bg-gray-800/50 border-2 border-gray-100 dark:border-gray-700 focus:border-pakistan-green outline-none text-sm dark:text-white transition-all" placeholder="XXXXX-XXXXXXX-X">
-                    </div>
-                    <div class="w-full group">
-                        <div class="flex items-center justify-between mb-2.5">
-                            <label class="block text-[10px] font-lemon tracking-widest text-gray-500 dark:text-gray-400">Email Address</label>
-                            <div class="relative group/tooltip">
-                                <i class="fa-solid fa-circle-info text-[10px] text-gray-400 hover:text-pakistan-green transition-colors cursor-help"></i>
-                                <div class="absolute bottom-full right-0 mb-2 w-48 p-2 bg-gray-900 text-white text-[9px] rounded-lg opacity-0 group-hover/tooltip:opacity-100 pointer-events-none transition-opacity z-50 shadow-xl border border-white/10">
-                                    <div class="relative z-10">Provide a valid email address for verification and communication.</div>
-                                    <div class="absolute top-full right-2 -mt-1 w-2 h-2 bg-gray-900 rotate-45"></div>
-                                </div>
-                            </div>
-                        </div>
-                        <input type="email" id="input-email" oninput="validateStep2()" class="w-full px-5 py-4 rounded-2xl bg-gray-50 dark:bg-gray-800/50 border-2 border-gray-100 dark:border-gray-700 focus:border-pakistan-green outline-none text-sm dark:text-white transition-all" placeholder="name@example.com">
-                    </div>
-                    <div class="w-full group">
-                        <div class="flex items-center justify-between mb-2.5">
-                            <label class="block text-[10px] font-lemon tracking-widest text-gray-500 dark:text-gray-400">WhatsApp Number</label>
-                            <div class="relative group/tooltip">
-                                <i class="fa-solid fa-circle-info text-[10px] text-gray-400 hover:text-pakistan-green transition-colors cursor-help"></i>
-                                <div class="absolute bottom-full right-0 mb-2 w-48 p-2 bg-gray-900 text-white text-[9px] rounded-lg opacity-0 group-hover/tooltip:opacity-100 pointer-events-none transition-opacity z-50 shadow-xl border border-white/10">
-                                    <div class="relative z-10">Enter your WhatsApp number starting with 92 (e.g., 923001234567).</div>
-                                    <div class="absolute top-full right-2 -mt-1 w-2 h-2 bg-gray-900 rotate-45"></div>
-                                </div>
-                            </div>
-                        </div>
-                        <input type="tel" id="input-whatsapp" oninput="this.value = this.value.replace(/\D/g, '').slice(0, 13); validateStep2()" class="w-full px-5 py-4 rounded-2xl bg-gray-50 dark:bg-gray-800/50 border-2 border-gray-100 dark:border-gray-700 focus:border-pakistan-green outline-none text-sm dark:text-white transition-all" placeholder="923XXXXXXXXX">
-                    </div>
-                </div>
-
-                <!-- STEP 3: Email Verification -->
-                <div id="step-3" class="hidden p-6 flex-grow">
-                    <div class="text-center py-2">
-                        <div class="w-16 h-16 bg-green-50 dark:bg-green-900/20 rounded-full flex items-center justify-center mx-auto mb-4 text-pakistan-green">
-                            <i class="fa-solid fa-envelope-circle-check text-2xl"></i>
-                        </div>
-                        <h3 class="text-xl font-bold text-gray-900 dark:text-white mb-2">Email Verification</h3>
-                        <p class="text-sm text-gray-600 dark:text-gray-400 mb-6 max-w-xs mx-auto">Please verify your email (<span id="verify-email-display" class="font-semibold text-pakistan-green"></span>) to proceed.</p>
-                        
-                        <div id="otp-section" class="flex flex-col gap-3 items-center w-full">
-                            <div class="flex flex-col items-center gap-3 w-full">
-                                <p id="otp-status" class="text-xs text-gray-500 hidden">Sending verification code...</p>
-                                <input type="text" id="input-otp" maxlength="6" placeholder="------" class="text-center tracking-[0.5em] font-mono text-lg w-full max-w-[200px] px-4 py-4 rounded-2xl border-2 border-gray-100 dark:border-gray-700 bg-white dark:bg-gray-900 focus:border-pakistan-green outline-none dark:text-white" oninput="validateStep3()">
-                                <button type="button" id="btn-send-otp" onclick="sendOTP()" class="hidden w-full max-w-xs py-3 bg-transparent text-pakistan-green underline hover:text-green-700 text-xs rounded-2xl transition-colors font-lemon tracking-widest uppercase disabled:opacity-50">Resend Code</button>
-                                <p id="otp-message" class="text-xs text-green-600 hidden">Code sent successfully!</p>
-                                <p id="otp-error" class="text-xs text-red-500 hidden"></p>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-
-                <!-- STEP 4: Specific Info -->
-                <div id="step-4" class="hidden space-y-6">
-                    <!-- Student & Professional Fields -->
-                    <div id="fields-package" class="hidden space-y-6">
-                        <div class="w-full">
-                            <label class="block text-[10px] font-lemon tracking-widest mb-2.5 text-gray-500 dark:text-gray-400">Current Status</label>
-                            <select id="input-status" class="w-full px-5 py-4 rounded-2xl bg-gray-50 dark:bg-gray-800/50 border-2 border-gray-100 dark:border-gray-700 focus:border-pakistan-green outline-none text-sm dark:text-white" onchange="validateStep4()">
-                                <option value="" disabled selected>Select Status</option>
-                                <option value="student">Student</option>
-                                <option value="professional">Job Professional</option>
-                            </select>
-                        </div>
-                        <div class="w-full">
-                            <label class="block text-[10px] font-lemon tracking-widest mb-2.5 text-gray-500 dark:text-gray-400">Target Country</label>
-                            <select id="input-country" onchange="handleOtherOption('input-country', 'input-country-other')" class="w-full px-5 py-4 rounded-2xl bg-gray-50 dark:bg-gray-800/50 border-2 border-gray-100 dark:border-gray-700 focus:border-pakistan-green outline-none text-sm dark:text-white">
-                                <option value="" disabled selected>Select Country</option>
-                                <option value="usa">United States</option>
-                                <option value="uk">United Kingdom</option>
-                                <option value="canada">Canada</option>
-                                <option value="uae">UAE & Gulf</option>
-                                <option value="europe">Europe (Schengen)</option>
-                                <option value="other">Other</option>
-                            </select>
-                            <input type="text" id="input-country-other" placeholder="Please specify" class="hidden w-full mt-3 px-5 py-4 rounded-2xl bg-gray-50 dark:bg-gray-800/50 border-2 border-gray-100 dark:border-gray-700 focus:border-pakistan-green outline-none text-sm dark:text-white" oninput="validateStep4()">
-                        </div>
-                    </div>
-                    <!-- Entrepreneur Fields -->
-                    <div id="fields-entrepreneur" class="hidden space-y-6">
-                        <div class="w-full">
-                            <label class="block text-[10px] font-lemon tracking-widest mb-2.5 text-gray-500 dark:text-gray-400">Business Name</label>
-                            <input type="text" id="input-business" oninput="validateStep4()" class="w-full px-5 py-4 rounded-2xl bg-gray-50 dark:bg-gray-800/50 border-2 border-gray-100 dark:border-gray-700 focus:border-pakistan-green outline-none text-sm dark:text-white" placeholder="e.g. NextGen Solutions">
-                        </div>
-                        <div class="w-full">
-                            <label class="block text-[10px] font-lemon tracking-widest mb-2.5 text-gray-500 dark:text-gray-400">Industry</label>
-                            <select id="input-industry" onchange="handleOtherOption('input-industry', 'input-industry-other')" class="w-full px-5 py-4 rounded-2xl bg-gray-50 dark:bg-gray-800/50 border-2 border-gray-100 dark:border-gray-700 focus:border-pakistan-green outline-none text-sm dark:text-white">
-                                <option value="" disabled selected>Select Industry</option>
-                                <option value="tech">Technology & IT</option>
-                                <option value="retail">Retail & E-commerce</option>
-                                <option value="agriculture">Agriculture</option>
-                                <option value="services">Professional Services</option>
-                                <option value="other">Other</option>
-                            </select>
-                            <input type="text" id="input-industry-other" placeholder="Please specify" class="hidden w-full mt-3 px-5 py-4 rounded-2xl bg-gray-50 dark:bg-gray-800/50 border-2 border-gray-100 dark:border-gray-700 focus:border-pakistan-green outline-none text-sm dark:text-white" oninput="validateStep4()">
-                        </div>
-                    </div>
-                </div>
-
-                <!-- STEP 5: Review -->
-                <div id="step-5" class="hidden space-y-6">
-                     <div class="bg-green-50/50 dark:bg-green-900/10 p-6 rounded-[1.5rem] border border-green-100 dark:border-green-800/50 relative overflow-hidden">
-                        <h4 class="font-lemon text-[10px] text-pakistan-green dark:text-green-400 mb-6 uppercase tracking-widest">Application Review</h4>
-                        <div class="grid grid-cols-2 gap-4 text-xs relative z-10">
-                          <div><span class="text-gray-400 text-[10px] uppercase">Name</span><span id="review-name" class="font-bold dark:text-white block">--</span></div>
-                          <div><span class="text-gray-400 text-[10px] uppercase">CNIC</span><span id="review-cnic" class="font-bold dark:text-white block font-mono">--</span></div>
-                        </div>
-                      </div>
-                      
-                      <div class="flex flex-col gap-3 px-2">
-                          <label class="flex items-start gap-3 cursor-pointer">
-                            <input type="checkbox" id="input-terms" onchange="validateStep5()" class="mt-0.5 h-5 w-5 rounded border-gray-300 text-pakistan-green focus:ring-pakistan-green">
-                            <span class="text-xs text-gray-600 dark:text-gray-400">I declare all information is correct and I agree to the <a href="https://drive.google.com/file/d/1NwKfofJT-kQ5veAhZVj0ebYeB6Tauk4I/view?usp=drivesdk" target="_blank" class="text-pakistan-green dark:text-green-400 underline hover:text-green-700 transition-colors">Privacy Policy</a>.</span>
-                          </label>
-                          <label class="flex items-start gap-3 cursor-pointer">
-                            <input type="checkbox" id="input-disclaimer" onchange="validateStep5()" class="mt-0.5 h-5 w-5 rounded border-gray-300 text-pakistan-green focus:ring-pakistan-green">
-                            <span class="text-xs text-gray-600 dark:text-gray-400">I agree to the <a href="https://drive.google.com/file/d/1AztKci5xP-UtafBjh6Uj1bVbTOZcO6JF/view?usp=sharing" target="_blank" class="text-pakistan-green dark:text-green-400 underline hover:text-green-700 transition-colors">Disclaimer Files</a>.</span>
-                          </label>
-                      </div>
-                </div>
-
-                <!-- STEP 6: Payment -->
-                <div id="step-6" class="hidden p-6 flex-grow">
-                    <div class="text-center py-2">
-                        <div class="w-16 h-16 bg-green-50 dark:bg-green-900/20 rounded-full flex items-center justify-center mx-auto mb-4 text-pakistan-green">
-                            <i class="fa-solid fa-wallet text-2xl"></i>
-                        </div>
-                        <h3 class="text-xl font-bold text-gray-900 dark:text-white mb-2">Select Payment Method</h3>
-                        <p class="text-sm text-gray-600 dark:text-gray-400 mb-6 max-w-xs mx-auto">Choose how you want to pay your processing fee via Fastpay.</p>
-                        
-                        <div class="bg-white dark:bg-gray-800 rounded-2xl border border-gray-200 dark:border-gray-700 shadow-sm p-5 mb-6">
-                            <div class="flex justify-between items-center mb-2">
-                                <span class="text-sm text-gray-500 dark:text-gray-400">Total Amount</span>
-                                <span class="text-2xl font-bold text-pakistan-green" id="payment-fee-amount">PKR 5,000</span>
-                            </div>
-                        </div>
-
-                        <div class="grid grid-cols-1 gap-3 text-left">
-                            <label onclick="selectPaymentMethod('easypaisa')" id="payment-easypaisa" class="payment-option flex items-center justify-between p-4 rounded-2xl border-2 border-gray-100 dark:border-gray-800 hover:border-green-100 transition-all cursor-pointer">
-                                <div class="flex items-center">
-                                    <h4 class="font-bold text-base dark:text-white">Easypaisa</h4>
-                                </div>
-                                <div class="w-5 h-5 rounded-full border-2 border-gray-200 flex items-center justify-center check-icon hidden">
-                                    <i class="fa-solid fa-check text-[10px] text-white"></i>
-                                </div>
-                            </label>
-
-                            <label onclick="selectPaymentMethod('jazzcash')" id="payment-jazzcash" class="payment-option flex items-center justify-between p-4 rounded-2xl border-2 border-gray-100 dark:border-gray-800 hover:border-green-100 transition-all cursor-pointer">
-                                <div class="flex items-center">
-                                    <h4 class="font-bold text-base dark:text-white">JazzCash</h4>
-                                </div>
-                                <div class="w-5 h-5 rounded-full border-2 border-gray-200 flex items-center justify-center check-icon hidden">
-                                    <i class="fa-solid fa-check text-[10px] text-white"></i>
-                                </div>
-                            </label>
-
-                            <label onclick="selectPaymentMethod('card')" id="payment-card" class="payment-option flex items-center justify-between p-4 rounded-2xl border-2 border-gray-100 dark:border-gray-800 hover:border-green-100 transition-all cursor-pointer">
-                                <div class="flex items-center">
-                                    <h4 class="font-bold text-base dark:text-white">Credit / Debit Card</h4>
-                                </div>
-                                <div class="w-5 h-5 rounded-full border-2 border-gray-200 flex items-center justify-center check-icon hidden">
-                                    <i class="fa-solid fa-check text-[10px] text-white"></i>
-                                </div>
-                            </label>
-                        </div>
-
-                        <div class="flex items-center justify-center gap-2 text-[10px] text-gray-400 mt-6">
-                            <i class="fa-solid fa-shield-halved text-pakistan-green"></i>
-                            <span>Secured by Fastpay</span>
-                        </div>
-                    </div>
-                </div>
-
-            </div>
-
-            <!-- Footer Buttons -->
-            <div class="px-8 pb-8 pt-4 flex gap-4 border-t border-gray-100 dark:border-gray-800">
-                <button id="btn-back" type="button" onclick="prevStep()" class="hidden px-6 py-4 rounded-2xl font-lemon text-[10px] border border-gray-200 dark:border-gray-700 text-gray-500 hover:bg-gray-50 dark:hover:bg-gray-800">Back</button>
-                <button id="btn-next" type="button" onclick="nextStep()" disabled class="flex-grow py-4 rounded-2xl font-lemon text-[10px] tracking-widest text-white transition-all bg-gray-200 dark:bg-gray-700 cursor-not-allowed">Continue</button>
-            </div>
+        <!-- Error banner -->
+        <div id="form-error-banner" class="hidden mx-6 sm:mx-8 mt-4 p-4 bg-red-50 dark:bg-red-900/20 border border-red-200 dark:border-red-800/40 rounded-xl flex items-start gap-3 text-red-700 dark:text-red-300">
+          <i class="fa-solid fa-circle-exclamation mt-0.5" aria-hidden="true"></i>
+          <div class="flex-grow">
+            <h4 class="text-sm font-bold mb-0.5" id="form-error-title">Error</h4>
+            <p class="text-xs leading-relaxed" id="form-error-message">Something went wrong.</p>
+          </div>
+          <button type="button" onclick="hideError()" aria-label="Dismiss error" class="text-red-400 hover:text-red-600 dark:hover:text-red-200"><i class="fa-solid fa-times" aria-hidden="true"></i></button>
         </div>
 
-        <!-- LOADING SPINNER -->
-        <div id="loading-view" class="hidden bg-white dark:bg-gray-900 rounded-3xl p-12 max-w-md w-full text-center shadow-2xl">
-            <div class="relative w-20 h-20 mx-auto mb-6">
-                <div class="absolute inset-0 border-4 border-gray-100 dark:border-gray-800 rounded-full"></div>
-                <div class="absolute inset-0 border-4 border-transparent border-t-pakistan-green rounded-full animate-spin"></div>
-                <div class="absolute inset-0 flex items-center justify-center text-pakistan-green animate-pulse"><i class="fa-solid fa-shield-halved text-xl"></i></div>
+        <!-- Progress -->
+        <nav aria-label="Application progress" class="px-6 sm:px-8 py-5">
+          <div class="flex items-center justify-between relative">
+            <div class="absolute top-1/2 left-0 right-0 h-0.5 bg-gray-100 dark:bg-white/10 -translate-y-1/2 -z-10" aria-hidden="true"></div>
+            <div id="progress-line" class="absolute top-1/2 left-0 h-0.5 bg-brand transition-all duration-500 -translate-y-1/2 -z-10" style="width: 0%" aria-hidden="true"></div>
+            <div class="flex flex-col items-center"><div id="step-1-indicator" class="w-8 h-8 rounded-full flex items-center justify-center text-xs font-bold border-2 bg-brand border-brand text-white">1</div></div>
+            <div class="flex flex-col items-center"><div id="step-2-indicator" class="w-8 h-8 rounded-full flex items-center justify-center text-xs font-bold border-2 bg-white dark:bg-brand-900 border-gray-200 dark:border-white/15 text-gray-400 dark:text-gray-500">2</div></div>
+            <div class="flex flex-col items-center"><div id="step-3-indicator" class="w-8 h-8 rounded-full flex items-center justify-center text-xs font-bold border-2 bg-white dark:bg-brand-900 border-gray-200 dark:border-white/15 text-gray-400 dark:text-gray-500">3</div></div>
+            <div class="flex flex-col items-center"><div id="step-4-indicator" class="w-8 h-8 rounded-full flex items-center justify-center text-xs font-bold border-2 bg-white dark:bg-brand-900 border-gray-200 dark:border-white/15 text-gray-400 dark:text-gray-500">4</div></div>
+            <div class="flex flex-col items-center"><div id="step-5-indicator" class="w-8 h-8 rounded-full flex items-center justify-center text-xs font-bold border-2 bg-white dark:bg-brand-900 border-gray-200 dark:border-white/15 text-gray-400 dark:text-gray-500">5</div></div>
+            <div class="flex flex-col items-center"><div id="step-6-indicator" class="w-8 h-8 rounded-full flex items-center justify-center text-xs font-bold border-2 bg-white dark:bg-brand-900 border-gray-200 dark:border-white/15 text-gray-400 dark:text-gray-500">6</div></div>
+          </div>
+        </nav>
+
+        <!-- Form body -->
+        <div id="form-body" class="flex-grow overflow-y-auto px-6 sm:px-8 py-6 custom-scrollbar">
+
+          <!-- STEP 1 -->
+          <div id="step-1" class="space-y-8">
+            <div>
+              <p class="eyebrow text-xs mb-4">Students &amp; Professionals</p>
+              <div class="grid grid-cols-1 sm:grid-cols-3 gap-3">
+                <button type="button" onclick="selectPlan('basic')" id="plan-basic" class="plan-card text-left p-5 rounded-2xl border-2 border-gray-100 dark:border-white/10 hover:border-brand-200 dark:hover:border-brand-800 transition-all">
+                  <div class="flex items-center justify-between mb-4">
+                    <div class="w-9 h-9 rounded-lg bg-brand-50 dark:bg-brand-900/40 text-brand dark:text-brand-300 flex items-center justify-center"><i class="fa-solid fa-leaf text-sm" aria-hidden="true"></i></div>
+                    <div class="w-5 h-5 rounded-full border-2 border-gray-200 dark:border-white/20 flex items-center justify-center check-circle"></div>
+                  </div>
+                  <h4 class="font-bold text-sm text-gray-900 dark:text-white">Basic</h4>
+                  <p class="text-xs font-semibold text-gray-500 dark:text-gray-400 mt-1">Free</p>
+                </button>
+                <button type="button" onclick="selectPlan('standard')" id="plan-standard" class="plan-card text-left p-5 rounded-2xl border-2 border-gray-100 dark:border-white/10 hover:border-brand-200 dark:hover:border-brand-800 transition-all">
+                  <div class="flex items-center justify-between mb-4">
+                    <div class="w-9 h-9 rounded-lg bg-brand-50 dark:bg-brand-900/40 text-brand dark:text-brand-300 flex items-center justify-center"><i class="fa-solid fa-star text-sm" aria-hidden="true"></i></div>
+                    <div class="w-5 h-5 rounded-full border-2 border-gray-200 dark:border-white/20 flex items-center justify-center check-circle"></div>
+                  </div>
+                  <h4 class="font-bold text-sm text-gray-900 dark:text-white">Standard</h4>
+                  <p class="text-xs font-semibold text-brand dark:text-brand-300 mt-1">PKR 2,499</p>
+                </button>
+                <button type="button" onclick="selectPlan('professional_pkg')" id="plan-professional_pkg" class="plan-card text-left p-5 rounded-2xl border-2 border-gray-100 dark:border-white/10 hover:border-brand-200 dark:hover:border-brand-800 transition-all">
+                  <div class="flex items-center justify-between mb-4">
+                    <div class="w-9 h-9 rounded-lg bg-brand-50 dark:bg-brand-900/40 text-brand dark:text-brand-300 flex items-center justify-center"><i class="fa-solid fa-crown text-sm" aria-hidden="true"></i></div>
+                    <div class="w-5 h-5 rounded-full border-2 border-gray-200 dark:border-white/20 flex items-center justify-center check-circle"></div>
+                  </div>
+                  <h4 class="font-bold text-sm text-gray-900 dark:text-white">Professional</h4>
+                  <p class="text-xs font-semibold text-brand dark:text-brand-300 mt-1">PKR 6,999</p>
+                </button>
+              </div>
             </div>
-            <h2 class="text-xl font-lemon dark:text-white mb-2">Processing Securely</h2>
-            <p class="text-gray-500 dark:text-gray-400 text-[10px] font-lemon tracking-widest uppercase">Verified Servers</p>
+
+            <div>
+              <p class="eyebrow text-xs mb-4">Business Growth</p>
+              <button type="button" onclick="selectPlan('entrepreneur')" id="plan-entrepreneur" class="plan-card w-full flex items-center gap-4 p-5 rounded-2xl border-2 border-gray-100 dark:border-white/10 hover:border-brand-200 dark:hover:border-brand-800 transition-all">
+                <div class="w-10 h-10 rounded-xl bg-brand-50 dark:bg-brand-900/40 text-brand dark:text-brand-300 flex items-center justify-center"><i class="fa-solid fa-rocket" aria-hidden="true"></i></div>
+                <div class="text-left flex-grow">
+                  <h4 class="font-bold text-sm text-gray-900 dark:text-white">Entrepreneur</h4>
+                  <p class="text-xs font-semibold text-brand dark:text-brand-300 mt-1">PKR 50,000</p>
+                </div>
+                <div class="w-5 h-5 rounded-full border-2 border-gray-200 dark:border-white/20 flex items-center justify-center check-circle"></div>
+              </button>
+            </div>
+
+            <div id="package-details-container" class="hidden p-5 bg-gray-50 dark:bg-white/5 rounded-2xl border border-gray-100 dark:border-white/10">
+              <h5 id="package-details-title" class="eyebrow text-xs mb-3">Package details</h5>
+              <ul id="package-details-list" class="space-y-2 text-sm text-gray-700 dark:text-gray-300"></ul>
+            </div>
+          </div>
+
+          <!-- STEP 2 -->
+          <div id="step-2" class="hidden grid grid-cols-1 md:grid-cols-2 gap-5">
+            <div>
+              <label for="input-fullname" class="block text-xs font-semibold tracking-[0.15em] text-gray-600 dark:text-gray-400 uppercase mb-2">Full Name <span class="text-gray-400">(as per CNIC)</span></label>
+              <input type="text" id="input-fullname" name="name" autocomplete="name" oninput="validateStep2()" class="w-full px-4 py-3.5 rounded-xl bg-gray-50 dark:bg-white/5 border-2 border-gray-100 dark:border-white/10 focus:border-brand outline-none text-sm text-gray-900 dark:text-white transition" placeholder="Your full name" />
+            </div>
+            <div>
+              <label for="input-cnic" class="block text-xs font-semibold tracking-[0.15em] text-gray-600 dark:text-gray-400 uppercase mb-2">CNIC</label>
+              <input type="text" id="input-cnic" inputmode="numeric" oninput="formatCNIC(this); validateStep2()" class="w-full px-4 py-3.5 rounded-xl bg-gray-50 dark:bg-white/5 border-2 border-gray-100 dark:border-white/10 focus:border-brand outline-none text-sm text-gray-900 dark:text-white transition font-mono tracking-wider" placeholder="XXXXX-XXXXXXX-X" maxlength="15" />
+            </div>
+            <div>
+              <label for="input-email" class="block text-xs font-semibold tracking-[0.15em] text-gray-600 dark:text-gray-400 uppercase mb-2">Email address</label>
+              <input type="email" id="input-email" name="email" autocomplete="email" oninput="validateStep2()" class="w-full px-4 py-3.5 rounded-xl bg-gray-50 dark:bg-white/5 border-2 border-gray-100 dark:border-white/10 focus:border-brand outline-none text-sm text-gray-900 dark:text-white transition" placeholder="name@example.com" />
+            </div>
+            <div>
+              <label for="input-whatsapp" class="block text-xs font-semibold tracking-[0.15em] text-gray-600 dark:text-gray-400 uppercase mb-2">WhatsApp Number</label>
+              <input type="tel" id="input-whatsapp" inputmode="numeric" autocomplete="tel" oninput="formatWhatsApp(this); validateStep2()" class="w-full px-4 py-3.5 rounded-xl bg-gray-50 dark:bg-white/5 border-2 border-gray-100 dark:border-white/10 focus:border-brand outline-none text-sm text-gray-900 dark:text-white transition font-mono tracking-wider" placeholder="923XXXXXXXXX" maxlength="12" />
+              <p class="text-xs text-gray-500 dark:text-gray-500 mt-1.5">Start with 92, then 10 digits (no + sign).</p>
+            </div>
+          </div>
+
+          <!-- STEP 3 -->
+          <div id="step-3" class="hidden">
+            <div class="text-center py-4 max-w-sm mx-auto">
+              <div class="w-14 h-14 bg-brand-50 dark:bg-brand-900/40 rounded-full flex items-center justify-center mx-auto mb-5 text-brand dark:text-brand-300">
+                <i class="fa-solid fa-envelope-circle-check text-xl" aria-hidden="true"></i>
+              </div>
+              <h3 class="text-lg font-bold text-gray-900 dark:text-white mb-2">Verify your email</h3>
+              <p class="text-sm text-gray-600 dark:text-gray-400 mb-6">We sent a 6-digit code to <span id="verify-email-display" class="font-semibold text-brand dark:text-brand-300"></span>. It expires in ~5 minutes.</p>
+
+              <div class="flex flex-col items-center gap-3 w-full">
+                <p id="otp-status" class="text-xs text-gray-500 hidden">Sending verification code…</p>
+                <label for="input-otp" class="sr-only">Verification code</label>
+                <input type="text" id="input-otp" inputmode="numeric" autocomplete="one-time-code" maxlength="6" placeholder="------" class="text-center tracking-[0.5em] font-mono text-xl w-full max-w-[220px] px-4 py-4 rounded-2xl border-2 border-gray-100 dark:border-white/10 bg-white dark:bg-white/5 focus:border-brand outline-none text-gray-900 dark:text-white" oninput="validateStep3()" />
+                <button type="button" id="btn-send-otp" onclick="sendOTP()" class="hidden py-2 px-4 text-xs font-semibold tracking-[0.2em] text-brand dark:text-brand-300 hover:opacity-80 uppercase transition disabled:opacity-50">Resend code</button>
+                <p id="otp-message" class="text-xs text-brand dark:text-brand-300 hidden">Code sent successfully.</p>
+                <p id="otp-error" class="text-xs text-red-500 hidden" role="alert"></p>
+              </div>
+            </div>
+          </div>
+
+          <!-- STEP 4 -->
+          <div id="step-4" class="hidden space-y-5">
+            <div id="fields-package" class="hidden space-y-5">
+              <div>
+                <label for="input-status" class="block text-xs font-semibold tracking-[0.15em] text-gray-600 dark:text-gray-400 uppercase mb-2">Current status</label>
+                <select id="input-status" onchange="validateStep4()" class="w-full px-4 py-3.5 rounded-xl bg-gray-50 dark:bg-white/5 border-2 border-gray-100 dark:border-white/10 focus:border-brand outline-none text-sm text-gray-900 dark:text-white transition">
+                  <option value="" disabled selected>Select status</option>
+                  <option value="student">Student</option>
+                  <option value="professional">Job Professional</option>
+                </select>
+              </div>
+              <div>
+                <label for="input-country" class="block text-xs font-semibold tracking-[0.15em] text-gray-600 dark:text-gray-400 uppercase mb-2">Target country</label>
+                <select id="input-country" onchange="handleOtherOption('input-country', 'input-country-other')" class="w-full px-4 py-3.5 rounded-xl bg-gray-50 dark:bg-white/5 border-2 border-gray-100 dark:border-white/10 focus:border-brand outline-none text-sm text-gray-900 dark:text-white transition">
+                  <option value="" disabled selected>Select country</option>
+                  <option value="usa">United States</option>
+                  <option value="uk">United Kingdom</option>
+                  <option value="canada">Canada</option>
+                  <option value="uae">UAE &amp; Gulf</option>
+                  <option value="europe">Europe (Schengen)</option>
+                  <option value="other">Other</option>
+                </select>
+                <input type="text" id="input-country-other" placeholder="Please specify" class="hidden w-full mt-3 px-4 py-3.5 rounded-xl bg-gray-50 dark:bg-white/5 border-2 border-gray-100 dark:border-white/10 focus:border-brand outline-none text-sm text-gray-900 dark:text-white transition" oninput="validateStep4()" />
+              </div>
+            </div>
+
+            <div id="fields-entrepreneur" class="hidden space-y-5">
+              <div>
+                <label for="input-business" class="block text-xs font-semibold tracking-[0.15em] text-gray-600 dark:text-gray-400 uppercase mb-2">Business name</label>
+                <input type="text" id="input-business" autocomplete="organization" oninput="validateStep4()" class="w-full px-4 py-3.5 rounded-xl bg-gray-50 dark:bg-white/5 border-2 border-gray-100 dark:border-white/10 focus:border-brand outline-none text-sm text-gray-900 dark:text-white transition" placeholder="e.g. NextGen Solutions" />
+              </div>
+              <div>
+                <label for="input-industry" class="block text-xs font-semibold tracking-[0.15em] text-gray-600 dark:text-gray-400 uppercase mb-2">Industry</label>
+                <select id="input-industry" onchange="handleOtherOption('input-industry', 'input-industry-other')" class="w-full px-4 py-3.5 rounded-xl bg-gray-50 dark:bg-white/5 border-2 border-gray-100 dark:border-white/10 focus:border-brand outline-none text-sm text-gray-900 dark:text-white transition">
+                  <option value="" disabled selected>Select industry</option>
+                  <option value="tech">Technology &amp; IT</option>
+                  <option value="retail">Retail &amp; E-commerce</option>
+                  <option value="agriculture">Agriculture</option>
+                  <option value="services">Professional Services</option>
+                  <option value="other">Other</option>
+                </select>
+                <input type="text" id="input-industry-other" placeholder="Please specify" class="hidden w-full mt-3 px-4 py-3.5 rounded-xl bg-gray-50 dark:bg-white/5 border-2 border-gray-100 dark:border-white/10 focus:border-brand outline-none text-sm text-gray-900 dark:text-white transition" oninput="validateStep4()" />
+              </div>
+            </div>
+          </div>
+
+          <!-- STEP 5 -->
+          <div id="step-5" class="hidden space-y-6">
+            <div class="bg-brand-50 dark:bg-brand-900/30 p-6 rounded-2xl border border-brand-100 dark:border-brand-800/50">
+              <h4 class="eyebrow text-xs mb-5">Application Review</h4>
+              <dl class="grid grid-cols-1 sm:grid-cols-2 gap-x-6 gap-y-4 text-sm">
+                <div>
+                  <dt class="text-xs font-semibold tracking-[0.15em] text-gray-500 dark:text-gray-400 uppercase mb-1">Plan</dt>
+                  <dd id="review-plan" class="font-semibold text-gray-900 dark:text-white">--</dd>
+                </div>
+                <div>
+                  <dt class="text-xs font-semibold tracking-[0.15em] text-gray-500 dark:text-gray-400 uppercase mb-1">Name</dt>
+                  <dd id="review-name" class="font-semibold text-gray-900 dark:text-white">--</dd>
+                </div>
+                <div>
+                  <dt class="text-xs font-semibold tracking-[0.15em] text-gray-500 dark:text-gray-400 uppercase mb-1">CNIC</dt>
+                  <dd id="review-cnic" class="font-semibold font-mono text-gray-900 dark:text-white">--</dd>
+                </div>
+                <div>
+                  <dt class="text-xs font-semibold tracking-[0.15em] text-gray-500 dark:text-gray-400 uppercase mb-1">Email</dt>
+                  <dd id="review-email" class="font-semibold text-gray-900 dark:text-white break-all">--</dd>
+                </div>
+                <div>
+                  <dt class="text-xs font-semibold tracking-[0.15em] text-gray-500 dark:text-gray-400 uppercase mb-1">WhatsApp</dt>
+                  <dd id="review-whatsapp" class="font-semibold font-mono text-gray-900 dark:text-white">--</dd>
+                </div>
+                <div id="review-status-row">
+                  <dt class="text-xs font-semibold tracking-[0.15em] text-gray-500 dark:text-gray-400 uppercase mb-1">Status</dt>
+                  <dd id="review-status" class="font-semibold text-gray-900 dark:text-white">--</dd>
+                </div>
+                <div id="review-country-row">
+                  <dt class="text-xs font-semibold tracking-[0.15em] text-gray-500 dark:text-gray-400 uppercase mb-1">Target country</dt>
+                  <dd id="review-country" class="font-semibold text-gray-900 dark:text-white">--</dd>
+                </div>
+                <div id="review-business-row" class="hidden">
+                  <dt class="text-xs font-semibold tracking-[0.15em] text-gray-500 dark:text-gray-400 uppercase mb-1">Business</dt>
+                  <dd id="review-business" class="font-semibold text-gray-900 dark:text-white">--</dd>
+                </div>
+                <div id="review-industry-row" class="hidden">
+                  <dt class="text-xs font-semibold tracking-[0.15em] text-gray-500 dark:text-gray-400 uppercase mb-1">Industry</dt>
+                  <dd id="review-industry" class="font-semibold text-gray-900 dark:text-white">--</dd>
+                </div>
+              </dl>
+            </div>
+
+            <div class="flex flex-col gap-3 px-1">
+              <label class="flex items-start gap-3 cursor-pointer">
+                <input type="checkbox" id="input-terms" onchange="validateStep5()" class="mt-0.5 h-5 w-5 rounded border-gray-300 text-brand focus:ring-brand" />
+                <span class="text-sm text-gray-700 dark:text-gray-300 leading-relaxed">I declare all information above is correct and I agree to the <a href="https://drive.google.com/file/d/1NwKfofJT-kQ5veAhZVj0ebYeB6Tauk4I/view?usp=drivesdk" target="_blank" rel="noopener noreferrer" class="text-brand dark:text-brand-300 underline hover:opacity-80">Privacy Policy</a>.</span>
+              </label>
+              <label class="flex items-start gap-3 cursor-pointer">
+                <input type="checkbox" id="input-disclaimer" onchange="validateStep5()" class="mt-0.5 h-5 w-5 rounded border-gray-300 text-brand focus:ring-brand" />
+                <span class="text-sm text-gray-700 dark:text-gray-300 leading-relaxed">I agree to the <a href="https://drive.google.com/file/d/1AztKci5xP-UtafBjh6Uj1bVbTOZcO6JF/view?usp=sharing" target="_blank" rel="noopener noreferrer" class="text-brand dark:text-brand-300 underline hover:opacity-80">Disclaimer</a>.</span>
+              </label>
+            </div>
+          </div>
+
+          <!-- STEP 6 -->
+          <div id="step-6" class="hidden">
+            <div class="max-w-md mx-auto text-center">
+              <div class="w-14 h-14 bg-brand-50 dark:bg-brand-900/40 rounded-full flex items-center justify-center mx-auto mb-5 text-brand dark:text-brand-300">
+                <i class="fa-solid fa-wallet text-xl" aria-hidden="true"></i>
+              </div>
+              <h3 class="text-lg font-bold text-gray-900 dark:text-white mb-2">Payment method</h3>
+              <p class="text-sm text-gray-600 dark:text-gray-400 mb-6">Your processing fee is collected securely via FastPay.</p>
+
+              <div class="bg-gray-50 dark:bg-white/5 rounded-2xl border border-gray-100 dark:border-white/10 p-5 mb-6 flex items-center justify-between">
+                <span class="text-sm font-medium text-gray-600 dark:text-gray-400">Total amount</span>
+                <span class="text-2xl font-bold text-brand dark:text-brand-300" id="payment-fee-amount">—</span>
+              </div>
+
+              <fieldset class="text-left">
+                <legend class="sr-only">Choose payment method</legend>
+                <div class="grid grid-cols-1 gap-3">
+                  <label class="payment-label flex items-center justify-between p-4 rounded-2xl border-2 border-gray-100 dark:border-white/10 hover:border-brand-200 dark:hover:border-brand-800 transition cursor-pointer">
+                    <span class="flex items-center gap-3">
+                      <input type="radio" name="payment" value="easypaisa" onchange="selectPaymentMethod('easypaisa')" class="h-4 w-4 text-brand focus:ring-brand" />
+                      <span class="font-semibold text-gray-900 dark:text-white">Easypaisa</span>
+                    </span>
+                    <span class="text-xs font-semibold text-gray-400">Mobile wallet</span>
+                  </label>
+                  <label class="payment-label flex items-center justify-between p-4 rounded-2xl border-2 border-gray-100 dark:border-white/10 hover:border-brand-200 dark:hover:border-brand-800 transition cursor-pointer">
+                    <span class="flex items-center gap-3">
+                      <input type="radio" name="payment" value="jazzcash" onchange="selectPaymentMethod('jazzcash')" class="h-4 w-4 text-brand focus:ring-brand" />
+                      <span class="font-semibold text-gray-900 dark:text-white">JazzCash</span>
+                    </span>
+                    <span class="text-xs font-semibold text-gray-400">Mobile wallet</span>
+                  </label>
+                  <label class="payment-label flex items-center justify-between p-4 rounded-2xl border-2 border-gray-100 dark:border-white/10 hover:border-brand-200 dark:hover:border-brand-800 transition cursor-pointer">
+                    <span class="flex items-center gap-3">
+                      <input type="radio" name="payment" value="card" onchange="selectPaymentMethod('card')" class="h-4 w-4 text-brand focus:ring-brand" />
+                      <span class="font-semibold text-gray-900 dark:text-white">Credit / Debit card</span>
+                    </span>
+                    <span class="text-xs font-semibold text-gray-400">Visa · Mastercard</span>
+                  </label>
+                </div>
+              </fieldset>
+
+              <p class="text-xs text-gray-500 dark:text-gray-500 mt-5 flex items-center justify-center gap-2">
+                <i class="fa-solid fa-shield-halved text-brand dark:text-brand-300" aria-hidden="true"></i>
+                Secured by FastPay · SSL encrypted
+              </p>
+            </div>
+          </div>
         </div>
 
-        <!-- SUCCESS -->
-        <div id="success-view" class="hidden bg-white dark:bg-gray-900 rounded-3xl p-8 max-w-md w-full text-center shadow-2xl relative">
-            <div class="w-14 h-14 bg-green-50 dark:bg-green-900/20 rounded-full flex items-center justify-center mx-auto mb-6 text-pakistan-green"><i class="fa-solid fa-check text-2xl animate-bounce"></i></div>
-            <h2 class="text-xl font-lemon mb-2 dark:text-white">Applied!</h2>
-            <p class="text-gray-500 dark:text-gray-400 mb-8 text-sm leading-relaxed">Your details are submitted successfully. We will contact you shortly.</p>
-            <button onclick="forceCloseForm()" class="w-full py-4 bg-pakistan-green text-white rounded-2xl font-lemon text-xs tracking-widest shadow-lg hover:bg-green-800 transition-all">Close</button>
+        <!-- Footer buttons -->
+        <div class="px-6 sm:px-8 py-5 flex gap-3 border-t border-gray-100 dark:border-white/10 bg-white dark:bg-brand-900">
+          <button id="btn-back" type="button" onclick="prevStep()" class="hidden px-5 py-3.5 rounded-xl font-semibold text-sm border border-gray-200 dark:border-white/10 text-gray-700 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-white/5 transition">Back</button>
+          <button id="btn-next" type="button" onclick="nextStep()" disabled class="flex-grow py-3.5 rounded-xl font-semibold text-sm text-white transition bg-gray-200 dark:bg-white/10 cursor-not-allowed">Continue</button>
         </div>
+      </div>
 
+      <!-- Loading view -->
+      <div id="loading-view" class="hidden bg-white dark:bg-brand-900 rounded-3xl p-12 max-w-md w-full text-center shadow-brandLg border border-gray-100 dark:border-white/10">
+        <div class="relative w-20 h-20 mx-auto mb-6">
+          <div class="absolute inset-0 border-4 border-gray-100 dark:border-white/10 rounded-full"></div>
+          <div class="absolute inset-0 border-4 border-transparent border-t-brand rounded-full animate-spin"></div>
+          <div class="absolute inset-0 flex items-center justify-center text-brand dark:text-brand-300"><i class="fa-solid fa-shield-halved" aria-hidden="true"></i></div>
+        </div>
+        <h2 class="text-xl font-bold text-gray-900 dark:text-white mb-2">Processing securely</h2>
+        <p class="text-xs font-semibold tracking-[0.2em] text-brand dark:text-brand-300 uppercase">Verified servers</p>
+      </div>
+
+      <!-- Success view -->
+      <div id="success-view" class="hidden bg-white dark:bg-brand-900 rounded-3xl p-10 max-w-md w-full text-center shadow-brandLg border border-gray-100 dark:border-white/10">
+        <div class="w-14 h-14 bg-brand-50 dark:bg-brand-900/40 rounded-full flex items-center justify-center mx-auto mb-6 text-brand dark:text-brand-300"><i class="fa-solid fa-check text-2xl" aria-hidden="true"></i></div>
+        <h2 class="text-xl font-bold text-gray-900 dark:text-white mb-2">Application submitted</h2>
+        <p class="text-sm text-gray-600 dark:text-gray-400 mb-8 leading-relaxed">We've received your details and our advisory team will be in touch shortly.</p>
+        <button type="button" onclick="forceCloseForm()" class="w-full py-3.5 bg-brand text-white rounded-xl font-semibold text-sm shadow-brand hover:bg-brand-600 transition">Close</button>
+      </div>
     </div>
 
-    <!-- MAIN JAVASCRIPT LOGIC -->
+    <!-- ================= MAIN SCRIPT ================= -->
     <script>
-        // --- State Management ---
-        let state = {
-            isOpen: false,
-            step: 1,
-            plan: null,
-            paymentMethod: null,
-            otpHash: null,
-            data: {
-                fullName: '',
-                cnic: '',
-                email: '',
-                whatsapp: '',
-                institute: '',
-                degree: '',
-                businessName: '',
-                industry: '',
-                experience: '',
-                country: ''
-            }
-        };
+      (function () {
+        'use strict';
 
-        // --- DOM Elements ---
+        /* ---------- Theme toggle ---------- */
+        const themeToggle = document.getElementById('theme-toggle');
+        const themeIcon = document.getElementById('theme-icon');
+        function syncThemeIcon() {
+          const isDark = document.documentElement.classList.contains('dark');
+          themeIcon.className = isDark ? 'fa-solid fa-moon text-sm' : 'fa-solid fa-sun text-sm';
+          themeToggle.setAttribute('aria-pressed', String(isDark));
+        }
+        syncThemeIcon();
+        themeToggle.addEventListener('click', function () {
+          const nowDark = !document.documentElement.classList.contains('dark');
+          document.documentElement.classList.toggle('dark', nowDark);
+          try { localStorage.theme = nowDark ? 'dark' : 'light'; } catch (e) {}
+          syncThemeIcon();
+        });
+
+        /* ---------- Footer year ---------- */
+        const yearEl = document.getElementById('year');
+        if (yearEl) yearEl.textContent = new Date().getFullYear();
+
+        /* ---------- Stats count-up ---------- */
+        if (!window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
+          const counters = document.querySelectorAll('[data-count-to]');
+          const io = new IntersectionObserver(function (entries) {
+            entries.forEach(function (entry) {
+              if (!entry.isIntersecting) return;
+              const el = entry.target;
+              const target = parseInt(el.getAttribute('data-count-to'), 10) || 0;
+              const suffix = el.getAttribute('data-count-suffix') || '';
+              const duration = 1400;
+              const start = performance.now();
+              function tick(now) {
+                const t = Math.min(1, (now - start) / duration);
+                const eased = 1 - Math.pow(1 - t, 3);
+                el.textContent = Math.round(target * eased).toLocaleString() + suffix;
+                if (t < 1) requestAnimationFrame(tick);
+              }
+              requestAnimationFrame(tick);
+              io.unobserve(el);
+            });
+          }, { threshold: 0.4 });
+          counters.forEach(function (el) { io.observe(el); });
+        } else {
+          document.querySelectorAll('[data-count-to]').forEach(function (el) {
+            const target = parseInt(el.getAttribute('data-count-to'), 10) || 0;
+            el.textContent = target.toLocaleString() + (el.getAttribute('data-count-suffix') || '');
+          });
+        }
+
+        /* ================= APPLICATION MODAL LOGIC ================= */
+
+        const INITIAL_STATE = {
+          isOpen: false,
+          step: 1,
+          plan: null,
+          paymentMethod: null,
+          otpHash: null,
+          otpBucket: null,
+        };
+        let state = Object.assign({}, INITIAL_STATE);
+
         const modalOverlay = document.getElementById('modal-overlay');
         const modalContent = document.getElementById('modal-content');
         const exitConfirm = document.getElementById('exit-confirm');
@@ -716,609 +1140,619 @@
         const btnBack = document.getElementById('btn-back');
         const loadingView = document.getElementById('loading-view');
         const successView = document.getElementById('success-view');
-        const themeToggle = document.getElementById('theme-toggle');
 
-        // --- Helper Logic ---
-        function handleOtherOption(selectId, inputId) {
-            const select = document.getElementById(selectId);
-            const input = document.getElementById(inputId);
-            if (select.value === 'other') {
-                input.classList.remove('hidden');
-            } else {
-                input.classList.add('hidden');
-                input.value = '';
-            }
-            validateStep4();
-        }
+        const PLAN_LABELS = {
+          basic: 'Basic (Free)',
+          standard: 'Standard (PKR 2,499)',
+          professional_pkg: 'Professional (PKR 6,999)',
+          entrepreneur: 'Entrepreneur (PKR 50,000)',
+        };
+        const PLAN_PRICES = {
+          basic: 0,
+          standard: 2499,
+          professional_pkg: 6999,
+          entrepreneur: 50000,
+        };
+        const PACKAGE_DETAILS = {
+          basic: [
+            'Initial career advice from professionals',
+            'Access to the First Nobel Step platform',
+            'Basic guidance for your situation',
+            'Initial case understanding by our advisory team',
+            'Opportunity to present your case or idea',
+            'General direction & professional suggestions',
+          ],
+          standard: [
+            'Everything in Basic, plus:',
+            'Detailed problem evaluation by our advisory team',
+            'Discussion with a First Nobel Step representative',
+            'Uploaded documents review & professional feedback',
+            'Personalised advice for your situation',
+            'Priority case review & faster response',
+            'Opportunity & risk assessment',
+            'Strategic suggestions for better outcomes',
+            'Verified badge certificate',
+          ],
+          professional_pkg: [
+            'Everything in Standard, plus:',
+            'Priority consultation with senior advisors',
+            'Comprehensive case analysis & strategic guidance',
+            'Advanced document & situation evaluation',
+            'Dedicated case handling with priority support',
+            'Verified profile badge on events',
+            'Exclusive networking opportunities',
+            'International exposure through global connections',
+            'Chance to win fully funded foreign job or studies',
+            'Access to high-level job opportunities',
+          ],
+          entrepreneur: [
+            'Turn your idea into a funded reality',
+            'Strategic feedback from industry leaders',
+            'Powerful business networking',
+            'Expert mentorship & guidance',
+            'Opportunity to pitch to investors',
+            'Business plan evaluation',
+          ],
+        };
 
-        // --- Theme Logic ---
-        const themeText = document.getElementById('theme-text');
-        const themeIcon = document.getElementById('theme-icon');
-
-        function updateThemeUI(isDark) {
-            if (isDark) {
-                document.documentElement.classList.add('dark');
-                themeText.textContent = 'NIGHT MODE';
-                themeIcon.classList.replace('fa-sun', 'fa-moon');
-                themeText.classList.replace('order-1', 'order-2');
-                themeIcon.classList.replace('order-2', 'order-1');
-            } else {
-                document.documentElement.classList.remove('dark');
-                themeText.textContent = 'DAY MODE';
-                themeIcon.classList.replace('fa-moon', 'fa-sun');
-                themeText.classList.replace('order-2', 'order-1');
-                themeIcon.classList.replace('order-1', 'order-2');
-            }
-        }
-
-        if (themeToggle) {
-            // Set initial state
-            const isDark = localStorage.theme === 'dark' || (!('theme' in localStorage) && window.matchMedia('(prefers-color-scheme: dark)').matches);
-            updateThemeUI(isDark);
-
-            themeToggle.addEventListener('click', () => {
-                const isDark = document.documentElement.classList.toggle('dark');
-                localStorage.theme = isDark ? 'dark' : 'light';
-                updateThemeUI(isDark);
-            });
-        }
-
-
-        // --- Modal Logic ---
+        /* ---------- Open / close ---------- */
+        let lastFocusedEl = null;
         function openForm(planId) {
-            state.isOpen = true;
-            modalOverlay.classList.remove('hidden');
-            setTimeout(() => {
-                modalContent.classList.remove('scale-95', 'opacity-0');
-                modalContent.classList.add('scale-100', 'opacity-100');
-            }, 10);
-            document.body.style.overflow = 'hidden';
-
-            if (planId) {
-                selectPlan(planId);
-            }
+          lastFocusedEl = document.activeElement;
+          state.isOpen = true;
+          modalOverlay.classList.remove('hidden');
+          modalOverlay.classList.add('flex');
+          requestAnimationFrame(function () {
+            modalContent.classList.remove('scale-95', 'opacity-0');
+            modalContent.classList.add('scale-100', 'opacity-100');
+          });
+          document.body.style.overflow = 'hidden';
+          if (planId) selectPlan(planId);
+          // Focus first focusable element inside modal
+          setTimeout(function () {
+            const firstFocusable = modalContent.querySelector('button, [href], input, select, [tabindex]:not([tabindex="-1"])');
+            if (firstFocusable) firstFocusable.focus();
+          }, 50);
         }
+        window.openForm = openForm;
 
         function attemptCloseForm() {
-            // Check if user has started entering data
-            if (state.step > 1 || state.data.fullName) {
-                exitConfirm.classList.remove('hidden');
-            } else {
-                forceCloseForm();
-            }
+          const name = document.getElementById('input-fullname').value;
+          if (state.step > 1 || name) {
+            exitConfirm.classList.remove('hidden');
+          } else {
+            forceCloseForm();
+          }
         }
+        window.attemptCloseForm = attemptCloseForm;
 
         function hideExitConfirm() {
-            exitConfirm.classList.add('hidden');
+          exitConfirm.classList.add('hidden');
         }
+        window.hideExitConfirm = hideExitConfirm;
 
         function forceCloseForm() {
-            modalContent.classList.remove('scale-100', 'opacity-100');
-            modalContent.classList.add('scale-95', 'opacity-0');
-            
-            // Hide other views if active
-            loadingView.classList.add('hidden');
-            successView.classList.add('hidden');
-            modalContent.classList.remove('hidden'); // Reset to show form for next time
-            
-            setTimeout(() => {
-                modalOverlay.classList.add('hidden');
-                state.isOpen = false;
-                resetForm();
-            }, 300);
-            document.body.style.overflow = '';
-            hideExitConfirm();
+          modalContent.classList.remove('scale-100', 'opacity-100');
+          modalContent.classList.add('scale-95', 'opacity-0');
+          loadingView.classList.add('hidden');
+          successView.classList.add('hidden');
+          modalContent.classList.remove('hidden');
+          setTimeout(function () {
+            modalOverlay.classList.add('hidden');
+            modalOverlay.classList.remove('flex');
+            state.isOpen = false;
+            resetForm();
+            if (lastFocusedEl && typeof lastFocusedEl.focus === 'function') {
+              lastFocusedEl.focus();
+            }
+          }, 250);
+          document.body.style.overflow = '';
+          hideExitConfirm();
         }
+        window.forceCloseForm = forceCloseForm;
 
         function resetForm() {
-            hideError();
-            state.step = 1;
-            state.plan = null;
-            state.data = { fullName: '', cnic: '', email: '', whatsapp: '' };
-            // Clear inputs
-            document.querySelectorAll('input').forEach(i => i.value = '');
-            document.querySelectorAll('input[type="checkbox"]').forEach(i => i.checked = false);
-            updateUI();
+          hideError();
+          state = Object.assign({}, INITIAL_STATE);
+          document.querySelectorAll('#modal-content input, #modal-content select').forEach(function (el) {
+            if (el.type === 'checkbox' || el.type === 'radio') el.checked = false;
+            else el.value = '';
+          });
+          document.querySelectorAll('.plan-card').forEach(function (el) {
+            el.classList.remove('border-brand', 'bg-brand-50', 'dark:bg-brand-900/30');
+            el.classList.add('border-gray-100', 'dark:border-white/10');
+            const check = el.querySelector('.check-circle');
+            if (check) {
+              check.classList.remove('bg-brand', 'border-brand', 'text-white');
+              check.classList.add('border-gray-200', 'dark:border-white/20');
+              check.innerHTML = '';
+            }
+          });
+          const hidden = document.getElementById('package-details-container');
+          if (hidden) hidden.classList.add('hidden');
+          updateUI();
         }
 
-        // --- Error Handling ---
+        /* ---------- Escape + focus trap ---------- */
+        document.addEventListener('keydown', function (e) {
+          if (!state.isOpen) return;
+          if (e.key === 'Escape') {
+            if (!exitConfirm.classList.contains('hidden')) hideExitConfirm();
+            else attemptCloseForm();
+            return;
+          }
+          if (e.key === 'Tab') {
+            const focusables = modalContent.querySelectorAll(
+              'button:not([disabled]):not(.hidden), [href], input:not([type="hidden"]), select, textarea, [tabindex]:not([tabindex="-1"])'
+            );
+            if (!focusables.length) return;
+            const first = focusables[0];
+            const last = focusables[focusables.length - 1];
+            if (e.shiftKey && document.activeElement === first) {
+              e.preventDefault();
+              last.focus();
+            } else if (!e.shiftKey && document.activeElement === last) {
+              e.preventDefault();
+              first.focus();
+            }
+          }
+        });
+
+        /* ---------- Error handling ---------- */
         function showError(title, message) {
-            const banner = document.getElementById('form-error-banner');
-            document.getElementById('form-error-title').innerText = title;
-            document.getElementById('form-error-message').innerText = message;
-            banner.classList.remove('hidden');
-            
-            // Scroll to top of modal so error is visible
-            const formBody = document.getElementById('form-body');
-            if (formBody) {
-                formBody.scrollTop = 0;
-            }
+          document.getElementById('form-error-title').innerText = title;
+          document.getElementById('form-error-message').innerText = message;
+          document.getElementById('form-error-banner').classList.remove('hidden');
+          const body = document.getElementById('form-body');
+          if (body) body.scrollTop = 0;
         }
-
         function hideError() {
-            document.getElementById('form-error-banner').classList.add('hidden');
+          document.getElementById('form-error-banner').classList.add('hidden');
         }
+        window.hideError = hideError;
 
-        // --- Form Navigation & Logic ---
+        /* ---------- Plan selection ---------- */
         function selectPlan(planId) {
-            hideError();
-            state.plan = planId;
-            // Highlight UI
-            document.querySelectorAll('.plan-card').forEach(el => {
-                if (el.id === 'plan-' + planId) {
-                    el.classList.add('border-pakistan-green', 'bg-green-50', 'dark:bg-green-900/10');
-                    el.classList.remove('border-gray-100', 'dark:border-gray-800');
-                    el.querySelector('.check-circle').classList.add('bg-pakistan-green', 'border-pakistan-green', 'text-white');
-                    el.querySelector('.check-circle').classList.remove('border-gray-200');
-                    el.querySelector('.check-circle').innerHTML = '<i class="fa-solid fa-check text-[10px] text-white"></i>';
-                } else {
-                    // Reset others
-                    el.classList.remove('border-pakistan-green', 'bg-green-50', 'dark:bg-green-900/10');
-                    el.classList.add('border-gray-100', 'dark:border-gray-800');
-                    el.querySelector('.check-circle').classList.remove('bg-pakistan-green', 'border-pakistan-green', 'text-white');
-                    el.querySelector('.check-circle').classList.add('border-gray-200');
-                    el.querySelector('.check-circle').innerHTML = '';
-                }
-            });
-
-            // Show Package Details
-            const packageDetails = {
-                'basic': [
-                    'Initial Career Advice from Professionals',
-                    'Access to the First Noble Step Platform',
-                    'Basic Guidance for Your Situation',
-                    'Initial Case Understanding by Our Advisory Team',
-                    'Opportunity to Present Your Case or Idea',
-                    'General Direction & Professional Suggestions'
-                ],
-                'standard': [
-                    '<span class="font-bold text-pakistan-green">Everything in Basic Package, plus:</span>',
-                    'Detailed Problem Evaluation by Our Advisory Team',
-                    'Discussion with a First Noble Step Representative',
-                    'Uploaded Documents Review & Professional Feedback',
-                    'Personalized Advice Based on Your Situation',
-                    'Priority Case Review & Faster Response',
-                    'Opportunity & Risk Assessment',
-                    'Strategic Suggestions for Better Outcomes',
-                    'Receive a Verified Badge Certificate'
-                ],
-                'professional_pkg': [
-                    '<span class="font-bold text-pakistan-green">Everything in Standard Package, plus:</span>',
-                    'Priority Consultation with Senior Advisors',
-                    'Comprehensive Case Analysis & Strategic Guidance',
-                    'Advanced Document & Situation Evaluation',
-                    'Dedicated Case Handling with Priority Support',
-                    'Verified Profile Badge on Events',
-                    'Exclusive Networking Opportunities',
-                    'International Exposure through Global Connections',
-                    'Chance to Win Foreign Job & Studies Complete Financial Support',
-                    'Access to High-Level Job Opportunities'
-                ],
-                'entrepreneur': [
-                    'Turn your idea into funded reality',
-                    'Strategic feedback from leaders',
-                    'Powerful Business Networking',
-                    'Expert Mentorship & Guidance',
-                    'Opportunity to Pitch to Investors',
-                    'Business Plan Evaluation'
-                ]
-            };
-
-            const detailsContainer = document.getElementById('package-details-container');
-            const detailsList = document.getElementById('package-details-list');
-            const detailsTitle = document.getElementById('package-details-title');
-
-            if (packageDetails[planId]) {
-                detailsContainer.classList.remove('hidden');
-                let title = planId === 'basic' ? 'Basic Package Details' : 
-                            planId === 'standard' ? 'Standard Package Details' : 
-                            planId === 'professional_pkg' ? 'Professional Package Details' : 
-                            'Entrepreneur Package Details';
-                detailsTitle.innerText = title;
-                detailsList.innerHTML = packageDetails[planId].map(detail => `<li class="flex items-start gap-2.5"><i class="fa-solid fa-check text-pakistan-green mt-0.5 text-[10px]"></i> <span>${detail}</span></li>`).join('');
+          hideError();
+          state.plan = planId;
+          document.querySelectorAll('.plan-card').forEach(function (el) {
+            const isSelected = el.id === 'plan-' + planId;
+            el.classList.toggle('border-brand', isSelected);
+            el.classList.toggle('bg-brand-50', isSelected);
+            el.classList.toggle('dark:bg-brand-900/30', isSelected);
+            el.classList.toggle('border-gray-100', !isSelected);
+            el.classList.toggle('dark:border-white/10', !isSelected);
+            const check = el.querySelector('.check-circle');
+            if (!check) return;
+            if (isSelected) {
+              check.classList.add('bg-brand', 'border-brand', 'text-white');
+              check.classList.remove('border-gray-200', 'dark:border-white/20');
+              check.innerHTML = '<i class="fa-solid fa-check text-[10px] text-white" aria-hidden="true"></i>';
             } else {
-                if (detailsContainer) detailsContainer.classList.add('hidden');
+              check.classList.remove('bg-brand', 'border-brand', 'text-white');
+              check.classList.add('border-gray-200', 'dark:border-white/20');
+              check.innerHTML = '';
             }
-            
-            validateCurrentStep();
-        }
+          });
 
+          const details = PACKAGE_DETAILS[planId];
+          const container = document.getElementById('package-details-container');
+          const list = document.getElementById('package-details-list');
+          const title = document.getElementById('package-details-title');
+          if (details) {
+            container.classList.remove('hidden');
+            title.textContent = (PLAN_LABELS[planId] || planId).toUpperCase() + ' DETAILS';
+            list.innerHTML = details.map(function (item, i) {
+              const isIntro = i === 0 && item.indexOf('Everything in') === 0;
+              return (
+                '<li class="flex items-start gap-3">' +
+                  '<i class="fa-solid fa-check text-brand dark:text-brand-300 mt-0.5 text-xs" aria-hidden="true"></i>' +
+                  '<span class="' + (isIntro ? 'font-semibold text-brand dark:text-brand-300' : '') + '">' + item + '</span>' +
+                '</li>'
+              );
+            }).join('');
+          } else {
+            container.classList.add('hidden');
+          }
+          validateCurrentStep();
+        }
+        window.selectPlan = selectPlan;
+
+        /* ---------- Payment method ---------- */
         function selectPaymentMethod(method) {
-            state.paymentMethod = method;
-            
-            // Update UI
-            document.querySelectorAll('.payment-option').forEach(el => {
-                if (el.id === 'payment-' + method) {
-                    el.classList.add('border-pakistan-green', 'bg-green-50', 'dark:bg-green-900/10');
-                    el.classList.remove('border-gray-100', 'dark:border-gray-800');
-                    el.querySelector('.check-icon').classList.remove('hidden');
-                } else {
-                    el.classList.remove('border-pakistan-green', 'bg-green-50', 'dark:bg-green-900/10');
-                    el.classList.add('border-gray-100', 'dark:border-gray-800');
-                    el.querySelector('.check-icon').classList.add('hidden');
-                }
-            });
-            
-            validateCurrentStep();
+          state.paymentMethod = method;
+          validateCurrentStep();
         }
+        window.selectPaymentMethod = selectPaymentMethod;
 
+        /* ---------- Navigation ---------- */
         async function nextStep() {
-            hideError();
-            if (state.step === 3) {
-                // Verify OTP first
-                const otpInput = document.getElementById('input-otp').value;
-                const email = document.getElementById('input-email').value.trim();
-                const errorEl = document.getElementById('otp-error');
-                const btnNext = document.getElementById('btn-next');
-                
-                btnNext.disabled = true;
-                btnNext.innerText = 'Verifying...';
-                errorEl.classList.add('hidden');
+          hideError();
 
-                try {
-                    const response = await fetch('/api/verify-otp', {
-                        method: 'POST',
-                        headers: { 'Content-Type': 'application/json' },
-                        body: JSON.stringify({ email, otp: otpInput, otpHash: state.otpHash })
-                    });
-                    const data = await response.json();
-                    if (!data.success) {
-                        throw new Error(data.error || 'Invalid verification code');
-                    }
-                    // Success, move to next step
-                    state.step++;
-                    updateUI();
-                } catch (err) {
-                    errorEl.innerText = err.message;
-                    errorEl.classList.remove('hidden');
-                } finally {
-                    btnNext.disabled = false;
-                    btnNext.innerText = 'Continue';
-                }
-                return;
+          if (state.step === 3) {
+            const otpInput = document.getElementById('input-otp').value;
+            const email = document.getElementById('input-email').value.trim();
+            const errorEl = document.getElementById('otp-error');
+            btnNext.disabled = true;
+            btnNext.textContent = 'Verifying…';
+            errorEl.classList.add('hidden');
+            try {
+              const r = await fetch('/api/verify-otp', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ email: email, otp: otpInput, otpHash: state.otpHash, otpBucket: state.otpBucket }),
+              });
+              const d = await r.json();
+              if (!d.success) throw new Error(d.error || 'Invalid verification code');
+              state.step++;
+              updateUI();
+            } catch (err) {
+              errorEl.innerText = err.message;
+              errorEl.classList.remove('hidden');
+            } finally {
+              btnNext.disabled = false;
+              btnNext.textContent = 'Continue';
             }
+            return;
+          }
 
-            if (state.step === 5 && state.plan === 'basic') {
-                submitForm();
-            } else if (state.step < 6) {
-                state.step++;
-                updateUI();
-                if (state.step === 3 && !state.otpHash) {
-                    sendOTP();
-                }
-            } else {
-                submitForm();
-            }
+          if (state.step === 5 && state.plan === 'basic') {
+            submitForm();
+            return;
+          }
+
+          if (state.step < 6) {
+            state.step++;
+            updateUI();
+            if (state.step === 3 && !state.otpHash) sendOTP();
+          } else {
+            submitForm();
+          }
         }
+        window.nextStep = nextStep;
 
         function prevStep() {
-            hideError();
-            if (state.step > 1) {
-                state.step--;
-                updateUI();
-            }
+          hideError();
+          if (state.step > 1) {
+            state.step--;
+            updateUI();
+          }
         }
+        window.prevStep = prevStep;
 
+        /* ---------- UI update ---------- */
         function updateUI() {
-            // Update Progress Bar
-            const progress = ((state.step - 1) / 5) * 100;
-            document.getElementById('progress-line').style.width = `${progress}%`;
+          const progress = ((state.step - 1) / 5) * 100;
+          document.getElementById('progress-line').style.width = progress + '%';
 
-            // Update Indicators
-            for (let i = 1; i <= 6; i++) {
-                const el = document.getElementById(`step-${i}-indicator`);
-                if (i <= state.step) {
-                    el.classList.add('bg-pakistan-green', 'border-pakistan-green', 'text-white');
-                    el.classList.remove('bg-white', 'dark:bg-gray-900', 'border-gray-200', 'dark:border-gray-700', 'text-gray-400', 'dark:text-gray-500');
-                } else {
-                    el.classList.remove('bg-pakistan-green', 'border-pakistan-green', 'text-white');
-                    el.classList.add('bg-white', 'dark:bg-gray-900', 'border-gray-200', 'dark:border-gray-700', 'text-gray-400', 'dark:text-gray-500');
-                }
-            }
-
-            // Show/Hide Steps
-            for (let i = 1; i <= 6; i++) {
-                const el = document.getElementById(`step-${i}`);
-                if (i === state.step) el.classList.remove('hidden');
-                else el.classList.add('hidden');
-            }
-
-            // Update Email Verification
-            if (state.step === 3) {
-                document.getElementById('verify-email-display').innerText = document.getElementById('input-email').value;
-            }
-
-            // Show/Hide Specific Plan Fields in Step 4
-            if (state.step === 4) {
-                document.getElementById('fields-package').classList.add('hidden');
-                document.getElementById('fields-entrepreneur').classList.add('hidden');
-                
-                if (['basic', 'standard', 'professional_pkg'].includes(state.plan)) {
-                    document.getElementById('fields-package').classList.remove('hidden');
-                } else if (state.plan === 'entrepreneur') {
-                    document.getElementById('fields-entrepreneur').classList.remove('hidden');
-                }
-            }
-
-            // Update Review Data
-            if (state.step === 5) {
-                document.getElementById('review-name').innerText = document.getElementById('input-fullname').value || '--';
-                document.getElementById('review-cnic').innerText = document.getElementById('input-cnic').value || '--';
-            }
-
-            // Update Payment Amount
-            if (state.step === 6) {
-                const feeElement = document.getElementById('payment-fee-amount');
-                if (state.plan === 'standard') feeElement.innerText = 'PKR 2,499';
-                else if (state.plan === 'professional_pkg') feeElement.innerText = 'PKR 6,999';
-                else feeElement.innerText = 'PKR 50,000'; // Default/Entrepreneur
-            }
-
-            // Update Buttons
-            btnBack.classList.toggle('hidden', state.step === 1);
-            if (state.step === 5 && state.plan === 'basic') {
-                btnNext.innerText = 'Submit Application';
+          for (let i = 1; i <= 6; i++) {
+            const el = document.getElementById('step-' + i + '-indicator');
+            if (!el) continue;
+            if (i <= state.step) {
+              el.classList.add('bg-brand', 'border-brand', 'text-white');
+              el.classList.remove('bg-white', 'dark:bg-brand-900', 'border-gray-200', 'dark:border-white/15', 'text-gray-400', 'dark:text-gray-500');
             } else {
-                btnNext.innerText = state.step === 6 ? 'Submit Payment' : 'Continue';
+              el.classList.remove('bg-brand', 'border-brand', 'text-white');
+              el.classList.add('bg-white', 'dark:bg-brand-900', 'border-gray-200', 'dark:border-white/15', 'text-gray-400', 'dark:text-gray-500');
             }
-            
-            // Validate Current Step to Enable Next
-            validateCurrentStep();
+          }
+
+          for (let i = 1; i <= 6; i++) {
+            const el = document.getElementById('step-' + i);
+            if (!el) continue;
+            el.classList.toggle('hidden', i !== state.step);
+          }
+
+          if (state.step === 3) {
+            document.getElementById('verify-email-display').innerText = document.getElementById('input-email').value;
+          }
+
+          if (state.step === 4) {
+            const pkg = document.getElementById('fields-package');
+            const ent = document.getElementById('fields-entrepreneur');
+            pkg.classList.add('hidden');
+            ent.classList.add('hidden');
+            if (['basic', 'standard', 'professional_pkg'].indexOf(state.plan) > -1) {
+              pkg.classList.remove('hidden');
+            } else if (state.plan === 'entrepreneur') {
+              ent.classList.remove('hidden');
+            }
+          }
+
+          if (state.step === 5) populateReview();
+
+          if (state.step === 6) {
+            const price = PLAN_PRICES[state.plan] || 0;
+            document.getElementById('payment-fee-amount').innerText = 'PKR ' + price.toLocaleString();
+          }
+
+          btnBack.classList.toggle('hidden', state.step === 1);
+          if (state.step === 5 && state.plan === 'basic') {
+            btnNext.textContent = 'Submit application';
+          } else {
+            btnNext.textContent = state.step === 6 ? 'Submit payment' : 'Continue';
+          }
+
+          validateCurrentStep();
         }
 
-        // --- Validation Logic ---
-        function formatCNIC(input) {
-            let val = input.value.replace(/\D/g, '');
-            if (val.length > 5) val = val.slice(0, 5) + '-' + val.slice(5);
-            if (val.length > 13) val = val.slice(0, 13) + '-' + val.slice(13, 14);
-            input.value = val.slice(0, 15);
+        function populateReview() {
+          const val = function (id) { const el = document.getElementById(id); return el ? el.value.trim() : ''; };
+          const set = function (id, v) { const el = document.getElementById(id); if (el) el.textContent = v || '--'; };
+          set('review-plan', PLAN_LABELS[state.plan] || '--');
+          set('review-name', val('input-fullname'));
+          set('review-cnic', val('input-cnic'));
+          set('review-email', val('input-email'));
+          set('review-whatsapp', val('input-whatsapp'));
+
+          const isEntrepreneur = state.plan === 'entrepreneur';
+          document.getElementById('review-status-row').classList.toggle('hidden', isEntrepreneur);
+          document.getElementById('review-country-row').classList.toggle('hidden', isEntrepreneur);
+          document.getElementById('review-business-row').classList.toggle('hidden', !isEntrepreneur);
+          document.getElementById('review-industry-row').classList.toggle('hidden', !isEntrepreneur);
+
+          if (isEntrepreneur) {
+            set('review-business', val('input-business'));
+            const industry = val('input-industry');
+            set('review-industry', industry === 'other' ? val('input-industry-other') : industry);
+          } else {
+            const status = val('input-status');
+            const country = val('input-country');
+            set('review-status', status);
+            set('review-country', country === 'other' ? val('input-country-other') : country);
+          }
         }
+
+        /* ---------- Validation ---------- */
+        function formatCNIC(input) {
+          let val = input.value.replace(/\D/g, '').slice(0, 13);
+          if (val.length > 12) val = val.slice(0, 5) + '-' + val.slice(5, 12) + '-' + val.slice(12);
+          else if (val.length > 5) val = val.slice(0, 5) + '-' + val.slice(5);
+          input.value = val;
+        }
+        window.formatCNIC = formatCNIC;
+
+        function formatWhatsApp(input) {
+          // Only digits, max 12. Auto-prepend "92" if user forgets.
+          let v = input.value.replace(/\D/g, '').slice(0, 12);
+          input.value = v;
+        }
+        window.formatWhatsApp = formatWhatsApp;
+
+        function handleOtherOption(selectId, inputId) {
+          const s = document.getElementById(selectId);
+          const i = document.getElementById(inputId);
+          if (s.value === 'other') i.classList.remove('hidden');
+          else { i.classList.add('hidden'); i.value = ''; }
+          validateStep4();
+        }
+        window.handleOtherOption = handleOtherOption;
 
         function validateCurrentStep() {
-            let isValid = false;
-            if (state.step === 1) {
-                isValid = !!state.plan;
-            } else if (state.step === 2) {
-                isValid = validateStep2(true);
-            } else if (state.step === 3) {
-                const otpInput = document.getElementById('input-otp').value;
-                isValid = otpInput.length === 6 && state.otpHash !== null;
-            } else if (state.step === 4) {
-                isValid = validateStep4(true);
-            } else if (state.step === 5) {
-                isValid = document.getElementById('input-terms').checked && document.getElementById('input-disclaimer').checked;
-            } else if (state.step === 6) {
-                isValid = !!state.paymentMethod;
-            }
+          let isValid = false;
+          if (state.step === 1) isValid = !!state.plan;
+          else if (state.step === 2) isValid = validateStep2(true);
+          else if (state.step === 3) {
+            const otp = document.getElementById('input-otp').value;
+            isValid = otp.length === 6 && !!state.otpHash;
+          }
+          else if (state.step === 4) isValid = validateStep4(true);
+          else if (state.step === 5) isValid = document.getElementById('input-terms').checked && document.getElementById('input-disclaimer').checked;
+          else if (state.step === 6) isValid = !!state.paymentMethod;
 
-            if (isValid) {
-                btnNext.disabled = false;
-                btnNext.classList.remove('bg-gray-200', 'dark:bg-gray-700', 'cursor-not-allowed');
-                btnNext.classList.add('bg-pakistan-green', 'shadow-lg');
-            } else {
-                btnNext.disabled = true;
-                btnNext.classList.add('bg-gray-200', 'dark:bg-gray-700', 'cursor-not-allowed');
-                btnNext.classList.remove('bg-pakistan-green', 'shadow-lg');
-            }
-            return isValid;
+          if (isValid) {
+            btnNext.disabled = false;
+            btnNext.classList.remove('bg-gray-200', 'dark:bg-white/10', 'cursor-not-allowed');
+            btnNext.classList.add('bg-brand', 'hover:bg-brand-600', 'shadow-brand');
+          } else {
+            btnNext.disabled = true;
+            btnNext.classList.add('bg-gray-200', 'dark:bg-white/10', 'cursor-not-allowed');
+            btnNext.classList.remove('bg-brand', 'hover:bg-brand-600', 'shadow-brand');
+          }
+          return isValid;
         }
 
-        function validateStep2(checkOnly = false) {
-            const name = document.getElementById('input-fullname').value.trim();
-            const cnic = document.getElementById('input-cnic').value.trim();
-            const email = document.getElementById('input-email').value.trim();
-            const whatsapp = document.getElementById('input-whatsapp').value.trim();
-            
-            const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-            const cnicRegex = /^\d{5}-\d{7}-\d{1}$/;
-            
-            const valid = name.length >= 3 && 
-                          cnicRegex.test(cnic) && 
-                          emailRegex.test(email) && 
-                          whatsapp.replace(/\D/g, '').length >= 11;
-            
-            if (!checkOnly) validateCurrentStep();
-            return valid;
+        function validateStep2(checkOnly) {
+          const name = document.getElementById('input-fullname').value.trim();
+          const cnic = document.getElementById('input-cnic').value.trim();
+          const email = document.getElementById('input-email').value.trim();
+          const whatsapp = document.getElementById('input-whatsapp').value.trim();
+          const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+          const cnicRegex = /^\d{5}-\d{7}-\d{1}$/;
+          const waRegex = /^92\d{10}$/;
+          const valid = name.length >= 3 && cnicRegex.test(cnic) && emailRegex.test(email) && waRegex.test(whatsapp);
+          if (!checkOnly) validateCurrentStep();
+          return valid;
         }
+        window.validateStep2 = validateStep2;
 
-        function validateStep3() {
-             validateCurrentStep();
-        }
+        function validateStep3() { validateCurrentStep(); }
+        window.validateStep3 = validateStep3;
 
-        function validateStep4(checkOnly = false) {
-            let valid = false;
-            if (['basic', 'standard', 'professional_pkg'].includes(state.plan)) {
-                const status = document.getElementById('input-status').value;
-                const country = document.getElementById('input-country').value;
-                const countryOther = document.getElementById('input-country-other').value;
-                valid = status !== '' && country !== '' && (country !== 'other' || countryOther.length > 0);
-            } else if (state.plan === 'entrepreneur') {
-                const industry = document.getElementById('input-industry').value;
-                const industryOther = document.getElementById('input-industry-other').value;
-                valid = document.getElementById('input-business').value.length > 0 && industry !== '' && (industry !== 'other' || industryOther.length > 0);
-            }
-            if (!checkOnly) validateCurrentStep();
-            return valid;
+        function validateStep4(checkOnly) {
+          let valid = false;
+          if (['basic', 'standard', 'professional_pkg'].indexOf(state.plan) > -1) {
+            const status = document.getElementById('input-status').value;
+            const country = document.getElementById('input-country').value;
+            const other = document.getElementById('input-country-other').value;
+            valid = !!status && !!country && (country !== 'other' || other.length > 0);
+          } else if (state.plan === 'entrepreneur') {
+            const industry = document.getElementById('input-industry').value;
+            const other = document.getElementById('input-industry-other').value;
+            valid = document.getElementById('input-business').value.trim().length > 0 &&
+                    !!industry && (industry !== 'other' || other.length > 0);
+          }
+          if (!checkOnly) validateCurrentStep();
+          return valid;
         }
-        
-        function validateStep5() {
-             validateCurrentStep();
-        }
+        window.validateStep4 = validateStep4;
 
+        function validateStep5() { validateCurrentStep(); }
+        window.validateStep5 = validateStep5;
+
+        /* ---------- OTP ---------- */
         async function sendOTP() {
-            const email = document.getElementById('input-email').value.trim();
-            const fullName = document.getElementById('input-fullname').value.trim();
-            const btn = document.getElementById('btn-send-otp');
-            const errorEl = document.getElementById('otp-error');
-            const msgEl = document.getElementById('otp-message');
-            const statusEl = document.getElementById('otp-status');
+          const email = document.getElementById('input-email').value.trim();
+          const fullName = document.getElementById('input-fullname').value.trim();
+          const btn = document.getElementById('btn-send-otp');
+          const errorEl = document.getElementById('otp-error');
+          const msgEl = document.getElementById('otp-message');
+          const statusEl = document.getElementById('otp-status');
 
-            btn.disabled = true;
-            btn.classList.add('hidden');
-            statusEl.classList.remove('hidden');
-            statusEl.innerText = 'Sending verification code...';
-            errorEl.classList.add('hidden');
-            msgEl.classList.add('hidden');
+          btn.disabled = true;
+          btn.classList.add('hidden');
+          statusEl.classList.remove('hidden');
+          statusEl.innerText = 'Sending verification code…';
+          errorEl.classList.add('hidden');
+          msgEl.classList.add('hidden');
 
-            try {
-                const response = await fetch('/api/send-otp', {
-                    method: 'POST',
-                    headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({ email, fullName })
-                });
-                
-                const data = await response.json();
-                if (data.success) {
-                    state.otpHash = data.hash;
-                    btn.disabled = false;
-                    btn.classList.remove('hidden');
-                    statusEl.classList.add('hidden');
-                    msgEl.classList.remove('hidden');
-                } else {
-                    throw new Error(data.error || 'Failed to send code');
-                }
-            } catch (err) {
-                statusEl.classList.add('hidden');
-                errorEl.innerText = err.message;
-                errorEl.classList.remove('hidden');
-                btn.disabled = false;
-                btn.classList.remove('hidden');
-            }
+          try {
+            const r = await fetch('/api/send-otp', {
+              method: 'POST',
+              headers: { 'Content-Type': 'application/json' },
+              body: JSON.stringify({ email: email, fullName: fullName }),
+            });
+            const d = await r.json();
+            if (!d.success) throw new Error(d.error || 'Failed to send code');
+            state.otpHash = d.hash;
+            state.otpBucket = d.bucket;
+            btn.disabled = false;
+            btn.classList.remove('hidden');
+            statusEl.classList.add('hidden');
+            msgEl.classList.remove('hidden');
+          } catch (err) {
+            statusEl.classList.add('hidden');
+            errorEl.innerText = err.message;
+            errorEl.classList.remove('hidden');
+            btn.disabled = false;
+            btn.classList.remove('hidden');
+          }
         }
+        window.sendOTP = sendOTP;
 
-        // --- Submission ---
+        /* ---------- Submission ---------- */
         async function submitForm() {
-            hideError();
-            // Collect Data
-            const formData = {
-                planId: state.plan,
-                fullName: document.getElementById('input-fullname').value,
-                cnic: document.getElementById('input-cnic').value,
-                email: document.getElementById('input-email').value.trim(),
-                whatsapp: document.getElementById('input-whatsapp').value,
-                status: document.getElementById('input-status') ? document.getElementById('input-status').value : '',
-                businessName: document.getElementById('input-business').value,
-                industry: document.getElementById('input-industry').value === 'other' ? document.getElementById('input-industry-other').value : document.getElementById('input-industry').value,
-                targetCountry: document.getElementById('input-country').value === 'other' ? document.getElementById('input-country-other').value : document.getElementById('input-country').value,
-                paymentMethod: state.plan === 'basic' ? 'none' : state.paymentMethod,
-                otp: document.getElementById('input-otp') ? document.getElementById('input-otp').value : '',
-                otpHash: state.otpHash
-            };
+          hideError();
+          const val = function (id) { const el = document.getElementById(id); return el ? el.value.trim() : ''; };
+          const formData = {
+            planId: state.plan,
+            fullName: val('input-fullname'),
+            cnic: val('input-cnic'),
+            email: val('input-email'),
+            whatsapp: val('input-whatsapp'),
+            status: val('input-status'),
+            businessName: val('input-business'),
+            industry: val('input-industry') === 'other' ? val('input-industry-other') : val('input-industry'),
+            targetCountry: val('input-country') === 'other' ? val('input-country-other') : val('input-country'),
+            paymentMethod: state.plan === 'basic' ? 'none' : state.paymentMethod,
+            otp: val('input-otp'),
+            otpHash: state.otpHash,
+            otpBucket: state.otpBucket,
+          };
 
-            // Hide Form
-            modalContent.classList.add('hidden');
-            loadingView.classList.remove('hidden');
+          modalContent.classList.add('hidden');
+          loadingView.classList.remove('hidden');
 
-            try {
-                const response = await fetch('https://website-first-nobel-step.vercel.app/api/submit-membership', {
-                    method: 'POST',
-                    headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify(formData)
-                });
+          try {
+            const r = await fetch('/api/submit-membership', {
+              method: 'POST',
+              headers: { 'Content-Type': 'application/json' },
+              body: JSON.stringify(formData),
+            });
+            const d = await r.json().catch(function () { return {}; });
+            if (!r.ok) throw new Error(d.error || 'Server encountered an error while processing your request.');
 
-                const data = await response.json().catch(() => ({}));
-                if (!response.ok) {
-                    throw new Error(data.error || 'Server encountered an error while processing your request.');
-                }
-
-                if (state.plan !== 'basic') {
-                    // Initialize FastPay Checkout
-                    const paymentResponse = await fetch('/api/create-fastpay-checkout', {
-                        method: 'POST',
-                        headers: { 'Content-Type': 'application/json' },
-                        body: JSON.stringify({
-                            amount: state.plan === 'standard' ? 2499 : (state.plan === 'professional_pkg' ? 6999 : 50000),
-                            paymentMethod: state.paymentMethod,
-                            email: formData.email,
-                            fullName: formData.fullName
-                        })
-                    });
-                    
-                    const paymentData = await paymentResponse.json().catch(() => ({}));
-                    if (!paymentResponse.ok || !paymentData.success) {
-                        throw new Error(paymentData.error || 'Failed to initialize payment gateway.');
-                    }
-                    
-                    // Save state before redirecting
-                    localStorage.setItem('membership_form_data', JSON.stringify(formData));
-                    localStorage.setItem('membership_form_state', JSON.stringify(state));
-                    
-                    // Redirect to FastPay Checkout
-                    window.location.href = paymentData.checkoutUrl;
-                    return;
-                }
-
-                loadingView.classList.add('hidden');
-                successView.classList.remove('hidden');
-            } catch (err) {
-                console.error(err);
-                loadingView.classList.add('hidden');
-                modalContent.classList.remove('hidden');
-                
-                showError('Submission Failed', err.message || 'Failed to submit application. Please check your connection and try again.');
+            if (state.plan !== 'basic') {
+              const pr = await fetch('/api/create-fastpay-checkout', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({
+                  amount: PLAN_PRICES[state.plan] || 0,
+                  paymentMethod: state.paymentMethod,
+                  email: formData.email,
+                  fullName: formData.fullName,
+                }),
+              });
+              const pd = await pr.json().catch(function () { return {}; });
+              if (!pr.ok || !pd.success) throw new Error(pd.error || 'Failed to initialize payment gateway.');
+              try {
+                localStorage.setItem('fns_form_data', JSON.stringify(formData));
+                localStorage.setItem('fns_form_state', JSON.stringify(state));
+              } catch (e) {}
+              window.location.href = pd.checkoutUrl;
+              return;
             }
+
+            loadingView.classList.add('hidden');
+            successView.classList.remove('hidden');
+          } catch (err) {
+            console.error('[v0] submitForm error:', err);
+            loadingView.classList.add('hidden');
+            modalContent.classList.remove('hidden');
+            showError('Submission failed', err.message || 'Please check your connection and try again.');
+          }
         }
 
-        // Handle Enter key on input fields
-        document.addEventListener('keydown', function(e) {
-            if (e.key === 'Enter' && e.target.tagName === 'INPUT') {
-                // Don't trigger if it's a checkbox (like terms)
-                if (e.target.type === 'checkbox') return;
-                
-                e.preventDefault();
-                if (validateCurrentStep()) {
-                    nextStep();
-                }
-            }
+        /* ---------- Enter-key navigation ---------- */
+        document.addEventListener('keydown', function (e) {
+          if (!state.isOpen) return;
+          if (e.key !== 'Enter') return;
+          const t = e.target;
+          if (!t || t.tagName !== 'INPUT') return;
+          if (t.type === 'checkbox' || t.type === 'radio') return;
+          e.preventDefault();
+          if (validateCurrentStep()) nextStep();
         });
 
-        // Check for payment status in URL on load
-        window.addEventListener('DOMContentLoaded', () => {
-            const urlParams = new URLSearchParams(window.location.search);
-            const paymentStatus = urlParams.get('payment_status');
-            
-            if (paymentStatus) {
-                // Show modal immediately
-                document.getElementById('application-modal').classList.remove('hidden');
-                document.getElementById('modal-content').classList.add('hidden');
-                
-                if (paymentStatus === 'success') {
-                    document.getElementById('success-view').classList.remove('hidden');
-                    localStorage.removeItem('membership_form_data');
-                    localStorage.removeItem('membership_form_state');
-                } else {
-                    // Restore state
-                    try {
-                        const savedState = JSON.parse(localStorage.getItem('membership_form_state'));
-                        const savedData = JSON.parse(localStorage.getItem('membership_form_data'));
-                        
-                        if (savedState && savedData) {
-                            state = savedState;
-                            state.step = 6; // Go back to payment step
-                            
-                            // Restore input values
-                            if (document.getElementById('input-fullname')) document.getElementById('input-fullname').value = savedData.fullName || '';
-                            if (document.getElementById('input-cnic')) document.getElementById('input-cnic').value = savedData.cnic || '';
-                            if (document.getElementById('input-email')) document.getElementById('input-email').value = savedData.email || '';
-                            if (document.getElementById('input-whatsapp')) document.getElementById('input-whatsapp').value = savedData.whatsapp || '';
-                            if (document.getElementById('input-business')) document.getElementById('input-business').value = savedData.businessName || '';
-                            if (document.getElementById('input-otp')) document.getElementById('input-otp').value = savedData.otp || '';
-                            
-                            updateUI();
-                        }
-                    } catch (e) {
-                        console.error('Failed to restore form state', e);
-                    }
-                    
-                    document.getElementById('modal-content').classList.remove('hidden');
-                    showError('Payment Failed', 'Your payment could not be processed. Please try again.');
-                }
-                
-                // Clean up URL
-                window.history.replaceState({}, document.title, window.location.pathname);
+        /* ---------- Payment callback restoration ---------- */
+        window.addEventListener('DOMContentLoaded', function () {
+          const params = new URLSearchParams(window.location.search);
+          const paymentStatus = params.get('payment_status');
+          if (!paymentStatus) return;
+
+          modalOverlay.classList.remove('hidden');
+          modalOverlay.classList.add('flex');
+          document.body.style.overflow = 'hidden';
+          modalContent.classList.add('hidden');
+          state.isOpen = true;
+
+          if (paymentStatus === 'success') {
+            successView.classList.remove('hidden');
+            try {
+              localStorage.removeItem('fns_form_data');
+              localStorage.removeItem('fns_form_state');
+            } catch (e) {}
+          } else {
+            try {
+              const savedState = JSON.parse(localStorage.getItem('fns_form_state') || 'null');
+              const savedData = JSON.parse(localStorage.getItem('fns_form_data') || 'null');
+              if (savedState && savedData) {
+                state = Object.assign({}, INITIAL_STATE, savedState, { step: 6, isOpen: true });
+                [
+                  ['input-fullname', 'fullName'],
+                  ['input-cnic', 'cnic'],
+                  ['input-email', 'email'],
+                  ['input-whatsapp', 'whatsapp'],
+                  ['input-business', 'businessName'],
+                  ['input-otp', 'otp'],
+                ].forEach(function (pair) {
+                  const el = document.getElementById(pair[0]);
+                  if (el && savedData[pair[1]]) el.value = savedData[pair[1]];
+                });
+                updateUI();
+              }
+            } catch (e) {
+              console.error('[v0] restore state failed', e);
             }
+            modalContent.classList.remove('hidden');
+            showError('Payment failed', 'Your payment could not be processed. Please try again.');
+          }
+          window.history.replaceState({}, document.title, window.location.pathname);
         });
+
+        /* ---------- Initial UI sync ---------- */
+        updateUI();
+      })();
     </script>
-<script type="module" src="/index.tsx"></script>
 </body>
 </html>

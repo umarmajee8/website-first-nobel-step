@@ -1,9 +1,7 @@
-import crypto from 'crypto';
+import { verifyOtp, rateLimit, getClientIp, applyCors } from './_lib/otp';
 
 export default async function handler(req: any, res: any) {
-  res.setHeader('Access-Control-Allow-Origin', '*');
-  res.setHeader('Access-Control-Allow-Methods', 'POST, OPTIONS');
-  res.setHeader('Access-Control-Allow-Headers', 'Content-Type');
+  applyCors(req, res);
 
   if (req.method === 'OPTIONS') {
     return res.status(200).end();
@@ -14,21 +12,37 @@ export default async function handler(req: any, res: any) {
   }
 
   try {
-    const { email: rawEmail, otp, otpHash } = req.body;
-    if (!rawEmail || !otp || !otpHash) {
+    const { email: rawEmail, otp, otpHash, otpBucket } = req.body || {};
+    if (!rawEmail || !otp || !otpHash || otpBucket === undefined) {
       return res.status(400).json({ success: false, error: 'Missing parameters' });
     }
-    
-    const email = rawEmail.toLowerCase().trim();
-    const secret = process.env.GOOGLE_PRIVATE_KEY || 'fallback_secret';
-    const expectedHash = crypto.createHash('sha256').update(otp + email + secret).digest('hex');
 
-    if (expectedHash === otpHash) {
-      return res.status(200).json({ success: true });
-    } else {
-      return res.status(400).json({ success: false, error: 'Invalid verification code' });
+    const email = String(rawEmail).toLowerCase().trim();
+
+    // Rate limit: max 5 verify attempts per 15 minutes per email+IP.
+    const ip = getClientIp(req);
+    const rl = rateLimit(`verify:${email}:${ip}`, 5, 15 * 60 * 1000);
+    if (!rl.allowed) {
+      res.setHeader('Retry-After', String(rl.retryAfterSec));
+      return res.status(429).json({
+        success: false,
+        error: 'Too many attempts. Please request a new code and try again later.',
+      });
     }
+
+    const result = verifyOtp(String(otp), email, String(otpHash), Number(otpBucket));
+    if (result.ok) {
+      return res.status(200).json({ success: true });
+    }
+    return res.status(400).json({
+      success: false,
+      error:
+        result.reason === 'expired'
+          ? 'Verification code has expired. Please request a new one.'
+          : 'Invalid verification code.',
+    });
   } catch (error: any) {
+    console.error('[verify-otp] error:', error);
     return res.status(500).json({ success: false, error: 'Server error' });
   }
 }
