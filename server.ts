@@ -380,9 +380,26 @@ async function startServer() {
   if (process.env.NODE_ENV !== 'production') {
     const vite = await createViteServer({
       server: { middlewareMode: true },
-      appType: 'spa',
+      appType: 'custom',
     });
     app.use(vite.middlewares);
+
+    // SPA fallback: Vite transforms index.html so PostCSS / Tailwind work in dev.
+    app.use(async (req, res, next) => {
+      try {
+        if (req.method !== 'GET') return next();
+        const url = req.originalUrl;
+        if (url.startsWith('/api/')) return next();
+        const filePath = path.resolve(__dirname, 'index.html');
+        const fs = await import('fs/promises');
+        const raw = await fs.readFile(filePath, 'utf-8');
+        const html = await vite.transformIndexHtml(url, raw);
+        res.status(200).set({ 'Content-Type': 'text/html' }).end(html);
+      } catch (e) {
+        (vite as any).ssrFixStacktrace?.(e);
+        next(e);
+      }
+    });
   } else {
     const distPath = path.join(__dirname, 'dist');
     app.use(express.static(distPath));
