@@ -391,6 +391,7 @@
                     <div class="flex flex-col items-center"><div id="step-4-indicator" class="w-8 h-8 rounded-full flex items-center justify-center text-[10px] font-lemon transition-all border-2 bg-white dark:bg-gray-900 border-gray-200 dark:border-gray-700 text-gray-400 dark:text-gray-500">4</div></div>
                     <div class="flex flex-col items-center"><div id="step-5-indicator" class="w-8 h-8 rounded-full flex items-center justify-center text-[10px] font-lemon transition-all border-2 bg-white dark:bg-gray-900 border-gray-200 dark:border-gray-700 text-gray-400 dark:text-gray-500">5</div></div>
                     <div class="flex flex-col items-center"><div id="step-6-indicator" class="w-8 h-8 rounded-full flex items-center justify-center text-[10px] font-lemon transition-all border-2 bg-white dark:bg-gray-900 border-gray-200 dark:border-gray-700 text-gray-400 dark:text-gray-500">6</div></div>
+                    <div class="flex flex-col items-center"><div id="step-7-indicator" class="w-8 h-8 rounded-full flex items-center justify-center text-[10px] font-lemon transition-all border-2 bg-white dark:bg-gray-900 border-gray-200 dark:border-gray-700 text-gray-400 dark:text-gray-500">7</div></div>
                 </div>
             </nav>
 
@@ -657,8 +658,31 @@
 
                         <div class="flex items-center justify-center gap-2 text-[10px] text-gray-400 mt-6">
                             <i class="fa-solid fa-shield-halved text-pakistan-green"></i>
-                            <span>Secured by Fastpay</span>
+                            <span>Secured Payment Configuration</span>
                         </div>
+                    </div>
+                </div>
+
+                <!-- STEP 7: Payment Proof -->
+                <div id="step-7" class="hidden p-6 flex-grow">
+                    <div class="text-center py-2 max-w-sm mx-auto">
+                        <div class="w-16 h-16 bg-blue-50 dark:bg-blue-900/20 rounded-full flex items-center justify-center mx-auto mb-4 text-blue-600">
+                            <i class="fa-solid fa-cloud-arrow-up text-2xl"></i>
+                        </div>
+                        <h3 class="text-xl font-bold text-gray-900 dark:text-white mb-2">Upload Payment Proof</h3>
+                        <p class="text-sm text-gray-600 dark:text-gray-400 mb-6">Please upload the screenshot or image of your payment receipt to confirm the transaction.</p>
+                        
+                        <label for="input-payment-proof" class="flex flex-col items-center justify-center w-full h-48 border-2 border-dashed border-gray-300 dark:border-gray-700 rounded-2xl cursor-pointer bg-gray-50/50 dark:bg-gray-800/30 hover:border-blue-300 hover:bg-blue-50/50 dark:hover:border-blue-800 dark:hover:bg-blue-900/10 transition-all overflow-hidden relative">
+                            <div id="proof-upload-placeholder" class="flex flex-col items-center justify-center pt-5 pb-6">
+                                <i class="fa-solid fa-image text-3xl text-gray-400 mb-3"></i>
+                                <p class="text-sm text-gray-500 dark:text-gray-400"><span class="font-bold text-blue-600">Click to upload</span> or drag and drop</p>
+                                <p class="text-xs text-gray-400 mt-1">PNG, JPG, JPEG or GIF</p>
+                            </div>
+                            <img id="proof-preview" class="hidden absolute inset-0 w-full h-full object-cover">
+                            <input id="input-payment-proof" type="file" class="hidden" accept="image/*" onchange="handleProofUpload(event)" />
+                        </label>
+                        
+                        <div id="proof-file-name" class="text-xs text-gray-500 mt-3 font-medium truncate"></div>
                     </div>
                 </div>
 
@@ -705,6 +729,7 @@
             step: 1,
             plan: null,
             paymentMethod: null,
+            paymentProofBase64: null,
             otpHash: null,
             data: {
                 fullName: '',
@@ -957,6 +982,36 @@
             if (state.step === 6) validateCurrentStep();
         }
 
+        function handleProofUpload(event) {
+            const file = event.target.files[0];
+            if (file) {
+                document.getElementById('proof-file-name').innerText = file.name;
+                const reader = new FileReader();
+                reader.onload = function(e) {
+                    state.paymentProofBase64 = e.target.result;
+                    const preview = document.getElementById('proof-preview');
+                    const placeholder = document.getElementById('proof-upload-placeholder');
+                    
+                    if (file.type.startsWith('image/')) {
+                        preview.src = state.paymentProofBase64;
+                        preview.classList.remove('hidden');
+                        placeholder.classList.add('hidden');
+                    } else {
+                        preview.classList.add('hidden');
+                        placeholder.classList.remove('hidden');
+                    }
+                    validateCurrentStep();
+                };
+                reader.readAsDataURL(file);
+            } else {
+                state.paymentProofBase64 = null;
+                document.getElementById('proof-file-name').innerText = '';
+                document.getElementById('proof-preview').classList.add('hidden');
+                document.getElementById('proof-upload-placeholder').classList.remove('hidden');
+                validateCurrentStep();
+            }
+        }
+
         async function nextStep() {
             hideError();
             if (state.step === 3) {
@@ -999,7 +1054,7 @@
 
             if (state.step === 5 && state.plan === 'basic') {
                 submitForm();
-            } else if (state.step < 6) {
+            } else if (state.step < 7) {
                 state.step++;
                 updateUI();
                 if (state.step === 3 && !state.otpHash) {
@@ -1020,11 +1075,11 @@
 
         function updateUI() {
             // Update Progress Bar
-            const progress = ((state.step - 1) / 5) * 100;
+            const progress = ((state.step - 1) / 6) * 100;
             document.getElementById('progress-line').style.width = `${progress}%`;
 
             // Update Indicators
-            for (let i = 1; i <= 6; i++) {
+            for (let i = 1; i <= 7; i++) {
                 const el = document.getElementById(`step-${i}-indicator`);
                 if (el) {
                     if (i <= state.step) {
@@ -1038,7 +1093,7 @@
             }
 
             // Show/Hide Steps
-            for (let i = 1; i <= 6; i++) {
+            for (let i = 1; i <= 7; i++) {
                 const el = document.getElementById(`step-${i}`);
                 if (el) {
                     if (i === state.step) el.classList.remove('hidden');
@@ -1082,8 +1137,10 @@
             const btnNextText = document.getElementById('btn-next-text');
             if (state.step === 5 && state.plan === 'basic') {
                 btnNextText.innerText = 'Submit Application';
+            } else if (state.step === 7) {
+                btnNextText.innerText = 'Submit Application';
             } else {
-                btnNextText.innerText = state.step === 6 ? 'Submit Payment' : 'Continue';
+                btnNextText.innerText = 'Continue';
             }
             
             // Validate Current Step to Enable Next
@@ -1113,6 +1170,8 @@
                 isValid = document.getElementById('input-terms').checked && document.getElementById('input-disclaimer').checked;
             } else if (state.step === 6) {
                 isValid = !!state.paymentMethod;
+            } else if (state.step === 7) {
+                isValid = !!state.paymentProofBase64;
             }
 
             if (isValid) {
@@ -1229,6 +1288,7 @@
                 industry: document.getElementById('input-industry').value === 'other' ? document.getElementById('input-industry-other').value : document.getElementById('input-industry').value,
                 targetCountry: document.getElementById('input-country').value === 'other' ? document.getElementById('input-country-other').value : document.getElementById('input-country').value,
                 paymentMethod: state.plan === 'basic' ? 'none' : state.paymentMethod,
+                paymentProof: state.paymentProofBase64 ? state.paymentProofBase64.substring(0, 100) + '...' : '', // Truncated to prevent sheet bloat for now, ideally upload to bucket
                 otp: document.getElementById('input-otp') ? document.getElementById('input-otp').value : '',
                 otpHash: state.otpHash
             };
