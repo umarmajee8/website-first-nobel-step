@@ -392,6 +392,7 @@
                     <div class="flex flex-col items-center"><div id="step-5-indicator" class="w-8 h-8 rounded-full flex items-center justify-center text-[10px] font-lemon transition-all border-2 bg-white dark:bg-gray-900 border-gray-200 dark:border-gray-700 text-gray-400 dark:text-gray-500">5</div></div>
                     <div class="flex flex-col items-center"><div id="step-6-indicator" class="w-8 h-8 rounded-full flex items-center justify-center text-[10px] font-lemon transition-all border-2 bg-white dark:bg-gray-900 border-gray-200 dark:border-gray-700 text-gray-400 dark:text-gray-500">6</div></div>
                     <div class="flex flex-col items-center"><div id="step-7-indicator" class="w-8 h-8 rounded-full flex items-center justify-center text-[10px] font-lemon transition-all border-2 bg-white dark:bg-gray-900 border-gray-200 dark:border-gray-700 text-gray-400 dark:text-gray-500">7</div></div>
+                    <div class="flex flex-col items-center"><div id="step-8-indicator" class="w-8 h-8 rounded-full flex items-center justify-center text-[10px] font-lemon transition-all border-2 bg-white dark:bg-gray-900 border-gray-200 dark:border-gray-700 text-gray-400 dark:text-gray-500">8</div></div>
                 </div>
             </nav>
 
@@ -617,7 +618,7 @@
                             <i class="fa-solid fa-wallet text-2xl"></i>
                         </div>
                         <h3 class="text-xl font-bold text-gray-900 dark:text-white mb-2">Select Payment Method</h3>
-                        <p class="text-sm text-gray-600 dark:text-gray-400 mb-6 max-w-xs mx-auto">Choose how you want to pay your processing fee via Fastpay.</p>
+                        <p class="text-sm text-gray-600 dark:text-gray-400 mb-6 max-w-xs mx-auto">Choose how you want to pay your processing fee.</p>
                         
                         <div class="bg-white dark:bg-gray-800 rounded-2xl border border-gray-200 dark:border-gray-700 shadow-sm p-5 mb-6">
                             <div class="flex justify-between items-center mb-2">
@@ -635,36 +636,38 @@
                                     <i class="fa-solid fa-check text-[10px] text-white"></i>
                                 </div>
                             </label>
-
-                            <label onclick="selectPaymentMethod('jazzcash')" id="payment-jazzcash" class="payment-option flex items-center justify-between p-4 rounded-2xl border-2 border-gray-100 dark:border-gray-800 hover:border-green-100 transition-all cursor-pointer">
-                                <div class="flex items-center">
-                                    <h4 class="font-bold text-base dark:text-white">JazzCash</h4>
-                                </div>
-                                <div class="w-5 h-5 rounded-full border-2 border-gray-200 flex items-center justify-center check-icon hidden">
-                                    <i class="fa-solid fa-check text-[10px] text-white"></i>
-                                </div>
-                            </label>
-
-                            <label onclick="selectPaymentMethod('card')" id="payment-card" class="payment-option flex items-center justify-between p-4 rounded-2xl border-2 border-gray-100 dark:border-gray-800 hover:border-green-100 transition-all cursor-pointer">
-                                <div class="flex items-center gap-3">
-                                    <i class="fa-solid fa-credit-card text-gray-400 text-xl"></i>
-                                    <h4 class="font-bold text-base dark:text-white">Credit / Debit Card</h4>
-                                </div>
-                                <div class="w-5 h-5 rounded-full border-2 border-gray-200 flex items-center justify-center check-icon hidden">
-                                    <i class="fa-solid fa-check text-[10px] text-white"></i>
-                                </div>
-                            </label>
-                        </div>
-
-                        <div class="flex items-center justify-center gap-2 text-[10px] text-gray-400 mt-6">
-                            <i class="fa-solid fa-shield-halved text-pakistan-green"></i>
-                            <span>Secured Payment Configuration</span>
                         </div>
                     </div>
                 </div>
 
-                <!-- STEP 7: Payment Proof -->
-                <div id="step-7" class="hidden p-6 flex-grow">
+                <!-- STEP 7: Payment Instructions -->
+                <div id="step-7" class="hidden p-6 flex-grow flex items-center justify-center">
+                    <div class="text-center w-full max-w-sm mx-auto">
+                        <div class="w-16 h-16 bg-green-50 dark:bg-green-900/20 rounded-full flex items-center justify-center mx-auto mb-4 text-pakistan-green">
+                            <i class="fa-solid fa-money-bill-transfer text-2xl"></i>
+                        </div>
+                        <h3 class="text-xl font-bold text-gray-900 dark:text-white mb-2">Transfer Payment</h3>
+                        <p class="text-sm text-gray-600 dark:text-gray-400 mb-6">Please transfer the fee to the following Easypaisa account and save the receipt.</p>
+                        
+                        <div class="bg-gray-50 dark:bg-gray-800/50 rounded-2xl border border-gray-200 dark:border-gray-700 p-6 text-left">
+                            <div class="mb-4">
+                                <p class="text-xs text-gray-500 uppercase tracking-wider mb-1">Total to Pay</p>
+                                <p class="text-lg font-bold text-gray-900 dark:text-white" id="transfer-fee-amount">PKR 5,000</p>
+                            </div>
+                            <div class="mb-4">
+                                <p class="text-xs text-gray-500 uppercase tracking-wider mb-1">Account Number</p>
+                                <p class="text-xl font-mono text-pakistan-green font-bold tracking-widest">0345-1234567</p> <!-- Replace with real number -->
+                            </div>
+                            <div>
+                                <p class="text-xs text-gray-500 uppercase tracking-wider mb-1">Account Title</p>
+                                <p class="text-lg font-bold text-gray-900 dark:text-white">First Nobel Step</p> <!-- Replace with actual title -->
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- STEP 8: Payment Proof -->
+                <div id="step-8" class="hidden p-6 flex-grow">
                     <div class="text-center py-2 max-w-sm mx-auto">
                         <div class="w-16 h-16 bg-blue-50 dark:bg-blue-900/20 rounded-full flex items-center justify-center mx-auto mb-4 text-blue-600">
                             <i class="fa-solid fa-cloud-arrow-up text-2xl"></i>
@@ -715,7 +718,7 @@
         <div id="success-view" class="hidden bg-white dark:bg-gray-900 rounded-3xl p-8 max-w-md w-full text-center shadow-2xl relative">
             <div class="w-14 h-14 bg-green-50 dark:bg-green-900/20 rounded-full flex items-center justify-center mx-auto mb-6 text-pakistan-green"><i class="fa-solid fa-check text-2xl animate-bounce"></i></div>
             <h2 class="text-xl font-lemon mb-2 dark:text-white">Applied!</h2>
-            <p class="text-gray-500 dark:text-gray-400 mb-8 text-sm leading-relaxed">Your details are submitted successfully. We will contact you shortly.</p>
+            <p class="text-gray-500 dark:text-gray-400 mb-8 text-sm leading-relaxed">Your details are submitted successfully. Our team will contact you after verifying your payment.</p>
             <button onclick="forceCloseForm()" class="w-full py-4 bg-pakistan-green text-white rounded-2xl font-lemon text-xs tracking-widest shadow-lg hover:bg-green-800 transition-all">Close</button>
         </div>
 
@@ -1054,7 +1057,7 @@
 
             if (state.step === 5 && state.plan === 'basic') {
                 submitForm();
-            } else if (state.step < 7) {
+            } else if (state.step < 8) {
                 state.step++;
                 updateUI();
                 if (state.step === 3 && !state.otpHash) {
@@ -1075,11 +1078,11 @@
 
         function updateUI() {
             // Update Progress Bar
-            const progress = ((state.step - 1) / 6) * 100;
+            const progress = ((state.step - 1) / 7) * 100;
             document.getElementById('progress-line').style.width = `${progress}%`;
 
             // Update Indicators
-            for (let i = 1; i <= 7; i++) {
+            for (let i = 1; i <= 8; i++) {
                 const el = document.getElementById(`step-${i}-indicator`);
                 if (el) {
                     if (i <= state.step) {
@@ -1093,7 +1096,7 @@
             }
 
             // Show/Hide Steps
-            for (let i = 1; i <= 7; i++) {
+            for (let i = 1; i <= 8; i++) {
                 const el = document.getElementById(`step-${i}`);
                 if (el) {
                     if (i === state.step) el.classList.remove('hidden');
@@ -1125,11 +1128,15 @@
             }
 
             // Update Payment Amount
-            if (state.step === 6) {
+            if (state.step >= 6) {
                 const feeElement = document.getElementById('payment-fee-amount');
-                if (state.plan === 'standard') feeElement.innerText = 'PKR 2,499';
-                else if (state.plan === 'professional_pkg') feeElement.innerText = 'PKR 6,999';
-                else feeElement.innerText = 'PKR 50,000'; // Default/Entrepreneur
+                const transferFeeElement = document.getElementById('transfer-fee-amount');
+                let amountStr = 'PKR 50,000';
+                if (state.plan === 'standard') amountStr = 'PKR 2,499';
+                else if (state.plan === 'professional_pkg') amountStr = 'PKR 6,999';
+                
+                if (feeElement) feeElement.innerText = amountStr;
+                if (transferFeeElement) transferFeeElement.innerText = amountStr;
             }
 
             // Update Buttons
@@ -1137,7 +1144,7 @@
             const btnNextText = document.getElementById('btn-next-text');
             if (state.step === 5 && state.plan === 'basic') {
                 btnNextText.innerText = 'Submit Application';
-            } else if (state.step === 7) {
+            } else if (state.step === 8) {
                 btnNextText.innerText = 'Submit Application';
             } else {
                 btnNextText.innerText = 'Continue';
@@ -1171,6 +1178,8 @@
             } else if (state.step === 6) {
                 isValid = !!state.paymentMethod;
             } else if (state.step === 7) {
+                isValid = true; // Just displaying account number
+            } else if (state.step === 8) {
                 isValid = !!state.paymentProofBase64;
             }
 
@@ -1288,7 +1297,7 @@
                 industry: document.getElementById('input-industry').value === 'other' ? document.getElementById('input-industry-other').value : document.getElementById('input-industry').value,
                 targetCountry: document.getElementById('input-country').value === 'other' ? document.getElementById('input-country-other').value : document.getElementById('input-country').value,
                 paymentMethod: state.plan === 'basic' ? 'none' : state.paymentMethod,
-                paymentProof: state.paymentProofBase64 ? state.paymentProofBase64.substring(0, 100) + '...' : '', // Truncated to prevent sheet bloat for now, ideally upload to bucket
+                paymentProof: state.paymentProofBase64 ? state.paymentProofBase64 : '',
                 otp: document.getElementById('input-otp') ? document.getElementById('input-otp').value : '',
                 otpHash: state.otpHash
             };

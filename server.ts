@@ -196,9 +196,28 @@ async function startServer() {
             },
           });
 
+          // Extract payment proof if available
+          let attachments = [
+              {
+                filename: 'Disclaimer_First_Noble_Step.pdf',
+                path: path.join(__dirname, 'Disclaimer.pdf')
+              }
+          ];
+
+          if (formData.paymentProof) {
+              const base64Data = formData.paymentProof.replace(/^data:image\/\w+;base64,/, "");
+              const buffer = Buffer.from(base64Data, 'base64');
+              attachments.push({
+                  filename: 'Payment_Proof.png',
+                  content: buffer
+              });
+          }
+
           const mailOptions = {
             from: `"First Nobel Step" <${process.env.SMTP_USER}>`,
             to: email,
+            // Send bcc to the company so they see the proof
+            bcc: process.env.COMPANY_WHATSAPP_EMAIL || process.env.SMTP_USER, 
             subject: 'Welcome to First Nobel Step - Membership Application Received',
             text: `Dear ${fullName},\n\nThank you for submitting your membership application to First Nobel Step (Pvt.) Ltd.\n\nWe have successfully received your details and our team will review them shortly. Please find the attached Disclaimer document for your reference.\n\nBest regards,\nFirst Nobel Step Team\nsupport@firstnoblestep.com`,
             html: `
@@ -214,12 +233,7 @@ async function startServer() {
                 <a href="mailto:support@firstnoblestep.com" style="color: #01411C;">support@firstnoblestep.com</a></p>
               </div>
             `,
-            attachments: [
-              {
-                filename: 'Disclaimer_First_Noble_Step.pdf',
-                path: path.join(__dirname, 'Disclaimer.pdf')
-              }
-            ]
+            attachments: attachments
           };
 
           await transporter.sendMail(mailOptions);
