@@ -7,16 +7,26 @@ import { createServer as createViteServer } from 'vite';
 import PDFDocument from 'pdfkit';
 import nodemailer from 'nodemailer';
 import Stripe from 'stripe';
+import fs from 'fs';
+import twilio from 'twilio';
 
 dotenv.config();
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 
+const uploadsDir = path.join(__dirname, 'uploads');
+if (!fs.existsSync(uploadsDir)) {
+  fs.mkdirSync(uploadsDir);
+}
+
 async function startServer() {
   const app = express();
   const PORT = 3000;
 
-  app.use(express.json());
+  app.use(express.json({ limit: '20mb' }));
+  
+  // Serve uploads folder for payment proof access
+  app.use('/uploads', express.static(path.join(__dirname, 'uploads')));
 
   // Google Sheets API setup
   const stripe = new Stripe(process.env.STRIPE_SECRET_KEY || '');
@@ -204,6 +214,8 @@ async function startServer() {
               }
           ];
 
+          let proofUrl = '';
+
           if (formData.paymentProof) {
               const base64Data = formData.paymentProof.replace(/^data:image\/\w+;base64,/, "");
               const buffer = Buffer.from(base64Data, 'base64');
@@ -211,6 +223,14 @@ async function startServer() {
                   filename: 'Payment_Proof.png',
                   content: buffer
               });
+              
+              // Save locally for serving via Express to WhatsApp
+              const fileName = `proof-${Date.now()}-${Math.floor(Math.random()*10000)}.png`;
+              const filePath = path.join(uploadsDir, fileName);
+              fs.writeFileSync(filePath, buffer);
+              
+              // Generate full URL
+              proofUrl = `${req.protocol}://${req.get('host')}/uploads/${fileName}`;
           }
 
           const mailOptions = {
@@ -240,6 +260,39 @@ async function startServer() {
           console.log(`Welcome email sent to ${email}`);
         } catch (emailError: any) {
           console.error('Error sending welcome email:', emailError);
+        }
+      }
+
+      // Send WhatsApp Notification to Admin
+      if (process.env.TWILIO_ACCOUNT_SID && process.env.TWILIO_AUTH_TOKEN && process.env.TWILIO_WHATSAPP_NUMBER) {
+        try {
+          const twilioClient = twilio(process.env.TWILIO_ACCOUNT_SID, process.env.TWILIO_AUTH_TOKEN);
+          
+          let waMessage = `*New Membership Application*\n\n`;
+          waMessage += `*Name:* ${fullName}\n`;
+          waMessage += `*Email:* ${email}\n`;
+          waMessage += `*WhatsApp:* ${whatsapp}\n`;
+          waMessage += `*Plan:* ${planId}\n`;
+          waMessage += `*Payment Method:* ${paymentMethod}\n`;
+          if (proofUrl) {
+            waMessage += `\n*Payment Proof Link:* ${proofUrl}\n`;
+          }
+
+          const messageConfig: any = {
+            body: waMessage,
+            from: `whatsapp:${process.env.TWILIO_WHATSAPP_NUMBER}`,
+            to: `whatsapp:+923332288877`
+          };
+          
+          if (proofUrl) {
+            // Twilio allows attaching media via mediaUrl
+            messageConfig.mediaUrl = [proofUrl];
+          }
+
+          await twilioClient.messages.create(messageConfig);
+          console.log(`WhatsApp notification sent to admin (+923332288877)`);
+        } catch (twError) {
+          console.error('Error sending WhatsApp message:', twError);
         }
       }
 
