@@ -2,7 +2,6 @@ import express from 'express';
 import { google } from 'googleapis';
 import dotenv from 'dotenv';
 import path from 'path';
-import { fileURLToPath } from 'url';
 import { createServer as createViteServer } from 'vite';
 import PDFDocument from 'pdfkit';
 import nodemailer from 'nodemailer';
@@ -12,21 +11,11 @@ import twilio from 'twilio';
 
 dotenv.config();
 
-const __dirname = path.dirname(fileURLToPath(import.meta.url));
-
-const uploadsDir = path.join(__dirname, 'uploads');
-if (!fs.existsSync(uploadsDir)) {
-  fs.mkdirSync(uploadsDir);
-}
-
 async function startServer() {
   const app = express();
   const PORT = 3000;
 
   app.use(express.json({ limit: '20mb' }));
-  
-  // Serve uploads folder for payment proof access
-  app.use('/uploads', express.static(path.join(__dirname, 'uploads')));
 
   // Google Sheets API setup
   const stripe = new Stripe(process.env.STRIPE_SECRET_KEY || '');
@@ -195,6 +184,24 @@ async function startServer() {
         // We continue even if sheet fails, or we can choose to fail here. 
       }
 
+      let proofAttached = false;
+      let attachments: { filename: string; path?: string; content?: Buffer | string }[] = [
+          {
+            filename: 'Disclaimer_First_Noble_Step.pdf',
+            path: path.join(process.cwd(), 'Disclaimer.pdf')
+          }
+      ];
+
+      if (formData.paymentProof) {
+          const base64Data = formData.paymentProof.replace(/^data:image\/\w+;base64,/, "");
+          const buffer = Buffer.from(base64Data, 'base64');
+          attachments.push({
+              filename: 'Payment_Proof.png',
+              content: buffer
+          });
+          proofAttached = true;
+      }
+
       // Send welcome email
       if (email && process.env.SMTP_USER && process.env.SMTP_PASS) {
         try {
@@ -205,33 +212,6 @@ async function startServer() {
               pass: process.env.SMTP_PASS,
             },
           });
-
-          // Extract payment proof if available
-          let attachments = [
-              {
-                filename: 'Disclaimer_First_Noble_Step.pdf',
-                path: path.join(__dirname, 'Disclaimer.pdf')
-              }
-          ];
-
-          let proofUrl = '';
-
-          if (formData.paymentProof) {
-              const base64Data = formData.paymentProof.replace(/^data:image\/\w+;base64,/, "");
-              const buffer = Buffer.from(base64Data, 'base64');
-              attachments.push({
-                  filename: 'Payment_Proof.png',
-                  content: buffer
-              });
-              
-              // Save locally for serving via Express to WhatsApp
-              const fileName = `proof-${Date.now()}-${Math.floor(Math.random()*10000)}.png`;
-              const filePath = path.join(uploadsDir, fileName);
-              fs.writeFileSync(filePath, buffer);
-              
-              // Generate full URL
-              proofUrl = `${req.protocol}://${req.get('host')}/uploads/${fileName}`;
-          }
 
           const mailOptions = {
             from: `"First Nobel Step" <${process.env.SMTP_USER}>`,
@@ -274,8 +254,8 @@ async function startServer() {
           waMessage += `*WhatsApp:* ${whatsapp}\n`;
           waMessage += `*Plan:* ${planId}\n`;
           waMessage += `*Payment Method:* ${paymentMethod}\n`;
-          if (proofUrl) {
-            waMessage += `\n*Payment Proof Link:* ${proofUrl}\n`;
+          if (proofAttached) {
+            waMessage += `\n*Payment Proof is attached in the Admin Email.*\n`;
           }
 
           const messageConfig: any = {
@@ -283,11 +263,6 @@ async function startServer() {
             from: `whatsapp:${process.env.TWILIO_WHATSAPP_NUMBER}`,
             to: `whatsapp:+923332288877`
           };
-          
-          if (proofUrl) {
-            // Twilio allows attaching media via mediaUrl
-            messageConfig.mediaUrl = [proofUrl];
-          }
 
           await twilioClient.messages.create(messageConfig);
           console.log(`WhatsApp notification sent to admin (+923332288877)`);
@@ -316,7 +291,7 @@ async function startServer() {
     });
     app.use(vite.middlewares);
   } else {
-    const distPath = path.join(__dirname, 'dist');
+    const distPath = path.join(process.cwd(), 'dist');
     app.use(express.static(distPath));
     app.get('*all', (req, res) => {
       res.sendFile(path.join(distPath, 'index.html'));
