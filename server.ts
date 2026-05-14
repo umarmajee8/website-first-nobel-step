@@ -7,7 +7,6 @@ import PDFDocument from 'pdfkit';
 import nodemailer from 'nodemailer';
 import Stripe from 'stripe';
 import fs from 'fs';
-import twilio from 'twilio';
 
 dotenv.config();
 
@@ -240,34 +239,6 @@ async function startServer() {
           console.log(`Welcome email sent to ${email}`);
         } catch (emailError: any) {
           console.error('Error sending welcome email:', emailError);
-        }
-      }
-
-      // Send WhatsApp Notification to Admin
-      if (process.env.TWILIO_ACCOUNT_SID && process.env.TWILIO_AUTH_TOKEN && process.env.TWILIO_WHATSAPP_NUMBER) {
-        try {
-          const twilioClient = twilio(process.env.TWILIO_ACCOUNT_SID, process.env.TWILIO_AUTH_TOKEN);
-          
-          let waMessage = `*New Membership Application*\n\n`;
-          waMessage += `*Name:* ${fullName}\n`;
-          waMessage += `*Email:* ${email}\n`;
-          waMessage += `*WhatsApp:* ${whatsapp}\n`;
-          waMessage += `*Plan:* ${planId}\n`;
-          waMessage += `*Payment Method:* ${paymentMethod}\n`;
-          if (proofAttached) {
-            waMessage += `\n*Payment Proof is attached in the Admin Email.*\n`;
-          }
-
-          const messageConfig: any = {
-            body: waMessage,
-            from: `whatsapp:${process.env.TWILIO_WHATSAPP_NUMBER}`,
-            to: `whatsapp:+923332288877`
-          };
-
-          await twilioClient.messages.create(messageConfig);
-          console.log(`WhatsApp notification sent to admin (+923332288877)`);
-        } catch (twError) {
-          console.error('Error sending WhatsApp message:', twError);
         }
       }
 
