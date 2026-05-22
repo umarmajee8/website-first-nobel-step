@@ -184,12 +184,7 @@ async function startServer() {
       }
 
       let proofAttached = false;
-      let attachments: { filename: string; path?: string; content?: Buffer | string }[] = [
-          {
-            filename: 'Disclaimer_First_Noble_Step.pdf',
-            path: path.join(process.cwd(), 'Disclaimer.pdf')
-          }
-      ];
+      let attachments: { filename: string; path?: string; content?: Buffer | string }[] = [];
 
       if (formData.paymentProof) {
           const base64Data = formData.paymentProof.replace(/^data:image\/\w+;base64,/, "");
@@ -218,14 +213,13 @@ async function startServer() {
             // Send bcc to the company so they see the proof
             bcc: process.env.COMPANY_WHATSAPP_EMAIL || process.env.SMTP_USER, 
             subject: 'Welcome to First Nobel Step - Membership Application Received',
-            text: `Dear ${fullName},\n\nThank you for submitting your membership application to First Nobel Step (Pvt.) Ltd.\n\nWe have successfully received your details and our team will review them shortly. Please find the attached Disclaimer document for your reference.\n\nBest regards,\nFirst Nobel Step Team\nsupport@firstnoblestep.com`,
+            text: `Dear ${fullName},\n\nThank you for submitting your membership application to First Nobel Step (Pvt.) Ltd.\n\nWe have successfully received your details and our team will review them shortly.\n\nBest regards,\nFirst Nobel Step Team\nsupport@firstnoblestep.com`,
             html: `
               <div style="font-family: Arial, sans-serif; color: #333; line-height: 1.6; max-w: 600px; margin: 0 auto; padding: 20px; border: 1px solid #e5e7eb; border-radius: 8px;">
                 <h2 style="color: #01411C; border-bottom: 2px solid #01411C; padding-bottom: 10px;">Welcome to First Nobel Step!</h2>
                 <p>Dear <strong>${fullName}</strong>,</p>
                 <p>Thank you for submitting your membership application to First Nobel Step (Pvt.) Ltd.</p>
                 <p>We have successfully received your details and our team will review them shortly.</p>
-                <p>Please find the attached <strong>Disclaimer</strong> document for your reference.</p>
                 <br/>
                 <p>Best regards,</p>
                 <p><strong>First Nobel Step Team</strong><br/>

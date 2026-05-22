@@ -241,6 +241,7 @@ const MembershipForm: React.FC<Props> = ({ initialPlanId, onClose }) => {
     }
     
     if (name === 'whatsapp') {
+      if (!value || value.trim().length === 0) return null; // Optional
       const cleaned = value.replace(/\D/g, '');
       if (cleaned.length < 11) return 'Minimum 11 digits required';
       if (cleaned.length > 13) return 'Maximum 13 digits allowed';
