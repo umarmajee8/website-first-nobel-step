@@ -138,10 +138,39 @@ export default async function handler(req: any, res: any) {
                 
                 <a href="https://firstnoblestep.com" style="display: inline-block; background-color: #01411C; color: #ffffff; padding: 10px 24px; text-decoration: none; border-radius: 20px; font-weight: 500; font-size: 14px; margin-bottom: 32px;">Visit Website</a>
                 
-                <p style="font-size: 14px; color: #444746; margin: 0;">
+                <p style="font-size: 14px; color: #444746; margin: 0 0 25px 0;">
                   You can also contact support at<br>
                   <a href="mailto:support@firstnoblestep.com" style="color: #01411C; text-decoration: none;">support@firstnoblestep.com</a>
                 </p>
+                
+                <div style="margin-top: 35px; text-align: center; border-top: 1px solid #e3e3e3; padding-top: 30px;">
+                  <table role="presentation" cellspacing="0" cellpadding="0" border="0" align="center" style="margin: 0 auto 18px auto;">
+                    <tr>
+                      <td style="padding: 0 15px; vertical-align: middle;">
+                        <a href="https://www.linkedin.com/company/firstnoblestep" target="_blank" style="text-decoration: none;">
+                          <img src="https://img.icons8.com/ios-filled/100/7d7d7d/linkedin.png" width="30" height="30" alt="LinkedIn" style="display: block; border: 0;" />
+                        </a>
+                      </td>
+                      <td style="padding: 0 15px; vertical-align: middle;">
+                        <a href="https://www.youtube.com/@firstnoblestep" target="_blank" style="text-decoration: none;">
+                          <img src="https://img.icons8.com/ios-filled/100/7d7d7d/youtube-play.png" width="34" height="34" alt="YouTube" style="display: block; border: 0;" />
+                        </a>
+                      </td>
+                      <td style="padding: 0 15px; vertical-align: middle;">
+                        <a href="https://x.com/FirstNobleStep" target="_blank" style="text-decoration: none;">
+                          <img src="https://img.icons8.com/ios-filled/100/7d7d7d/twitterx.png" width="28" height="28" alt="X" style="display: block; border: 0;" />
+                        </a>
+                      </td>
+                    </tr>
+                  </table>
+                  
+                  <p style="font-size: 15px; color: #1f1f1f; line-height: 1.5; margin: 0 0 12px 0; max-width: 440px; margin-left: auto; margin-right: auto; text-align: center; font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;">
+                    We're on <a href="https://www.linkedin.com/company/firstnoblestep" target="_blank" style="color: #1a73e8; text-decoration: underline; font-weight: 500;">LinkedIn</a>. Follow us for new business-focused content, including the latest videos, blogs, podcasts, and interactive experiences from the team.
+                  </p>
+                  <p style="font-size: 15px; margin: 0; text-align: center; font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;">
+                    <a href="https://x.com/FirstNobleStep" target="_blank" style="color: #1a73e8; text-decoration: underline; font-weight: 500;">Follow us on X for updates</a>.
+                  </p>
+                </div>
                 
               </div>
               

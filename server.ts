@@ -215,15 +215,44 @@ async function startServer() {
             subject: 'Welcome to First Noble Step - Membership Application Received',
             text: `Dear ${fullName},\n\nThank you for submitting your membership application to First Noble Step (Pvt.) Ltd.\n\nWe have successfully received your details and our team will review them shortly.\n\nBest regards,\nFirst Noble Step Team\nsupport@firstnoblestep.com`,
             html: `
-              <div style="font-family: Arial, sans-serif; color: #333; line-height: 1.6; max-w: 600px; margin: 0 auto; padding: 20px; border: 1px solid #e5e7eb; border-radius: 8px;">
+              <div style="font-family: Arial, sans-serif; color: #333; line-height: 1.6; max-width: 600px; margin: 0 auto; padding: 20px; border: 1px solid #e5e7eb; border-radius: 8px;">
                 <h2 style="color: #01411C; border-bottom: 2px solid #01411C; padding-bottom: 10px;">Welcome to First Noble Step!</h2>
                 <p>Dear <strong>${fullName}</strong>,</p>
                 <p>Thank you for submitting your membership application to First Noble Step (Pvt.) Ltd.</p>
                 <p>We have successfully received your details and our team will review them shortly.</p>
                 <br/>
                 <p>Best regards,</p>
-                <p><strong>First Noble Step Team</strong><br/>
-                <a href="mailto:support@firstnoblestep.com" style="color: #01411C;">support@firstnoblestep.com</a></p>
+                <p style="margin-bottom: 25px;"><strong>First Noble Step Team</strong><br/>
+                <a href="mailto:support@firstnoblestep.com" style="color: #01411C; text-decoration: none;">support@firstnoblestep.com</a></p>
+                
+                <div style="margin-top: 35px; text-align: center; border-top: 1px solid #e3e3e3; padding-top: 30px;">
+                  <table role="presentation" cellspacing="0" cellpadding="0" border="0" align="center" style="margin: 0 auto 18px auto;">
+                    <tr>
+                      <td style="padding: 0 15px; vertical-align: middle;">
+                        <a href="https://www.linkedin.com/company/firstnoblestep" target="_blank" style="text-decoration: none;">
+                          <img src="https://img.icons8.com/ios-filled/100/7d7d7d/linkedin.png" width="30" height="30" alt="LinkedIn" style="display: block; border: 0;" />
+                        </a>
+                      </td>
+                      <td style="padding: 0 15px; vertical-align: middle;">
+                        <a href="https://www.youtube.com/@firstnoblestep" target="_blank" style="text-decoration: none;">
+                          <img src="https://img.icons8.com/ios-filled/100/7d7d7d/youtube-play.png" width="34" height="34" alt="YouTube" style="display: block; border: 0;" />
+                        </a>
+                      </td>
+                      <td style="padding: 0 15px; vertical-align: middle;">
+                        <a href="https://x.com/FirstNobleStep" target="_blank" style="text-decoration: none;">
+                          <img src="https://img.icons8.com/ios-filled/100/7d7d7d/twitterx.png" width="28" height="28" alt="X" style="display: block; border: 0;" />
+                        </a>
+                      </td>
+                    </tr>
+                  </table>
+                  
+                  <p style="font-size: 15px; color: #1f1f1f; line-height: 1.5; margin: 0 0 12px 0; max-width: 440px; margin-left: auto; margin-right: auto; text-align: center; font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;">
+                    We're on <a href="https://www.linkedin.com/company/firstnoblestep" target="_blank" style="color: #1a73e8; text-decoration: underline; font-weight: 500;">LinkedIn</a>. Follow us for new business-focused content, including the latest videos, blogs, podcasts, and interactive experiences from the team.
+                  </p>
+                  <p style="font-size: 15px; margin: 0; text-align: center; font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;">
+                    <a href="https://x.com/FirstNobleStep" target="_blank" style="color: #1a73e8; text-decoration: underline; font-weight: 500;">Follow us on X for updates</a>.
+                  </p>
+                </div>
               </div>
             `,
             attachments: attachments
