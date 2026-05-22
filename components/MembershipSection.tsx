@@ -25,7 +25,7 @@ const plans: MembershipPlan[] = [
     features: [
       'Turn your idea into funded reality',
       'Strategic feedback from business leaders',
-      'Official Membership of First Nobel Step (Pvt.) Ltd.',
+      'Official Membership of First Noble Step (Pvt.) Ltd.',
       'Verified Business Opportunity Alerts',
       'Powerful Business Networking'
     ]

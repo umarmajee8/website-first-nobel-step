@@ -73,14 +73,14 @@ async function startServer() {
         });
 
         const mailOptions = {
-          from: `"First Nobel Step" <${process.env.SMTP_USER}>`,
+          from: `"First Noble Step" <${process.env.SMTP_USER}>`,
           to: email,
-          subject: 'Your Verification Code - First Nobel Step',
+          subject: 'Your Verification Code - First Noble Step',
           html: `
             <div style="font-family: Arial, sans-serif; padding: 20px; color: #333; max-width: 500px; margin: 0 auto; border: 1px solid #e5e7eb; border-radius: 8px;">
               <h2 style="color: #01411C; border-bottom: 2px solid #01411C; padding-bottom: 10px;">Email Verification</h2>
               <p>Dear ${fullName || 'Applicant'},</p>
-              <p>Your verification code for the First Nobel Step membership application is:</p>
+              <p>Your verification code for the First Noble Step membership application is:</p>
               <div style="text-align: center; margin: 30px 0;">
                   <span style="font-size: 32px; letter-spacing: 5px; color: #01411C; background: #f0f4f9; padding: 15px 25px; border-radius: 8px; font-weight: bold;">${otp}</span>
               </div>
@@ -208,21 +208,21 @@ async function startServer() {
           });
 
           const mailOptions = {
-            from: `"First Nobel Step" <${process.env.SMTP_USER}>`,
+            from: `"First Noble Step" <${process.env.SMTP_USER}>`,
             to: email,
             // Send bcc to the company so they see the proof
             bcc: process.env.COMPANY_WHATSAPP_EMAIL || process.env.SMTP_USER, 
-            subject: 'Welcome to First Nobel Step - Membership Application Received',
-            text: `Dear ${fullName},\n\nThank you for submitting your membership application to First Nobel Step (Pvt.) Ltd.\n\nWe have successfully received your details and our team will review them shortly.\n\nBest regards,\nFirst Nobel Step Team\nsupport@firstnoblestep.com`,
+            subject: 'Welcome to First Noble Step - Membership Application Received',
+            text: `Dear ${fullName},\n\nThank you for submitting your membership application to First Noble Step (Pvt.) Ltd.\n\nWe have successfully received your details and our team will review them shortly.\n\nBest regards,\nFirst Noble Step Team\nsupport@firstnoblestep.com`,
             html: `
               <div style="font-family: Arial, sans-serif; color: #333; line-height: 1.6; max-w: 600px; margin: 0 auto; padding: 20px; border: 1px solid #e5e7eb; border-radius: 8px;">
-                <h2 style="color: #01411C; border-bottom: 2px solid #01411C; padding-bottom: 10px;">Welcome to First Nobel Step!</h2>
+                <h2 style="color: #01411C; border-bottom: 2px solid #01411C; padding-bottom: 10px;">Welcome to First Noble Step!</h2>
                 <p>Dear <strong>${fullName}</strong>,</p>
-                <p>Thank you for submitting your membership application to First Nobel Step (Pvt.) Ltd.</p>
+                <p>Thank you for submitting your membership application to First Noble Step (Pvt.) Ltd.</p>
                 <p>We have successfully received your details and our team will review them shortly.</p>
                 <br/>
                 <p>Best regards,</p>
-                <p><strong>First Nobel Step Team</strong><br/>
+                <p><strong>First Noble Step Team</strong><br/>
                 <a href="mailto:support@firstnoblestep.com" style="color: #01411C;">support@firstnoblestep.com</a></p>
               </div>
             `,

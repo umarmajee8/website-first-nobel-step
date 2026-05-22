@@ -16,7 +16,7 @@ const Footer: React.FC<Props> = ({ onApply }) => {
               <Logo className="h-12" />
             </div>
             <p className="text-xs leading-relaxed mb-6 text-gray-500 dark:text-gray-500">
-              The official membership portal of First Nobel Step (Pvt.) Ltd., to foster global success for our citizens.
+              The official membership portal of First Noble Step (Pvt.) Ltd., to foster global success for our citizens.
             </p>
             <div className="flex gap-3">
               <a href="#" className="w-9 h-9 bg-white dark:bg-gray-800 border border-green-200 dark:border-gray-700 text-pakistan-green dark:text-green-500 rounded-full flex items-center justify-center hover:bg-pakistan-green hover:text-white dark:hover:text-green-400 transition-all shadow-sm"><i className="fa-brands fa-facebook-f text-sm"></i></a>
@@ -56,7 +56,7 @@ const Footer: React.FC<Props> = ({ onApply }) => {
         
         <div className="pt-8 border-t border-green-200 dark:border-gray-800 flex flex-col items-center gap-4">
           <div className="flex flex-col md:flex-row justify-center items-center text-[9px] font-bold uppercase tracking-[0.2em] text-gray-500 dark:text-gray-600">
-            <p>© 2026 First Nobel Step (Pvt.) Ltd. All Rights Reserved.</p>
+            <p>© 2026 First Noble Step (Pvt.) Ltd. All Rights Reserved.</p>
           </div>
         </div>
       </div>

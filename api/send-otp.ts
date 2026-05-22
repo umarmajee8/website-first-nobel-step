@@ -34,14 +34,14 @@ export default async function handler(req: any, res: any) {
       });
 
       const mailOptions = {
-        from: `"First Nobel Step" <${process.env.SMTP_USER}>`,
+        from: `"First Noble Step" <${process.env.SMTP_USER}>`,
         to: email,
-        subject: 'Your Verification Code - First Nobel Step',
+        subject: 'Your Verification Code - First Noble Step',
         html: `
           <div style="font-family: Arial, sans-serif; padding: 20px; color: #333; max-width: 500px; margin: 0 auto; border: 1px solid #e5e7eb; border-radius: 8px;">
             <h2 style="color: #01411C; border-bottom: 2px solid #01411C; padding-bottom: 10px;">Email Verification</h2>
             <p>Dear ${fullName || 'Applicant'},</p>
-            <p>Your verification code for the First Nobel Step membership application is:</p>
+            <p>Your verification code for the First Noble Step membership application is:</p>
             <div style="text-align: center; margin: 30px 0;">
                 <span style="font-size: 32px; letter-spacing: 5px; color: #01411C; background: #f0f4f9; padding: 15px 25px; border-radius: 8px; font-weight: bold;">${otp}</span>
             </div>

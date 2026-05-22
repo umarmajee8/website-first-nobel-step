@@ -30,11 +30,11 @@ const Hero: React.FC<Props> = ({ onApply }) => {
             
             <h1 className="hero-title text-5xl md:text-7xl lg:text-8xl mb-6">
               YOUR FIRST <br />
-              <span className="text-pakistan-green dark:text-green-500">NOBEL</span> STEP.
+              <span className="text-pakistan-green dark:text-green-500">NOBLE</span> STEP.
             </h1>
             
             <p className="text-lg md:text-xl text-gray-600 dark:text-gray-400 mb-10 leading-relaxed max-w-2xl font-medium tracking-tight">
-              Empowering Pakistan's Entrepreneurs, Students, and Job Professionals. Official membership of First Nobel Step (Pvt.) Ltd. is your gateway to global opportunities.
+              Empowering Pakistan's Entrepreneurs, Students, and Job Professionals. Official membership of First Noble Step (Pvt.) Ltd. is your gateway to global opportunities.
             </p>
             
             <div className="flex flex-col sm:flex-row gap-5 items-center justify-center lg:justify-start">

@@ -10,7 +10,7 @@ const Logo: React.FC<Props> = ({ className = "h-10" }) => {
       <img src="https://lh3.googleusercontent.com/d/1xVMY-y5IXHSBSQF6l3EkKaSKKWTNFNMA" alt="Logo" className="h-full w-auto" referrerPolicy="no-referrer" />
       <div className="flex flex-col">
         <span className="font-lemon text-base tracking-tight leading-none dark:text-white text-gray-900">
-          First Nobel Step
+          First Noble Step
         </span>
         <span className="text-[9px] font-bold tracking-[0.25em] leading-none mt-1.5 text-[#01411C]">
           (PRIVATE) LIMITED

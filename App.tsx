@@ -34,8 +34,6 @@ const App: React.FC = () => {
         <ServicePackages />
       </main>
       
-      {/* AI Chat Assistant removed to eliminate API key dependency */}
-      
       <Footer onApply={() => openForm()} />
 
       {isFormOpen && (
