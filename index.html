@@ -686,7 +686,7 @@
     <!-- MAIN JAVASCRIPT LOGIC -->
     <script type="module">
         import { initializeApp } from 'https://www.gstatic.com/firebasejs/11.0.1/firebase-app.js';
-        import { getAuth, signInWithPopup, GoogleAuthProvider, onAuthStateChanged, signOut, createUserWithEmailAndPassword, signInWithEmailAndPassword, updateProfile } from 'https://www.gstatic.com/firebasejs/11.0.1/firebase-auth.js';
+        import { getAuth, signInWithRedirect, getRedirectResult, GoogleAuthProvider, onAuthStateChanged, signOut, createUserWithEmailAndPassword, signInWithEmailAndPassword, updateProfile } from 'https://www.gstatic.com/firebasejs/11.0.1/firebase-auth.js';
         import { getFirestore, collection, addDoc, serverTimestamp } from 'https://www.gstatic.com/firebasejs/11.0.1/firebase-firestore.js';
 
         const firebaseConfig = {
@@ -708,6 +708,52 @@
 
         let isSigningIn = false;
 
+        // --- State Persist/Restore Helper Prototypes ---
+        function saveState() {
+            if (typeof state !== 'undefined') {
+                sessionStorage.setItem('membership_form_state', JSON.stringify({
+                    isOpen: state.isOpen,
+                    step: state.step,
+                    plan: state.plan,
+                    paymentMethod: state.paymentMethod,
+                    paymentProofBase64: state.paymentProofBase64
+                }));
+            }
+        }
+
+        function loadState() {
+            if (typeof state !== 'undefined') {
+                const saved = sessionStorage.getItem('membership_form_state');
+                if (saved) {
+                    try {
+                        const parsed = JSON.parse(saved);
+                        Object.assign(state, parsed);
+                    } catch (e) {
+                        console.error('Error restoring state:', e);
+                    }
+                    sessionStorage.removeItem('membership_form_state');
+                }
+            }
+        }
+
+        // Process any redirect results as soon as possible
+        getRedirectResult(auth).then((result) => {
+            if (result && result.user) {
+                console.log('Redirect sign-in successful:', result.user);
+                loadState();
+                if (state.isOpen && state.step === 0) {
+                    openForm(state.plan);
+                }
+            }
+        }).catch((error) => {
+            console.error('Redirect sign-in error:', error);
+            const errorMsg = document.getElementById('auth-error-msg');
+            if (errorMsg) {
+                errorMsg.innerText = "Google sign-in failed: " + error.message;
+                errorMsg.classList.remove('hidden');
+            }
+        });
+
         onAuthStateChanged(auth, (user) => {
             currentUser = user;
             const profileEl = document.getElementById('user-profile');
@@ -724,6 +770,11 @@
                 if (loginNavItem) loginNavItem.classList.add('hidden');
                 if (avatarEl) avatarEl.src = user.photoURL || 'https://ui-avatars.com/api/?name=' + encodeURIComponent(user.displayName || 'User');
                 if (nameEl) nameEl.textContent = (user.displayName || 'User').split(' ')[0];
+
+                // If user state is restored indicating they were on step 0 and had the modal open, continue to step 1
+                if (typeof state !== 'undefined' && state.isOpen && state.step === 0) {
+                    openForm(state.plan);
+                }
             } else {
                 // User is signed out
                 currentUser = null;
@@ -744,32 +795,20 @@
             if (isSigningIn) return null;
             isSigningIn = true;
             try {
-                const result = await signInWithPopup(auth, provider);
-                const user = result.user;
-                if (user && state.isOpen && state.step === 0) {
-                    // transition to step 1 automatically
-                    openForm(state.plan);
-                }
-                return user;
+                saveState();
+                await signInWithRedirect(auth, provider);
             } catch (error) {
-                if (error.code === 'auth/popup-closed-by-user') {
-                    console.warn('Sign-in popup closed by user');
-                } else if (error.code === 'auth/cancelled-popup-request') {
-                    console.warn('Popup request cancelled');
+                console.error('Sign-in failed:', error);
+                const errorMsg = document.getElementById('auth-error-msg');
+                if(errorMsg) {
+                    errorMsg.innerText = "Sign-in failed. Please try again.";
+                    errorMsg.classList.remove('hidden');
                 } else {
-                    console.error('Sign-in failed:', error);
-                    const errorMsg = document.getElementById('auth-error-msg');
-                    if(errorMsg) {
-                        errorMsg.innerText = "Sign-in failed. Please ensure popups are allowed and try again.";
-                        errorMsg.classList.remove('hidden');
-                    } else {
-                        alert("Sign-in failed.");
-                    }
+                    alert("Sign-in failed.");
                 }
-                return null;
-            } finally {
                 isSigningIn = false;
             }
+            return null;
         }
 
         let isLoginMode = false;
@@ -895,6 +934,9 @@
                 country: ''
             }
         };
+
+        // Restore state if available
+        loadState();
 
         // --- DOM Elements ---
         const modalOverlay = document.getElementById('modal-overlay');
