@@ -1,0 +1,615 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Privacy Policy – First Noble Step</title>
+<link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@300;400;500;600&family=DM+Serif+Display&display=swap" rel="stylesheet">
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  :root {
+    --green-50: #f0faf4;
+    --green-100: #d4f0df;
+    --green-200: #a9e0c0;
+    --green-500: #2d9b5a;
+    --green-600: #207a44;
+    --green-700: #155c31;
+    --green-800: #0d3d21;
+    --white: #ffffff;
+    --gray-50: #f8faf9;
+    --gray-200: #e2e8e4;
+    --gray-500: #5a6b60;
+    --gray-700: #2e3d34;
+  }
+
+  body {
+    font-family: 'DM Sans', sans-serif;
+    background: var(--white);
+    color: var(--gray-700);
+    font-size: 13px;
+    line-height: 1.65;
+  }
+
+  /* Header */
+  .header {
+    background: var(--green-700);
+    color: var(--white);
+    padding: 28px 48px 22px;
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    border-bottom: 3px solid var(--green-500);
+  }
+
+  .logo-mark {
+    width: 40px;
+    height: 40px;
+    border-radius: 10px;
+    background: var(--green-500);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+  }
+
+  .logo-mark svg { width: 22px; height: 22px; fill: #fff; }
+
+  .header-text h1 {
+    font-family: 'DM Serif Display', serif;
+    font-size: 18px;
+    font-weight: 400;
+    letter-spacing: 0.01em;
+    line-height: 1.2;
+  }
+
+  .header-text p {
+    font-size: 11px;
+    opacity: 0.75;
+    margin-top: 2px;
+    letter-spacing: 0.04em;
+    text-transform: uppercase;
+  }
+
+  /* Layout */
+  .layout {
+    display: grid;
+    grid-template-columns: 190px 1fr;
+    min-height: calc(100vh - 93px);
+  }
+
+  /* Sidebar TOC */
+  .sidebar {
+    background: var(--green-50);
+    border-right: 1px solid var(--green-100);
+    padding: 24px 0;
+    position: sticky;
+    top: 0;
+    height: calc(100vh - 93px);
+    overflow-y: auto;
+  }
+
+  .sidebar-label {
+    font-size: 10px;
+    font-weight: 600;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: var(--green-500);
+    padding: 0 18px 10px;
+  }
+
+  .toc-link {
+    display: block;
+    padding: 5px 18px;
+    font-size: 11.5px;
+    color: var(--gray-500);
+    text-decoration: none;
+    line-height: 1.4;
+    transition: color 0.15s, background 0.15s;
+    border-left: 2px solid transparent;
+  }
+
+  .toc-link:hover {
+    color: var(--green-600);
+    background: var(--green-100);
+    border-left-color: var(--green-500);
+  }
+
+  /* Main content */
+  .main {
+    padding: 32px 48px 48px;
+    max-width: 740px;
+  }
+
+  /* Intro banner */
+  .intro-banner {
+    background: var(--green-50);
+    border: 1px solid var(--green-100);
+    border-left: 3px solid var(--green-500);
+    border-radius: 6px;
+    padding: 12px 16px;
+    margin-bottom: 28px;
+    font-size: 12px;
+    color: var(--green-700);
+    line-height: 1.6;
+  }
+
+  /* Sections */
+  .section {
+    margin-bottom: 24px;
+    padding-bottom: 24px;
+    border-bottom: 1px solid var(--gray-200);
+  }
+
+  .section:last-child {
+    border-bottom: none;
+    margin-bottom: 0;
+    padding-bottom: 0;
+  }
+
+  .section-header {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin-bottom: 10px;
+  }
+
+  .section-num {
+    background: var(--green-600);
+    color: #fff;
+    font-size: 10px;
+    font-weight: 600;
+    width: 22px;
+    height: 22px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+  }
+
+  .section-title {
+    font-family: 'DM Serif Display', serif;
+    font-size: 15px;
+    font-weight: 400;
+    color: var(--green-800);
+    letter-spacing: 0.01em;
+  }
+
+  .section-body {
+    font-size: 12.5px;
+    color: var(--gray-700);
+    line-height: 1.7;
+  }
+
+  .section-body p { margin-bottom: 8px; }
+  .section-body p:last-child { margin-bottom: 0; }
+
+  /* Sub-sections */
+  .sub-section {
+    margin: 10px 0;
+    padding: 10px 14px;
+    background: var(--gray-50);
+    border-radius: 6px;
+    border: 1px solid var(--gray-200);
+  }
+
+  .sub-title {
+    font-size: 12px;
+    font-weight: 600;
+    color: var(--green-700);
+    margin-bottom: 5px;
+  }
+
+  /* Lists */
+  .bullet-list {
+    list-style: none;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 3px 12px;
+    margin-top: 6px;
+  }
+
+  .bullet-list.single { grid-template-columns: 1fr; }
+
+  .bullet-list li {
+    font-size: 12px;
+    color: var(--gray-700);
+    display: flex;
+    align-items: flex-start;
+    gap: 6px;
+    line-height: 1.5;
+  }
+
+  .bullet-list li::before {
+    content: '';
+    width: 5px;
+    height: 5px;
+    border-radius: 50%;
+    background: var(--green-500);
+    flex-shrink: 0;
+    margin-top: 5px;
+  }
+
+  /* Tag badges */
+  .tag {
+    display: inline-block;
+    background: var(--green-100);
+    color: var(--green-700);
+    font-size: 10px;
+    font-weight: 500;
+    padding: 2px 8px;
+    border-radius: 20px;
+    margin-right: 4px;
+    margin-bottom: 3px;
+  }
+
+  /* Purpose grid */
+  .purpose-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 5px;
+    margin-top: 8px;
+  }
+
+  .purpose-item {
+    display: flex;
+    align-items: flex-start;
+    gap: 6px;
+    font-size: 11.5px;
+    color: var(--gray-700);
+    line-height: 1.5;
+    padding: 5px 8px;
+    background: var(--green-50);
+    border-radius: 5px;
+  }
+
+  .purpose-item::before {
+    content: '✓';
+    color: var(--green-500);
+    font-size: 11px;
+    flex-shrink: 0;
+    font-weight: 600;
+    margin-top: 1px;
+  }
+
+  /* Contact box */
+  .contact-box {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    background: var(--green-700);
+    color: #fff;
+    padding: 8px 16px;
+    border-radius: 6px;
+    font-size: 12.5px;
+    margin-top: 8px;
+    text-decoration: none;
+  }
+
+  .contact-box svg { width: 14px; height: 14px; fill: #fff; opacity: 0.8; }
+
+  /* Rights grid */
+  .rights-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 5px;
+    margin-top: 8px;
+  }
+
+  .right-item {
+    background: var(--green-50);
+    border: 1px solid var(--green-100);
+    border-radius: 6px;
+    padding: 7px 10px;
+    font-size: 11.5px;
+    color: var(--green-800);
+    display: flex;
+    align-items: flex-start;
+    gap: 6px;
+  }
+
+  .right-item::before {
+    content: '→';
+    color: var(--green-500);
+    font-size: 11px;
+    flex-shrink: 0;
+  }
+
+  /* Footer */
+  .footer {
+    background: var(--green-800);
+    color: rgba(255,255,255,0.6);
+    text-align: center;
+    padding: 12px;
+    font-size: 10.5px;
+    letter-spacing: 0.02em;
+  }
+
+  .footer span { color: rgba(255,255,255,0.85); }
+</style>
+</head>
+<body>
+
+<!-- Header -->
+<div class="header">
+  <div class="logo-mark">
+    <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+      <path d="M12 2L3 7v5c0 5.25 3.75 10.15 9 11.35C17.25 22.15 21 17.25 21 12V7l-9-5z"/>
+    </svg>
+  </div>
+  <div class="header-text">
+    <h1>First Noble Step (Private) Limited</h1>
+    <p>Privacy Policy &nbsp;·&nbsp; Data Protection Statement</p>
+  </div>
+</div>
+
+<div class="layout">
+
+  <!-- Sidebar -->
+  <nav class="sidebar">
+    <div class="sidebar-label">Contents</div>
+    <a class="toc-link" href="#s1">1. Introduction</a>
+    <a class="toc-link" href="#s2">2. Information We Collect</a>
+    <a class="toc-link" href="#s3">3. How We Use Your Info</a>
+    <a class="toc-link" href="#s4">4. Data Sharing</a>
+    <a class="toc-link" href="#s5">5. Data Security</a>
+    <a class="toc-link" href="#s6">6. Cookies & Tracking</a>
+    <a class="toc-link" href="#s7">7. Third-Party Links</a>
+    <a class="toc-link" href="#s8">8. User Rights</a>
+    <a class="toc-link" href="#s9">9. Data Retention</a>
+    <a class="toc-link" href="#s10">10. Children's Privacy</a>
+    <a class="toc-link" href="#s11">11. Policy Changes</a>
+    <a class="toc-link" href="#s12">12. Contact</a>
+  </nav>
+
+  <!-- Main -->
+  <main class="main">
+
+    <div class="intro-banner">
+      By accessing or using our website and services, you agree to the collection and use of information in accordance with this Privacy Policy.
+    </div>
+
+    <!-- 1. Introduction -->
+    <div class="section" id="s1">
+      <div class="section-header">
+        <div class="section-num">1</div>
+        <div class="section-title">Introduction</div>
+      </div>
+      <div class="section-body">
+        <p>This Privacy Policy describes how First Noble Step (Private) Limited ("Company", "we", "our", or "us") collects, uses, stores, and protects personal information of individuals who visit our website, use our services, or interact with our digital platforms.</p>
+        <p>We are committed to protecting the privacy and confidentiality of our users and ensuring that personal information is handled responsibly and in accordance with applicable laws and best practices.</p>
+      </div>
+    </div>
+
+    <!-- 2. Information We Collect -->
+    <div class="section" id="s2">
+      <div class="section-header">
+        <div class="section-num">2</div>
+        <div class="section-title">Information We Collect</div>
+      </div>
+      <div class="section-body">
+        <p>We may collect the following types of information:</p>
+
+        <div class="sub-section">
+          <div class="sub-title">2.1 Personal Information</div>
+          <p style="margin-bottom:6px;">Personal information that you voluntarily provide to us, including but not limited to:</p>
+          <ul class="bullet-list">
+            <li>Full Name</li>
+            <li>Email Address</li>
+            <li>Phone Number</li>
+            <li>Postal Address</li>
+            <li>Business Information</li>
+            <li>Resume or professional details (if submitted)</li>
+            <li>Identification details when required for verification</li>
+          </ul>
+        </div>
+
+        <div class="sub-section">
+          <div class="sub-title">2.2 Business Information</div>
+          <p style="margin-bottom:6px;">If you use our consultancy or business advisory services, we may collect:</p>
+          <ul class="bullet-list single">
+            <li>Business plans</li>
+            <li>Financial information voluntarily shared for consultation</li>
+            <li>Startup or business idea details</li>
+            <li>Market or operational data submitted by the user</li>
+          </ul>
+        </div>
+
+        <div class="sub-section">
+          <div class="sub-title">2.3 Technical Information</div>
+          <p style="margin-bottom:6px;">When you visit our website, we may automatically collect:</p>
+          <ul class="bullet-list">
+            <li>IP Address</li>
+            <li>Browser type</li>
+            <li>Device information</li>
+            <li>Pages visited</li>
+            <li>Time spent on website</li>
+            <li>Referring websites</li>
+          </ul>
+          <p style="margin-top:8px;">This information helps us improve website functionality and user experience.</p>
+        </div>
+      </div>
+    </div>
+
+    <!-- 3. How We Use -->
+    <div class="section" id="s3">
+      <div class="section-header">
+        <div class="section-num">3</div>
+        <div class="section-title">How We Use Your Information</div>
+      </div>
+      <div class="section-body">
+        <p>The information collected may be used for the following purposes:</p>
+        <div class="purpose-grid">
+          <div class="purpose-item">To provide consultancy and advisory services</div>
+          <div class="purpose-item">To create and manage user accounts</div>
+          <div class="purpose-item">To process service requests or applications</div>
+          <div class="purpose-item">To communicate with users regarding services or updates</div>
+          <div class="purpose-item">To improve website performance and customer experience</div>
+          <div class="purpose-item">To analyze trends and usage patterns</div>
+          <div class="purpose-item">To send promotional or informational communications (where permitted)</div>
+        </div>
+        <p style="margin-top:10px;"><strong style="color:var(--green-700)">We do not sell personal data to third parties.</strong></p>
+      </div>
+    </div>
+
+    <!-- 4. Data Sharing -->
+    <div class="section" id="s4">
+      <div class="section-header">
+        <div class="section-num">4</div>
+        <div class="section-title">Data Sharing and Disclosure</div>
+      </div>
+      <div class="section-body">
+        <p>Your personal information may only be shared under the following circumstances:</p>
+
+        <div class="sub-section">
+          <div class="sub-title">4.1 Service Providers</div>
+          <p>We may share information with trusted third-party service providers who assist us in operating our website or delivering services.</p>
+        </div>
+
+        <div class="sub-section">
+          <div class="sub-title">4.2 Legal Requirements</div>
+          <p>We may disclose personal information if required by law, by court order, by regulatory authorities, or to protect our legal rights.</p>
+        </div>
+
+        <div class="sub-section">
+          <div class="sub-title">4.3 Business Transfers</div>
+          <p>In the event of a merger, restructuring, or sale of company assets, user information may be transferred as part of the business assets.</p>
+        </div>
+      </div>
+    </div>
+
+    <!-- 5. Data Security -->
+    <div class="section" id="s5">
+      <div class="section-header">
+        <div class="section-num">5</div>
+        <div class="section-title">Data Security</div>
+      </div>
+      <div class="section-body">
+        <p>We take reasonable administrative, technical, and physical measures to protect user information from:</p>
+        <ul class="bullet-list">
+          <li>Unauthorized access</li>
+          <li>Misuse</li>
+          <li>Loss</li>
+          <li>Alteration</li>
+          <li>Disclosure</li>
+        </ul>
+        <p style="margin-top:8px;">However, no system of data transmission over the internet can be guaranteed to be 100% secure.</p>
+      </div>
+    </div>
+
+    <!-- 6. Cookies -->
+    <div class="section" id="s6">
+      <div class="section-header">
+        <div class="section-num">6</div>
+        <div class="section-title">Cookies and Tracking Technologies</div>
+      </div>
+      <div class="section-body">
+        <p>Our website may use cookies and similar tracking technologies to:</p>
+        <ul class="bullet-list single">
+          <li>Enhance website functionality</li>
+          <li>Analyze traffic</li>
+          <li>Remember user preferences</li>
+          <li>Improve services</li>
+        </ul>
+        <p style="margin-top:8px;">Users may choose to disable cookies through their browser settings, although some features of the website may not function properly.</p>
+      </div>
+    </div>
+
+    <!-- 7. Third-Party Links -->
+    <div class="section" id="s7">
+      <div class="section-header">
+        <div class="section-num">7</div>
+        <div class="section-title">Third-Party Links</div>
+      </div>
+      <div class="section-body">
+        <p>Our website may contain links to external websites. We are not responsible for the privacy practices or content of third-party websites.</p>
+        <p>Users are encouraged to review the privacy policies of any external websites they visit.</p>
+      </div>
+    </div>
+
+    <!-- 8. User Rights -->
+    <div class="section" id="s8">
+      <div class="section-header">
+        <div class="section-num">8</div>
+        <div class="section-title">User Rights</div>
+      </div>
+      <div class="section-body">
+        <p>Users may have the right to:</p>
+        <div class="rights-grid">
+          <div class="right-item">Request access to their personal data</div>
+          <div class="right-item">Request correction of inaccurate information</div>
+          <div class="right-item">Request deletion of their personal data (where legally permitted)</div>
+          <div class="right-item">Withdraw consent for marketing communications</div>
+        </div>
+        <p style="margin-top:10px;">Requests can be made by contacting us using the contact information provided below.</p>
+      </div>
+    </div>
+
+    <!-- 9. Data Retention -->
+    <div class="section" id="s9">
+      <div class="section-header">
+        <div class="section-num">9</div>
+        <div class="section-title">Data Retention</div>
+      </div>
+      <div class="section-body">
+        <p>We retain personal information only for as long as necessary to:</p>
+        <ul class="bullet-list single">
+          <li>Fulfill the purposes described in this policy</li>
+          <li>Comply with legal obligations</li>
+          <li>Resolve disputes</li>
+          <li>Enforce agreements</li>
+        </ul>
+        <p style="margin-top:8px;">After this period, the data may be securely deleted or anonymized.</p>
+      </div>
+    </div>
+
+    <!-- 10. Children's Privacy -->
+    <div class="section" id="s10">
+      <div class="section-header">
+        <div class="section-num">10</div>
+        <div class="section-title">Children's Privacy</div>
+      </div>
+      <div class="section-body">
+        <p>Our services are not directed toward individuals under the age of 18. We do not knowingly collect personal information from minors.</p>
+        <p>If we become aware that personal information of a minor has been collected, we will take steps to remove such information.</p>
+      </div>
+    </div>
+
+    <!-- 11. Changes -->
+    <div class="section" id="s11">
+      <div class="section-header">
+        <div class="section-num">11</div>
+        <div class="section-title">Changes to This Privacy Policy</div>
+      </div>
+      <div class="section-body">
+        <p>First Noble Step (Private) Limited reserves the right to update or modify this Privacy Policy at any time.</p>
+        <p>Any changes will be posted on this page and will become effective immediately upon publication. Users are encouraged to review this policy periodically.</p>
+      </div>
+    </div>
+
+    <!-- 12. Contact -->
+    <div class="section" id="s12">
+      <div class="section-header">
+        <div class="section-num">12</div>
+        <div class="section-title">Contact Information</div>
+      </div>
+      <div class="section-body">
+        <p>If you have any questions regarding this Privacy Policy or how your information is handled, please contact us:</p>
+        <a class="contact-box" href="mailto:support@firstnoblestep.com">
+          <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M20 4H4c-1.1 0-2 .9-2 2v12c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V6c0-1.1-.9-2-2-2zm0 4l-8 5-8-5V6l8 5 8-5v2z"/></svg>
+          support@firstnoblestep.com
+        </a>
+      </div>
+    </div>
+
+  </main>
+</div>
+
+<!-- Footer -->
+<div class="footer">
+  &copy; 2025 <span>First Noble Step (Private) Limited</span> &nbsp;·&nbsp; All rights reserved &nbsp;·&nbsp; Privacy Policy
+</div>
+
+</body>
+</html>
