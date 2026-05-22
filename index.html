@@ -686,7 +686,7 @@
     <!-- MAIN JAVASCRIPT LOGIC -->
     <script type="module">
         import { initializeApp } from 'https://www.gstatic.com/firebasejs/11.0.1/firebase-app.js';
-        import { getAuth, signInWithRedirect, getRedirectResult, GoogleAuthProvider, onAuthStateChanged, signOut, createUserWithEmailAndPassword, signInWithEmailAndPassword, updateProfile } from 'https://www.gstatic.com/firebasejs/11.0.1/firebase-auth.js';
+        import { getAuth, signInWithRedirect, signInWithPopup, getRedirectResult, GoogleAuthProvider, onAuthStateChanged, signOut, createUserWithEmailAndPassword, signInWithEmailAndPassword, updateProfile } from 'https://www.gstatic.com/firebasejs/11.0.1/firebase-auth.js';
         import { getFirestore, collection, addDoc, serverTimestamp } from 'https://www.gstatic.com/firebasejs/11.0.1/firebase-firestore.js';
 
         const firebaseConfig = {
@@ -796,15 +796,43 @@
             isSigningIn = true;
             try {
                 saveState();
+                
+                // If running inside a sandboxed iframe (like the AI Studio preview), redirect often fails
+                // due to browser security blocking 3rd party cookies/storage access (auth/network-request-failed).
+                // If we detect we are in an iframe, we can try to warn or prepare a fallback.
+                const isInIframe = window.self !== window.top;
+                if (isInIframe) {
+                    console.log("Iframe setup detected, attempting redirect sign-in. If blocked, we will fall back to popup.");
+                }
+
                 await signInWithRedirect(auth, provider);
             } catch (error) {
+                console.warn('Redirect sign-in failed/blocked:', error);
+                
+                // Fallback to signInWithPopup in case of network restrictions (like iframe sandbox)
+                if (error.code === 'auth/network-request-failed' || error.message.includes('network-request-failed') || window.self !== window.top) {
+                    console.log('Attempting Popup fallback authentication...');
+                    try {
+                        const result = await signInWithPopup(auth, provider);
+                        const user = result.user;
+                        if (user && state.isOpen && state.step === 0) {
+                            openForm(state.plan);
+                        }
+                        isSigningIn = false;
+                        return user;
+                    } catch (popupError) {
+                        console.error('Popup fallback also failed:', popupError);
+                        error = popupError; // Show the ultimate error
+                    }
+                }
+
                 console.error('Sign-in failed:', error);
                 const errorMsg = document.getElementById('auth-error-msg');
                 if(errorMsg) {
-                    errorMsg.innerText = "Sign-in failed. Please try again.";
+                    errorMsg.innerText = "Sign-in blocked or failed. Please check your browser's third-party cookies or try matching pop-ups.";
                     errorMsg.classList.remove('hidden');
                 } else {
-                    alert("Sign-in failed.");
+                    alert("Sign-in failed: " + error.message);
                 }
                 isSigningIn = false;
             }
