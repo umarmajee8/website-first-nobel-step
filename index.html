@@ -4,8 +4,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta name="theme-color" content="#ffffff" media="(prefers-color-scheme: light)">
-    <meta name="theme-color" content="#111827" media="(prefers-color-scheme: dark)">
+    <meta name="theme-color" content="#ffffff">
     <title>First Nobel Step | Official Portal</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
@@ -124,14 +123,6 @@
   }
 }
 </script>
-<script>
-    // Prevent FOUC
-    if (localStorage.theme === 'dark' || (!('theme' in localStorage) && window.matchMedia('(prefers-color-scheme: dark)').matches)) {
-        document.documentElement.classList.add('dark');
-    } else {
-        document.documentElement.classList.remove('dark');
-    }
-</script>
 <link rel="stylesheet" href="/index.css">
 </head>
 <body class="min-h-screen flex flex-col bg-white dark:bg-gray-900 text-gray-900 dark:text-white transition-colors duration-300 selection:bg-green-100 selection:text-pakistan-green">
@@ -148,11 +139,28 @@
                 </div>
             </div>
             
-            <div class="flex items-center gap-4">
-                <button id="theme-toggle" class="flex items-center justify-center gap-1 w-[76px] px-1.5 py-1 rounded-full transition-all duration-300 bg-gray-200 dark:bg-black border border-gray-300 dark:border-gray-700">
-                    <span id="theme-text" class="text-[8px] font-bold text-gray-900 dark:text-white order-1 whitespace-nowrap">DAY MODE</span>
-                    <i id="theme-icon" class="fa-solid fa-sun text-[10px] text-gray-900 dark:text-white order-2"></i>
-                </button>
+            <div class="flex items-center gap-3 sm:gap-4">
+                <!-- User Profile & Login -->
+                <div id="user-profile" class="hidden items-center gap-2 px-3 py-1 bg-gray-50 dark:bg-gray-800 rounded-full border border-gray-100 dark:border-gray-700">
+                    <div class="relative group cursor-pointer">
+                        <img id="user-avatar" src="" alt="Profile" class="w-8 h-8 rounded-full border-2 border-pakistan-green object-cover" />
+                    </div>
+                    <div class="flex flex-col flex-1 pl-1 pr-2">
+                        <span id="user-name" class="text-[11px] font-bold text-gray-900 dark:text-white truncate max-w-[100px]">User</span>
+                        <button onclick="handleLogout()" class="text-[9px] text-left font-lemon tracking-widest text-red-500 hover:text-red-700 uppercase transition-colors">Logout</button>
+                    </div>
+                </div>
+
+                <div id="login-nav-item">
+                    <button id="login-button" onclick="handleLogin()" class="flex items-center gap-2 px-4 py-1.5 bg-white dark:bg-gray-900 border border-gray-200 dark:border-gray-700 rounded-full hover:bg-gray-50 dark:hover:bg-gray-800 transition-all shadow-sm active:scale-95 group">
+                        <div class="w-6 h-6 rounded-full bg-gray-100 dark:bg-gray-800 flex items-center justify-center text-gray-500 group-hover:text-pakistan-green transition-colors">
+                            <i class="fa-solid fa-user text-xs"></i>
+                        </div>
+                        <span class="text-[10px] font-bold text-gray-700 dark:text-gray-300">Login</span>
+                    </button>
+                </div>
+
+                <!-- Apply Button -->
                 <button onclick="openForm()" class="group relative inline-flex items-center justify-center overflow-hidden bg-pakistan-green text-white px-5 py-2 rounded-lg font-lemon text-[10px] tracking-widest hover:bg-green-800 transition-all shadow-[0_10px_20px_-5px_rgba(1,65,28,0.4)] active:scale-95 text-center">
                     <span class="transition-all duration-300 group-hover:-translate-x-2">Apply Now</span>
                     <i class="fa-solid fa-arrow-right absolute right-3 translate-x-4 opacity-0 transition-all duration-300 group-hover:translate-x-0 group-hover:opacity-100"></i>
@@ -279,13 +287,15 @@
                             <div class="h-px bg-gray-100 dark:bg-gray-800 w-full mb-6"></div>
                             <div class="mb-3 text-[10px] font-lemon text-pakistan-green dark:text-green-400 tracking-widest">What You Unlock:</div>
                             <ul class="space-y-3 mb-6 flex-grow">
-                                <li class="flex items-start gap-2.5 text-sm"><i class="fa-solid fa-check text-pakistan-green dark:text-green-400 text-[9px] mt-1 bg-green-50 dark:bg-green-900/40 p-1 rounded-full"></i> <span class="text-gray-700 dark:text-gray-300 font-medium text-xs">Turn your idea into funded reality</span></li>
+                                <li class="flex items-start gap-2.5 text-sm"><i class="fa-solid fa-check text-pakistan-green dark:text-green-400 text-[9px] mt-1 bg-green-50 dark:bg-green-900/40 p-1 rounded-full"></i> <span class="text-gray-700 dark:text-gray-300 font-medium text-xs">Coffee meetups</span></li>
                                 <li class="flex items-start gap-2.5 text-sm"><i class="fa-solid fa-check text-pakistan-green dark:text-green-400 text-[9px] mt-1 bg-green-50 dark:bg-green-900/40 p-1 rounded-full"></i> <span class="text-gray-700 dark:text-gray-300 font-medium text-xs">Strategic feedback from leaders</span></li>
                                 <li class="flex items-start gap-2.5 text-sm"><i class="fa-solid fa-check text-pakistan-green dark:text-green-400 text-[9px] mt-1 bg-green-50 dark:bg-green-900/40 p-1 rounded-full"></i> <span class="text-gray-700 dark:text-gray-300 font-medium text-xs">Powerful Business Networking</span></li>
                             </ul>
-                            <button onclick="openForm('entrepreneur')" class="w-full py-4 rounded-xl font-lemon text-[10px] tracking-widest bg-pakistan-green text-white shadow-xl shadow-green-900/10 hover:bg-green-900 uppercase transition-all hover:scale-[1.02] active:scale-95">
-                                Join Entrepreneurs
-                            </button>
+                            <div class="flex flex-col gap-3 mt-auto">
+                                <button onclick="openForm('entrepreneur')" class="w-full py-4 rounded-xl font-lemon text-[10px] tracking-widest bg-pakistan-green text-white shadow-xl shadow-green-900/10 hover:bg-green-900 uppercase transition-all hover:scale-[1.02] active:scale-95">
+                                    Join Entrepreneurs
+                                </button>
+                            </div>
                         </div>
                     </div>
                 </div>
@@ -391,16 +401,63 @@
                     <div class="flex flex-col items-center"><div id="step-2-indicator" class="w-8 h-8 rounded-full flex items-center justify-center text-[10px] font-lemon transition-all border-2 bg-white dark:bg-gray-900 border-gray-200 dark:border-gray-700 text-gray-400 dark:text-gray-500">2</div></div>
                     <div class="flex flex-col items-center"><div id="step-3-indicator" class="w-8 h-8 rounded-full flex items-center justify-center text-[10px] font-lemon transition-all border-2 bg-white dark:bg-gray-900 border-gray-200 dark:border-gray-700 text-gray-400 dark:text-gray-500">3</div></div>
                     <div class="flex flex-col items-center"><div id="step-4-indicator" class="w-8 h-8 rounded-full flex items-center justify-center text-[10px] font-lemon transition-all border-2 bg-white dark:bg-gray-900 border-gray-200 dark:border-gray-700 text-gray-400 dark:text-gray-500">4</div></div>
-                    <div class="flex flex-col items-center"><div id="step-5-indicator" class="w-8 h-8 rounded-full flex items-center justify-center text-[10px] font-lemon transition-all border-2 bg-white dark:bg-gray-900 border-gray-200 dark:border-gray-700 text-gray-400 dark:text-gray-500">5</div></div>
-                    <div class="flex flex-col items-center"><div id="step-6-indicator" class="w-8 h-8 rounded-full flex items-center justify-center text-[10px] font-lemon transition-all border-2 bg-white dark:bg-gray-900 border-gray-200 dark:border-gray-700 text-gray-400 dark:text-gray-500">6</div></div>
-                    <div class="flex flex-col items-center"><div id="step-7-indicator" class="w-8 h-8 rounded-full flex items-center justify-center text-[10px] font-lemon transition-all border-2 bg-white dark:bg-gray-900 border-gray-200 dark:border-gray-700 text-gray-400 dark:text-gray-500">7</div></div>
-                    <div class="flex flex-col items-center"><div id="step-8-indicator" class="w-8 h-8 rounded-full flex items-center justify-center text-[10px] font-lemon transition-all border-2 bg-white dark:bg-gray-900 border-gray-200 dark:border-gray-700 text-gray-400 dark:text-gray-500">8</div></div>
                 </div>
             </nav>
 
             <!-- Form Content -->
             <div id="form-body" class="flex-grow overflow-y-auto px-8 py-6 custom-scrollbar">
                 
+                <!-- STEP 0: Auth Form -->
+                <div id="step-0" class="hidden h-full flex-col items-center justify-center -mt-4 py-8">
+                    <div class="w-full max-w-sm mx-auto">
+                        <h2 class="text-[28px] font-bold text-gray-800 dark:text-white mb-8 text-center" id="auth-title">Create an account</h2>
+                        
+                        <button onclick="handleGoogleSignIn()" type="button" class="w-full py-4 rounded-full border border-gray-300 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-800 transition-all flex items-center justify-center gap-3 active:scale-95">
+                            <img src="https://www.gstatic.com/firebasejs/ui/2.0.0/images/auth/google.svg" class="w-5 h-5" />
+                            <span class="font-bold text-gray-800 dark:text-gray-200">Sign in with Google</span>
+                        </button>
+
+                        <div class="flex items-center gap-4 my-6">
+                            <div class="flex-grow h-px bg-gray-200 dark:bg-gray-700"></div>
+                            <span class="text-sm font-bold text-gray-500">Or</span>
+                            <div class="flex-grow h-px bg-gray-200 dark:bg-gray-700"></div>
+                        </div>
+
+                        <form id="auth-email-form" onsubmit="handleEmailAuth(event)" class="space-y-4">
+                            <div id="auth-name-fields" class="flex gap-4">
+                                <input type="text" id="auth-fname" placeholder="First Name" class="w-full px-5 py-4 rounded-[1.25rem] bg-gray-100/80 dark:bg-gray-800 focus:outline-none focus:ring-2 focus:ring-pakistan-green font-medium text-gray-900 dark:text-white placeholder-gray-400" required />
+                                <input type="text" id="auth-lname" placeholder="Last Name" class="w-full px-5 py-4 rounded-[1.25rem] bg-gray-100/80 dark:bg-gray-800 focus:outline-none focus:ring-2 focus:ring-pakistan-green font-medium text-gray-900 dark:text-white placeholder-gray-400" required />
+                            </div>
+                            
+                            <input type="email" id="auth-email" placeholder="Email" class="w-full px-5 py-4 rounded-[1.25rem] bg-gray-100/80 dark:bg-gray-800 focus:outline-none focus:ring-2 focus:ring-pakistan-green font-medium text-gray-900 dark:text-white placeholder-gray-400" required />
+                            
+                            <div class="relative flex gap-2">
+                                <input type="password" id="auth-password" placeholder="Password" class="w-full px-5 py-4 rounded-[1.25rem] bg-gray-100/80 dark:bg-gray-800 focus:outline-none focus:ring-2 focus:ring-pakistan-green font-medium text-gray-900 dark:text-white placeholder-gray-400" required />
+                                <button type="button" onclick="toggleAuthPassword()" class="px-5 py-4 rounded-[1.25rem] bg-gray-100/80 dark:bg-gray-800 text-gray-500 hover:text-gray-700 dark:hover:text-gray-300">
+                                    <i id="auth-pwd-icon" class="fa-solid fa-eye"></i>
+                                </button>
+                            </div>
+
+                            <!-- Error Message container for Email/PWD auth -->
+                            <div id="auth-error-msg" class="hidden text-red-500 text-xs font-bold text-center px-4"></div>
+
+                            <button type="submit" id="auth-submit-btn" class="w-full py-4 mt-2 rounded-full bg-black dark:bg-white text-white dark:text-black font-bold text-base hover:bg-gray-800 dark:hover:bg-gray-200 transition-colors active:scale-95 shadow-md flex items-center justify-center gap-2">
+                                <i class="fa-solid fa-circle-notch fa-spin hidden" id="auth-submit-spinner"></i>
+                                <span id="auth-submit-text">Create account</span>
+                            </button>
+                        </form>
+
+                        <p id="auth-terms" class="text-center text-xs text-gray-500 font-medium mt-6 px-4 leading-relaxed">
+                            Signing up for account means you agree to the <br/> <a href="#" class="underline hover:text-gray-800 dark:hover:text-gray-300">privacy policy</a> and <a href="#" class="underline hover:text-gray-800 dark:hover:text-gray-300">terms of services</a>
+                        </p>
+
+                        <p class="text-center text-sm font-bold text-gray-800 dark:text-gray-200 mt-8">
+                            <span id="auth-switch-text">Have an account?</span> 
+                            <button type="button" onclick="toggleAuthMode()" class="underline underline-offset-2 hover:text-gray-600 dark:hover:text-white ml-1">Log in here</button>
+                        </p>
+                    </div>
+                </div>
+
                 <!-- STEP 1: Plan Selection -->
                 <div id="step-1" class="space-y-8">
                     <div class="bg-gray-50 dark:bg-gray-800/30 p-6 rounded-[2rem] border border-gray-100 dark:border-gray-700">
@@ -520,37 +577,13 @@
                     </div>
                 </div>
 
-                <!-- STEP 3: Email Verification -->
-                <div id="step-3" class="hidden p-6 flex-grow">
-                    <div class="text-center py-2">
-                        <div class="w-16 h-16 bg-green-50 dark:bg-green-900/20 rounded-full flex items-center justify-center mx-auto mb-4 text-pakistan-green">
-                            <i class="fa-solid fa-envelope-circle-check text-2xl"></i>
-                        </div>
-                        <h3 class="text-xl font-bold text-gray-900 dark:text-white mb-2">Email Verification</h3>
-                        <p class="text-sm text-gray-600 dark:text-gray-400 mb-6 max-w-xs mx-auto">Please verify your email (<span id="verify-email-display" class="font-semibold text-pakistan-green"></span>) to proceed.</p>
-                        
-                        <div id="otp-section" class="flex flex-col gap-3 items-center w-full">
-                            <div class="flex flex-col items-center gap-3 w-full">
-                                <p id="otp-status" class="text-xs text-gray-500 hidden">Sending verification code...</p>
-                                <input type="text" id="input-otp" maxlength="6" placeholder="------" class="text-center tracking-[0.5em] font-mono text-lg w-full max-w-[200px] px-4 py-4 rounded-2xl border-2 border-gray-100 dark:border-gray-700 bg-white dark:bg-gray-900 focus:border-pakistan-green outline-none dark:text-white" oninput="validateStep3()">
-                                <button type="button" id="btn-send-otp" onclick="sendOTP()" class="hidden w-full max-w-xs py-3 bg-transparent text-pakistan-green underline hover:text-green-700 text-xs rounded-2xl transition-colors font-lemon tracking-widest uppercase disabled:opacity-50 flex items-center justify-center gap-2 mx-auto">
-                                    <i class="fa-solid fa-circle-notch fa-spin hidden" id="btn-send-otp-spinner"></i>
-                                    <span id="btn-send-otp-text">Resend Code</span>
-                                </button>
-                                <p id="otp-message" class="text-xs text-green-600 hidden">Code sent successfully!</p>
-                                <p id="otp-error" class="text-xs text-red-500 hidden"></p>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-
-                <!-- STEP 4: Specific Info -->
-                <div id="step-4" class="hidden space-y-6">
+                <!-- STEP 3: Specific Info -->
+                <div id="step-3" class="hidden space-y-6">
                     <!-- Student & Professional Fields -->
                     <div id="fields-package" class="hidden space-y-6">
                         <div class="w-full">
                             <label class="block text-[10px] font-lemon tracking-widest mb-2.5 text-gray-500 dark:text-gray-400">Current Status</label>
-                            <select id="input-status" class="w-full px-5 py-4 rounded-2xl bg-gray-50 dark:bg-gray-800/50 border-2 border-gray-100 dark:border-gray-700 focus:border-pakistan-green outline-none text-sm dark:text-white" onchange="validateStep4()">
+                            <select id="input-status" class="w-full px-5 py-4 rounded-2xl bg-gray-50 dark:bg-gray-800/50 border-2 border-gray-100 dark:border-gray-700 focus:border-pakistan-green outline-none text-sm dark:text-white" onchange="validateStep3()">
                                 <option value="" disabled selected>Select Status</option>
                                 <option value="student">Student</option>
                                 <option value="professional">Job Professional</option>
@@ -567,14 +600,14 @@
                                 <option value="europe">Europe (Schengen)</option>
                                 <option value="other">Other</option>
                             </select>
-                            <input type="text" id="input-country-other" placeholder="Please specify" class="hidden w-full mt-3 px-5 py-4 rounded-2xl bg-gray-50 dark:bg-gray-800/50 border-2 border-gray-100 dark:border-gray-700 focus:border-pakistan-green outline-none text-sm dark:text-white" oninput="validateStep4()">
+                            <input type="text" id="input-country-other" placeholder="Please specify" class="hidden w-full mt-3 px-5 py-4 rounded-2xl bg-gray-50 dark:bg-gray-800/50 border-2 border-gray-100 dark:border-gray-700 focus:border-pakistan-green outline-none text-sm dark:text-white" oninput="validateStep3()">
                         </div>
                     </div>
                     <!-- Entrepreneur Fields -->
                     <div id="fields-entrepreneur" class="hidden space-y-6">
                         <div class="w-full">
                             <label class="block text-[10px] font-lemon tracking-widest mb-2.5 text-gray-500 dark:text-gray-400">Business Name</label>
-                            <input type="text" id="input-business" oninput="validateStep4()" class="w-full px-5 py-4 rounded-2xl bg-gray-50 dark:bg-gray-800/50 border-2 border-gray-100 dark:border-gray-700 focus:border-pakistan-green outline-none text-sm dark:text-white" placeholder="e.g. NextGen Solutions">
+                            <input type="text" id="input-business" oninput="validateStep3()" class="w-full px-5 py-4 rounded-2xl bg-gray-50 dark:bg-gray-800/50 border-2 border-gray-100 dark:border-gray-700 focus:border-pakistan-green outline-none text-sm dark:text-white" placeholder="e.g. NextGen Solutions">
                         </div>
                         <div class="w-full">
                             <label class="block text-[10px] font-lemon tracking-widest mb-2.5 text-gray-500 dark:text-gray-400">Industry</label>
@@ -586,13 +619,13 @@
                                 <option value="services">Professional Services</option>
                                 <option value="other">Other</option>
                             </select>
-                            <input type="text" id="input-industry-other" placeholder="Please specify" class="hidden w-full mt-3 px-5 py-4 rounded-2xl bg-gray-50 dark:bg-gray-800/50 border-2 border-gray-100 dark:border-gray-700 focus:border-pakistan-green outline-none text-sm dark:text-white" oninput="validateStep4()">
+                            <input type="text" id="input-industry-other" placeholder="Please specify" class="hidden w-full mt-3 px-5 py-4 rounded-2xl bg-gray-50 dark:bg-gray-800/50 border-2 border-gray-100 dark:border-gray-700 focus:border-pakistan-green outline-none text-sm dark:text-white" oninput="validateStep3()">
                         </div>
                     </div>
                 </div>
 
-                <!-- STEP 5: Review -->
-                <div id="step-5" class="hidden space-y-6">
+                <!-- STEP 4: Review -->
+                <div id="step-4" class="hidden space-y-6">
                      <div class="bg-green-50/50 dark:bg-green-900/10 p-6 rounded-[1.5rem] border border-green-100 dark:border-green-800/50 relative overflow-hidden">
                         <h4 class="font-lemon text-[10px] text-pakistan-green dark:text-green-400 mb-6 uppercase tracking-widest">Application Review</h4>
                         <div class="grid grid-cols-2 gap-4 text-xs relative z-10">
@@ -613,90 +646,14 @@
                       </div>
                 </div>
 
-                <!-- STEP 6: Payment -->
-                <div id="step-6" class="hidden p-6 flex-grow">
-                    <div class="text-center py-2">
-                        <div class="w-16 h-16 bg-green-50 dark:bg-green-900/20 rounded-full flex items-center justify-center mx-auto mb-4 text-pakistan-green">
-                            <i class="fa-solid fa-wallet text-2xl"></i>
-                        </div>
-                        <h3 class="text-xl font-bold text-gray-900 dark:text-white mb-2">Select Payment Method</h3>
-                        <p class="text-sm text-gray-600 dark:text-gray-400 mb-6 max-w-xs mx-auto">Choose how you want to pay your processing fee.</p>
-                        
-                        <div class="bg-white dark:bg-gray-800 rounded-2xl border border-gray-200 dark:border-gray-700 shadow-sm p-5 mb-6">
-                            <div class="flex justify-between items-center mb-2">
-                                <span class="text-sm text-gray-500 dark:text-gray-400">Total Amount</span>
-                                <span class="text-2xl font-bold text-pakistan-green" id="payment-fee-amount">PKR 5,000</span>
-                            </div>
-                        </div>
-
-                        <div class="grid grid-cols-1 gap-3 text-left">
-                            <label onclick="selectPaymentMethod('easypaisa')" id="payment-easypaisa" class="payment-option flex items-center justify-between p-4 rounded-2xl border-2 border-gray-100 dark:border-gray-800 hover:border-green-100 transition-all cursor-pointer">
-                                <div class="flex items-center">
-                                    <h4 class="font-bold text-base dark:text-white">Easypaisa</h4>
-                                </div>
-                                <div class="w-5 h-5 rounded-full border-2 border-gray-200 flex items-center justify-center check-icon hidden">
-                                    <i class="fa-solid fa-check text-[10px] text-white"></i>
-                                </div>
-                            </label>
-                        </div>
-                    </div>
-                </div>
-
-                <!-- STEP 7: Payment Instructions -->
-                <div id="step-7" class="hidden p-6 flex-grow flex items-center justify-center">
-                    <div class="text-center w-full max-w-sm mx-auto">
-                        <div class="w-16 h-16 bg-green-50 dark:bg-green-900/20 rounded-full flex items-center justify-center mx-auto mb-4 text-pakistan-green">
-                            <i class="fa-solid fa-money-bill-transfer text-2xl"></i>
-                        </div>
-                        <h3 class="text-xl font-bold text-gray-900 dark:text-white mb-2">Transfer Payment</h3>
-                        <p class="text-sm text-gray-600 dark:text-gray-400 mb-6">Please transfer the fee to the following Easypaisa account and save the receipt.</p>
-                        
-                        <div class="bg-gray-50 dark:bg-gray-800/50 rounded-2xl border border-gray-200 dark:border-gray-700 p-6 text-left">
-                            <div class="mb-4">
-                                <p class="text-xs text-gray-500 uppercase tracking-wider mb-1">Total to Pay</p>
-                                <p class="text-lg font-bold text-gray-900 dark:text-white" id="transfer-fee-amount">PKR 5,000</p>
-                            </div>
-                            <div class="mb-4">
-                                <p class="text-xs text-gray-500 uppercase tracking-wider mb-1">Account Number</p>
-                                <p class="text-xl font-mono text-pakistan-green font-bold tracking-widest">0345-1234567</p> <!-- Replace with real number -->
-                            </div>
-                            <div>
-                                <p class="text-xs text-gray-500 uppercase tracking-wider mb-1">Account Title</p>
-                                <p class="text-lg font-bold text-gray-900 dark:text-white">First Nobel Step</p> <!-- Replace with actual title -->
-                            </div>
-                        </div>
-                    </div>
-                </div>
-
-                <!-- STEP 8: Payment Proof -->
-                <div id="step-8" class="hidden p-6 flex-grow">
-                    <div class="text-center py-2 max-w-sm mx-auto">
-                        <div class="w-16 h-16 bg-blue-50 dark:bg-blue-900/20 rounded-full flex items-center justify-center mx-auto mb-4 text-blue-600">
-                            <i class="fa-solid fa-cloud-arrow-up text-2xl"></i>
-                        </div>
-                        <h3 class="text-xl font-bold text-gray-900 dark:text-white mb-2">Upload Payment Proof</h3>
-                        <p class="text-sm text-gray-600 dark:text-gray-400 mb-6">Please upload the screenshot or image of your payment receipt to confirm the transaction.</p>
-                        
-                        <label for="input-payment-proof" class="flex flex-col items-center justify-center w-full h-48 border-2 border-dashed border-gray-300 dark:border-gray-700 rounded-2xl cursor-pointer bg-gray-50/50 dark:bg-gray-800/30 hover:border-blue-300 hover:bg-blue-50/50 dark:hover:border-blue-800 dark:hover:bg-blue-900/10 transition-all overflow-hidden relative">
-                            <div id="proof-upload-placeholder" class="flex flex-col items-center justify-center pt-5 pb-6">
-                                <i class="fa-solid fa-image text-3xl text-gray-400 mb-3"></i>
-                                <p class="text-sm text-gray-500 dark:text-gray-400"><span class="font-bold text-blue-600">Click to upload</span> or drag and drop</p>
-                                <p class="text-xs text-gray-400 mt-1">PNG, JPG, JPEG or GIF</p>
-                            </div>
-                            <img id="proof-preview" class="hidden absolute inset-0 w-full h-full object-cover">
-                            <input id="input-payment-proof" type="file" class="hidden" accept="image/*" onchange="handleProofUpload(event)" />
-                        </label>
-                        
-                        <div id="proof-file-name" class="text-xs text-gray-500 mt-3 font-medium truncate"></div>
-                    </div>
-                </div>
+                <!-- STEP 6: Payment removed -->
 
 
 
             </div>
 
             <!-- Footer Buttons -->
-            <div class="px-8 pb-8 pt-4 flex gap-4 border-t border-gray-100 dark:border-gray-800">
+            <div id="form-footer" class="px-8 pb-8 pt-4 flex gap-4 border-t border-gray-100 dark:border-gray-800">
                 <button id="btn-back" type="button" onclick="prevStep()" class="hidden px-6 py-4 rounded-2xl font-lemon text-[10px] border border-gray-200 dark:border-gray-700 text-gray-500 hover:bg-gray-50 dark:hover:bg-gray-800">Back</button>
                 <button id="btn-next" type="button" onclick="nextStep()" disabled class="flex-grow py-4 rounded-2xl font-lemon text-[10px] tracking-widest text-white transition-all bg-gray-200 dark:bg-gray-700 cursor-not-allowed flex items-center justify-center gap-2">
                     <i class="fa-solid fa-circle-notch fa-spin hidden" id="btn-next-spinner"></i>
@@ -727,7 +684,196 @@
     </div>
 
     <!-- MAIN JAVASCRIPT LOGIC -->
-    <script>
+    <script type="module">
+        import { initializeApp } from 'https://www.gstatic.com/firebasejs/11.0.1/firebase-app.js';
+        import { getAuth, signInWithPopup, GoogleAuthProvider, onAuthStateChanged, signOut, createUserWithEmailAndPassword, signInWithEmailAndPassword, updateProfile } from 'https://www.gstatic.com/firebasejs/11.0.1/firebase-auth.js';
+        import { getFirestore, collection, addDoc, serverTimestamp } from 'https://www.gstatic.com/firebasejs/11.0.1/firebase-firestore.js';
+
+        const firebaseConfig = {
+            projectId: "firstnoblestep-7d323",
+            appId: "1:509916109588:web:03a3b0e62559a066310001",
+            apiKey: "AIzaSyCV99pJn6rtCywO-XWph91PyNZ75ZAasFQ",
+            authDomain: "firstnoblestep-7d323.firebaseapp.com",
+            storageBucket: "firstnoblestep-7d323.firebasestorage.app",
+            messagingSenderId: "509916109588",
+            measurementId: "G-S9HXG4S0LS"
+        };
+
+        const app = initializeApp(firebaseConfig);
+        const auth = getAuth(app);
+        const db = getFirestore(app);
+        const provider = new GoogleAuthProvider();
+
+        let currentUser = null;
+
+        let isSigningIn = false;
+
+        onAuthStateChanged(auth, (user) => {
+            currentUser = user;
+            const profileEl = document.getElementById('user-profile');
+            const loginNavItem = document.getElementById('login-nav-item');
+            const avatarEl = document.getElementById('user-avatar');
+            const nameEl = document.getElementById('user-name');
+
+            if (user) {
+                // User is signed in
+                if (profileEl) {
+                    profileEl.classList.remove('hidden');
+                    profileEl.classList.add('flex');
+                }
+                if (loginNavItem) loginNavItem.classList.add('hidden');
+                if (avatarEl) avatarEl.src = user.photoURL || 'https://ui-avatars.com/api/?name=' + encodeURIComponent(user.displayName || 'User');
+                if (nameEl) nameEl.textContent = (user.displayName || 'User').split(' ')[0];
+            } else {
+                // User is signed out
+                currentUser = null;
+                if (profileEl) {
+                    profileEl.classList.add('hidden');
+                    profileEl.classList.remove('flex');
+                }
+                if (loginNavItem) loginNavItem.classList.remove('hidden');
+            }
+        });
+
+        async function handleLogin() {
+            // Log in from header defaults to opening the form on step 0
+            openForm(null);
+        }
+
+        async function handleGoogleSignIn() {
+            if (isSigningIn) return null;
+            isSigningIn = true;
+            try {
+                const result = await signInWithPopup(auth, provider);
+                const user = result.user;
+                if (user && state.isOpen && state.step === 0) {
+                    // transition to step 1 automatically
+                    openForm(state.plan);
+                }
+                return user;
+            } catch (error) {
+                if (error.code === 'auth/popup-closed-by-user') {
+                    console.warn('Sign-in popup closed by user');
+                } else if (error.code === 'auth/cancelled-popup-request') {
+                    console.warn('Popup request cancelled');
+                } else {
+                    console.error('Sign-in failed:', error);
+                    const errorMsg = document.getElementById('auth-error-msg');
+                    if(errorMsg) {
+                        errorMsg.innerText = "Sign-in failed. Please ensure popups are allowed and try again.";
+                        errorMsg.classList.remove('hidden');
+                    } else {
+                        alert("Sign-in failed.");
+                    }
+                }
+                return null;
+            } finally {
+                isSigningIn = false;
+            }
+        }
+
+        let isLoginMode = false;
+        function toggleAuthMode() {
+            isLoginMode = !isLoginMode;
+            const title = document.getElementById('auth-title');
+            const nameFields = document.getElementById('auth-name-fields');
+            const submitText = document.getElementById('auth-submit-text');
+            const switchText = document.getElementById('auth-switch-text');
+            const switchBtn = switchText.nextElementSibling;
+            const fnameInput = document.getElementById('auth-fname');
+            const lnameInput = document.getElementById('auth-lname');
+            const errorMsg = document.getElementById('auth-error-msg');
+            
+            if (errorMsg) errorMsg.classList.add('hidden');
+
+            if (isLoginMode) {
+                title.innerText = 'Log in';
+                nameFields.classList.add('hidden');
+                fnameInput.removeAttribute('required');
+                lnameInput.removeAttribute('required');
+                submitText.innerText = 'Log in';
+                switchText.innerText = "Don't have an account?";
+                switchBtn.innerText = "Create one here";
+            } else {
+                title.innerText = 'Create an account';
+                nameFields.classList.remove('hidden');
+                fnameInput.setAttribute('required', 'true');
+                lnameInput.setAttribute('required', 'true');
+                submitText.innerText = 'Create account';
+                switchText.innerText = "Have an account?";
+                switchBtn.innerText = "Log in here";
+            }
+        }
+
+        function toggleAuthPassword() {
+            const pwdInput = document.getElementById('auth-password');
+            const pwdIcon = document.getElementById('auth-pwd-icon');
+            if (pwdInput.type === 'password') {
+                pwdInput.type = 'text';
+                pwdIcon.classList.replace('fa-eye', 'fa-eye-slash');
+            } else {
+                pwdInput.type = 'password';
+                pwdIcon.classList.replace('fa-eye-slash', 'fa-eye');
+            }
+        }
+
+        async function handleEmailAuth(e) {
+            e.preventDefault();
+            const email = document.getElementById('auth-email').value;
+            const password = document.getElementById('auth-password').value;
+            const fname = document.getElementById('auth-fname').value;
+            const lname = document.getElementById('auth-lname').value;
+            
+            const errorMsg = document.getElementById('auth-error-msg');
+            const submitSpinner = document.getElementById('auth-submit-spinner');
+            const submitBtn = document.getElementById('auth-submit-btn');
+
+            errorMsg.classList.add('hidden');
+            submitBtn.disabled = true;
+            submitSpinner.classList.remove('hidden');
+
+            try {
+                let userCred;
+                if (isLoginMode) {
+                    userCred = await signInWithEmailAndPassword(auth, email, password);
+                } else {
+                    userCred = await createUserWithEmailAndPassword(auth, email, password);
+                    // Update profile with name
+                    const fullName = `${fname} ${lname}`.trim();
+                    await updateProfile(userCred.user, { displayName: fullName });
+                    // Optional: force refresh token to show claims/name properly
+                    // await auth.currentUser.getIdToken(true);
+                }
+                
+                // Success: If we are in the form modal, proceed to step 1
+                if (state.isOpen && state.step === 0) {
+                    openForm(state.plan);
+                }
+            } catch (err) {
+                console.error(err);
+                if (err.code === 'auth/email-already-in-use') errorMsg.innerText = 'Email is already registered. Please log in instead.';
+                else if (err.code === 'auth/wrong-password') errorMsg.innerText = 'Incorrect password.';
+                else if (err.code === 'auth/user-not-found') errorMsg.innerText = 'Account not found. Please create one.';
+                else if (err.code === 'auth/invalid-credential') errorMsg.innerText = 'Incorrect email or password.';
+                else if (err.code === 'auth/weak-password') errorMsg.innerText = 'Password must be at least 6 characters.';
+                else if (err.code === 'auth/invalid-email') errorMsg.innerText = 'Please enter a valid email address.';
+                else if (err.code === 'auth/operation-not-allowed') errorMsg.innerText = 'Email/password sign-in is disabled. Please use Google Sign-in above.';
+                else errorMsg.innerText = err.message;
+                errorMsg.classList.remove('hidden');
+            } finally {
+                submitBtn.disabled = false;
+                submitSpinner.classList.add('hidden');
+            }
+        }
+
+        async function handleLogout() {
+            try {
+                await signOut(auth);
+            } catch (error) {
+                console.error('Logout failed:', error);
+            }
+        }
+
         // --- State Management ---
         let state = {
             isOpen: false,
@@ -758,7 +904,6 @@
         const btnBack = document.getElementById('btn-back');
         const loadingView = document.getElementById('loading-view');
         const successView = document.getElementById('success-view');
-        const themeToggle = document.getElementById('theme-toggle');
 
         // --- Helper Logic ---
         function handleOtherOption(selectId, inputId) {
@@ -773,41 +918,8 @@
             validateStep4();
         }
 
-        // --- Theme Logic ---
-        const themeText = document.getElementById('theme-text');
-        const themeIcon = document.getElementById('theme-icon');
-
-        function updateThemeUI(isDark) {
-            if (isDark) {
-                document.documentElement.classList.add('dark');
-                themeText.textContent = 'NIGHT MODE';
-                themeIcon.classList.replace('fa-sun', 'fa-moon');
-                themeText.classList.replace('order-1', 'order-2');
-                themeIcon.classList.replace('order-2', 'order-1');
-            } else {
-                document.documentElement.classList.remove('dark');
-                themeText.textContent = 'DAY MODE';
-                themeIcon.classList.replace('fa-moon', 'fa-sun');
-                themeText.classList.replace('order-2', 'order-1');
-                themeIcon.classList.replace('order-1', 'order-2');
-            }
-        }
-
-        if (themeToggle) {
-            // Set initial state
-            const isDark = localStorage.theme === 'dark' || (!('theme' in localStorage) && window.matchMedia('(prefers-color-scheme: dark)').matches);
-            updateThemeUI(isDark);
-
-            themeToggle.addEventListener('click', () => {
-                const isDark = document.documentElement.classList.toggle('dark');
-                localStorage.theme = isDark ? 'dark' : 'light';
-                updateThemeUI(isDark);
-            });
-        }
-
-
         // --- Modal Logic ---
-        function openForm(planId) {
+        async function openForm(planId) {
             state.isOpen = true;
             modalOverlay.classList.remove('hidden');
             setTimeout(() => {
@@ -819,6 +931,26 @@
             if (planId) {
                 selectPlan(planId);
             }
+
+            if (!currentUser) {
+                state.step = 0;
+            } else {
+                if (state.step === 0 || state.step === undefined) state.step = 1;
+                // Pre-fill user data from Google if not already filled
+                if (!state.data.fullName) {
+                    state.data.fullName = currentUser.displayName || "";
+                    const inputName = document.getElementById('input-fullname');
+                    if (inputName) inputName.value = state.data.fullName;
+                }
+                if (!state.data.email) {
+                    state.data.email = currentUser.email || "";
+                    const inputEmail = document.getElementById('input-email');
+                    if (inputEmail) inputEmail.value = state.data.email;
+                }
+                // Verify steps if pre-filled
+                validateStep2(true);
+            }
+            updateUI();
         }
 
         function attemptCloseForm() {
@@ -1019,52 +1151,11 @@
 
         async function nextStep() {
             hideError();
-            if (state.step === 3) {
-                // Verify OTP first
-                const otpInput = document.getElementById('input-otp').value;
-                const email = document.getElementById('input-email').value.trim();
-                const errorEl = document.getElementById('otp-error');
-                const btnNext = document.getElementById('btn-next');
-                const btnNextText = document.getElementById('btn-next-text');
-                const btnNextSpinner = document.getElementById('btn-next-spinner');
-                
-                btnNext.disabled = true;
-                btnNextText.innerText = 'Verifying...';
-                btnNextSpinner.classList.remove('hidden');
-                errorEl.classList.add('hidden');
-
-                try {
-                    const response = await fetch('/api/verify-otp', {
-                        method: 'POST',
-                        headers: { 'Content-Type': 'application/json' },
-                        body: JSON.stringify({ email, otp: otpInput, otpHash: state.otpHash })
-                    });
-                    const data = await response.json();
-                    if (!data.success) {
-                        throw new Error(data.error || 'Invalid verification code');
-                    }
-                    // Success, move to next step
-                    state.step++;
-                    updateUI();
-                } catch (err) {
-                    errorEl.innerText = err.message;
-                    errorEl.classList.remove('hidden');
-                } finally {
-                    btnNext.disabled = false;
-                    btnNextText.innerText = 'Continue';
-                    btnNextSpinner.classList.add('hidden');
-                }
-                return;
-            }
-
-            if (state.step === 5 && state.plan === 'basic') {
+            if (state.step === 4) {
                 submitForm();
-            } else if (state.step < 8) {
+            } else if (state.step < 4) {
                 state.step++;
                 updateUI();
-                if (state.step === 3 && !state.otpHash) {
-                    sendOTP();
-                }
             } else {
                 submitForm();
             }
@@ -1079,12 +1170,33 @@
         }
 
         function updateUI() {
+            if (state.step === 0) {
+                const progressEl = document.getElementById('form-progress');
+                const footerEl = document.getElementById('form-footer');
+                if (progressEl) progressEl.classList.add('hidden');
+                if (footerEl) footerEl.classList.add('hidden');
+                for (let i = 1; i <= 4; i++) {
+                    const el = document.getElementById(`step-${i}`);
+                    if(el) el.classList.add('hidden');
+                }
+                const el0 = document.getElementById('step-0');
+                if (el0) el0.classList.remove('hidden');
+                return;
+            } else {
+                const progressEl = document.getElementById('form-progress');
+                const footerEl = document.getElementById('form-footer');
+                if (progressEl) progressEl.classList.remove('hidden');
+                if (footerEl) footerEl.classList.remove('hidden');
+                const el0 = document.getElementById('step-0');
+                if (el0) el0.classList.add('hidden');
+            }
+
             // Update Progress Bar
-            const progress = ((state.step - 1) / 7) * 100;
+            const progress = ((state.step - 1) / 3) * 100;
             document.getElementById('progress-line').style.width = `${progress}%`;
 
             // Update Indicators
-            for (let i = 1; i <= 8; i++) {
+            for (let i = 1; i <= 4; i++) {
                 const el = document.getElementById(`step-${i}-indicator`);
                 if (el) {
                     if (i <= state.step) {
@@ -1098,7 +1210,7 @@
             }
 
             // Show/Hide Steps
-            for (let i = 1; i <= 8; i++) {
+            for (let i = 1; i <= 4; i++) {
                 const el = document.getElementById(`step-${i}`);
                 if (el) {
                     if (i === state.step) el.classList.remove('hidden');
@@ -1106,13 +1218,8 @@
                 }
             }
 
-            // Update Email Verification
+            // Show/Hide Specific Plan Fields in Step 3
             if (state.step === 3) {
-                document.getElementById('verify-email-display').innerText = document.getElementById('input-email').value;
-            }
-
-            // Show/Hide Specific Plan Fields in Step 4
-            if (state.step === 4) {
                 document.getElementById('fields-package').classList.add('hidden');
                 document.getElementById('fields-entrepreneur').classList.add('hidden');
                 
@@ -1124,29 +1231,15 @@
             }
 
             // Update Review Data
-            if (state.step === 5) {
+            if (state.step === 4) {
                 document.getElementById('review-name').innerText = document.getElementById('input-fullname').value || '--';
                 document.getElementById('review-cnic').innerText = document.getElementById('input-cnic').value || '--';
-            }
-
-            // Update Payment Amount
-            if (state.step >= 6) {
-                const feeElement = document.getElementById('payment-fee-amount');
-                const transferFeeElement = document.getElementById('transfer-fee-amount');
-                let amountStr = 'PKR 50,000';
-                if (state.plan === 'standard') amountStr = 'PKR 2,499';
-                else if (state.plan === 'professional_pkg') amountStr = 'PKR 6,999';
-                
-                if (feeElement) feeElement.innerText = amountStr;
-                if (transferFeeElement) transferFeeElement.innerText = amountStr;
             }
 
             // Update Buttons
             btnBack.classList.toggle('hidden', state.step === 1);
             const btnNextText = document.getElementById('btn-next-text');
-            if (state.step === 5 && state.plan === 'basic') {
-                btnNextText.innerText = 'Submit Application';
-            } else if (state.step === 8) {
+            if (state.step === 4) {
                 btnNextText.innerText = 'Submit Application';
             } else {
                 btnNextText.innerText = 'Continue';
@@ -1171,18 +1264,9 @@
             } else if (state.step === 2) {
                 isValid = validateStep2(true);
             } else if (state.step === 3) {
-                const otpInput = document.getElementById('input-otp').value;
-                isValid = otpInput.length === 6 && state.otpHash !== null;
+                isValid = validateStep3(true);
             } else if (state.step === 4) {
-                isValid = validateStep4(true);
-            } else if (state.step === 5) {
                 isValid = document.getElementById('input-terms').checked && document.getElementById('input-disclaimer').checked;
-            } else if (state.step === 6) {
-                isValid = !!state.paymentMethod;
-            } else if (state.step === 7) {
-                isValid = true; // Just displaying account number
-            } else if (state.step === 8) {
-                isValid = !!state.paymentProofBase64;
             }
 
             if (isValid) {
@@ -1215,11 +1299,7 @@
             return valid;
         }
 
-        function validateStep3() {
-             validateCurrentStep();
-        }
-
-        function validateStep4(checkOnly = false) {
+        function validateStep3(checkOnly = false) {
             let valid = false;
             if (['basic', 'standard', 'professional_pkg'].includes(state.plan)) {
                 const status = document.getElementById('input-status').value;
@@ -1235,53 +1315,8 @@
             return valid;
         }
         
-        function validateStep5() {
+        function validateStep4() {
              validateCurrentStep();
-        }
-
-        async function sendOTP() {
-            const email = document.getElementById('input-email').value.trim();
-            const fullName = document.getElementById('input-fullname').value.trim();
-            const btn = document.getElementById('btn-send-otp');
-            const btnText = document.getElementById('btn-send-otp-text');
-            const btnSpinner = document.getElementById('btn-send-otp-spinner');
-            const errorEl = document.getElementById('otp-error');
-            const msgEl = document.getElementById('otp-message');
-            const statusEl = document.getElementById('otp-status');
-
-            btn.disabled = true;
-            btn.classList.remove('hidden');
-            btnText.innerText = 'Sending...';
-            btnSpinner.classList.remove('hidden');
-            statusEl.classList.add('hidden');
-            errorEl.classList.add('hidden');
-            msgEl.classList.add('hidden');
-
-            try {
-                const response = await fetch('/api/send-otp', {
-                    method: 'POST',
-                    headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({ email, fullName })
-                });
-                
-                const data = await response.json();
-                if (data.success) {
-                    state.otpHash = data.hash;
-                    btn.disabled = false;
-                    btnText.innerText = 'Resend Code';
-                    btnSpinner.classList.add('hidden');
-                    msgEl.classList.remove('hidden');
-                } else {
-                    throw new Error(data.error || 'Failed to send code');
-                }
-            } catch (err) {
-                statusEl.classList.add('hidden');
-                errorEl.innerText = err.message;
-                errorEl.classList.remove('hidden');
-                btn.disabled = false;
-                btnText.innerText = 'Resend Code';
-                btnSpinner.classList.add('hidden');
-            }
         }
 
         // --- Submission ---
@@ -1301,7 +1336,8 @@
                 paymentMethod: state.plan === 'basic' ? 'none' : state.paymentMethod,
                 paymentProof: state.paymentProofBase64 ? state.paymentProofBase64 : '',
                 otp: document.getElementById('input-otp') ? document.getElementById('input-otp').value : '',
-                otpHash: state.otpHash
+                otpHash: state.otpHash,
+                userId: currentUser ? currentUser.uid : null
             };
 
             // Hide Form
@@ -1309,6 +1345,21 @@
             loadingView.classList.remove('hidden');
 
             try {
+                // Save to Firestore first
+                if (currentUser) {
+                    try {
+                        await addDoc(collection(db, "applications"), {
+                            ...formData,
+                            // Ensure sensitive binary/base64 stuff doesn't bloat Firestore too much if not needed, 
+                            // but for now keeping it simple as per schema
+                            createdAt: serverTimestamp()
+                        });
+                        console.log("Application saved to Firestore");
+                    } catch (e) {
+                        console.error("Error adding document to Firestore: ", e);
+                    }
+                }
+
                 const response = await fetch('/api/submit-membership', {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
@@ -1384,39 +1435,35 @@
             }, 250);
         }
 
-        // --- Success Animation ---
-        function triggerSuccessAnimation() {
-            var duration = 3 * 1000;
-            var animationEnd = Date.now() + duration;
-            var defaults = { startVelocity: 30, spread: 360, ticks: 60, zIndex: 10000 };
-
-            function randomInRange(min, max) {
-              return Math.random() * (max - min) + min;
-            }
-
-            var interval = setInterval(function() {
-              var timeLeft = animationEnd - Date.now();
-
-              if (timeLeft <= 0) {
-                return clearInterval(interval);
-              }
-
-              var particleCount = 50 * (timeLeft / duration);
-              // since particles fall down, start a bit higher than random
-              confetti({
-                ...defaults, particleCount,
-                origin: { x: randomInRange(0.1, 0.3), y: Math.random() - 0.2 }
-              });
-              confetti({
-                ...defaults, particleCount,
-                origin: { x: randomInRange(0.7, 0.9), y: Math.random() - 0.2 }
-              });
-            }, 250);
-        }
-
         // Check for payment status in URL on load (FastPay temporarily removed)
         window.addEventListener('DOMContentLoaded', () => {
             // FastPay logic removed
+        });
+
+        // Expose functions to window for HTML event handlers
+        Object.assign(window, {
+            openForm,
+            attemptCloseForm,
+            hideExitConfirm,
+            forceCloseForm,
+            prevStep,
+            nextStep,
+            selectPlan,
+            validateStep2,
+            validateStep3,
+            validateStep4,
+            hideError,
+            formatCNIC,
+            handleOtherOption,
+            triggerSuccessAnimation,
+            selectPaymentMethod,
+            handleProofUpload,
+            handleLogout,
+            handleLogin,
+            handleGoogleSignIn,
+            handleEmailAuth,
+            toggleAuthMode,
+            toggleAuthPassword
         });
     </script>
 <script type="module" src="/index.tsx"></script>
