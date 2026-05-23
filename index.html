@@ -242,9 +242,9 @@
                             <div class="h-px bg-gray-100 dark:bg-gray-800 w-full mb-6"></div>
                             <div class="mb-3 text-[10px] font-lemon text-pakistan-green dark:text-green-400 tracking-widest">Available Packages:</div>
                             <ul class="space-y-3 mb-6 flex-grow">
-                                <li class="flex items-start gap-2.5 text-sm"><i class="fa-solid fa-circle text-green-500 text-[6px] mt-1.5"></i> <span class="text-gray-700 dark:text-gray-300 font-medium text-xs"><strong>Basic Package</strong> (Free) - Initial advice & guidance</span></li>
-                                <li class="flex items-start gap-2.5 text-sm"><i class="fa-solid fa-circle text-blue-500 text-[6px] mt-1.5"></i> <span class="text-gray-700 dark:text-gray-300 font-medium text-xs"><strong>Standard Package</strong> (PKR 2,499) - Detailed evaluation & support</span></li>
-                                <li class="flex items-start gap-2.5 text-sm"><i class="fa-solid fa-circle text-purple-500 text-[6px] mt-1.5"></i> <span class="text-gray-700 dark:text-gray-300 font-medium text-xs"><strong>Professional Package</strong> (PKR 6,999) - Premium advisory & global exposure</span></li>
+                                <li class="flex items-start gap-2.5 text-sm"><i class="fa-solid fa-circle text-green-500 text-[6px] mt-1.5"></i> <span class="text-gray-700 dark:text-gray-300 font-medium text-xs"><strong>Basic Package</strong> (PKR 2,499) - Initial advice & guidance</span></li>
+                                <li class="flex items-start gap-2.5 text-sm"><i class="fa-solid fa-circle text-blue-500 text-[6px] mt-1.5"></i> <span class="text-gray-700 dark:text-gray-300 font-medium text-xs"><strong>Standard Package</strong> (PKR 6,999) - Detailed evaluation & support</span></li>
+                                <li class="flex items-start gap-2.5 text-sm"><i class="fa-solid fa-circle text-purple-500 text-[6px] mt-1.5"></i> <span class="text-gray-700 dark:text-gray-300 font-medium text-xs"><strong>Professional Package</strong> (PKR 14,999) - Premium advisory & global exposure</span></li>
                             </ul>
                             <div class="flex flex-col gap-3 mt-auto">
                                 <button onclick="openForm()" class="w-full py-4 rounded-xl font-lemon text-[10px] tracking-widest bg-pakistan-green text-white shadow-xl shadow-green-900/10 hover:bg-green-900 uppercase transition-all hover:scale-[1.02] active:scale-95">
@@ -408,7 +408,7 @@
                                 </div>
                                 <div>
                                     <h4 class="font-lemon text-[10px] dark:text-white">Basic Package</h4>
-                                    <p class="text-[10px] text-gray-500 font-bold mt-0.5">Free</p>
+                                    <p class="text-[10px] text-green-600 font-bold mt-0.5">PKR 2,499</p>
                                 </div>
                             </div>
                             <div onclick="selectPlan('standard')" id="plan-standard" class="plan-card flex flex-col gap-3 p-4 rounded-2xl border-2 transition-all cursor-pointer border-gray-100 dark:border-gray-800 hover:border-blue-100 relative overflow-hidden">
@@ -418,7 +418,7 @@
                                 </div>
                                 <div>
                                     <h4 class="font-lemon text-[10px] dark:text-white">Standard Package</h4>
-                                    <p class="text-[10px] text-blue-600 font-bold mt-0.5">PKR 2,499</p>
+                                    <p class="text-[10px] text-blue-600 font-bold mt-0.5">PKR 6,999</p>
                                 </div>
                             </div>
                             <div onclick="selectPlan('professional_pkg')" id="plan-professional_pkg" class="plan-card flex flex-col gap-3 p-4 rounded-2xl border-2 transition-all cursor-pointer border-gray-100 dark:border-gray-800 hover:border-purple-100 relative overflow-hidden">
@@ -428,7 +428,7 @@
                                 </div>
                                 <div>
                                     <h4 class="font-lemon text-[10px] dark:text-white">Professional Package</h4>
-                                    <p class="text-[10px] text-purple-600 font-bold mt-0.5">PKR 6,999</p>
+                                    <p class="text-[10px] text-purple-600 font-bold mt-0.5">PKR 14,999</p>
                                 </div>
                             </div>
                         </div>
@@ -442,7 +442,7 @@
                             <div class="w-10 h-10 rounded-xl flex items-center justify-center bg-gray-50 dark:bg-gray-800 text-gray-400 icon-box"><i class="fa-solid fa-rocket"></i></div>
                             <div>
                                 <h4 class="font-lemon text-[10px] dark:text-white">Entrepreneur</h4>
-                                <p class="text-[10px] text-green-600 font-bold mt-0.5">PKR 50,000</p>
+                                <p class="text-[10px] text-green-600 font-bold mt-0.5">PKR 49,999</p>
                             </div>
                             <div class="ml-auto w-5 h-5 rounded-full border-2 flex items-center justify-center border-gray-200 check-circle"></div>
                         </div>
@@ -1124,20 +1124,16 @@
                 const freeUi = document.getElementById('payment-free-ui');
                 const amountDisplay = document.getElementById('payment-amount-display');
                 
-                if (state.plan === 'basic') {
-                    if (nonFree) nonFree.classList.add('hidden');
-                    if (freeUi) freeUi.classList.remove('hidden');
-                } else {
-                    if (freeUi) freeUi.classList.add('hidden');
-                    if (nonFree) nonFree.classList.remove('hidden');
-                    
-                    let feeStr = 'PKR 2,499';
-                    if (state.plan === 'standard') feeStr = 'PKR 2,499';
-                    else if (state.plan === 'professional_pkg') feeStr = 'PKR 6,999';
-                    else if (state.plan === 'entrepreneur') feeStr = 'PKR 50,000';
-                    
-                    if (amountDisplay) amountDisplay.innerText = feeStr;
-                }
+                if (freeUi) freeUi.classList.add('hidden');
+                if (nonFree) nonFree.classList.remove('hidden');
+                
+                let feeStr = 'PKR 2,499';
+                if (state.plan === 'basic') feeStr = 'PKR 2,499';
+                else if (state.plan === 'standard') feeStr = 'PKR 6,999';
+                else if (state.plan === 'professional_pkg') feeStr = 'PKR 14,999';
+                else if (state.plan === 'entrepreneur') feeStr = 'PKR 49,999';
+                
+                if (amountDisplay) amountDisplay.innerText = feeStr;
             }
 
             // Update Review Data
@@ -1215,12 +1211,7 @@
         }
 
         function validateStep4(checkOnly = false) {
-            let valid = false;
-            if (state.plan === 'basic') {
-                valid = true;
-            } else {
-                valid = !!state.paymentProofBase64;
-            }
+            const valid = !!state.paymentProofBase64;
             if (!checkOnly) validateCurrentStep();
             return valid;
         }
@@ -1247,7 +1238,7 @@
                 businessName: document.getElementById('input-business') ? document.getElementById('input-business').value : '',
                 industry: document.getElementById('input-industry') ? (document.getElementById('input-industry').value === 'other' ? document.getElementById('input-industry-other').value : document.getElementById('input-industry').value) : '',
                 targetCountry: document.getElementById('input-country') ? (document.getElementById('input-country').value === 'other' ? document.getElementById('input-country-other').value : document.getElementById('input-country').value) : '',
-                paymentMethod: state.plan === 'basic' ? 'none' : state.paymentMethod,
+                paymentMethod: state.paymentMethod,
                 paymentProof: state.paymentProofBase64 ? state.paymentProofBase64 : '',
                 otp: document.getElementById('input-otp') ? document.getElementById('input-otp').value : '',
                 otpHash: state.otpHash

@@ -346,26 +346,24 @@ const MembershipForm: React.FC<Props> = ({ initialPlanId, onClose }) => {
         throw new Error(data.error || "Failed to submit application. Please try again later.");
       }
 
-      if (formData.planId !== 'basic') {
-        const paymentResponse = await fetch('/api/create-fastpay-checkout', {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({
-            amount: formData.planId === 'standard' ? 2499 : (formData.planId === 'professional_pkg' ? 6999 : 50000),
-            paymentMethod: formData.paymentMethod,
-            email: formData.email,
-            fullName: formData.fullName
-          })
-        });
-        
-        const paymentData = await paymentResponse.json();
-        if (!paymentResponse.ok || !paymentData.success) {
-          throw new Error(paymentData.error || 'Failed to initialize payment gateway.');
-        }
-        
-        window.location.href = paymentData.checkoutUrl;
-        return;
+      const paymentResponse = await fetch('/api/create-fastpay-checkout', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          amount: formData.planId === 'basic' ? 2499 : (formData.planId === 'standard' ? 6999 : (formData.planId === 'professional_pkg' ? 14999 : 49999)),
+          paymentMethod: formData.paymentMethod,
+          email: formData.email,
+          fullName: formData.fullName
+        })
+      });
+      
+      const paymentData = await paymentResponse.json();
+      if (!paymentResponse.ok || !paymentData.success) {
+        throw new Error(paymentData.error || 'Failed to initialize payment gateway.');
       }
+      
+      window.location.href = paymentData.checkoutUrl;
+      return;
 
       localStorage.removeItem(STORAGE_KEY);
       setIsSubmitted(true);
