@@ -204,56 +204,161 @@
                         </div>
                     </div>
 
-                    <!-- HERO RIGHT COLUMN: BRAND PROPOSITIONS & CIRCLE STATS -->
-                    <div class="flex-1 w-full max-w-md lg:max-w-none flex flex-col items-center justify-center relative mt-10 lg:mt-0">
+                    <!-- HERO RIGHT COLUMN: BRAND PROPOSITIONS & STAR CARDS -->
+                    <div class="flex-1 w-full max-w-lg flex flex-col items-center justify-center relative mt-10 lg:mt-0">
                         <!-- Decorative glow effects -->
                         <div class="absolute -top-12 -left-12 w-64 h-64 bg-green-200/10 dark:bg-green-900/5 rounded-full blur-3xl pointer-events-none"></div>
                         <div class="absolute -bottom-12 -right-12 w-64 h-64 bg-emerald-200/10 dark:bg-emerald-950/5 rounded-full blur-3xl pointer-events-none"></div>
 
-                        <!-- Content wrapper -->
-                        <div class="relative w-full flex flex-col items-center gap-10">
+                        <!-- Content wrapper: 3D Gold Stars List -->
+                        <div class="relative w-full flex flex-col gap-6">
                             
-                            <!-- Massive Custom Circle Badge representing 63.9K+ Lives Changed -->
-                            <div class="relative group">
-                                <!-- Pulsing concentric indicator rings -->
-                                <div class="absolute inset-x-0 inset-y-0 bg-pakistan-green/5 dark:bg-green-500/5 rounded-full scale-[1.25] animate-pulse"></div>
-                                <div class="absolute inset-x-0 inset-y-0 bg-pakistan-green/10 dark:bg-green-500/10 rounded-full scale-[1.12] animate-pulse delay-100"></div>
-                                
-                                <!-- Main Solid Glassmorphic Premium Circle Metric Display -->
-                                <div class="relative w-64 h-64 md:w-72 md:h-72 rounded-full bg-gradient-to-br from-white to-gray-50 dark:from-gray-800 dark:to-gray-950 border-[6px] border-pakistan-green dark:border-green-500 shadow-2xl flex flex-col items-center justify-center p-8 text-center transition-all duration-500 hover:scale-[1.03] hover:shadow-pakistan-green/25">
-                                    <div class="absolute top-6 text-pakistan-green/15 dark:text-green-500/15">
-                                        <i class="fa-solid fa-chart-line text-4xl"></i>
-                                    </div>
-                                    <!-- Orbiting badge -->
-                                    <div class="absolute -top-3 -right-3 whitespace-nowrap bg-gradient-to-r from-pakistan-green to-emerald-800 text-white text-[9px] font-lemon tracking-widest px-3 py-1.5 rounded-full shadow-lg">
-                                        <i class="fa-solid fa-heart-pulse animate-pulse mr-1 text-[8px]"></i> Real Impact
-                                    </div>
+                            <!-- Stat Ribbon Badge on top -->
+                            <div class="self-center lg:self-start inline-flex items-center gap-2.5 px-4 py-2 bg-gradient-to-r from-pakistan-green/5 to-emerald-800/10 dark:from-green-500/10 dark:to-emerald-500/10 border border-pakistan-green/10 dark:border-green-500/20 rounded-full shadow-sm">
+                                <span class="relative flex h-2 w-2">
+                                  <span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-green-400 opacity-75"></span>
+                                  <span class="relative inline-flex rounded-full h-2 w-2 bg-green-500"></span>
+                                </span>
+                                <span class="text-[10px] font-lemon tracking-[0.2em] text-pakistan-green dark:text-green-400 font-extrabold uppercase">
+                                    63.9K+ Lives Changed & Growing
+                                </span>
+                            </div>
+
+                            <!-- Star 1 Card -->
+                            <div class="flex items-center gap-5 p-5 bg-white/70 dark:bg-gray-900/50 backdrop-blur-md border border-gray-100 dark:border-gray-800 rounded-[2rem] hover:border-yellow-400/20 shadow-md hover:shadow-xl hover:scale-[1.02] transition-all duration-300 group">
+                                <div class="relative shrink-0 flex items-center justify-center">
+                                    <div class="absolute w-16 h-16 bg-yellow-400/10 dark:bg-yellow-500/5 rounded-full blur-md pointer-events-none group-hover:scale-125 transition-transform duration-300"></div>
                                     
-                                    <span class="text-4.5xl md:text-5xl font-black tracking-tight text-pakistan-green dark:text-green-400 font-display leading-none mb-1">
-                                        63.9K+
-                                    </span>
-                                    <span class="text-[10px] md:text-xs font-lemon text-gray-700 dark:text-gray-300 tracking-[0.2em] uppercase leading-relaxed font-bold">
-                                        Lives Changed
-                                    </span>
-                                    <div class="w-16 h-0.5 bg-gradient-to-r from-transparent via-pakistan-green to-transparent dark:via-green-500 my-4"></div>
-                                    <p class="text-[10px] font-semibold text-gray-500 dark:text-gray-400 max-w-[190px] leading-relaxed mx-auto">
-                                        Delivering true global career support with legal certainty
-                                    </p>
+                                    <!-- 3D Star 1 -->
+                                    <svg class="w-14 h-14 filter drop-shadow-[0_6px_10px_rgba(212,175,55,0.35)] transition-all duration-500 group-hover:scale-110 group-hover:rotate-[15deg] select-none" viewBox="0 0 100 100" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                        <defs>
+                                            <linearGradient id="gold-primary-h1" x1="0%" y1="0%" x2="100%" y2="100%">
+                                                <stop offset="0%" stop-color="#FFEAA7" />
+                                                <stop offset="30%" stop-color="#F1C40F" />
+                                                <stop offset="70%" stop-color="#D4AF37" />
+                                                <stop offset="100%" stop-color="#9A7B1C" />
+                                            </linearGradient>
+                                            <linearGradient id="gold-shadow-h1" x1="100%" y1="0%" x2="0%" y2="100%">
+                                                <stop offset="0%" stop-color="#D4AF37" />
+                                                <stop offset="50%" stop-color="#AA8010" />
+                                                <stop offset="100%" stop-color="#6A4E05" />
+                                            </linearGradient>
+                                            <linearGradient id="gold-highlight-h1" x1="0%" y1="0%" x2="0%" y2="100%">
+                                                <stop offset="0%" stop-color="#FFFFFF" stop-opacity="0.9" />
+                                                <stop offset="50%" stop-color="#FFFDF0" stop-opacity="0.3" />
+                                                <stop offset="100%" stop-color="#FFEAA7" opacity="0" />
+                                            </linearGradient>
+                                        </defs>
+                                        <polygon points="50,50 50,5 36,38" fill="url(#gold-primary-h1)" />
+                                        <polygon points="50,50 50,5 64,38" fill="url(#gold-shadow-h1)" />
+                                        <polygon points="50,50 95,38 64,38" fill="url(#gold-primary-h1)" />
+                                        <polygon points="50,50 95,38 67,62" fill="url(#gold-shadow-h1)" />
+                                        <polygon points="50,50 78,91 67,62" fill="url(#gold-primary-h1)" />
+                                        <polygon points="50,50 78,91 50,75" fill="url(#gold-shadow-h1)" />
+                                        <polygon points="50,50 22,91 50,75" fill="url(#gold-primary-h1)" />
+                                        <polygon points="50,50 22,91 33,62" fill="url(#gold-shadow-h1)" />
+                                        <polygon points="50,50 5,38 33,62" fill="url(#gold-primary-h1)" />
+                                        <polygon points="50,50 5,38 36,38" fill="url(#gold-shadow-h1)" />
+                                        <polygon points="50,5 19,27 50,50" fill="url(#gold-highlight-h1)" opacity="0.4" />
+                                    </svg>
+                                </div>
+                                <div class="text-left">
+                                    <h4 class="text-sm font-bold text-gray-900 dark:text-white leading-relaxed tracking-tight">
+                                        Stop Sending CVs.<br/>
+                                        <span class="text-pakistan-green dark:text-green-400">Start Getting Offers Worldwide.</span>
+                                    </h4>
                                 </div>
                             </div>
 
-                            <!-- Elegant Brand Statement Board -->
-                            <div class="w-full bg-white/80 dark:bg-gray-900/80 backdrop-blur-md border border-gray-100 dark:border-gray-800 rounded-[2rem] p-6 text-center shadow-lg transition-all duration-300 hover:shadow-xl max-w-sm">
-                                <h3 class="text-base md:text-lg font-bold text-gray-900 dark:text-white leading-snug tracking-tight mb-2">
-                                    Stop Sending CVs.<br />
-                                    <span class="text-pakistan-green dark:text-green-500">Start Getting Offers Worldwide.</span>
-                                </h3>
-                                
-                                <div class="flex items-center justify-center gap-2 mt-4 bg-green-50/50 dark:bg-green-950/20 py-2.5 px-4 rounded-xl">
-                                    <span class="w-1.5 h-1.5 rounded-full bg-pakistan-green dark:bg-green-400"></span>
-                                    <span class="text-[9px] font-lemon text-pakistan-green dark:text-green-400 tracking-[0.2em] font-extrabold uppercase">
-                                        Be Seen. Be Known. Be 7X Multiplied.
-                                    </span>
+                            <!-- Star 2 Card -->
+                            <div class="flex items-center gap-5 p-5 bg-white/70 dark:bg-gray-900/50 backdrop-blur-md border border-gray-100 dark:border-gray-800 rounded-[2rem] hover:border-yellow-400/20 shadow-md hover:shadow-xl hover:scale-[1.02] transition-all duration-300 group">
+                                <div class="relative shrink-0 flex items-center justify-center">
+                                    <div class="absolute w-16 h-16 bg-yellow-400/10 dark:bg-yellow-500/5 rounded-full blur-md pointer-events-none group-hover:scale-125 transition-transform duration-300"></div>
+                                    
+                                    <!-- 3D Star 2 -->
+                                    <svg class="w-14 h-14 filter drop-shadow-[0_6px_10px_rgba(212,175,55,0.35)] transition-all duration-500 group-hover:scale-110 group-hover:rotate-[15deg] select-none" viewBox="0 0 100 100" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                        <defs>
+                                            <linearGradient id="gold-primary-h2" x1="0%" y1="0%" x2="100%" y2="100%">
+                                                <stop offset="0%" stop-color="#FFEAA7" />
+                                                <stop offset="30%" stop-color="#F1C40F" />
+                                                <stop offset="70%" stop-color="#D4AF37" />
+                                                <stop offset="100%" stop-color="#9A7B1C" />
+                                            </linearGradient>
+                                            <linearGradient id="gold-shadow-h2" x1="100%" y1="0%" x2="0%" y2="100%">
+                                                <stop offset="0%" stop-color="#D4AF37" />
+                                                <stop offset="50%" stop-color="#AA8010" />
+                                                <stop offset="100%" stop-color="#6A4E05" />
+                                            </linearGradient>
+                                            <linearGradient id="gold-highlight-h2" x1="0%" y1="0%" x2="0%" y2="100%">
+                                                <stop offset="0%" stop-color="#FFFFFF" stop-opacity="0.9" />
+                                                <stop offset="50%" stop-color="#FFFDF0" stop-opacity="0.3" />
+                                                <stop offset="100%" stop-color="#FFEAA7" opacity="0" />
+                                            </linearGradient>
+                                        </defs>
+                                        <polygon points="50,50 50,5 36,38" fill="url(#gold-primary-h2)" />
+                                        <polygon points="50,50 50,5 64,38" fill="url(#gold-shadow-h2)" />
+                                        <polygon points="50,50 95,38 64,38" fill="url(#gold-primary-h2)" />
+                                        <polygon points="50,50 95,38 67,62" fill="url(#gold-shadow-h2)" />
+                                        <polygon points="50,50 78,91 67,62" fill="url(#gold-primary-h2)" />
+                                        <polygon points="50,50 78,91 50,75" fill="url(#gold-shadow-h2)" />
+                                        <polygon points="50,50 22,91 50,75" fill="url(#gold-primary-h2)" />
+                                        <polygon points="50,50 22,91 33,62" fill="url(#gold-shadow-h2)" />
+                                        <polygon points="50,50 5,38 33,62" fill="url(#gold-primary-h2)" />
+                                        <polygon points="50,50 5,38 36,38" fill="url(#gold-shadow-h2)" />
+                                        <polygon points="50,5 19,27 50,50" fill="url(#gold-highlight-h2)" opacity="0.4" />
+                                    </svg>
+                                </div>
+                                <div class="text-left">
+                                    <h4 class="text-sm font-bold text-gray-900 dark:text-white leading-relaxed tracking-tight">
+                                        Your Idea. Our Network.<br/>
+                                        <span class="text-pakistan-green dark:text-green-400">Their Investment.</span>
+                                    </h4>
+                                </div>
+                            </div>
+
+                            <!-- Star 3 Card -->
+                            <div class="flex items-center gap-5 p-5 bg-white/70 dark:bg-gray-900/50 backdrop-blur-md border border-gray-100 dark:border-gray-800 rounded-[2rem] hover:border-yellow-400/20 shadow-md hover:shadow-xl hover:scale-[1.02] transition-all duration-300 group">
+                                <div class="relative shrink-0 flex items-center justify-center">
+                                    <div class="absolute w-16 h-16 bg-yellow-400/10 dark:bg-yellow-500/5 rounded-full blur-md pointer-events-none group-hover:scale-125 transition-transform duration-300"></div>
+                                    
+                                    <!-- 3D Star 3 -->
+                                    <svg class="w-14 h-14 filter drop-shadow-[0_6px_10px_rgba(212,175,55,0.35)] transition-all duration-500 group-hover:scale-110 group-hover:rotate-[15deg] select-none" viewBox="0 0 100 100" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                        <defs>
+                                            <linearGradient id="gold-primary-h3" x1="0%" y1="0%" x2="100%" y2="100%">
+                                                <stop offset="0%" stop-color="#FFEAA7" />
+                                                <stop offset="30%" stop-color="#F1C40F" />
+                                                <stop offset="70%" stop-color="#D4AF37" />
+                                                <stop offset="100%" stop-color="#9A7B1C" />
+                                            </linearGradient>
+                                            <linearGradient id="gold-shadow-h3" x1="100%" y1="0%" x2="0%" y2="100%">
+                                                <stop offset="0%" stop-color="#D4AF37" />
+                                                <stop offset="50%" stop-color="#AA8010" />
+                                                <stop offset="100%" stop-color="#6A4E05" />
+                                            </linearGradient>
+                                            <linearGradient id="gold-highlight-h3" x1="0%" y1="0%" x2="0%" y2="100%">
+                                                <stop offset="0%" stop-color="#FFFFFF" stop-opacity="0.9" />
+                                                <stop offset="50%" stop-color="#FFFDF0" stop-opacity="0.3" />
+                                                <stop offset="100%" stop-color="#FFEAA7" opacity="0" />
+                                            </linearGradient>
+                                        </defs>
+                                        <polygon points="50,50 50,5 36,38" fill="url(#gold-primary-h3)" />
+                                        <polygon points="50,50 50,5 64,38" fill="url(#gold-shadow-h3)" />
+                                        <polygon points="50,50 95,38 64,38" fill="url(#gold-primary-h3)" />
+                                        <polygon points="50,50 95,38 67,62" fill="url(#gold-shadow-h3)" />
+                                        <polygon points="50,50 78,91 67,62" fill="url(#gold-primary-h3)" />
+                                        <polygon points="50,50 78,91 50,75" fill="url(#gold-shadow-h3)" />
+                                        <polygon points="50,50 22,91 50,75" fill="url(#gold-primary-h3)" />
+                                        <polygon points="50,50 22,91 33,62" fill="url(#gold-shadow-h3)" />
+                                        <polygon points="50,50 5,38 33,62" fill="url(#gold-primary-h3)" />
+                                        <polygon points="50,50 5,38 36,38" fill="url(#gold-shadow-h3)" />
+                                        <polygon points="50,5 19,27 50,50" fill="url(#gold-highlight-h3)" opacity="0.4" />
+                                    </svg>
+                                </div>
+                                <div class="text-left">
+                                    <h4 class="text-sm font-bold text-gray-900 dark:text-white leading-relaxed tracking-tight">
+                                        Be Seen. Be Known.<br/>
+                                        <span class="text-pakistan-green dark:text-green-400">Be 7X Multiplied.</span>
+                                    </h4>
                                 </div>
                             </div>
                         </div>
