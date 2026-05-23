@@ -13,6 +13,7 @@ const ServicePackages: React.FC = () => {
             <ul className="space-y-3 text-sm text-gray-700 dark:text-gray-300">
               <li>✓ Initial Career Advice</li>
               <li>✓ Access to Platform</li>
+              <li className="font-bold text-pakistan-green dark:text-green-400">✓ Access to 100,000+ Free Online Courses</li>
               <li>✓ Basic Guidance</li>
               <li>✓ Initial Case Understanding</li>
               <li>✓ Opportunity to Present Case</li>
@@ -28,6 +29,7 @@ const ServicePackages: React.FC = () => {
               <li>✓ Detailed Problem Evaluation</li>
               <li>✓ Discussion with Representative</li>
               <li>✓ Documents Review</li>
+              <li className="font-bold text-blue-600 dark:text-blue-400">✓ Access to 100,000+ Free Online Courses</li>
               <li>✓ Personalized Advice</li>
               <li>✓ Priority Case Review</li>
               <li>✓ Opportunity & Risk Assessment</li>
@@ -44,6 +46,7 @@ const ServicePackages: React.FC = () => {
               <li>✓ Priority Consultation</li>
               <li>✓ Comprehensive Case Analysis</li>
               <li>✓ Advanced Document Evaluation</li>
+              <li className="font-bold text-purple-600 dark:text-purple-400">✓ Access to 100,000+ Free Online Courses</li>
               <li>✓ Dedicated Case Handling</li>
               <li>✓ Customized Strategic Recommendations</li>
               <li>✓ Global Networking Opportunities</li>

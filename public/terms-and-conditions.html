@@ -1,0 +1,895 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Terms & Conditions – First Noble Step</title>
+<link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@300;400;500;600&family=DM+Serif+Display&display=swap" rel="stylesheet">
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  :root {
+    --green-50: #f0faf4;
+    --green-100: #d4f0df;
+    --green-200: #a9e0c0;
+    --green-500: #2d9b5a;
+    --green-600: #207a44;
+    --green-700: #155c31;
+    --green-800: #0d3d21;
+    --white: #ffffff;
+    --gray-50: #f8faf9;
+    --gray-200: #e2e8e4;
+    --gray-500: #5a6b60;
+    --gray-700: #2e3d34;
+  }
+
+  body {
+    font-family: 'DM Sans', sans-serif;
+    background: var(--white);
+    color: var(--gray-700);
+    font-size: 13px;
+    line-height: 1.65;
+  }
+
+  /* Header */
+  .header {
+    background: var(--green-700);
+    color: var(--white);
+    padding: 28px 48px 22px;
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    border-bottom: 3px solid var(--green-500);
+  }
+
+  .logo-mark {
+    width: 40px;
+    height: 40px;
+    border-radius: 10px;
+    background: var(--green-500);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+  }
+
+  .logo-mark svg { width: 22px; height: 22px; fill: #fff; }
+
+  .header-text h1 {
+    font-family: 'DM Serif Display', serif;
+    font-size: 18px;
+    font-weight: 400;
+    letter-spacing: 0.01em;
+    line-height: 1.2;
+  }
+
+  .header-text p {
+    font-size: 11px;
+    opacity: 0.75;
+    margin-top: 2px;
+    letter-spacing: 0.04em;
+    text-transform: uppercase;
+  }
+
+  .back-btn {
+    margin-left: auto;
+    background: var(--green-500);
+    color: var(--white);
+    text-decoration: none;
+    padding: 8px 16px;
+    border-radius: 8px;
+    font-size: 11px;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    transition: background 0.15s, transform 0.1s;
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+  }
+
+  .back-btn:hover {
+    background: var(--green-600);
+    transform: translateY(-1px);
+  }
+
+  .back-btn:active {
+    transform: translateY(0);
+  }
+
+  /* Layout */
+  .layout {
+    display: grid;
+    grid-template-columns: 190px 1fr;
+    min-height: calc(100vh - 93px);
+  }
+
+  /* Sidebar TOC */
+  .sidebar {
+    background: var(--green-50);
+    border-right: 1px solid var(--green-100);
+    padding: 24px 0;
+    position: sticky;
+    top: 0;
+    height: calc(100vh - 93px);
+    overflow-y: auto;
+  }
+
+  .sidebar-label {
+    font-size: 10px;
+    font-weight: 600;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: var(--green-500);
+    padding: 0 18px 10px;
+  }
+
+  .toc-link {
+    display: block;
+    padding: 5px 18px;
+    font-size: 11.5px;
+    color: var(--gray-500);
+    text-decoration: none;
+    line-height: 1.4;
+    transition: color 0.15s, background 0.15s;
+    border-left: 2px solid transparent;
+  }
+
+  .toc-link:hover {
+    color: var(--green-600);
+    background: var(--green-100);
+    border-left-color: var(--green-500);
+  }
+
+  /* Main content */
+  .main {
+    padding: 32px 48px 48px;
+    max-width: 740px;
+  }
+
+  /* Intro banner */
+  .intro-banner {
+    background: var(--green-50);
+    border: 1px solid var(--green-100);
+    border-left: 3px solid var(--green-500);
+    border-radius: 6px;
+    padding: 12px 16px;
+    margin-bottom: 28px;
+    font-size: 12px;
+    color: var(--green-700);
+    line-height: 1.6;
+  }
+
+  /* Sections */
+  .section {
+    margin-bottom: 24px;
+    padding-bottom: 24px;
+    border-bottom: 1px solid var(--gray-200);
+  }
+
+  .section:last-child {
+    border-bottom: none;
+    margin-bottom: 0;
+    padding-bottom: 0;
+  }
+
+  .section-header {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin-bottom: 10px;
+  }
+
+  .section-num {
+    background: var(--green-600);
+    color: #fff;
+    font-size: 10px;
+    font-weight: 600;
+    width: 22px;
+    height: 22px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+  }
+
+  .section-title {
+    font-family: 'DM Serif Display', serif;
+    font-size: 15px;
+    font-weight: 400;
+    color: var(--green-800);
+    letter-spacing: 0.01em;
+  }
+
+  .section-body {
+    font-size: 12.5px;
+    color: var(--gray-700);
+    line-height: 1.7;
+  }
+
+  .section-body p { margin-bottom: 8px; }
+  .section-body p:last-child { margin-bottom: 0; }
+
+  /* Sub-sections */
+  .sub-section {
+    margin: 10px 0;
+    padding: 10px 14px;
+    background: var(--gray-50);
+    border-radius: 6px;
+    border: 1px solid var(--gray-200);
+  }
+
+  .sub-title {
+    font-size: 12px;
+    font-weight: 600;
+    color: var(--green-700);
+    margin-bottom: 5px;
+  }
+
+  /* Lists */
+  .bullet-list {
+    list-style: none;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 3px 12px;
+    margin-top: 6px;
+  }
+
+  .bullet-list.single { grid-template-columns: 1fr; }
+
+  .bullet-list li {
+    font-size: 12px;
+    color: var(--gray-700);
+    display: flex;
+    align-items: flex-start;
+    gap: 6px;
+    line-height: 1.5;
+  }
+
+  .bullet-list li::before {
+    content: '';
+    width: 5px;
+    height: 5px;
+    border-radius: 50%;
+    background: var(--green-500);
+    flex-shrink: 0;
+    margin-top: 5px;
+  }
+
+  /* Tag badges */
+  .tag {
+    display: inline-block;
+    background: var(--green-100);
+    color: var(--green-700);
+    font-size: 10px;
+    font-weight: 500;
+    padding: 2px 8px;
+    border-radius: 20px;
+    margin-right: 4px;
+    margin-bottom: 3px;
+  }
+
+  /* Purpose grid */
+  .purpose-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 5px;
+    margin-top: 8px;
+  }
+
+  .purpose-item {
+    display: flex;
+    align-items: flex-start;
+    gap: 6px;
+    font-size: 11.5px;
+    color: var(--gray-700);
+    line-height: 1.5;
+    padding: 5px 8px;
+    background: var(--green-50);
+    border-radius: 5px;
+  }
+
+  .purpose-item::before {
+    content: '✓';
+    color: var(--green-500);
+    font-size: 11px;
+    flex-shrink: 0;
+    font-weight: 600;
+    margin-top: 1px;
+  }
+
+  /* Warning box */
+  .warning-box {
+    background: #fff8f0;
+    border: 1px solid #f5d6a8;
+    border-left: 3px solid #e08d2a;
+    border-radius: 6px;
+    padding: 10px 14px;
+    margin-top: 10px;
+    font-size: 12px;
+    color: #7a4a10;
+    line-height: 1.6;
+  }
+
+  /* Rights grid */
+  .rights-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 5px;
+    margin-top: 8px;
+  }
+
+  .right-item {
+    background: var(--green-50);
+    border: 1px solid var(--green-100);
+    border-radius: 6px;
+    padding: 7px 10px;
+    font-size: 11.5px;
+    color: var(--green-800);
+    display: flex;
+    align-items: flex-start;
+    gap: 6px;
+  }
+
+  .right-item::before {
+    content: '→';
+    color: var(--green-500);
+    font-size: 11px;
+    flex-shrink: 0;
+  }
+
+  /* Payment method cards */
+  .payment-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 5px;
+    margin-top: 8px;
+  }
+
+  .payment-item {
+    background: var(--green-50);
+    border: 1px solid var(--green-100);
+    border-radius: 6px;
+    padding: 7px 10px;
+    font-size: 11.5px;
+    color: var(--green-800);
+    display: flex;
+    align-items: flex-start;
+    gap: 6px;
+  }
+
+  .payment-item::before {
+    content: '💳';
+    font-size: 11px;
+    flex-shrink: 0;
+  }
+
+  /* Contact box */
+  .contact-box {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    background: var(--green-700);
+    color: #fff;
+    padding: 8px 16px;
+    border-radius: 6px;
+    font-size: 12.5px;
+    margin-top: 8px;
+    text-decoration: none;
+  }
+
+  .contact-box svg { width: 14px; height: 14px; fill: #fff; opacity: 0.8; }
+
+  /* Acknowledgement banner */
+  .ack-banner {
+    background: var(--green-800);
+    color: rgba(255,255,255,0.9);
+    border-radius: 8px;
+    padding: 14px 18px;
+    margin-top: 12px;
+    font-size: 12px;
+    line-height: 1.7;
+    font-style: italic;
+  }
+
+  /* Footer */
+  .footer {
+    background: var(--green-800);
+    color: rgba(255,255,255,0.6);
+    text-align: center;
+    padding: 12px;
+    font-size: 10.5px;
+    letter-spacing: 0.02em;
+  }
+
+  .footer span { color: rgba(255,255,255,0.85); }
+</style>
+</head>
+<body>
+
+<!-- Header -->
+<div class="header">
+  <div class="logo-mark">
+    <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+      <path d="M12 2L3 7v5c0 5.25 3.75 10.15 9 11.35C17.25 22.15 21 17.25 21 12V7l-9-5z"/>
+    </svg>
+  </div>
+  <div class="header-text">
+    <h1>First Noble Step (Private) Limited</h1>
+    <p>Terms &amp; Conditions &nbsp;·&nbsp; Legal Agreement</p>
+  </div>
+  <a href="/" class="back-btn">
+    <svg style="width: 12px; height: 12px; fill: currentColor; margin-right: 2px;" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+      <path d="M20 11H7.83l5.59-5.59L12 4l-8 8 8 8 1.41-1.41L7.83 13H20v-2z"/>
+    </svg>
+    Back to Home
+  </a>
+</div>
+
+<div class="layout">
+
+  <!-- Sidebar -->
+  <nav class="sidebar">
+    <div class="sidebar-label">Contents</div>
+    <a class="toc-link" href="#s1">1. Company Information</a>
+    <a class="toc-link" href="#s2">2. Acceptance of Terms</a>
+    <a class="toc-link" href="#s3">3. Scope of Services</a>
+    <a class="toc-link" href="#s4">4. Website Use</a>
+    <a class="toc-link" href="#s5">5. Intellectual Property</a>
+    <a class="toc-link" href="#s6">6. User Accounts</a>
+    <a class="toc-link" href="#s7">7. Payments & Fees</a>
+    <a class="toc-link" href="#s8">8. Investment Disclaimer</a>
+    <a class="toc-link" href="#s9">9. Anti-Fraud Policy</a>
+    <a class="toc-link" href="#s10">10. Startup & Marketing</a>
+    <a class="toc-link" href="#s11">11. Confidentiality</a>
+    <a class="toc-link" href="#s12">12. Limitation of Liability</a>
+    <a class="toc-link" href="#s13">13. No Legal/Financial Advice</a>
+    <a class="toc-link" href="#s14">14. Third-Party Links</a>
+    <a class="toc-link" href="#s15">15. Data Security</a>
+    <a class="toc-link" href="#s16">16. Indemnification</a>
+    <a class="toc-link" href="#s17">17. Availability & Changes</a>
+    <a class="toc-link" href="#s18">18. Termination</a>
+    <a class="toc-link" href="#s19">19. Governing Law</a>
+    <a class="toc-link" href="#s20">20. Time-Related Policies</a>
+    <a class="toc-link" href="#s21">21. Dispute Resolution</a>
+    <a class="toc-link" href="#s22">22. Force Majeure</a>
+    <a class="toc-link" href="#s23">23. Changes & Agreement</a>
+    <a class="toc-link" href="#s24">24. Severability</a>
+  </nav>
+
+  <!-- Main -->
+  <main class="main">
+
+    <div class="intro-banner">
+      By accessing or using this Website, you agree to be legally bound by these Terms and Conditions. If you do not agree, please stop using the Website immediately.
+    </div>
+
+    <!-- 1. Company Information -->
+    <div class="section" id="s1">
+      <div class="section-header">
+        <div class="section-num">1</div>
+        <div class="section-title">Company Information</div>
+      </div>
+      <div class="section-body">
+        <p><strong style="color:var(--green-700)">First Noble Step (Private) Limited</strong> is a company registered in Pakistan, providing Business Consulting, Corporate Advisory, and Strategic Business Services.</p>
+      </div>
+    </div>
+
+    <!-- 2. Acceptance -->
+    <div class="section" id="s2">
+      <div class="section-header">
+        <div class="section-num">2</div>
+        <div class="section-title">Acceptance of Terms</div>
+      </div>
+      <div class="section-body">
+        <p>By using this website, you confirm that:</p>
+        <ul class="bullet-list single">
+          <li>You are at least 18 years old or accessing under lawful legal supervision.</li>
+          <li>You have the legal capacity to enter into binding agreements.</li>
+          <li>You agree to comply with all applicable laws and accept these Terms fully.</li>
+        </ul>
+      </div>
+    </div>
+
+    <!-- 3. Scope -->
+    <div class="section" id="s3">
+      <div class="section-header">
+        <div class="section-num">3</div>
+        <div class="section-title">Scope of Services</div>
+      </div>
+      <div class="section-body">
+        <p>Our services include but are not limited to:</p>
+        <div class="purpose-grid">
+          <div class="purpose-item">Business consultancy &amp; startup advisory</div>
+          <div class="purpose-item">Strategic &amp; corporate advisory</div>
+          <div class="purpose-item">Corporate training &amp; networking</div>
+          <div class="purpose-item">Research, reports &amp; online educational resources</div>
+        </div>
+        <p style="margin-top:10px;">The Company may add, modify, suspend, or discontinue services at any time without prior notice.</p>
+      </div>
+    </div>
+
+    <!-- 4. Website Use -->
+    <div class="section" id="s4">
+      <div class="section-header">
+        <div class="section-num">4</div>
+        <div class="section-title">Website Use</div>
+      </div>
+      <div class="section-body">
+        <p>You must <strong>NOT</strong> use this website to:</p>
+        <ul class="bullet-list single">
+          <li>Engage in illegal activities or fraudulent purposes</li>
+          <li>Hack, damage, disrupt, or upload malicious software</li>
+          <li>Attempt unauthorized system access</li>
+          <li>Copy intellectual property or misrepresent your identity</li>
+        </ul>
+        <div class="warning-box">
+          Violations may result in immediate access termination, legal action, and financial damages claims.
+        </div>
+      </div>
+    </div>
+
+    <!-- 5. Intellectual Property -->
+    <div class="section" id="s5">
+      <div class="section-header">
+        <div class="section-num">5</div>
+        <div class="section-title">Intellectual Property Rights</div>
+      </div>
+      <div class="section-body">
+        <p>All website content — including text, graphics, logos, designs, videos, reports, databases, and software — is the exclusive intellectual property of First Noble Step (Private) Limited.</p>
+        <p>Reproduction, distribution, or commercial use of any content without prior written permission is strictly prohibited.</p>
+      </div>
+    </div>
+
+    <!-- 6. User Accounts -->
+    <div class="section" id="s6">
+      <div class="section-header">
+        <div class="section-num">6</div>
+        <div class="section-title">User Accounts</div>
+      </div>
+      <div class="section-body">
+        <p>If you register for an account, you must:</p>
+        <ul class="bullet-list single">
+          <li>Provide accurate and complete registration information</li>
+          <li>Maintain confidentiality of your login credentials</li>
+          <li>Notify the Company immediately of any unauthorized use</li>
+          <li>Accept full responsibility for all activities on your account</li>
+        </ul>
+        <p style="margin-top:8px;">The Company may suspend or terminate accounts at its sole discretion.</p>
+      </div>
+    </div>
+
+    <!-- 7. Payments -->
+    <div class="section" id="s7">
+      <div class="section-header">
+        <div class="section-num">7</div>
+        <div class="section-title">Payments, Fees &amp; Payment Policy</div>
+      </div>
+      <div class="section-body">
+        <p><strong style="color:var(--green-700)">Accepted Payment Methods:</strong></p>
+        <div class="payment-grid">
+          <div class="payment-item">Online transfer to official company bank account</div>
+          <div class="payment-item">Cross Cheque / Pay Order in company name</div>
+          <div class="payment-item">Bank deposit via official challan (Faysal Bank Limited)</div>
+          <div class="payment-item">Cash at Head Office (official voucher/receipt issued)</div>
+        </div>
+
+        <div class="sub-section" style="margin-top:12px;">
+          <div class="sub-title">Online Payment Guidelines</div>
+          <ul class="bullet-list single">
+            <li>Account title must match the official company name.</li>
+            <li>Submit payment receipt through official communication channels.</li>
+            <li>Payments are confirmed only upon official email/receipt from the Company.</li>
+          </ul>
+        </div>
+
+        <div class="warning-box">
+          <strong>Important:</strong> Payments to personal or third-party accounts will NOT be recognized. Fake, altered, AI-generated, or edited payment slips will not be accepted. Fraudulent payment claims may result in permanent suspension and legal action.
+        </div>
+
+        <p style="margin-top:8px;">The Company reserves the right to reject suspicious or non-compliant transactions.</p>
+      </div>
+    </div>
+
+    <!-- 8. Investment Disclaimer -->
+    <div class="section" id="s8">
+      <div class="section-header">
+        <div class="section-num">8</div>
+        <div class="section-title">Investment, Financial Disclaimer &amp; Authorized Activities</div>
+      </div>
+      <div class="section-body">
+        <p>The Company provides consultancy and advisory services only. We do <strong>NOT</strong> guarantee funding, investment, business success, or financial returns. All client decisions are their sole responsibility.</p>
+
+        <div class="sub-section">
+          <div class="sub-title">Principal Services</div>
+          <ul class="bullet-list single">
+            <li>Strategic Planning &amp; Project Management</li>
+            <li>Institutional Development &amp; Capacity Building</li>
+            <li>Organizational Strategy &amp; Business Planning</li>
+          </ul>
+        </div>
+
+        <div class="sub-section">
+          <div class="sub-title">Restricted Activities (Requires Special License)</div>
+          <ul class="bullet-list single">
+            <li>Banking, NBFC activities (asset management, leasing, investment finance, REIT, housing finance, PE/VC funds, micro-financing)</li>
+            <li>Insurance, Modaraba, Stock Brokerage, Forex trading, Securities advisory</li>
+            <li>MLM, pyramid schemes, or commission-based recruitment structures</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+
+    <!-- 9. Anti-Fraud -->
+    <div class="section" id="s9">
+      <div class="section-header">
+        <div class="section-num">9</div>
+        <div class="section-title">Anti-Fraud &amp; Unauthorized Representation</div>
+      </div>
+      <div class="section-body">
+        <p>No individual may represent, collect payments for, or claim affiliation with the Company without written authorization.</p>
+        <p>Report fake representatives or unauthorized content to:</p>
+        <a class="contact-box" href="mailto:support@firstnoblestep.com">
+          <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M20 4H4c-1.1 0-2 .9-2 2v12c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V6c0-1.1-.9-2-2-2zm0 4l-8 5-8-5V6l8 5 8-5v2z"/></svg>
+          support@firstnoblestep.com
+        </a>
+      </div>
+    </div>
+
+    <!-- 10. Startup & Marketing -->
+    <div class="section" id="s10">
+      <div class="section-header">
+        <div class="section-num">10</div>
+        <div class="section-title">Startup Capital &amp; Marketing Disclaimer</div>
+      </div>
+      <div class="section-body">
+        <p>Any reference to startup capital or financial assistance is strictly promotional in nature. It does not constitute an investment offering. Not all clients will receive such support.</p>
+        <p>The Company may modify or withdraw such programs at any time without notice. Marketing materials are informational only and do not constitute guarantees or binding commitments.</p>
+      </div>
+    </div>
+
+    <!-- 11. Confidentiality -->
+    <div class="section" id="s11">
+      <div class="section-header">
+        <div class="section-num">11</div>
+        <div class="section-title">Confidentiality &amp; Non-Disclosure</div>
+      </div>
+      <div class="section-body">
+        <p>The Company handles all client confidential information with professional care. Confidentiality does not apply to:</p>
+        <ul class="bullet-list single">
+          <li>Publicly available information</li>
+          <li>Client-consented disclosures</li>
+          <li>Legally required disclosures</li>
+        </ul>
+        <p style="margin-top:8px;">Clients must not misuse the Company's proprietary frameworks or materials.</p>
+      </div>
+    </div>
+
+    <!-- 12. Limitation of Liability -->
+    <div class="section" id="s12">
+      <div class="section-header">
+        <div class="section-num">12</div>
+        <div class="section-title">Limitation of Liability</div>
+      </div>
+      <div class="section-body">
+        <p>To the maximum extent permitted by law, the Company shall not be liable for:</p>
+        <div class="rights-grid">
+          <div class="right-item">Direct or indirect losses</div>
+          <div class="right-item">Business interruption</div>
+          <div class="right-item">Lost profits or data loss</div>
+          <div class="right-item">Reputational damage</div>
+        </div>
+        <p style="margin-top:10px;">Total liability shall not exceed the fees paid for the specific service in question.</p>
+      </div>
+    </div>
+
+    <!-- 13. No Legal/Financial Advice -->
+    <div class="section" id="s13">
+      <div class="section-header">
+        <div class="section-num">13</div>
+        <div class="section-title">No Professional Legal or Financial Advice</div>
+      </div>
+      <div class="section-body">
+        <p>Website content is provided for general information only and does not constitute legal, financial, tax, or investment advice. Users should consult qualified professionals before making any decisions.</p>
+      </div>
+    </div>
+
+    <!-- 14. Third-Party Links -->
+    <div class="section" id="s14">
+      <div class="section-header">
+        <div class="section-num">14</div>
+        <div class="section-title">Third-Party Links</div>
+      </div>
+      <div class="section-body">
+        <p>The Company does not control, endorse, or guarantee third-party websites linked from our platform. Accessing third-party websites is entirely at your own risk.</p>
+      </div>
+    </div>
+
+    <!-- 15. Data Security -->
+    <div class="section" id="s15">
+      <div class="section-header">
+        <div class="section-num">15</div>
+        <div class="section-title">Data Security &amp; Privacy</div>
+      </div>
+      <div class="section-body">
+        <p>We take reasonable steps to protect user data through secure servers, encryption, and access controls. Business information shared by users is treated confidentially where possible.</p>
+        <p>Use of the website is governed by our Privacy Policy, which covers data collection, usage, security, and cookies. No online platform can guarantee absolute security.</p>
+      </div>
+    </div>
+
+    <!-- 16. Indemnification -->
+    <div class="section" id="s16">
+      <div class="section-header">
+        <div class="section-num">16</div>
+        <div class="section-title">Indemnification</div>
+      </div>
+      <div class="section-body">
+        <p>Users agree to indemnify and hold harmless First Noble Step (Private) Limited from any claims, damages, or legal costs arising from:</p>
+        <ul class="bullet-list single">
+          <li>Violations of these Terms and Conditions</li>
+          <li>Misuse of the website or its services</li>
+          <li>Engagement in illegal or prohibited activities</li>
+        </ul>
+      </div>
+    </div>
+
+    <!-- 17. Availability & Service Modifications -->
+    <div class="section" id="s17">
+      <div class="section-header">
+        <div class="section-num">17</div>
+        <div class="section-title">Website Availability &amp; Service Modifications</div>
+      </div>
+      <div class="section-body">
+        <p>We do not guarantee uninterrupted or error-free access to our website or services. The Company may modify, update, or remove content, features, or services at any time without prior notice.</p>
+      </div>
+    </div>
+
+    <!-- 18. Termination -->
+    <div class="section" id="s18">
+      <div class="section-header">
+        <div class="section-num">18</div>
+        <div class="section-title">Termination</div>
+      </div>
+      <div class="section-body">
+        <p>Access to the website may be terminated without notice in the event of:</p>
+        <ul class="bullet-list">
+          <li>Violations of these Terms</li>
+          <li>Fraudulent activity</li>
+          <li>Misuse of platform resources</li>
+          <li>Legal obligations requiring termination</li>
+        </ul>
+      </div>
+    </div>
+
+    <!-- 22. Governing Law -->
+    <div class="section" id="s22">
+      <div class="section-header">
+        <div class="section-num">22</div>
+        <div class="section-title">Governing Law</div>
+      </div>
+      <div class="section-body">
+        <p>These Terms and Conditions are governed by and construed in accordance with the laws of Pakistan. Any disputes arising shall be subject to the jurisdiction of Pakistani courts.</p>
+      </div>
+    </div>
+
+    <!-- 20. Time-Related Policies -->
+    <div class="section" id="s20">
+      <div class="section-header">
+        <div class="section-num">20</div>
+        <div class="section-title">Time-Related Policies</div>
+      </div>
+      <div class="section-body">
+
+        <div class="sub-section">
+          <div class="sub-title">Service Validity</div>
+          <p>All dedicated packages and subscriptions are valid for a maximum of <strong style="color:var(--green-700)">one (1) year</strong> from the date of purchase, unless a specific package explicitly states a shorter duration.</p>
+        </div>
+
+        <div class="sub-section">
+          <div class="sub-title">Response Time</div>
+          <p>The Company will respond to all client queries and communications within a minimum of <strong style="color:var(--green-700)">forty-eight (48) working hours</strong>, excluding weekends and public holidays.</p>
+        </div>
+
+        <div class="sub-section">
+          <div class="sub-title">Business Plan Evaluation</div>
+          <p>Due to the inherent complexity of Business Plan Evaluations, the processing and delivery timeframe may exceed <strong style="color:var(--green-700)">one hundred and eighty (180) working days</strong>.</p>
+        </div>
+
+        <div class="sub-section">
+          <div class="sub-title">Service Delivery &amp; Support</div>
+          <p>The Company strives to deliver all services as promptly as possible. In the event of any error or delay, the Client must notify us via:</p>
+          <ul class="bullet-list single" style="margin-top:6px;">
+            <li>Helpline: <strong>0333 2288877</strong></li>
+            <li>Email: <a href="mailto:support@firstnoblestep.com" style="color:var(--green-600);">support@firstnoblestep.com</a></li>
+          </ul>
+          <p style="margin-top:8px;">The Company will make every reasonable effort to resolve the issue expeditiously.</p>
+        </div>
+
+        <div class="sub-section">
+          <div class="sub-title">Dispute Resolution Timeline</div>
+          <p>The Client agrees not to initiate any legal action against the Company before the expiration of <strong style="color:var(--green-700)">one hundred and eighty (180) working days</strong> from the date a grievance arises.</p>
+          <div class="warning-box" style="margin:8px 0;">
+            Any legal action taken prior to this 180-day period shall be deemed null and void.
+          </div>
+          <p style="margin-top:8px;">After this period, disputes shall be resolved strictly in the following order:</p>
+          <ul class="bullet-list single" style="margin-top:6px;">
+            <li><strong>Amicable Negotiation:</strong> Between the Parties directly.</li>
+            <li><strong>Mediation / Arbitration:</strong> Through formal mediation or arbitration.</li>
+            <li><strong>Legal Jurisdiction:</strong> Through courts of competent jurisdiction in Pakistan.</li>
+          </ul>
+        </div>
+
+      </div>
+    </div>
+
+    <!-- 21. Dispute Resolution -->
+    <div class="section" id="s21">
+      <div class="section-header">
+        <div class="section-num">21</div>
+        <div class="section-title">Dispute Resolution</div>
+      </div>
+      <div class="section-body">
+        <p>Disputes shall be resolved in the following order:</p>
+        <ul class="bullet-list single">
+          <li>First, through amicable negotiation between the parties</li>
+          <li>If unresolved, through formal mediation or arbitration</li>
+          <li>Finally, through courts of competent jurisdiction in Pakistan</li>
+        </ul>
+      </div>
+    </div>
+
+    <!-- 22. Force Majeure -->
+    <div class="section" id="s22">
+      <div class="section-header">
+        <div class="section-num">22</div>
+        <div class="section-title">Force Majeure</div>
+      </div>
+      <div class="section-body">
+        <p>The Company shall not be liable for failure to perform its obligations due to circumstances beyond its reasonable control, including:</p>
+        <ul class="bullet-list">
+          <li>Natural disasters or acts of God</li>
+          <li>War or civil unrest</li>
+          <li>Government actions or regulations</li>
+          <li>Internet outages or cyber attacks</li>
+          <li>Power failures or infrastructure disruptions</li>
+        </ul>
+      </div>
+    </div>
+
+    <!-- 23. Changes & Entire Agreement -->
+    <div class="section" id="s23">
+      <div class="section-header">
+        <div class="section-num">23</div>
+        <div class="section-title">Changes to Terms &amp; Entire Agreement</div>
+      </div>
+      <div class="section-body">
+        <p>These Terms may be updated at any time and take effect immediately upon publication. Users are responsible for reviewing the Terms regularly.</p>
+        <p>These Terms and Conditions constitute the entire agreement between the user and First Noble Step (Private) Limited regarding the use of this website and services.</p>
+      </div>
+    </div>
+
+    <!-- 24. Severability -->
+    <div class="section" id="s24">
+      <div class="section-header">
+        <div class="section-num">24</div>
+        <div class="section-title">Severability</div>
+      </div>
+      <div class="section-body">
+        <p>If any provision of these Terms is found to be invalid or unenforceable by a court of competent jurisdiction, the remaining provisions shall continue to remain fully valid and effective.</p>
+        <div class="ack-banner">
+          By using the website of First Noble Step (Private) Limited, you acknowledge that you have read, understood, and agreed to these Terms and Conditions.
+        </div>
+      </div>
+    </div>
+
+  </main>
+</div>
+
+<!-- Footer -->
+<div class="footer">
+  <span>First Noble Step (Private) Limited</span> &nbsp;·&nbsp; All rights reserved &nbsp;·&nbsp; Terms &amp; Conditions
+</div>
+
+</body>
+</html>
