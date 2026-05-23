@@ -433,9 +433,9 @@
                             <div class="h-px bg-gray-100 dark:bg-gray-800 w-full mb-6"></div>
                             <div class="mb-3 text-[10px] font-lemon text-pakistan-green dark:text-green-400 tracking-widest">What You Unlock:</div>
                             <ul class="space-y-3 mb-6 flex-grow">
-                                <li class="flex items-start gap-2.5 text-sm"><i class="fa-solid fa-check text-pakistan-green dark:text-green-400 text-[9px] mt-1 bg-green-50 dark:bg-green-900/40 p-1 rounded-full"></i> <span class="text-gray-700 dark:text-gray-300 font-medium text-xs">Coffee meetups</span></li>
-                                <li class="flex items-start gap-2.5 text-sm"><i class="fa-solid fa-check text-pakistan-green dark:text-green-400 text-[9px] mt-1 bg-green-50 dark:bg-green-900/40 p-1 rounded-full"></i> <span class="text-gray-700 dark:text-gray-300 font-medium text-xs">Strategic feedback from leaders</span></li>
-                                <li class="flex items-start gap-2.5 text-sm"><i class="fa-solid fa-check text-pakistan-green dark:text-green-400 text-[9px] mt-1 bg-green-50 dark:bg-green-900/40 p-1 rounded-full"></i> <span class="text-gray-700 dark:text-gray-300 font-medium text-xs">Powerful Business Networking</span></li>
+                                <li class="flex items-start gap-3"><div class="shrink-0 w-5 h-5 bg-green-50 dark:bg-green-900/40 rounded-full flex items-center justify-center"><i class="fa-solid fa-check text-pakistan-green dark:text-green-400 text-[10px]"></i></div> <span class="text-gray-700 dark:text-gray-300 font-medium text-xs leading-5">Coffee meetups</span></li>
+                                <li class="flex items-start gap-3"><div class="shrink-0 w-5 h-5 bg-green-50 dark:bg-green-900/40 rounded-full flex items-center justify-center"><i class="fa-solid fa-check text-pakistan-green dark:text-green-400 text-[10px]"></i></div> <span class="text-gray-700 dark:text-gray-300 font-medium text-xs leading-5">Honest words from people who believe in your ideas</span></li>
+                                <li class="flex items-start gap-3"><div class="shrink-0 w-5 h-5 bg-green-50 dark:bg-green-900/40 rounded-full flex items-center justify-center"><i class="fa-solid fa-check text-pakistan-green dark:text-green-400 text-[10px]"></i></div> <span class="text-gray-700 dark:text-gray-300 font-medium text-xs leading-5">Get a chance to win investment for your startup</span></li>
                             </ul>
                             <div class="flex flex-col gap-3 mt-auto">
                                 <button onclick="openForm('entrepreneur')" class="w-full py-4 rounded-xl font-lemon text-[10px] tracking-widest bg-pakistan-green text-white shadow-xl shadow-green-900/10 hover:bg-green-900 uppercase transition-all hover:scale-[1.02] active:scale-95">
@@ -581,14 +581,15 @@
                                     <p class="text-[10px] text-blue-600 font-bold mt-0.5">PKR 6,999</p>
                                 </div>
                             </div>
-                            <div onclick="selectPlan('professional_pkg')" id="plan-professional_pkg" class="plan-card flex flex-col gap-3 p-4 rounded-2xl border-2 transition-all cursor-pointer border-gray-100 dark:border-gray-800 hover:border-purple-100 relative overflow-hidden">
-                                <div class="flex items-center justify-between w-full mb-2">
-                                    <div class="w-8 h-8 rounded-lg flex items-center justify-center bg-purple-100 text-purple-600 icon-box"><i class="fa-solid fa-crown"></i></div>
-                                    <div class="w-5 h-5 rounded-full border-2 flex items-center justify-center border-gray-200 check-circle"></div>
+                            <div onclick="selectPlan('professional_pkg')" id="plan-professional_pkg" class="plan-card flex flex-col gap-3 p-4 rounded-2xl border-2 transition-all cursor-pointer border-gray-100 dark:border-gray-800 hover:border-[#D4AF37]/40 hover:shadow-lg hover:shadow-[#D4AF37]/10 bg-gradient-to-br from-white to-[#D4AF37]/[0.02] dark:from-gray-900 dark:to-[#D4AF37]/10 relative overflow-hidden group">
+                                <div class="absolute -top-8 -right-8 w-24 h-24 bg-[#D4AF37]/10 dark:bg-[#D4AF37]/20 rounded-full blur-2xl group-hover:scale-150 transition-transform duration-700 pointer-events-none"></div>
+                                <div class="flex items-center justify-between w-full mb-2 relative z-10">
+                                    <div class="w-8 h-8 rounded-lg flex items-center justify-center bg-gradient-to-br from-yellow-50 to-yellow-100/50 dark:from-yellow-900/30 dark:to-yellow-800/10 text-[#D4AF37] border border-[#D4AF37]/20 shadow-[0_4px_10px_rgba(212,175,55,0.15)] icon-box"><i class="fa-solid fa-crown drop-shadow-sm"></i></div>
+                                    <div class="w-5 h-5 rounded-full border-2 flex items-center justify-center border-gray-200 check-circle bg-white dark:bg-gray-800"></div>
                                 </div>
-                                <div>
-                                    <h4 class="font-lemon text-[10px] dark:text-white">Professional Package</h4>
-                                    <p class="text-[10px] text-purple-600 font-bold mt-0.5">PKR 14,999</p>
+                                <div class="relative z-10">
+                                    <h4 class="font-lemon text-[10px] text-gray-900 dark:text-white transition-colors">Professional Package</h4>
+                                    <p class="text-[10px] text-[#A67C00] dark:text-[#D4AF37] font-bold mt-0.5 tracking-wide">PKR 14,999</p>
                                 </div>
                             </div>
                         </div>
@@ -978,19 +979,36 @@
             state.plan = planId;
             // Highlight UI
             document.querySelectorAll('.plan-card').forEach(el => {
+                const isProf = el.id === 'plan-professional_pkg';
+                const checkCircle = el.querySelector('.check-circle');
+
                 if (el.id === 'plan-' + planId) {
-                    el.classList.add('border-pakistan-green', 'bg-green-50', 'dark:bg-green-900/10');
-                    el.classList.remove('border-gray-100', 'dark:border-gray-800');
-                    el.querySelector('.check-circle').classList.add('bg-pakistan-green', 'border-pakistan-green', 'text-white');
-                    el.querySelector('.check-circle').classList.remove('border-gray-200');
-                    el.querySelector('.check-circle').innerHTML = '<i class="fa-solid fa-check text-[10px] text-white"></i>';
+                    if (isProf) {
+                        el.classList.add('border-[#D4AF37]', 'from-[#D4AF37]/5', 'to-[#D4AF37]/10', 'dark:from-[#D4AF37]/10', 'dark:to-[#D4AF37]/20');
+                        el.classList.remove('border-gray-100', 'dark:border-gray-800');
+                        checkCircle.classList.add('bg-[#D4AF37]', 'border-[#D4AF37]', 'text-white');
+                        checkCircle.classList.remove('border-gray-200', 'bg-white', 'dark:bg-gray-800');
+                    } else {
+                        el.classList.add('border-pakistan-green', 'bg-green-50', 'dark:bg-green-900/10');
+                        el.classList.remove('border-gray-100', 'dark:border-gray-800');
+                        checkCircle.classList.add('bg-pakistan-green', 'border-pakistan-green', 'text-white');
+                        checkCircle.classList.remove('border-gray-200');
+                    }
+                    checkCircle.innerHTML = '<i class="fa-solid fa-check text-[10px] text-white"></i>';
                 } else {
                     // Reset others
-                    el.classList.remove('border-pakistan-green', 'bg-green-50', 'dark:bg-green-900/10');
-                    el.classList.add('border-gray-100', 'dark:border-gray-800');
-                    el.querySelector('.check-circle').classList.remove('bg-pakistan-green', 'border-pakistan-green', 'text-white');
-                    el.querySelector('.check-circle').classList.add('border-gray-200');
-                    el.querySelector('.check-circle').innerHTML = '';
+                    if (isProf) {
+                        el.classList.remove('border-[#D4AF37]', 'from-[#D4AF37]/5', 'to-[#D4AF37]/10', 'dark:from-[#D4AF37]/10', 'dark:to-[#D4AF37]/20');
+                        el.classList.add('border-gray-100', 'dark:border-gray-800');
+                        checkCircle.classList.remove('bg-[#D4AF37]', 'border-[#D4AF37]', 'text-white');
+                        checkCircle.classList.add('border-gray-200', 'bg-white', 'dark:bg-gray-800');
+                    } else {
+                        el.classList.remove('border-pakistan-green', 'bg-green-50', 'dark:bg-green-900/10');
+                        el.classList.add('border-gray-100', 'dark:border-gray-800');
+                        checkCircle.classList.remove('bg-pakistan-green', 'border-pakistan-green', 'text-white');
+                        checkCircle.classList.add('border-gray-200');
+                    }
+                    checkCircle.innerHTML = '';
                 }
             });
 
@@ -1031,13 +1049,18 @@
                     'Access to High-Level Job Opportunities'
                 ],
                 'entrepreneur': [
-                    '<span class="font-bold text-pakistan-green">Access to 100,000+ Free Online Courses</span>',
-                    'Turn your idea into funded reality',
+                    'Business Plan Evaluation',
                     'Strategic feedback from leaders',
+                    'Get a chance to turn your idea into funded reality',
                     'Powerful Business Networking',
-                    'Expert Mentorship & Guidance',
-                    'Opportunity to Pitch to Investors',
-                    'Business Plan Evaluation'
+                    'Exclusive direct access to CEOs, founders, CXOs, and industry leaders',
+                    'Get a verified badge certificate on your business idea from First Noble Step',
+                    'Your company logo visibility across First Noble Step events, meetings, connects, summits, and networking dinners',
+                    'Your brand featured on our official website, digital assets, and social media platforms (LinkedIn, X, Instagram, Facebook)',
+                    'Proudly recognized as an Official Partner / Member for One Full Year',
+                    'Unlock powerful opportunities for B2B collaborations, MOUs, strategic partnerships, and deal-making',
+                    'Proudly eligible for the First Noble Step Business & Leadership Awards',
+                    'Honorably receive your exclusive Legacy Card & Certificate for your company from First Noble Step'
                 ]
             };
 
@@ -1052,7 +1075,7 @@
                             planId === 'professional_pkg' ? 'Professional Package Details' : 
                             'Entrepreneur Package Details';
                 detailsTitle.innerText = title;
-                detailsList.innerHTML = packageDetails[planId].map(detail => `<li class="flex items-start gap-2.5"><i class="fa-solid fa-check text-pakistan-green mt-0.5 text-[10px]"></i> <span>${detail}</span></li>`).join('');
+                detailsList.innerHTML = packageDetails[planId].map(detail => `<li class="flex items-start gap-3"><div class="shrink-0 w-5 h-5 bg-green-50 dark:bg-green-900/10 rounded-full flex items-center justify-center"><i class="fa-solid fa-check text-pakistan-green dark:text-green-400 text-[10px]"></i></div> <span class="leading-5 mt-0.5">${detail}</span></li>`).join('');
             } else {
                 if (detailsContainer) detailsContainer.classList.add('hidden');
             }
