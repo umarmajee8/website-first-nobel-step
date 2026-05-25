@@ -146,8 +146,21 @@
     const app = initializeApp(firebaseConfig);
     const auth = getAuth(app);
     window.firebaseAuth = auth;
-    window.RecaptchaVerifier = RecaptchaVerifier;
     window.signInWithPhoneNumber = signInWithPhoneNumber;
+
+    // reCAPTCHA Setup
+    const setupRecaptcha = () => {
+        window.recaptchaVerifier = new RecaptchaVerifier(auth, 'recaptcha-container', {
+            'size': 'invisible',
+            'callback': (response) => {
+                // reCAPTCHA solved
+                console.log("reCAPTCHA solved");
+            }
+        });
+    };
+    
+    // Defer setup slightly to ensure DOM is fully ready
+    setTimeout(setupRecaptcha, 100);
 </script>
 <link rel="stylesheet" href="/index.css">
 </head>
@@ -793,10 +806,6 @@
                             <input type="checkbox" id="input-terms" onchange="validateStep5()" class="mt-0.5 h-5 w-5 rounded border-gray-300 text-pakistan-green focus:ring-pakistan-green">
                             <span class="text-xs text-gray-600 dark:text-gray-400">I declare all information is correct and I agree to the <a href="/privacy-policy.html" class="text-pakistan-green dark:text-green-400 underline hover:text-green-700 transition-colors">Privacy Policy</a> and <a href="/terms-and-conditions.html" class="text-pakistan-green dark:text-green-400 underline hover:text-green-700 transition-colors">Terms & Conditions</a>.</span>
                           </label>
-                          <label class="flex items-start gap-3 cursor-pointer">
-                            <input type="checkbox" id="input-disclaimer" onchange="validateStep5()" class="mt-0.5 h-5 w-5 rounded border-gray-300 text-pakistan-green focus:ring-pakistan-green">
-                            <span class="text-xs text-gray-600 dark:text-gray-400">I agree to the <a href="https://drive.google.com/file/d/1AztKci5xP-UtafBjh6Uj1bVbTOZcO6JF/view?usp=sharing" target="_blank" class="text-pakistan-green dark:text-green-400 underline hover:text-green-700 transition-colors">Disclaimer Files</a>.</span>
-                          </label>
                       </div>
                 </div>
 
@@ -875,7 +884,6 @@
             paymentMethod: 'easypaisa',
             paymentProofBase64: null,
             otpHash: null,
-            setupRecaptcha: false,
             confirmationResult: null,
             data: {
                 fullName: '',
@@ -1189,23 +1197,6 @@
                 
                 document.getElementById('otp-phone-display').innerText = '+' + whatsapp.replace(/\D/g, '');
                 
-                if (!state.setupRecaptcha && window.firebaseAuth && window.RecaptchaVerifier) {
-                    try {
-                        window.recaptchaVerifier = new window.RecaptchaVerifier(window.firebaseAuth, 'recaptcha-container', {
-                            'size': 'invisible',
-                            'callback': (response) => {
-                                // reCAPTCHA solved
-                            },
-                            'expired-callback': () => {
-                                showError('Error', 'reCAPTCHA expired. Please verify again.');
-                            }
-                        });
-                        state.setupRecaptcha = true;
-                    } catch (e) {
-                         console.error("reCaptcha error:", e);
-                    }
-                }
-                
                 sendVerificationCode();
             } else if (state.step === 3) {
                 const otpVal = document.getElementById('input-otp').value.trim();
@@ -1239,7 +1230,7 @@
                         state.step++;
                         updateUI();
                     } else {
-                        throw new Error('Please request a code first.');
+                        throw new Error('OTP has not been sent yet or failed to send. Please wait or click Resend.');
                     }
                 } catch (err) {
                     console.error(err);
@@ -1317,10 +1308,14 @@
                 
                 let errorMsg = error.message;
                 if (error.code === 'auth/operation-not-allowed') {
-                    errorMsg = 'Phone Auth is disabled. Please enable it in Firebase Console.';
+                    errorMsg = 'Phone Auth is disabled. Please enable it in Firebase Console -> Authentication -> Sign-in methods.';
                 } else if (error.code === 'auth/invalid-phone-number') {
                     errorMsg = 'Invalid phone number format.';
+                } else if (error.code === 'auth/too-many-requests') {
+                    errorMsg = 'Too many requests. Please try again later.';
                 }
+
+                showError('OTP Sending Failed', errorMsg);
                 
                 if (statusMsg) {
                     statusMsg.innerText = 'Failed: ' + errorMsg;
@@ -1470,8 +1465,7 @@
 
         function validateStep5(checkOnly = false) {
             const termsChecked = document.getElementById('input-terms') ? document.getElementById('input-terms').checked : false;
-            const disclaimerChecked = document.getElementById('input-disclaimer') ? document.getElementById('input-disclaimer').checked : false;
-            const valid = termsChecked && disclaimerChecked;
+            const valid = termsChecked;
             if (!checkOnly) validateCurrentStep();
             return valid;
         }
