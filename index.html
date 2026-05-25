@@ -654,10 +654,10 @@
                 </div>
 
                 <!-- STEP 2: Personal Info -->
-                <div id="step-2" class="hidden flex flex-col gap-4">
+                <div id="step-2" class="hidden flex flex-col gap-5">
                     <div class="w-full relative group">
                         <div class="flex items-center justify-between mb-2">
-                            <label class="block text-[10px] font-lemon tracking-widest text-gray-500 dark:text-gray-400">Full Name (As per Passport / ID)</label>
+                            <label class="block text-[10px] font-lemon tracking-widest text-gray-500 dark:text-gray-400">Full Name (As per Passport / ID) <span class="text-red-500 font-sans">*</span></label>
                             <div class="relative group/tooltip">
                                 <i class="fa-solid fa-circle-info text-[10px] text-gray-400 hover:text-pakistan-green transition-colors cursor-help"></i>
                                 <div class="absolute bottom-full right-0 mb-2 w-48 p-2 bg-gray-900 text-white text-[9px] rounded-lg opacity-0 group-hover/tooltip:opacity-100 pointer-events-none transition-opacity z-50 shadow-xl border border-white/10">
@@ -669,33 +669,32 @@
                         <input type="text" id="input-fullname" oninput="validateStep2()" class="w-full px-4 py-3 rounded-xl bg-gray-50 dark:bg-gray-800/50 border border-gray-200 dark:border-gray-700 focus:border-pakistan-green outline-none text-sm dark:text-white transition-all" placeholder="Enter Full Name">
                     </div>
                     
-                    <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-                        <div class="w-full relative group">
-                            <div class="flex items-center justify-between mb-2">
-                                <label class="block text-[10px] font-lemon tracking-widest text-gray-500 dark:text-gray-400">Email Address <span class="text-[9px] text-gray-400 lowercase">(optional)</span></label>
-                                <div class="relative group/tooltip">
-                                    <i class="fa-solid fa-circle-info text-[10px] text-gray-400 hover:text-pakistan-green transition-colors cursor-help"></i>
-                                    <div class="absolute bottom-full right-0 mb-2 w-48 p-2 bg-gray-900 text-white text-[9px] rounded-lg opacity-0 group-hover/tooltip:opacity-100 pointer-events-none transition-opacity z-50 shadow-xl border border-white/10">
-                                        <div class="relative z-10">Provide a valid email address for verification and communication. (Optional)</div>
-                                        <div class="absolute top-full right-2 -mt-1 w-2 h-2 bg-gray-900 rotate-45"></div>
-                                    </div>
+                    <div class="w-full relative group">
+                        <div class="flex items-center justify-between mb-2">
+                            <label class="block text-[10px] font-lemon tracking-widest text-gray-500 dark:text-gray-400">Phone Number <span class="text-red-500 font-sans">*</span></label>
+                            <div class="relative group/tooltip">
+                                <i class="fa-solid fa-circle-info text-[10px] text-gray-400 hover:text-pakistan-green transition-colors cursor-help"></i>
+                                <div class="absolute bottom-full right-0 mb-2 w-48 p-2 bg-gray-900 text-white text-[9px] rounded-lg opacity-0 group-hover/tooltip:opacity-100 pointer-events-none transition-opacity z-50 shadow-xl border border-white/10">
+                                    <div class="relative z-10">Enter your phone number starting with 92 (e.g., 923001234567). (Required)</div>
+                                    <div class="absolute top-full right-2 -mt-1 w-2 h-2 bg-gray-900 rotate-45"></div>
                                 </div>
                             </div>
-                            <input type="email" id="input-email" oninput="validateStep2()" class="w-full px-4 py-3 rounded-xl bg-gray-50 dark:bg-gray-800/50 border border-gray-200 dark:border-gray-700 focus:border-pakistan-green outline-none text-sm dark:text-white transition-all" placeholder="name@example.com">
                         </div>
-                        <div class="w-full relative group">
-                            <div class="flex items-center justify-between mb-2">
-                                <label class="block text-[10px] font-lemon tracking-widest text-gray-500 dark:text-gray-400">WhatsApp Number <span class="text-red-500 font-sans">*</span></label>
-                                <div class="relative group/tooltip">
-                                    <i class="fa-solid fa-circle-info text-[10px] text-gray-400 hover:text-pakistan-green transition-colors cursor-help"></i>
-                                    <div class="absolute bottom-full right-0 mb-2 w-48 p-2 bg-gray-900 text-white text-[9px] rounded-lg opacity-0 group-hover/tooltip:opacity-100 pointer-events-none transition-opacity z-50 shadow-xl border border-white/10">
-                                        <div class="relative z-10">Enter your WhatsApp number starting with 92 (e.g., 923001234567). (Required)</div>
-                                        <div class="absolute top-full right-2 -mt-1 w-2 h-2 bg-gray-900 rotate-45"></div>
-                                    </div>
+                        <input type="tel" id="input-whatsapp" oninput="this.value = this.value.replace(/\D/g, '').slice(0, 13); validateStep2()" class="w-full px-4 py-3 rounded-xl bg-gray-50 dark:bg-gray-800/50 border border-gray-200 dark:border-gray-700 focus:border-pakistan-green outline-none text-sm dark:text-white transition-all" placeholder="923XXXXXXXXX">
+                    </div>
+
+                    <div class="w-full relative group">
+                        <div class="flex items-center justify-between mb-2">
+                            <label class="block text-[10px] font-lemon tracking-widest text-gray-500 dark:text-gray-400">Email Address <span class="text-[9px] text-gray-400 lowercase">(optional)</span></label>
+                            <div class="relative group/tooltip">
+                                <i class="fa-solid fa-circle-info text-[10px] text-gray-400 hover:text-pakistan-green transition-colors cursor-help"></i>
+                                <div class="absolute bottom-full right-0 mb-2 w-48 p-2 bg-gray-900 text-white text-[9px] rounded-lg opacity-0 group-hover/tooltip:opacity-100 pointer-events-none transition-opacity z-50 shadow-xl border border-white/10">
+                                    <div class="relative z-10">Provide a valid email address for verification and communication. (Optional)</div>
+                                    <div class="absolute top-full right-2 -mt-1 w-2 h-2 bg-gray-900 rotate-45"></div>
                                 </div>
                             </div>
-                            <input type="tel" id="input-whatsapp" oninput="this.value = this.value.replace(/\D/g, '').slice(0, 13); validateStep2()" class="w-full px-4 py-3 rounded-xl bg-gray-50 dark:bg-gray-800/50 border border-gray-200 dark:border-gray-700 focus:border-pakistan-green outline-none text-sm dark:text-white transition-all" placeholder="923XXXXXXXXX">
                         </div>
+                        <input type="email" id="input-email" oninput="validateStep2()" class="w-full px-4 py-3 rounded-xl bg-gray-50 dark:bg-gray-800/50 border border-gray-200 dark:border-gray-700 focus:border-pakistan-green outline-none text-sm dark:text-white transition-all" placeholder="name@example.com">
                     </div>
                 </div>
 
@@ -706,7 +705,7 @@
                     </div>
                     <h3 class="text-xl font-bold text-gray-900 dark:text-white mb-2">Phone Verification</h3>
                     <p class="text-xs text-gray-600 dark:text-gray-400 mb-6 max-w-sm mx-auto">
-                        Please verify your WhatsApp Number (<strong id="otp-phone-display" class="font-bold text-pakistan-green dark:text-green-400">--</strong>) to continue.
+                        Please verify your Phone Number (<strong id="otp-phone-display" class="font-bold text-pakistan-green dark:text-green-400">--</strong>) to continue.
                     </p>
                     <!-- reCAPTCHA Container -->
                     <div id="recaptcha-container" class="flex justify-center mb-4"></div>
@@ -715,7 +714,7 @@
                             <input type="text" id="input-otp" maxlength="6" oninput="validateStep3Code()" placeholder="------" class="w-full px-5 py-4 text-center tracking-[0.5em] font-mono font-bold text-2xl rounded-2xl bg-gray-100 dark:bg-gray-800/90 border-2 border-gray-300 dark:border-gray-600 focus:border-pakistan-green focus:bg-white dark:focus:bg-gray-900 outline-none text-gray-900 dark:text-white shadow-inner transition-all" >
                         </div>
                         <div class="flex flex-col items-center gap-1">
-                            <span id="otp-sending-text" class="hidden text-[10px] text-gray-500 dark:text-gray-500">Sending verification code to WhatsApp...</span>
+                            <span id="otp-sending-text" class="hidden text-[10px] text-gray-500 dark:text-gray-500">Sending verification code to Phone...</span>
                             <button id="btn-otp-resend" type="button" onclick="sendVerificationCode()" class="text-xs font-lemon text-pakistan-green dark:text-green-400 underline hover:text-green-800 transition-colors uppercase tracking-wider hidden">
                                 Send Code / Resend Code
                             </button>
@@ -796,8 +795,8 @@
                         <h4 class="font-lemon text-[10px] text-pakistan-green dark:text-green-400 mb-6 uppercase tracking-widest">Application Review</h4>
                         <div class="grid grid-cols-1 md:grid-cols-2 gap-4 text-xs relative z-10">
                           <div class="md:col-span-2"><span class="text-gray-400 text-[10px] uppercase">Name</span><span id="review-name" class="font-bold dark:text-white block text-sm">--</span></div>
+                          <div><span class="text-gray-400 text-[10px] uppercase">Phone Number</span><span id="review-whatsapp" class="font-bold dark:text-white block font-mono">--</span></div>
                           <div><span class="text-gray-400 text-[10px] uppercase">Email</span><span id="review-email" class="font-bold dark:text-white block font-mono">--</span></div>
-                          <div><span class="text-gray-400 text-[10px] uppercase">WhatsApp</span><span id="review-whatsapp" class="font-bold dark:text-white block font-mono">--</span></div>
                         </div>
                       </div>
                       
