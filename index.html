@@ -147,16 +147,21 @@
     const auth = getAuth(app);
     window.firebaseAuth = auth;
     window.signInWithPhoneNumber = signInWithPhoneNumber;
+    window.RecaptchaVerifier = RecaptchaVerifier;
 
     // reCAPTCHA Setup
     const setupRecaptcha = () => {
-        window.recaptchaVerifier = new RecaptchaVerifier(auth, 'recaptcha-container', {
-            'size': 'invisible',
-            'callback': (response) => {
-                // reCAPTCHA solved
-                console.log("reCAPTCHA solved");
-            }
-        });
+        try {
+            window.recaptchaVerifier = new RecaptchaVerifier(auth, 'recaptcha-container', {
+                'size': 'invisible',
+                'callback': (response) => {
+                    // reCAPTCHA solved
+                    console.log("reCAPTCHA solved");
+                }
+            });
+        } catch (e) {
+            console.warn("reCAPTCHA pre-init deferred or failed: ", e);
+        }
     };
     
     // Defer setup slightly to ensure DOM is fully ready
@@ -1237,7 +1242,17 @@
                     const btnNext = document.getElementById('btn-next');
                     if (btnNextText) btnNextText.innerText = 'Continue';
                     btnNext.disabled = false;
-                    showError('Verification Error', err.message || 'Invalid code. Please try again.');
+                    
+                    let errorMsg = err.message || 'Invalid code. Please try again.';
+                    if (err.code === 'auth/invalid-verification-code') {
+                        errorMsg = 'The verification code you entered is incorrect. Please check the code and try again.';
+                    } else if (err.code === 'auth/code-expired') {
+                        errorMsg = 'The verification code has expired. Please click "Resend Code" to get a new one.';
+                    } else if (err.code === 'auth/too-many-requests') {
+                        errorMsg = 'Too many attempts. Please wait a while before trying again.';
+                    }
+                    
+                    showError('Verification Error', errorMsg);
                 }
             } else if (state.step < 5) {
                 state.step++;
@@ -1263,6 +1278,10 @@
         async function sendVerificationCode() {
             let phoneVal = document.getElementById('input-whatsapp').value.trim();
             let digits = phoneVal.replace(/\D/g, '');
+            if (!digits) {
+                showError('Phone Number Required', 'Please enter a valid phone number before proceeding.');
+                return;
+            }
             // Automatically format to Pakistani standard if missing country code
             if (digits.startsWith('0')) {
                 digits = '92' + digits.substring(1);
@@ -1275,8 +1294,6 @@
             const sendingText = document.getElementById('otp-sending-text');
             const resendBtn = document.getElementById('btn-otp-resend');
             
-            if (!digits || !window.firebaseAuth || !window.recaptchaVerifier) return;
-            
             if (statusMsg) {
                 statusMsg.innerText = '';
                 statusMsg.classList.remove('text-red-500', 'dark:text-red-400');
@@ -1284,6 +1301,51 @@
             }
             if (sendingText) sendingText.classList.remove('hidden');
             if (resendBtn) resendBtn.disabled = true;
+
+            // Make sure Firebase Auth is loaded
+            if (!window.firebaseAuth) {
+                if (sendingText) sendingText.classList.add('hidden');
+                if (resendBtn) {
+                    resendBtn.disabled = false;
+                    resendBtn.classList.remove('hidden');
+                }
+                showError('System Loading', 'Firebase service is initializing. Please wait a second and click "Send Code / Resend Code".');
+                return;
+            }
+
+            // Lazy/on-demand-initialization of recaptchaVerifier
+            if (!window.recaptchaVerifier) {
+                if (window.RecaptchaVerifier) {
+                    try {
+                        window.recaptchaVerifier = new window.RecaptchaVerifier(window.firebaseAuth, 'recaptcha-container', {
+                            'size': 'invisible',
+                            'callback': (response) => {
+                                console.log("reCAPTCHA solved");
+                            },
+                            'expired-callback': () => {
+                                showError('Security Verification', 'reCAPTCHA expired. Please try again.');
+                            }
+                        });
+                    } catch (e) {
+                        console.error("Failed to initialize RecaptchaVerifier: ", e);
+                        if (sendingText) sendingText.classList.add('hidden');
+                        if (resendBtn) {
+                            resendBtn.disabled = false;
+                            resendBtn.classList.remove('hidden');
+                        }
+                        showError('Security Error', 'Failed to initialize the reCAPTCHA security verifier. Please check your internet connection and refresh.');
+                        return;
+                    }
+                } else {
+                    if (sendingText) sendingText.classList.add('hidden');
+                    if (resendBtn) {
+                        resendBtn.disabled = false;
+                        resendBtn.classList.remove('hidden');
+                    }
+                    showError('System Error', 'Recaptcha SDK failed to load. Please check your internet connection.');
+                    return;
+                }
+            }
             
             try {
                 const appVerifier = window.recaptchaVerifier;
