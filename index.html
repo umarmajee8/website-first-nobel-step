@@ -730,45 +730,48 @@
 
                 <!-- STEP 4: Payment via Easypaisa -->
                 <div id="step-4" class="hidden space-y-6 text-center">
-                    <div class="w-16 h-16 bg-green-50 dark:bg-green-900/20 rounded-full flex items-center justify-center mx-auto text-pakistan-green dark:text-green-400">
-                        <i class="fa-solid fa-wallet text-2xl"></i>
-                    </div>
                     <div id="payment-non-free-ui" class="space-y-6">
-                        <div class="space-y-2">
-                            <h3 class="text-xl font-bold text-gray-900 dark:text-white">Fee Payment</h3>
-                            <p class="text-xs text-gray-600 dark:text-gray-400 max-w-sm mx-auto">
-                                Please transfer <span id="payment-amount-display" class="font-bold text-pakistan-green dark:text-green-400">the package fee</span> to our official Easypaisa account and upload the proof screenshot.
-                            </p>
+                        <div class="space-y-1">
+                            <h3 class="text-2xl font-bold text-gray-900 dark:text-white tracking-tight">Complete Payment</h3>
+                            <p class="text-sm font-medium text-gray-500 dark:text-gray-400">Total Due: <span id="payment-amount-display" class="font-bold text-pakistan-green dark:text-green-400 text-lg">--</span></p>
                         </div>
 
                         <!-- Easypaisa Account Details Card -->
-                        <div class="bg-gray-50 dark:bg-gray-800/30 p-5 rounded-2xl border border-gray-100 dark:border-gray-800 text-left max-w-sm mx-auto space-y-4">
-                            <div class="flex items-center justify-between border-b border-gray-100 dark:border-gray-800 pb-3">
-                                <span class="text-[10px] font-lemon tracking-widest text-gray-400 uppercase">Payment Method</span>
-                                <span class="text-xs font-bold text-green-600 dark:text-green-400 flex items-center gap-1">
-                                    <i class="fa-solid fa-circle-check"></i> Easypaisa Only
-                                </span>
+                        <div class="bg-white dark:bg-gray-900 rounded-[2rem] border border-gray-100 dark:border-gray-800 shadow-[0_8px_30px_rgb(0,0,0,0.04)] dark:shadow-none text-center max-w-sm mx-auto overflow-hidden">
+                            <!-- Top Green Bar (Easypaisa branding) -->
+                            <div class="bg-[#00B551] py-4 flex items-center justify-center gap-2">
+                                <div class="w-6 h-6 bg-white rounded-full flex items-center justify-center text-[#00B551] font-bold text-sm italic pr-0.5 pt-0.5 leading-none">e</div>
+                                <span class="text-white font-sans font-bold tracking-tight text-xl mb-0.5">easypaisa</span>
                             </div>
-                            <div class="grid grid-cols-2 gap-4 text-xs">
-                                <div>
-                                    <span class="text-gray-400 block text-[9px] uppercase tracking-wider mb-0.5">Account Title</span>
-                                    <strong class="font-bold text-gray-900 dark:text-white block">First Noble Step</strong>
+
+                            <div class="p-6 space-y-5 flex flex-col items-center">
+                                <!-- QR Code Box -->
+                                <div class="bg-white p-2.5 rounded-2xl shadow-sm border border-gray-100 dark:border-gray-800 flex-shrink-0">
+                                    <img src="https://api.qrserver.com/v1/create-qr-code/?size=150x150&data=03332288877&color=01411C" alt="Easypaisa QR Code" class="w-32 h-32 md:w-36 md:h-36 object-cover mix-blend-multiply">
                                 </div>
-                                <div>
-                                    <span class="text-gray-400 block text-[9px] uppercase tracking-wider mb-0.5">Account Number</span>
-                                    <strong class="font-bold text-gray-900 dark:text-white block font-mono">0333-2288877</strong>
+
+                                <!-- Details -->
+                                <div class="space-y-4 w-full">
+                                    <div>
+                                        <span class="block text-[10px] uppercase tracking-widest text-gray-400 mb-1 font-semibold">Account Title</span>
+                                        <strong class="font-semibold text-gray-900 dark:text-white text-2xl tracking-tight">Umer Majeed</strong>
+                                    </div>
+                                    
+                                    <div class="bg-green-50/50 dark:bg-green-900/10 rounded-2xl py-4 border border-green-100/50 dark:border-gray-800 flex flex-col items-center justify-center">
+                                        <span class="block text-[10px] uppercase tracking-widest text-[#00B551] dark:text-green-400 mb-1 font-semibold">Account Number</span>
+                                        <strong class="font-mono text-3xl tracking-widest text-pakistan-green dark:text-green-400 font-extrabold block">0333 2288877</strong>
+                                    </div>
                                 </div>
                             </div>
                         </div>
 
                         <!-- Upload Proof Section -->
-                        <div class="max-w-sm mx-auto space-y-3 text-left">
-                            <label class="block text-[10px] font-lemon tracking-widest text-gray-500 dark:text-gray-400 mb-2.5 uppercase">Upload Receipt/Screenshot</label>
-                            <label for="proof-file-input" class="group relative flex flex-col items-center justify-center w-full min-h-[140px] rounded-2xl border-2 border-dashed border-gray-200 dark:border-gray-700 hover:border-pakistan-green cursor-pointer transition-colors overflow-hidden bg-gray-50/50 dark:bg-gray-800/20">
-                                <div id="proof-upload-placeholder" class="flex flex-col items-center justify-center p-4 text-center space-y-2">
-                                    <i class="fa-solid fa-cloud-arrow-up text-2xl text-gray-400 group-hover:text-pakistan-green transition-colors"></i>
-                                    <p class="text-[11px] font-medium text-gray-600 dark:text-gray-400">Click or Drag to Upload Screen Shot</p>
-                                    <p class="text-[9px] text-gray-400">Supports PNG, JPG (Max 5MB)</p>
+                        <div class="max-w-sm mx-auto space-y-2 text-left">
+                            <label class="block text-[10px] font-lemon tracking-widest text-gray-500 dark:text-gray-400 uppercase">Upload Receipt</label>
+                            <label for="proof-file-input" class="group relative flex flex-col items-center justify-center w-full min-h-[120px] rounded-[1.5rem] border-2 border-dashed border-gray-200 dark:border-gray-700 hover:border-[#00B551] cursor-pointer transition-colors overflow-hidden bg-gray-50/50 dark:bg-gray-800/20">
+                                <div id="proof-upload-placeholder" class="flex flex-col items-center justify-center p-4 text-center space-y-1.5">
+                                    <i class="fa-solid fa-cloud-arrow-up text-xl text-gray-400 group-hover:text-[#00B551] transition-colors"></i>
+                                    <p class="text-[11px] font-medium text-gray-600 dark:text-gray-400">Click to attach screenshot</p>
                                 </div>
                                 <img id="proof-preview" class="hidden absolute inset-0 w-full h-full object-contain p-2 bg-white dark:bg-gray-900" alt="Receipt Preview">
                                 <input type="file" id="proof-file-input" class="hidden" accept="image/*" onchange="handleProofUpload(event)">
