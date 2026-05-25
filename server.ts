@@ -132,8 +132,7 @@ async function startServer() {
       const formData = req.body;
       const { fullName, cnic, email: rawEmail, whatsapp, planId, institute, degree, businessName, industry, experience, targetCountry, paymentMethod } = formData;
 
-      if (!rawEmail) return res.status(400).json({ success: false, error: 'Email is required' });
-      const email = rawEmail.toLowerCase().trim();
+      const email = rawEmail ? rawEmail.toLowerCase().trim() : '';
 
       if (!process.env.GOOGLE_SHEET_ID || !process.env.GOOGLE_SERVICE_ACCOUNT_EMAIL || !process.env.GOOGLE_PRIVATE_KEY) {
         return res.status(500).json({ success: false, error: 'Server configuration error: Missing Google Sheets credentials in Environment Variables. Please set GOOGLE_SHEET_ID, GOOGLE_SERVICE_ACCOUNT_EMAIL, and GOOGLE_PRIVATE_KEY.' });

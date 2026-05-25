@@ -129,6 +129,26 @@
   }
 }
 </script>
+<script type="module">
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/10.9.0/firebase-app.js";
+    import { getAuth, RecaptchaVerifier, signInWithPhoneNumber } from "https://www.gstatic.com/firebasejs/10.9.0/firebase-auth.js";
+
+    const firebaseConfig = {
+      apiKey: "AIzaSyCV99pJn6rtCywO-XWph91PyNZ75ZAasFQ",
+      authDomain: "firstnoblestep-7d323.firebaseapp.com",
+      projectId: "firstnoblestep-7d323",
+      storageBucket: "firstnoblestep-7d323.firebasestorage.app",
+      messagingSenderId: "509916109588",
+      appId: "1:509916109588:web:3578edc003c42edd310001",
+      measurementId: "G-JDVNP7S1TF"
+    };
+
+    const app = initializeApp(firebaseConfig);
+    const auth = getAuth(app);
+    window.firebaseAuth = auth;
+    window.RecaptchaVerifier = RecaptchaVerifier;
+    window.signInWithPhoneNumber = signInWithPhoneNumber;
+</script>
 <link rel="stylesheet" href="/index.css">
 </head>
 <body class="min-h-screen flex flex-col bg-white dark:bg-gray-900 text-gray-900 dark:text-white transition-colors duration-300 selection:bg-green-100 selection:text-pakistan-green">
@@ -404,7 +424,7 @@
                             <ul class="space-y-3 mb-6 flex-grow">
                                 <li class="flex items-start gap-2.5 text-sm"><i class="fa-solid fa-circle text-green-500 text-[6px] mt-1.5"></i> <span class="text-gray-700 dark:text-gray-300 font-medium text-xs"><strong>Basic Package</strong> (PKR 2,499) - Initial advice & guidance</span></li>
                                 <li class="flex items-start gap-2.5 text-sm"><i class="fa-solid fa-circle text-blue-500 text-[6px] mt-1.5"></i> <span class="text-gray-700 dark:text-gray-300 font-medium text-xs"><strong>Standard Package</strong> (PKR 6,999) - Detailed evaluation & support</span></li>
-                                <li class="flex items-start gap-2.5 text-sm"><i class="fa-solid fa-circle text-purple-500 text-[6px] mt-1.5"></i> <span class="text-gray-700 dark:text-gray-300 font-medium text-xs"><strong>Professional Package</strong> (PKR 14,999) - Premium advisory & global exposure</span></li>
+                                <li class="flex items-start gap-2.5 text-sm"><i class="fa-solid fa-circle text-purple-500 text-[6px] mt-1.5"></i> <span class="text-gray-700 dark:text-gray-300 font-medium text-xs"><strong>Premium Package</strong> (PKR 14,999) - Premium advisory & global exposure</span></li>
                             </ul>
                             <div class="flex flex-col gap-3 mt-auto">
                                 <button onclick="openForm()" class="w-full py-4 rounded-xl font-lemon text-[10px] tracking-widest bg-pakistan-green text-white shadow-xl shadow-green-900/10 hover:bg-green-900 uppercase transition-all hover:scale-[1.02] active:scale-95">
@@ -556,11 +576,11 @@
                 
                 <!-- STEP 1: Plan Selection -->
                 <div id="step-1" class="space-y-8">
-                    <div class="bg-gray-50 dark:bg-gray-800/30 p-6 rounded-[2rem] border border-gray-100 dark:border-gray-700">
+                    <div id="section-students" class="bg-gray-50 dark:bg-gray-800/30 p-6 rounded-[2rem] border border-gray-100 dark:border-gray-700">
                         <h4 class="text-[10px] font-lemon tracking-[0.2em] text-pakistan-green mb-6 uppercase flex items-center gap-3">
                             <span class="w-6 h-px bg-pakistan-green/20"></span> Students & Professionals
                         </h4>
-                        <div class="grid grid-cols-1 sm:grid-cols-3 gap-4">
+                        <div class="grid grid-cols-1 sm:grid-cols-3 gap-4 items-start">
                             <div onclick="selectPlan('basic')" id="plan-basic" class="plan-card flex flex-col gap-3 p-4 rounded-2xl border-2 transition-all cursor-pointer border-gray-100 dark:border-gray-800 hover:border-green-100 relative overflow-hidden">
                                 <div class="flex items-center justify-between w-full mb-2">
                                     <div class="w-8 h-8 rounded-lg flex items-center justify-center bg-green-100 text-green-600 icon-box"><i class="fa-solid fa-leaf"></i></div>
@@ -588,40 +608,42 @@
                                     <div class="w-5 h-5 rounded-full border-2 flex items-center justify-center border-gray-200 check-circle bg-white dark:bg-gray-800"></div>
                                 </div>
                                 <div class="relative z-10">
-                                    <h4 class="font-lemon text-[10px] text-gray-900 dark:text-white transition-colors">Professional Package</h4>
+                                    <h4 class="font-lemon text-[10px] text-gray-900 dark:text-white transition-colors">Premium Package</h4>
                                     <p class="text-[10px] text-[#A67C00] dark:text-[#D4AF37] font-bold mt-0.5 tracking-wide">PKR 14,999</p>
                                 </div>
                             </div>
                         </div>
                     </div>
 
-                    <div class="p-6">
+                    <div id="section-entrepreneur" class="p-6">
                         <h4 class="text-[10px] font-lemon tracking-[0.2em] text-pakistan-green mb-6 uppercase flex items-center gap-3">
                             <span class="w-6 h-px bg-pakistan-green/20"></span> Business Growth
                         </h4>
-                        <div onclick="selectPlan('entrepreneur')" id="plan-entrepreneur" class="plan-card flex items-center gap-4 p-5 rounded-2xl border-2 transition-all cursor-pointer border-gray-100 dark:border-gray-800 hover:border-green-100">
-                            <div class="w-10 h-10 rounded-xl flex items-center justify-center bg-gray-50 dark:bg-gray-800 text-gray-400 icon-box"><i class="fa-solid fa-rocket"></i></div>
-                            <div>
+                        <div onclick="selectPlan('entrepreneur')" id="plan-entrepreneur" class="plan-card flex flex-col gap-3 p-5 rounded-2xl border-2 transition-all cursor-pointer border-gray-100 dark:border-gray-800 hover:border-green-100 overflow-hidden relative">
+                            <div class="flex items-center justify-between w-full mb-2 z-10">
+                                <div class="w-10 h-10 rounded-xl flex items-center justify-center bg-gray-50 dark:bg-gray-800 text-gray-400 icon-box"><i class="fa-solid fa-rocket"></i></div>
+                                <div class="w-5 h-5 rounded-full border-2 flex items-center justify-center border-gray-200 check-circle"></div>
+                            </div>
+                            <div class="z-10">
                                 <h4 class="font-lemon text-[10px] dark:text-white">Entrepreneur</h4>
                                 <p class="text-[10px] text-green-600 font-bold mt-0.5">PKR 49,999</p>
                             </div>
-                            <div class="ml-auto w-5 h-5 rounded-full border-2 flex items-center justify-center border-gray-200 check-circle"></div>
                         </div>
                     </div>
 
                     <!-- Package Details Container -->
-                    <div id="package-details-container" class="hidden p-5 bg-white dark:bg-gray-900 rounded-2xl border border-gray-100 dark:border-gray-800 transition-all">
-                        <h5 id="package-details-title" class="font-lemon text-[10px] text-pakistan-green uppercase tracking-widest mb-4">Package Details</h5>
-                        <ul id="package-details-list" class="space-y-2.5 text-xs text-gray-600 dark:text-gray-400">
+                    <div id="package-details-container" class="hidden mt-2 pt-4 border-t border-gray-100 dark:border-gray-800/50 w-full transition-all">
+                        <h5 id="package-details-title" class="font-lemon text-[10px] text-pakistan-green uppercase tracking-widest mb-3">Package Details</h5>
+                        <ul id="package-details-list" class="space-y-3 text-xs text-gray-600 dark:text-gray-400">
                             <!-- Bullets injected via JS -->
                         </ul>
                     </div>
                 </div>
 
                 <!-- STEP 2: Personal Info -->
-                <div id="step-2" class="hidden grid grid-cols-1 md:grid-cols-2 gap-6">
-                    <div class="w-full group md:col-span-2">
-                        <div class="flex items-center justify-between mb-2.5">
+                <div id="step-2" class="hidden flex flex-col gap-4">
+                    <div class="w-full relative group">
+                        <div class="flex items-center justify-between mb-2">
                             <label class="block text-[10px] font-lemon tracking-widest text-gray-500 dark:text-gray-400">Full Name (As per Passport / ID)</label>
                             <div class="relative group/tooltip">
                                 <i class="fa-solid fa-circle-info text-[10px] text-gray-400 hover:text-pakistan-green transition-colors cursor-help"></i>
@@ -631,59 +653,57 @@
                                 </div>
                             </div>
                         </div>
-                        <input type="text" id="input-fullname" oninput="validateStep2()" class="w-full px-5 py-4 rounded-2xl bg-gray-50 dark:bg-gray-800/50 border-2 border-gray-100 dark:border-gray-700 focus:border-pakistan-green outline-none text-sm dark:text-white transition-all" placeholder="Enter Full Name">
+                        <input type="text" id="input-fullname" oninput="validateStep2()" class="w-full px-4 py-3 rounded-xl bg-gray-50 dark:bg-gray-800/50 border border-gray-200 dark:border-gray-700 focus:border-pakistan-green outline-none text-sm dark:text-white transition-all" placeholder="Enter Full Name">
                     </div>
                     
-                    <!-- Contact details container box -->
-                    <div class="md:col-span-2 p-6 rounded-[2rem] bg-gray-50/50 dark:bg-gray-800/10 border-2 border-dashed border-gray-100 dark:border-gray-800/80 group">
-                        <span class="block text-[10px] font-lemon tracking-widest text-pakistan-green dark:text-green-400 mb-4 uppercase">Contact & Verification</span>
-                        <div class="grid grid-cols-1 md:grid-cols-2 gap-5">
-                            <div class="w-full">
-                                <div class="flex items-center justify-between mb-2.5">
-                                    <label class="block text-[10px] font-lemon tracking-widest text-gray-500 dark:text-gray-400">Email Address <span class="text-red-500 font-sans">*</span></label>
-                                    <div class="relative group/tooltip">
-                                        <i class="fa-solid fa-circle-info text-[10px] text-gray-400 hover:text-pakistan-green transition-colors cursor-help"></i>
-                                        <div class="absolute bottom-full right-0 mb-2 w-48 p-2 bg-gray-900 text-white text-[9px] rounded-lg opacity-0 group-hover/tooltip:opacity-100 pointer-events-none transition-opacity z-50 shadow-xl border border-white/10">
-                                            <div class="relative z-10">Provide a valid email address for verification and communication. (Required)</div>
-                                            <div class="absolute top-full right-2 -mt-1 w-2 h-2 bg-gray-900 rotate-45"></div>
-                                        </div>
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                        <div class="w-full relative group">
+                            <div class="flex items-center justify-between mb-2">
+                                <label class="block text-[10px] font-lemon tracking-widest text-gray-500 dark:text-gray-400">Email Address <span class="text-[9px] text-gray-400 lowercase">(optional)</span></label>
+                                <div class="relative group/tooltip">
+                                    <i class="fa-solid fa-circle-info text-[10px] text-gray-400 hover:text-pakistan-green transition-colors cursor-help"></i>
+                                    <div class="absolute bottom-full right-0 mb-2 w-48 p-2 bg-gray-900 text-white text-[9px] rounded-lg opacity-0 group-hover/tooltip:opacity-100 pointer-events-none transition-opacity z-50 shadow-xl border border-white/10">
+                                        <div class="relative z-10">Provide a valid email address for verification and communication. (Optional)</div>
+                                        <div class="absolute top-full right-2 -mt-1 w-2 h-2 bg-gray-900 rotate-45"></div>
                                     </div>
                                 </div>
-                                <input type="email" id="input-email" oninput="validateStep2()" class="w-full px-5 py-4 rounded-2xl bg-white dark:bg-gray-800 border-2 border-gray-100 dark:border-gray-700/80 focus:border-pakistan-green outline-none text-sm dark:text-white transition-all" placeholder="name@example.com">
                             </div>
-                            <div class="w-full">
-                                <div class="flex items-center justify-between mb-2.5">
-                                    <label class="block text-[10px] font-lemon tracking-widest text-gray-500 dark:text-gray-400">WhatsApp Number <span class="text-xs text-gray-400 lowercase italic">(optional)</span></label>
-                                    <div class="relative group/tooltip">
-                                        <i class="fa-solid fa-circle-info text-[10px] text-gray-400 hover:text-pakistan-green transition-colors cursor-help"></i>
-                                        <div class="absolute bottom-full right-0 mb-2 w-48 p-2 bg-gray-900 text-white text-[9px] rounded-lg opacity-0 group-hover/tooltip:opacity-100 pointer-events-none transition-opacity z-50 shadow-xl border border-white/10">
-                                            <div class="relative z-10">Enter your WhatsApp number starting with 92 (e.g., 923001234567). (Optional)</div>
-                                            <div class="absolute top-full right-2 -mt-1 w-2 h-2 bg-gray-900 rotate-45"></div>
-                                        </div>
+                            <input type="email" id="input-email" oninput="validateStep2()" class="w-full px-4 py-3 rounded-xl bg-gray-50 dark:bg-gray-800/50 border border-gray-200 dark:border-gray-700 focus:border-pakistan-green outline-none text-sm dark:text-white transition-all" placeholder="name@example.com">
+                        </div>
+                        <div class="w-full relative group">
+                            <div class="flex items-center justify-between mb-2">
+                                <label class="block text-[10px] font-lemon tracking-widest text-gray-500 dark:text-gray-400">WhatsApp Number <span class="text-red-500 font-sans">*</span></label>
+                                <div class="relative group/tooltip">
+                                    <i class="fa-solid fa-circle-info text-[10px] text-gray-400 hover:text-pakistan-green transition-colors cursor-help"></i>
+                                    <div class="absolute bottom-full right-0 mb-2 w-48 p-2 bg-gray-900 text-white text-[9px] rounded-lg opacity-0 group-hover/tooltip:opacity-100 pointer-events-none transition-opacity z-50 shadow-xl border border-white/10">
+                                        <div class="relative z-10">Enter your WhatsApp number starting with 92 (e.g., 923001234567). (Required)</div>
+                                        <div class="absolute top-full right-2 -mt-1 w-2 h-2 bg-gray-900 rotate-45"></div>
                                     </div>
                                 </div>
-                                <input type="tel" id="input-whatsapp" oninput="this.value = this.value.replace(/\D/g, '').slice(0, 13); validateStep2()" class="w-full px-5 py-4 rounded-2xl bg-white dark:bg-gray-800 border-2 border-gray-100 dark:border-gray-700/80 focus:border-pakistan-green outline-none text-sm dark:text-white transition-all" placeholder="923XXXXXXXXX (Optional)">
                             </div>
+                            <input type="tel" id="input-whatsapp" oninput="this.value = this.value.replace(/\D/g, '').slice(0, 13); validateStep2()" class="w-full px-4 py-3 rounded-xl bg-gray-50 dark:bg-gray-800/50 border border-gray-200 dark:border-gray-700 focus:border-pakistan-green outline-none text-sm dark:text-white transition-all" placeholder="923XXXXXXXXX">
                         </div>
                     </div>
                 </div>
 
-                <!-- STEP 3: Email Verification -->
+                <!-- STEP 3: Phone Verification -->
                 <div id="step-3" class="hidden text-center space-y-6">
                     <div class="w-16 h-16 bg-green-50 dark:bg-green-900/20 rounded-full flex items-center justify-center mx-auto mb-4 text-pakistan-green dark:text-green-400">
-                        <i class="fa-solid fa-envelope-circle-check text-2xl"></i>
+                        <i class="fa-solid fa-mobile-screen-button text-2xl"></i>
                     </div>
-                    <h3 class="text-xl font-bold text-gray-900 dark:text-white mb-2">Email Verification</h3>
+                    <h3 class="text-xl font-bold text-gray-900 dark:text-white mb-2">Phone Verification</h3>
                     <p class="text-xs text-gray-600 dark:text-gray-400 mb-6 max-w-sm mx-auto">
-                        Please verify your email address (<strong id="otp-email-display" class="font-bold text-pakistan-green dark:text-green-400">--</strong>) to continue.
+                        Please verify your WhatsApp Number (<strong id="otp-phone-display" class="font-bold text-pakistan-green dark:text-green-400">--</strong>) to continue.
                     </p>
+                    <!-- reCAPTCHA Container -->
+                    <div id="recaptcha-container" class="flex justify-center mb-4"></div>
                     <div class="flex flex-col gap-4 items-center w-full">
                         <div class="w-full max-w-xs relative">
                             <input type="text" id="input-otp" maxlength="6" oninput="validateStep3Code()" placeholder="------" class="w-full px-5 py-4 text-center tracking-[0.5em] font-mono font-bold text-2xl rounded-2xl bg-gray-100 dark:bg-gray-800/90 border-2 border-gray-300 dark:border-gray-600 focus:border-pakistan-green focus:bg-white dark:focus:bg-gray-900 outline-none text-gray-900 dark:text-white shadow-inner transition-all" >
                         </div>
                         <div class="flex flex-col items-center gap-1">
-                            <span id="otp-sending-text" class="hidden text-[10px] text-gray-500 dark:text-gray-500">Sending verification code...</span>
-                            <button id="btn-otp-resend" type="button" onclick="sendVerificationCode()" class="text-xs font-lemon text-pakistan-green dark:text-green-400 underline hover:text-green-800 transition-colors uppercase tracking-wider">
+                            <span id="otp-sending-text" class="hidden text-[10px] text-gray-500 dark:text-gray-500">Sending verification code to WhatsApp...</span>
+                            <button id="btn-otp-resend" type="button" onclick="sendVerificationCode()" class="text-xs font-lemon text-pakistan-green dark:text-green-400 underline hover:text-green-800 transition-colors uppercase tracking-wider hidden">
                                 Send Code / Resend Code
                             </button>
                             <span id="otp-status-message" class="text-[10px] text-green-600 dark:text-green-400 font-medium"></span>
@@ -855,6 +875,8 @@
             paymentMethod: 'easypaisa',
             paymentProofBase64: null,
             otpHash: null,
+            setupRecaptcha: false,
+            confirmationResult: null,
             data: {
                 fullName: '',
                 cnic: '',
@@ -904,8 +926,19 @@
             }, 10);
             document.body.style.overflow = 'hidden';
 
-            if (planId) {
+            const sectionStudents = document.getElementById('section-students');
+            const sectionEntrepreneur = document.getElementById('section-entrepreneur');
+
+            if (planId === 'entrepreneur') {
+                if (sectionStudents) sectionStudents.classList.add('hidden');
+                if (sectionEntrepreneur) sectionEntrepreneur.classList.remove('hidden');
                 selectPlan(planId);
+            } else {
+                if (sectionStudents) sectionStudents.classList.remove('hidden');
+                if (sectionEntrepreneur) sectionEntrepreneur.classList.add('hidden');
+                if (planId) {
+                    selectPlan(planId);
+                }
             }
 
             if (state.step === 0 || state.step === undefined) state.step = 1;
@@ -949,6 +982,7 @@
             state.step = 1;
             state.plan = null;
             state.data = { fullName: '', cnic: '', email: '', whatsapp: '' };
+            selectPlan(null);
             // Clear inputs
             document.querySelectorAll('input').forEach(i => i.value = '');
             document.querySelectorAll('input[type="checkbox"]').forEach(i => i.checked = false);
@@ -1015,38 +1049,30 @@
             // Show Package Details
             const packageDetails = {
                 'basic': [
-                    'Initial Career Advice from Professionals',
-                    'Access to the First Noble Step Platform',
-                    '<span class="font-bold text-pakistan-green">Access to 100,000+ Free Online Courses</span>',
-                    'Basic Guidance for Your Situation',
-                    'Initial Case Understanding by Our Advisory Team',
-                    'Opportunity to Present Your Case or Idea',
-                    'General Direction & Professional Suggestions'
+                    'Resume & CV optimization',
+                    'Mock interview session',
+                    'Job search strategy guide',
+                    'Official Noble Career Foundation Certificate'
                 ],
                 'standard': [
-                    '<span class="font-bold text-pakistan-green">Everything in Basic Package, plus:</span>',
-                    '<span class="font-bold text-pakistan-green">Access to 100,000+ Free Online Courses</span>',
-                    'Detailed Problem Evaluation by Our Advisory Team',
-                    'Discussion with a First Noble Step Representative',
-                    'Uploaded Documents Review & Professional Feedback',
-                    'Personalized Advice Based on Your Situation',
-                    'Priority Case Review & Faster Response',
-                    'Opportunity & Risk Assessment',
-                    'Strategic Suggestions for Better Outcomes',
-                    'Receive a Verified Badge Certificate'
+                    '<span class="font-bold text-pakistan-green">Everything on the Basic Package</span>',
+                    'Salary negotiation coaching',
+                    'Exclusive 1-on-1 call',
+                    'LinkedIn profile review',
+                    'Career roadmap planning',
+                    'Exclusive Networking Opportunities',
+                    'Get an Official Noble Career Prestige Certificate',
+                    'Feeling stuck or overwhelmed in your career journey? We provide Comprehensive Case Analysis & Strategic Guidance'
                 ],
                 'professional_pkg': [
-                    '<span class="font-bold text-pakistan-green">Everything in Standard Package, plus:</span>',
-                    '<span class="font-bold text-pakistan-green">Access to 100,000+ Free Online Courses</span>',
-                    'Priority Consultation with Senior Advisors',
-                    'Comprehensive Case Analysis & Strategic Guidance',
-                    'Advanced Document & Situation Evaluation',
-                    'Dedicated Case Handling with Priority Support',
-                    'Verified Profile Badge on Events',
-                    'Exclusive Networking Opportunities',
-                    'International Exposure through Global Connections',
-                    'Chance to Win Foreign Job & Studies Complete Financial Support',
-                    'Access to High-Level Job Opportunities'
+                    '<span class="font-bold text-pakistan-green">Everything on the Standard Package</span>',
+                    'Verified Profile Badge for your resume',
+                    'Industry Connections & Networking',
+                    'Global Exposure through Professional Connections',
+                    'Get a chance to access High-Level Job Opportunities',
+                    'Free Access to First Noble Step\'s Exclusive Events',
+                    'Compete & Win the Noble Career Champion Award',
+                    'Seize your Chance to Win International Jobs & Study Opportunities with Full Support'
                 ],
                 'entrepreneur': [
                     'Business Plan Evaluation',
@@ -1069,13 +1095,19 @@
             const detailsTitle = document.getElementById('package-details-title');
 
             if (packageDetails[planId]) {
-                detailsContainer.classList.remove('hidden');
                 let title = planId === 'basic' ? 'Basic Package Details' : 
                             planId === 'standard' ? 'Standard Package Details' : 
-                            planId === 'professional_pkg' ? 'Professional Package Details' : 
+                            planId === 'professional_pkg' ? 'Premium Package Details' : 
                             'Entrepreneur Package Details';
                 detailsTitle.innerText = title;
-                detailsList.innerHTML = packageDetails[planId].map(detail => `<li class="flex items-start gap-3"><div class="shrink-0 w-5 h-5 bg-green-50 dark:bg-green-900/10 rounded-full flex items-center justify-center"><i class="fa-solid fa-check text-pakistan-green dark:text-green-400 text-[10px]"></i></div> <span class="leading-5 mt-0.5">${detail}</span></li>`).join('');
+                detailsList.innerHTML = packageDetails[planId].map(detail => `<li class="flex items-start gap-2.5"><div class="shrink-0 w-4 h-4 bg-green-50 dark:bg-green-900/20 rounded-full flex items-center justify-center mt-0.5"><i class="fa-solid fa-check text-pakistan-green dark:text-green-400 text-[8px]"></i></div> <span class="leading-relaxed text-xs">${detail}</span></li>`).join('');
+                
+                // Move the container inside the selected plan card!
+                const selectedCard = document.getElementById('plan-' + planId);
+                if (selectedCard && detailsContainer) {
+                    selectedCard.appendChild(detailsContainer);
+                    detailsContainer.classList.remove('hidden');
+                }
             } else {
                 if (detailsContainer) detailsContainer.classList.add('hidden');
             }
@@ -1150,17 +1182,33 @@
             if (state.step === 5) {
                 submitForm();
             } else if (state.step === 2) {
-                const email = document.getElementById('input-email').value.trim();
-                const fullName = document.getElementById('input-fullname').value.trim();
+                const whatsapp = document.getElementById('input-whatsapp').value.trim();
                 
                 state.step++;
                 updateUI();
                 
-                document.getElementById('otp-email-display').innerText = email;
-                sendVerificationCode(email, fullName);
+                document.getElementById('otp-phone-display').innerText = '+' + whatsapp.replace(/\D/g, '');
+                
+                if (!state.setupRecaptcha && window.firebaseAuth && window.RecaptchaVerifier) {
+                    try {
+                        window.recaptchaVerifier = new window.RecaptchaVerifier(window.firebaseAuth, 'recaptcha-container', {
+                            'size': 'invisible',
+                            'callback': (response) => {
+                                // reCAPTCHA solved
+                            },
+                            'expired-callback': () => {
+                                showError('Error', 'reCAPTCHA expired. Please verify again.');
+                            }
+                        });
+                        state.setupRecaptcha = true;
+                    } catch (e) {
+                         console.error("reCaptcha error:", e);
+                    }
+                }
+                
+                sendVerificationCode();
             } else if (state.step === 3) {
                 const otpVal = document.getElementById('input-otp').value.trim();
-                const email = document.getElementById('input-email').value.trim();
                 
                 if (otpVal.length !== 6) {
                     showError('Verification Required', 'Please enter a 6-digit verification code.');
@@ -1174,22 +1222,24 @@
                     btnNext.disabled = true;
                     if (btnNextText) btnNextText.innerText = 'Verifying...';
                     
-                    const response = await fetch('/api/verify-otp', {
-                        method: 'POST',
-                        headers: { 'Content-Type': 'application/json' },
-                        body: JSON.stringify({ email: email, otp: otpVal, otpHash: state.otpHash })
-                    });
-                    
-                    const data = await response.json();
-                    
-                    if (btnNextText) btnNextText.innerText = 'Continue';
-                    btnNext.disabled = false;
-                    
-                    if (data.success) {
+                    if (state.confirmationResult) {
+                        await state.confirmationResult.confirm(otpVal);
+                        
+                        const statusMsg = document.getElementById('otp-status-message');
+                        if (statusMsg) {
+                            statusMsg.innerText = 'Phone Verified Successfully!';
+                            statusMsg.classList.remove('text-red-500');
+                            statusMsg.classList.add('text-green-600', 'dark:text-green-400');
+                        }
+                        document.getElementById('input-otp').classList.add('border-green-500', 'bg-green-50', 'dark:bg-green-900/20');
+                        
+                        if (btnNextText) btnNextText.innerText = 'Continue';
+                        btnNext.disabled = false;
+                        
                         state.step++;
                         updateUI();
                     } else {
-                        showError('Invalid Code', data.error || 'The verification code you entered is invalid or expired.');
+                        throw new Error('Please request a code first.');
                     }
                 } catch (err) {
                     console.error(err);
@@ -1197,7 +1247,7 @@
                     const btnNext = document.getElementById('btn-next');
                     if (btnNextText) btnNextText.innerText = 'Continue';
                     btnNext.disabled = false;
-                    showError('Verification Error', 'Failed to communicate with verification servers. Please try again.');
+                    showError('Verification Error', err.message || 'Invalid code. Please try again.');
                 }
             } else if (state.step < 5) {
                 state.step++;
@@ -1210,55 +1260,74 @@
         function prevStep() {
             hideError();
             if (state.step > 1) {
+                if (state.step === 4) {
+                    if (state.planId === 'basic') {
+                        state.step = 3;
+                    }
+                }
                 state.step--;
                 updateUI();
             }
         }
 
-        async function sendVerificationCode(email, fullName) {
-            const emailVal = email || document.getElementById('input-email').value.trim();
-            const fullNameVal = fullName || document.getElementById('input-fullname').value.trim();
+        async function sendVerificationCode() {
+            let phoneVal = document.getElementById('input-whatsapp').value.trim();
+            let digits = phoneVal.replace(/\D/g, '');
+            // Automatically format to Pakistani standard if missing country code
+            if (digits.startsWith('0')) {
+                digits = '92' + digits.substring(1);
+            } else if (!digits.startsWith('92')) {
+                digits = '92' + digits;
+            }
+            phoneVal = '+' + digits;
+            
             const statusMsg = document.getElementById('otp-status-message');
             const sendingText = document.getElementById('otp-sending-text');
             const resendBtn = document.getElementById('btn-otp-resend');
             
-            if (!emailVal) return;
+            if (!digits || !window.firebaseAuth || !window.recaptchaVerifier) return;
             
-            if (statusMsg) statusMsg.innerText = '';
+            if (statusMsg) {
+                statusMsg.innerText = '';
+                statusMsg.classList.remove('text-red-500', 'dark:text-red-400');
+                statusMsg.classList.add('text-green-600', 'dark:text-green-400');
+            }
             if (sendingText) sendingText.classList.remove('hidden');
             if (resendBtn) resendBtn.disabled = true;
             
             try {
-                const response = await fetch('/api/send-otp', {
-                    method: 'POST',
-                    headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({ email: emailVal, fullName: fullNameVal })
-                });
+                const appVerifier = window.recaptchaVerifier;
+                const confirmationResult = await window.signInWithPhoneNumber(window.firebaseAuth, phoneVal, appVerifier);
                 
-                const data = await response.json();
+                state.confirmationResult = confirmationResult;
+                
                 if (sendingText) sendingText.classList.add('hidden');
-                if (resendBtn) resendBtn.disabled = false;
+                if (statusMsg) statusMsg.innerText = 'Verification code sent successfully to ' + phoneVal;
                 
-                if (data.success) {
-                    state.otpHash = data.hash;
-                    if (statusMsg) {
-                        statusMsg.innerText = 'Verification code sent successfully to ' + emailVal;
-                        statusMsg.className = 'text-[10px] text-green-600 dark:text-green-400 font-medium';
-                    }
-                } else {
-                    if (statusMsg) {
-                        statusMsg.innerText = data.error || 'Failed to send verification code.';
-                        statusMsg.className = 'text-[10px] text-red-500 dark:text-red-400 font-medium';
-                    }
+                if (resendBtn) {
+                    resendBtn.disabled = false;
+                    resendBtn.classList.remove('hidden');
                 }
-            } catch (err) {
-                console.error(err);
+            } catch (error) {
                 if (sendingText) sendingText.classList.add('hidden');
-                if (resendBtn) resendBtn.disabled = false;
+                if (resendBtn) {
+                    resendBtn.disabled = false;
+                    resendBtn.classList.remove('hidden');
+                }
+                
+                let errorMsg = error.message;
+                if (error.code === 'auth/operation-not-allowed') {
+                    errorMsg = 'Phone Auth is disabled. Please enable it in Firebase Console.';
+                } else if (error.code === 'auth/invalid-phone-number') {
+                    errorMsg = 'Invalid phone number format.';
+                }
+                
                 if (statusMsg) {
-                    statusMsg.innerText = 'Failed to connect to verification servers.';
-                    statusMsg.className = 'text-[10px] text-red-500 dark:text-red-400 font-medium';
+                    statusMsg.innerText = 'Failed: ' + errorMsg;
+                    statusMsg.classList.remove('text-green-600', 'dark:text-green-400');
+                    statusMsg.classList.add('text-red-500', 'dark:text-red-400');
                 }
+                console.error("Firebase Auth Error: ", error);
             }
         }
 
@@ -1386,8 +1455,8 @@
             const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
             
             const valid = name.length >= 3 && 
-                          emailRegex.test(email) && 
-                          (whatsapp.length === 0 || whatsapp.replace(/\D/g, '').length >= 10);
+                          (email === '' || emailRegex.test(email)) && 
+                          whatsapp.replace(/\D/g, '').length >= 10;
             
             if (!checkOnly) validateCurrentStep();
             return valid;
