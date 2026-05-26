@@ -120,6 +120,32 @@
         .modal-exit-active { opacity: 0; transform: scale(0.95); transition: opacity 200ms, transform 200ms; }
         
         .hidden-important { display: none !important; }
+
+        @keyframes dot-pulse {
+            0%, 100% {
+                transform: scale(0.6);
+                opacity: 0.35;
+            }
+            50% {
+                transform: scale(1.15);
+                opacity: 1;
+            }
+        }
+        
+        @keyframes scale-up {
+            0% {
+                transform: scale(0.4);
+                opacity: 0;
+            }
+            100% {
+                transform: scale(1);
+                opacity: 1;
+            }
+        }
+        
+        .animate-scale-up {
+            animation: scale-up 0.3s cubic-bezier(0.34, 1.56, 0.64, 1) forwards;
+        }
     </style>
 <script type="importmap">
 {
@@ -825,9 +851,27 @@
             <!-- Footer Buttons -->
             <div id="form-footer" class="px-8 pb-8 pt-4 flex gap-4 border-t border-gray-100 dark:border-gray-800">
                 <button id="btn-back" type="button" onclick="prevStep()" class="hidden px-6 py-4 rounded-2xl font-lemon text-[10px] border border-gray-200 dark:border-gray-700 text-gray-500 hover:bg-gray-50 dark:hover:bg-gray-800">Back</button>
-                <button id="btn-next" type="button" onclick="nextStep()" disabled class="flex-grow py-4 rounded-2xl font-lemon text-[10px] tracking-widest text-white transition-all bg-gray-200 dark:bg-gray-700 cursor-not-allowed flex items-center justify-center gap-2">
-                    <i class="fa-solid fa-circle-notch fa-spin hidden" id="btn-next-spinner"></i>
-                    <span id="btn-next-text">Continue</span>
+                <button id="btn-next" type="button" onclick="nextStep()" disabled class="relative flex-grow py-4 rounded-2xl font-lemon text-[10px] tracking-widest text-white transition-all bg-gray-200 dark:bg-gray-700 cursor-not-allowed flex items-center justify-center gap-2 overflow-hidden min-h-[56px] select-none">
+                    <!-- Dot Loading State (for custom submission) -->
+                    <div id="btn-next-dots" class="hidden absolute inset-0 flex items-center justify-center gap-1.5 bg-[#12131C] dark:bg-slate-950">
+                        <span class="w-2 h-2 rounded-full bg-[#4066ff] animate-[dot-pulse_1s_infinite_ease-in-out]"></span>
+                        <span class="w-2 h-2 rounded-full bg-[#4066ff] animate-[dot-pulse_1s_infinite_ease-in-out_0.20s]"></span>
+                        <span class="w-2 h-2 rounded-full bg-[#4066ff] animate-[dot-pulse_1s_infinite_ease-in-out_0.40s]"></span>
+                    </div>
+                    <!-- Success Status Overlays -->
+                    <div id="btn-next-success-state" class="hidden absolute inset-0 flex items-center justify-center gap-2 bg-[#12131C] dark:bg-slate-950 font-sans font-semibold text-sm tracking-normal text-white">
+                        <svg class="w-4 h-4 text-green-400 animate-scale-up" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="3">
+                            <path stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7" />
+                        </svg>
+                        <span class="font-bold text-[13px] tracking-normal">Success</span>
+                    </div>
+                    
+                    <!-- Normal Content -->
+                    <div id="btn-next-normal-content" class="flex items-center justify-center gap-2">
+                        <i class="fa-solid fa-circle-notch fa-spin hidden" id="btn-next-spinner"></i>
+                        <span id="btn-next-icon-placeholder" class="hidden text-[#4066ff] dark:text-[#4d6dff] font-extrabold text-sm select-none mr-1">↓</span>
+                        <span id="btn-next-text">Continue</span>
+                    </div>
                 </button>
             </div>
         </div>
@@ -1461,10 +1505,28 @@
             // Update Buttons
             btnBack.classList.toggle('hidden', state.step === 1);
             const btnNextText = document.getElementById('btn-next-text');
+            const btnNextIcon = document.getElementById('btn-next-icon-placeholder');
+            
             if (state.step === 5) {
-                btnNextText.innerText = 'Submit Application';
+                btnNextText.innerText = 'Submit';
+                btnNextText.classList.add('font-sans', 'text-[13px]', 'font-semibold', 'tracking-normal', 'capitalize');
+                btnNextText.classList.remove('font-lemon', 'text-[10px]', 'tracking-widest');
+                if (btnNextIcon) {
+                    btnNextIcon.classList.remove('hidden');
+                    btnNextIcon.classList.add('inline-block');
+                }
+                btnNext.classList.add('rounded-full', 'px-10');
+                btnNext.classList.remove('rounded-2xl');
             } else {
                 btnNextText.innerText = 'Continue';
+                btnNextText.classList.remove('font-sans', 'text-[13px]', 'font-semibold', 'tracking-normal', 'capitalize');
+                btnNextText.classList.add('font-lemon', 'text-[10px]', 'tracking-widest');
+                if (btnNextIcon) {
+                    btnNextIcon.classList.add('hidden');
+                    btnNextIcon.classList.remove('inline-block');
+                }
+                btnNext.classList.remove('rounded-full', 'px-10');
+                btnNext.classList.add('rounded-2xl');
             }
             
             // Validate Current Step to Enable Next
@@ -1494,14 +1556,23 @@
                 isValid = validateStep5(true);
             }
 
+            // Reset dynamically updated dynamic step-style button classes
+            btnNext.classList.remove(
+                'bg-gray-200', 'dark:bg-gray-700', 'cursor-not-allowed',
+                'bg-pakistan-green', 'shadow-lg',
+                'bg-[#12131C]', 'hover:bg-[#1C1E2D]', 'border', 'border-gray-800/40', 'dark:bg-slate-950', 'dark:hover:bg-slate-900'
+            );
+
             if (isValid) {
                 btnNext.disabled = false;
-                btnNext.classList.remove('bg-gray-200', 'dark:bg-gray-700', 'cursor-not-allowed');
-                btnNext.classList.add('bg-pakistan-green', 'shadow-lg');
+                if (state.step === 5) {
+                    btnNext.classList.add('bg-[#12131C]', 'hover:bg-[#1C1E2D]', 'border', 'border-gray-800/40', 'dark:bg-slate-950', 'dark:hover:bg-slate-900', 'shadow-lg');
+                } else {
+                    btnNext.classList.add('bg-pakistan-green', 'shadow-lg');
+                }
             } else {
                 btnNext.disabled = true;
                 btnNext.classList.add('bg-gray-200', 'dark:bg-gray-700', 'cursor-not-allowed');
-                btnNext.classList.remove('bg-pakistan-green', 'shadow-lg');
             }
             return isValid;
         }
@@ -1554,9 +1625,17 @@
                 otpHash: state.otpHash
             };
 
-            // Hide Form
-            modalContent.classList.add('hidden');
-            loadingView.classList.remove('hidden');
+            // Fetch interactive status layers inside our custom styled button
+            const btnDots = document.getElementById('btn-next-dots');
+            const btnSuccessState = document.getElementById('btn-next-success-state');
+            const btnNormalContent = document.getElementById('btn-next-normal-content');
+            
+            // Lock form navigation & show premium dots loading state inside button itself
+            btnNext.disabled = true;
+            btnBack.classList.add('hidden');
+            
+            if (btnNormalContent) btnNormalContent.classList.add('hidden');
+            if (btnDots) btnDots.classList.remove('hidden');
 
             try {
                 const response = await fetch('/api/submit-membership', {
@@ -1570,22 +1649,33 @@
                     throw new Error(data.error || 'Server encountered an error while processing your request.');
                 }
 
-                if (state.plan !== 'basic') {
-                    // Temporarily bypassing FastPay integration
-                    // Just show success view directly
-                    loadingView.classList.add('hidden');
-                    successView.classList.remove('hidden');
-                    triggerSuccessAnimation();
-                    return;
-                }
-
-                loadingView.classList.add('hidden');
-                successView.classList.remove('hidden');
+                // Switch button to Success state with checkmark!
+                if (btnDots) btnDots.classList.add('hidden');
+                if (btnSuccessState) btnSuccessState.classList.remove('hidden');
+                
+                // Trigger celebratory confetti burst!
                 triggerSuccessAnimation();
+                
+                // Wait 1.6 seconds to let user enjoy the premium button success response
+                await new Promise(resolve => setTimeout(resolve, 1600));
+
+                // Now transition from the application form to the full success view
+                modalContent.classList.add('hidden');
+                successView.classList.remove('hidden');
+                
+                // Reset button views cleanly for subsequent runs
+                if (btnSuccessState) btnSuccessState.classList.add('hidden');
+                if (btnNormalContent) btnNormalContent.classList.remove('hidden');
+                
             } catch (err) {
                 console.error(err);
-                loadingView.classList.add('hidden');
-                modalContent.classList.remove('hidden');
+                // Revert button back to interactive normal layout so they can retry
+                if (btnDots) btnDots.classList.add('hidden');
+                if (btnSuccessState) btnSuccessState.classList.add('hidden');
+                if (btnNormalContent) btnNormalContent.classList.remove('hidden');
+                
+                btnNext.disabled = false;
+                btnBack.classList.remove('hidden');
                 
                 showError('Submission Failed', err.message || 'Failed to submit application. Please check your connection and try again.');
             }
