@@ -853,14 +853,14 @@
                 <button id="btn-back" type="button" onclick="prevStep()" class="hidden px-6 py-4 rounded-2xl font-lemon text-[10px] border border-gray-200 dark:border-gray-700 text-gray-500 hover:bg-gray-50 dark:hover:bg-gray-800">Back</button>
                 <button id="btn-next" type="button" onclick="nextStep()" disabled class="relative flex-grow py-4 rounded-2xl font-lemon text-[10px] tracking-widest text-white transition-all bg-gray-200 dark:bg-gray-700 cursor-not-allowed flex items-center justify-center gap-2 overflow-hidden min-h-[56px] select-none">
                     <!-- Dot Loading State (for custom submission) -->
-                    <div id="btn-next-dots" class="hidden absolute inset-0 flex items-center justify-center gap-1.5 bg-[#12131C] dark:bg-slate-950">
-                        <span class="w-2 h-2 rounded-full bg-[#4066ff] animate-[dot-pulse_1s_infinite_ease-in-out]"></span>
-                        <span class="w-2 h-2 rounded-full bg-[#4066ff] animate-[dot-pulse_1s_infinite_ease-in-out_0.20s]"></span>
-                        <span class="w-2 h-2 rounded-full bg-[#4066ff] animate-[dot-pulse_1s_infinite_ease-in-out_0.40s]"></span>
+                    <div id="btn-next-dots" class="hidden absolute inset-0 flex items-center justify-center gap-1.5 bg-pakistan-green">
+                        <span class="w-2 h-2 rounded-full bg-white animate-[dot-pulse_1s_infinite_ease-in-out]"></span>
+                        <span class="w-2 h-2 rounded-full bg-white animate-[dot-pulse_1s_infinite_ease-in-out_0.20s]"></span>
+                        <span class="w-2 h-2 rounded-full bg-white animate-[dot-pulse_1s_infinite_ease-in-out_0.40s]"></span>
                     </div>
                     <!-- Success Status Overlays -->
-                    <div id="btn-next-success-state" class="hidden absolute inset-0 flex items-center justify-center gap-2 bg-[#12131C] dark:bg-slate-950 font-sans font-semibold text-sm tracking-normal text-white">
-                        <svg class="w-4 h-4 text-green-400 animate-scale-up" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="3">
+                    <div id="btn-next-success-state" class="hidden absolute inset-0 flex items-center justify-center gap-2 bg-pakistan-green font-sans font-semibold text-sm tracking-normal text-white">
+                        <svg class="w-4 h-4 text-white animate-scale-up" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="3">
                             <path stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7" />
                         </svg>
                         <span class="font-bold text-[13px] tracking-normal">Success</span>
@@ -869,7 +869,7 @@
                     <!-- Normal Content -->
                     <div id="btn-next-normal-content" class="flex items-center justify-center gap-2">
                         <i class="fa-solid fa-circle-notch fa-spin hidden" id="btn-next-spinner"></i>
-                        <span id="btn-next-icon-placeholder" class="hidden text-[#4066ff] dark:text-[#4d6dff] font-extrabold text-sm select-none mr-1">↓</span>
+                        <span id="btn-next-icon-placeholder" class="hidden text-white font-extrabold text-sm select-none mr-1">↓</span>
                         <span id="btn-next-text">Continue</span>
                     </div>
                 </button>
@@ -1559,17 +1559,13 @@
             // Reset dynamically updated dynamic step-style button classes
             btnNext.classList.remove(
                 'bg-gray-200', 'dark:bg-gray-700', 'cursor-not-allowed',
-                'bg-pakistan-green', 'shadow-lg',
+                'bg-pakistan-green', 'hover:bg-green-800', 'shadow-lg',
                 'bg-[#12131C]', 'hover:bg-[#1C1E2D]', 'border', 'border-gray-800/40', 'dark:bg-slate-950', 'dark:hover:bg-slate-900'
             );
 
             if (isValid) {
                 btnNext.disabled = false;
-                if (state.step === 5) {
-                    btnNext.classList.add('bg-[#12131C]', 'hover:bg-[#1C1E2D]', 'border', 'border-gray-800/40', 'dark:bg-slate-950', 'dark:hover:bg-slate-900', 'shadow-lg');
-                } else {
-                    btnNext.classList.add('bg-pakistan-green', 'shadow-lg');
-                }
+                btnNext.classList.add('bg-pakistan-green', 'hover:bg-green-800', 'shadow-lg');
             } else {
                 btnNext.disabled = true;
                 btnNext.classList.add('bg-gray-200', 'dark:bg-gray-700', 'cursor-not-allowed');
