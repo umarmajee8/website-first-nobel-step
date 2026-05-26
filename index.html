@@ -888,8 +888,8 @@
         </div>
 
         <!-- SUCCESS -->
-        <div id="success-view" class="hidden bg-white dark:bg-gray-900 rounded-3xl p-8 max-w-md w-full text-center shadow-2xl relative">
-            <div class="w-14 h-14 bg-green-50 dark:bg-green-900/20 rounded-full flex items-center justify-center mx-auto mb-6 text-pakistan-green"><i class="fa-solid fa-check text-2xl animate-bounce"></i></div>
+        <div id="success-view" class="hidden bg-white dark:bg-gray-900 rounded-3xl p-8 max-w-md w-full text-center shadow-2xl relative transition-all duration-300 transform scale-95 opacity-0">
+            <div class="w-14 h-14 bg-green-50 dark:bg-green-900/20 rounded-full flex items-center justify-center mx-auto mb-6 text-pakistan-green"><i class="fa-solid fa-check text-2xl animate-scale-up"></i></div>
             <h2 class="text-xl font-lemon mb-2 dark:text-white">Applied!</h2>
             <p class="text-gray-500 dark:text-gray-400 mb-8 text-sm leading-relaxed">Your details are submitted successfully. Our team will contact you after verifying your payment.</p>
             <button onclick="forceCloseForm()" class="w-full py-4 bg-pakistan-green text-white rounded-2xl font-lemon text-xs tracking-widest shadow-lg hover:bg-green-800 transition-all">Close</button>
@@ -1022,12 +1022,18 @@
             modalContent.classList.remove('scale-100', 'opacity-100');
             modalContent.classList.add('scale-95', 'opacity-0');
             
+            // If successView is visible, fade it out smoothly alongside the modalContent closing
+            if (!successView.classList.contains('hidden')) {
+                successView.classList.remove('scale-100', 'opacity-100');
+                successView.classList.add('scale-95', 'opacity-0');
+            }
+            
             // Hide other views if active
             loadingView.classList.add('hidden');
-            successView.classList.add('hidden');
-            modalContent.classList.remove('hidden'); // Reset to show form for next time
             
             setTimeout(() => {
+                successView.classList.add('hidden');
+                modalContent.classList.remove('hidden'); // Reset to show form for next time
                 modalOverlay.classList.add('hidden');
                 state.isOpen = false;
                 resetForm();
@@ -1505,28 +1511,11 @@
             // Update Buttons
             btnBack.classList.toggle('hidden', state.step === 1);
             const btnNextText = document.getElementById('btn-next-text');
-            const btnNextIcon = document.getElementById('btn-next-icon-placeholder');
             
             if (state.step === 5) {
                 btnNextText.innerText = 'Submit';
-                btnNextText.classList.add('font-sans', 'text-[13px]', 'font-semibold', 'tracking-normal', 'capitalize');
-                btnNextText.classList.remove('font-lemon', 'text-[10px]', 'tracking-widest');
-                if (btnNextIcon) {
-                    btnNextIcon.classList.remove('hidden');
-                    btnNextIcon.classList.add('inline-block');
-                }
-                btnNext.classList.add('rounded-full', 'px-10');
-                btnNext.classList.remove('rounded-2xl');
             } else {
                 btnNextText.innerText = 'Continue';
-                btnNextText.classList.remove('font-sans', 'text-[13px]', 'font-semibold', 'tracking-normal', 'capitalize');
-                btnNextText.classList.add('font-lemon', 'text-[10px]', 'tracking-widest');
-                if (btnNextIcon) {
-                    btnNextIcon.classList.add('hidden');
-                    btnNextIcon.classList.remove('inline-block');
-                }
-                btnNext.classList.remove('rounded-full', 'px-10');
-                btnNext.classList.add('rounded-2xl');
             }
             
             // Validate Current Step to Enable Next
@@ -1655,9 +1644,25 @@
                 // Wait 1.6 seconds to let user enjoy the premium button success response
                 await new Promise(resolve => setTimeout(resolve, 1600));
 
-                // Now transition from the application form to the full success view
+                // Now transition from the application form to the full success view smoothly
+                modalContent.classList.remove('scale-100', 'opacity-100');
+                modalContent.classList.add('scale-95', 'opacity-0');
+                
+                // Wait for the fade-out duration (300ms) to finish cleanly
+                await new Promise(resolve => setTimeout(resolve, 300));
+                
                 modalContent.classList.add('hidden');
+                
+                // Initialize successView with initial scale down and transparent opacity
+                successView.classList.add('scale-95', 'opacity-0');
                 successView.classList.remove('hidden');
+                
+                // Trigger layout reflow to let browser register initial style state
+                successView.offsetHeight;
+                
+                // Animate successView into full zoom and opacity state smoothly
+                successView.classList.remove('scale-95', 'opacity-0');
+                successView.classList.add('scale-100', 'opacity-100');
                 
                 // Reset button views cleanly for subsequent runs
                 if (btnSuccessState) btnSuccessState.classList.add('hidden');
