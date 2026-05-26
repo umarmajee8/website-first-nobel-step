@@ -22,14 +22,10 @@ export default async function handler(req: any, res: any) {
     const formData = req.body;
     const { fullName, cnic, email: rawEmail, whatsapp, planId, institute, degree, businessName, industry, experience, targetCountry, paymentMethod, otp, otpHash } = formData;
 
-    if (!rawEmail) return res.status(400).json({ success: false, error: 'Email is required' });
-    const email = rawEmail.toLowerCase().trim();
+    const email = rawEmail ? rawEmail.toLowerCase().trim() : '';
 
-    // Verify OTP if it's not a basic plan
-    if (planId !== 'basic') {
-      if (!otp || !otpHash) {
-        return res.status(400).json({ success: false, error: 'Email verification is required.' });
-      }
+    // Verify OTP if it's not a basic plan and otpHash is provided (e.g. for custom/legacy paths)
+    if (planId !== 'basic' && otpHash) {
       const secret = process.env.GOOGLE_PRIVATE_KEY || 'fallback_secret';
       const expectedHash = crypto.createHash('sha256').update(otp + email + secret).digest('hex');
       if (expectedHash !== otpHash) {
