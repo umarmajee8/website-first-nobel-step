@@ -420,9 +420,9 @@
                             <div class="h-px bg-gray-100 dark:bg-gray-800 w-full mb-6"></div>
                             <div class="mb-3 text-[10px] font-lemon text-pakistan-green dark:text-green-400 tracking-widest">Available Packages:</div>
                             <ul class="space-y-3 mb-6 flex-grow">
-                                <li class="flex items-start gap-2.5 text-sm"><i class="fa-solid fa-circle text-green-500 text-[6px] mt-1.5"></i> <span class="text-gray-700 dark:text-gray-300 font-medium text-xs"><strong>Basic Package</strong> (PKR 2,499) - Initial advice & guidance</span></li>
-                                <li class="flex items-start gap-2.5 text-sm"><i class="fa-solid fa-circle text-blue-500 text-[6px] mt-1.5"></i> <span class="text-gray-700 dark:text-gray-300 font-medium text-xs"><strong>Standard Package</strong> (PKR 6,999) - Detailed evaluation & support</span></li>
-                                <li class="flex items-start gap-2.5 text-sm"><i class="fa-solid fa-circle text-purple-500 text-[6px] mt-1.5"></i> <span class="text-gray-700 dark:text-gray-300 font-medium text-xs"><strong>Premium Package</strong> (PKR 14,999) - Premium advisory & global exposure</span></li>
+                                <li class="flex items-start gap-2.5 text-sm"><i class="fa-solid fa-circle text-green-500 text-[6px] mt-1.5"></i> <span class="text-gray-700 dark:text-gray-300 font-medium text-xs"><strong>Basic Package</strong> (PKR 2,499) - Smart career foundation & expert guidance.</span></li>
+                                <li class="flex items-start gap-2.5 text-sm"><i class="fa-solid fa-circle text-pakistan-green dark:text-green-400 text-[6px] mt-1.5"></i> <span class="text-gray-700 dark:text-gray-300 font-medium text-xs"><strong>Standard Package</strong> (PKR 6,999) - Complete career strategy & dedicated support.</span></li>
+                                <li class="flex items-start gap-2.5 text-sm"><i class="fa-solid fa-circle text-emerald-600 text-[6px] mt-1.5"></i> <span class="text-gray-700 dark:text-gray-300 font-medium text-xs"><strong>Premium Package</strong> (PKR 14,999) - Elite career mastery & global exposure.</span></li>
                             </ul>
                             <div class="flex flex-col gap-3 mt-auto">
                                 <button onclick="openForm()" class="w-full py-4 rounded-xl font-lemon text-[10px] tracking-widest bg-pakistan-green text-white shadow-xl shadow-green-900/10 hover:bg-green-900 uppercase transition-all hover:scale-[1.02] active:scale-95">
@@ -515,7 +515,7 @@
     <!-- SPAM ALERT MODAL -->
     <div id="spam-alert-modal" class="hidden fixed inset-0 z-[200] flex items-center justify-center p-4 bg-black/60 backdrop-blur-sm transition-all duration-300 opacity-0">
         <div class="bg-white dark:bg-gray-900 rounded-[2rem] w-full max-w-sm p-8 shadow-2xl border border-gray-100 dark:border-gray-800 flex flex-col items-center text-center transform scale-95 transition-all duration-300">
-            <div class="w-16 h-16 bg-blue-50 dark:bg-blue-900/20 text-blue-600 dark:text-blue-400 rounded-full flex items-center justify-center mb-6">
+            <div class="w-16 h-16 bg-green-50 dark:bg-green-900/20 text-pakistan-green dark:text-green-400 rounded-full flex items-center justify-center mb-6">
                 <i class="fa-solid fa-envelope-open-text text-2xl"></i>
             </div>
             <h3 class="text-xl font-bold text-gray-900 dark:text-white mb-2">Check Your Spam Folder</h3>
@@ -682,7 +682,21 @@
                         </div>
                         <input type="text" id="input-fullname" oninput="validateStep2()" class="w-full px-4 py-3 rounded-xl bg-gray-50 dark:bg-gray-800/50 border border-gray-200 dark:border-gray-700 focus:border-pakistan-green outline-none text-sm dark:text-white transition-all" placeholder="Enter Full Name">
                     </div>
-                    
+
+                    <div class="w-full relative group">
+                        <div class="flex items-center justify-between mb-2">
+                            <label class="block text-[10px] font-lemon tracking-widest text-gray-500 dark:text-gray-400">WhatsApp Number <span class="text-red-500 font-sans">*</span></label>
+                            <div class="relative group/tooltip">
+                                <i class="fa-solid fa-circle-info text-[10px] text-gray-400 hover:text-pakistan-green transition-colors cursor-help"></i>
+                                <div class="absolute bottom-full right-0 mb-2 w-48 p-2 bg-gray-900 text-white text-[9px] rounded-lg opacity-0 group-hover/tooltip:opacity-100 pointer-events-none transition-opacity z-50 shadow-xl border border-white/10">
+                                    <div class="relative z-10">Enter your active WhatsApp phone number starting with 92 (e.g., 923001234567). (Required)</div>
+                                    <div class="absolute top-full right-2 -mt-1 w-2 h-2 bg-gray-900 rotate-45"></div>
+                                </div>
+                            </div>
+                        </div>
+                        <input type="tel" id="input-whatsapp" oninput="this.value = this.value.replace(/\D/g, '').slice(0, 13); validateStep2()" class="w-full px-4 py-3 rounded-xl bg-gray-50 dark:bg-gray-800/50 border border-gray-200 dark:border-gray-700 focus:border-pakistan-green outline-none text-sm dark:text-white transition-all" placeholder="e.g., 923001234567">
+                    </div>
+
                     <div class="w-full relative group">
                         <div class="flex items-center justify-between mb-2">
                             <label class="block text-[10px] font-lemon tracking-widest text-gray-500 dark:text-gray-400">Email Address <span class="text-red-500 font-sans">*</span></label>
@@ -700,20 +714,20 @@
 
                 <!-- STEP 3: Phone Verification -->
                 <div id="step-3" class="hidden text-center space-y-6">
-                    <div class="w-16 h-16 bg-blue-50 dark:bg-blue-900/20 rounded-full flex items-center justify-center mx-auto mb-4 text-blue-600 dark:text-blue-400">
+                    <div class="w-16 h-16 bg-green-50 dark:bg-green-900/20 rounded-full flex items-center justify-center mx-auto mb-4 text-pakistan-green dark:text-green-400">
                         <i class="fa-solid fa-envelope text-2xl"></i>
                     </div>
                     <h3 class="text-xl font-bold text-gray-900 dark:text-white mb-2">Email Verification</h3>
                     <p class="text-xs text-gray-600 dark:text-gray-400 mb-6 max-w-sm mx-auto">
-                        Please enter the 6-digit verification code sent to <br/><strong id="otp-phone-display" class="font-bold text-blue-600 dark:text-blue-400 text-sm mt-1 inline-block">--</strong>
+                        Please enter the 6-digit verification code sent to <br/><strong id="otp-phone-display" class="font-bold text-pakistan-green dark:text-green-400 text-sm mt-1 inline-block">--</strong>
                     </p>
                     <div class="flex flex-col gap-4 items-center w-full">
                         <div class="w-full max-w-xs relative">
-                            <input type="text" id="input-otp" maxlength="6" oninput="validateStep3Code()" placeholder="------" class="w-full px-5 py-4 text-center tracking-[0.5em] font-mono font-bold text-2xl rounded-2xl bg-gray-100 dark:bg-gray-800/90 border-2 border-gray-300 dark:border-gray-600 focus:border-blue-500 focus:bg-white dark:focus:bg-gray-900 outline-none text-gray-900 dark:text-white shadow-inner transition-all" >
+                            <input type="text" id="input-otp" maxlength="6" oninput="validateStep3Code()" placeholder="------" class="w-full px-5 py-4 text-center tracking-[0.5em] font-mono font-bold text-2xl rounded-2xl bg-gray-100 dark:bg-gray-800/90 border-2 border-gray-300 dark:border-gray-600 focus:border-pakistan-green focus:bg-white dark:focus:bg-gray-900 outline-none text-gray-900 dark:text-white shadow-inner transition-all" >
                         </div>
                         <div class="flex flex-col items-center gap-1">
                             <span id="otp-sending-text" class="hidden text-[10px] text-gray-500 dark:text-gray-500">Sending verification code...</span>
-                            <button id="btn-otp-resend" type="button" onclick="sendVerificationCode()" class="text-xs font-lemon text-blue-600 dark:text-blue-400 underline hover:text-blue-800 transition-colors uppercase tracking-wider hidden">
+                            <button id="btn-otp-resend" type="button" onclick="sendVerificationCode()" class="text-xs font-lemon text-pakistan-green dark:text-green-400 underline hover:text-green-800 transition-colors uppercase tracking-wider hidden">
                                 Resend Code
                             </button>
                             <span id="otp-status-message" class="text-[10px] text-green-600 dark:text-green-400 font-medium"></span>
@@ -839,7 +853,8 @@
                         <h4 class="font-lemon text-[10px] text-pakistan-green dark:text-green-400 mb-6 uppercase tracking-widest">Application Review</h4>
                         <div class="grid grid-cols-1 md:grid-cols-2 gap-4 text-xs relative z-10">
                           <div class="md:col-span-2"><span class="text-gray-400 text-[10px] uppercase">Name</span><span id="review-name" class="font-bold dark:text-white block text-sm">--</span></div>
-                          <div class="md:col-span-2"><span class="text-gray-400 text-[10px] uppercase">Email</span><span id="review-email" class="font-bold dark:text-white block font-mono">--</span></div>
+                          <div><span class="text-gray-400 text-[10px] uppercase">WhatsApp Number</span><span id="review-whatsapp" class="font-bold dark:text-white block font-mono">--</span></div>
+                          <div><span class="text-gray-400 text-[10px] uppercase">Email</span><span id="review-email" class="font-bold dark:text-white block font-mono">--</span></div>
                         </div>
                       </div>
                       
@@ -1098,7 +1113,7 @@
             hideError();
             state.step = 1;
             state.plan = null;
-            state.data = { fullName: '', cnic: '', email: '' };
+            state.data = { fullName: '', cnic: '', email: '', whatsapp: '' };
             selectPlan(null);
             // Clear inputs
             document.querySelectorAll('input').forEach(i => i.value = '');
@@ -1579,6 +1594,9 @@
                 if (document.getElementById('review-email')) {
                     document.getElementById('review-email').innerText = document.getElementById('input-email').value || '--';
                 }
+                if (document.getElementById('review-whatsapp')) {
+                    document.getElementById('review-whatsapp').innerText = document.getElementById('input-whatsapp').value || '--';
+                }
             }
 
             // Update Buttons
@@ -1638,11 +1656,15 @@
         function validateStep2(checkOnly = false) {
             const name = document.getElementById('input-fullname').value.trim();
             const email = document.getElementById('input-email').value.trim();
+            const whatsappEl = document.getElementById('input-whatsapp');
+            const whatsapp = whatsappEl ? whatsappEl.value.trim() : '';
             
             const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+            const cleanWhatsapp = whatsapp.replace(/\D/g, '');
             
             const valid = name.length >= 3 && 
-                          emailRegex.test(email);
+                          emailRegex.test(email) &&
+                          cleanWhatsapp.length >= 10;
             
             if (!checkOnly) validateCurrentStep();
             return valid;
@@ -1670,6 +1692,7 @@
                 fullName: document.getElementById('input-fullname').value,
                 cnic: '',
                 email: document.getElementById('input-email').value.trim(),
+                whatsapp: document.getElementById('input-whatsapp') ? document.getElementById('input-whatsapp').value.trim() : '',
                 status: document.getElementById('input-status') ? document.getElementById('input-status').value : '',
                 businessName: document.getElementById('input-business') ? document.getElementById('input-business').value : '',
                 industry: document.getElementById('input-industry') ? (document.getElementById('input-industry').value === 'other' ? document.getElementById('input-industry-other').value : document.getElementById('input-industry').value) : '',

@@ -130,7 +130,7 @@ async function startServer() {
     console.log('Received request to submit membership:', req.body);
     try {
       const formData = req.body;
-      const { fullName, cnic, email: rawEmail, planId, institute, degree, businessName, industry, experience, targetCountry, paymentMethod } = formData;
+      const { fullName, cnic, email: rawEmail, whatsapp, planId, institute, degree, businessName, industry, experience, targetCountry, paymentMethod } = formData;
 
       const email = rawEmail ? rawEmail.toLowerCase().trim() : '';
 
@@ -155,7 +155,7 @@ async function startServer() {
           fullName || '',
           cnic || '',
           email || '',
-          '', // Removed whatsapp column
+          whatsapp || '',
           planId || '',
           paymentMethod || '',
           institute || '',
@@ -266,7 +266,7 @@ async function startServer() {
               from: `"First Noble Step System" <${process.env.SMTP_USER}>`,
               to: adminEmail,
               subject: `New Membership Application Received - [${fullName}]`,
-              text: `A new membership application details are submitted.\n\nName: ${fullName}\nEmail: ${email}\nCNIC: ${cnic || 'N/A'}\nPlan: ${planId}\nPayment Method: ${paymentMethod || 'N/A'}`,
+              text: `A new membership application details are submitted.\n\nName: ${fullName}\nEmail: ${email}\nCNIC: ${cnic || 'N/A'}\nWhatsApp: ${whatsapp || 'N/A'}\nPlan: ${planId}\nPayment Method: ${paymentMethod || 'N/A'}`,
               html: `
                 <div style="font-family: Arial, sans-serif; color: #333; line-height: 1.6; max-width: 600px; margin: 0 auto; padding: 20px; border: 1px solid #e5e7eb; border-radius: 8px;">
                   <h3 style="color: #01411C; border-bottom: 2px solid #01411C; padding-bottom: 10px; margin-top: 0;">New Application Submission Details</h3>
@@ -274,6 +274,7 @@ async function startServer() {
                     <tr style="border-bottom: 1px solid #eee;"><td style="padding: 8px 0; font-weight: bold; width: 140px;">Name:</td><td style="padding: 8px 0;">${fullName}</td></tr>
                     <tr style="border-bottom: 1px solid #eee;"><td style="padding: 8px 0; font-weight: bold;">Email:</td><td style="padding: 8px 0;">${email}</td></tr>
                     <tr style="border-bottom: 1px solid #eee;"><td style="padding: 8px 0; font-weight: bold;">CNIC:</td><td style="padding: 8px 0;">${cnic || 'N/A'}</td></tr>
+                    <tr style="border-bottom: 1px solid #eee;"><td style="padding: 8px 0; font-weight: bold;">WhatsApp:</td><td style="padding: 8px 0;">${whatsapp || 'N/A'}</td></tr>
                     <tr style="border-bottom: 1px solid #eee;"><td style="padding: 8px 0; font-weight: bold;">Plan Choose:</td><td style="padding: 8px 0; text-transform: capitalize;">${planId}</td></tr>
                     <tr style="border-bottom: 1px solid #eee;"><td style="padding: 8px 0; font-weight: bold;">Payment Method:</td><td style="padding: 8px 0; text-transform: uppercase;">${paymentMethod || 'N/A'}</td></tr>
                   </table>
