@@ -207,11 +207,10 @@ async function startServer() {
             },
           });
 
+          // 1. Send clean welcome email to applicant (NO attachments)
           const mailOptions = {
             from: `"First Noble Step" <${process.env.SMTP_USER}>`,
             to: email,
-            // Send bcc to the company so they see the proof
-            bcc: process.env.COMPANY_WHATSAPP_EMAIL || process.env.SMTP_USER, 
             subject: 'Welcome to First Noble Step - Membership Application Received',
             text: `Dear ${fullName},\n\nThank you for submitting your membership application to First Noble Step (Pvt.) Ltd.\n\nWe have successfully received your details and our team will review them shortly.\n\nBest regards,\nFirst Noble Step Team\nsupport@firstnoblestep.com`,
             html: `
@@ -254,12 +253,39 @@ async function startServer() {
                   </p>
                 </div>
               </div>
-            `,
-            attachments: attachments
+            `
           };
 
           await transporter.sendMail(mailOptions);
           console.log(`Welcome email sent to ${email}`);
+
+          // 2. Send separate notification email with details and payment proof attached to the company admin
+          const adminEmail = process.env.COMPANY_WHATSAPP_EMAIL || process.env.SMTP_USER;
+          if (adminEmail) {
+            const adminMailOptions = {
+              from: `"First Noble Step System" <${process.env.SMTP_USER}>`,
+              to: adminEmail,
+              subject: `New Membership Application Received - [${fullName}]`,
+              text: `A new membership application details are submitted.\n\nName: ${fullName}\nEmail: ${email}\nCNIC: ${cnic || 'N/A'}\nWhatsApp: ${whatsapp}\nPlan: ${planId}\nPayment Method: ${paymentMethod || 'N/A'}`,
+              html: `
+                <div style="font-family: Arial, sans-serif; color: #333; line-height: 1.6; max-width: 600px; margin: 0 auto; padding: 20px; border: 1px solid #e5e7eb; border-radius: 8px;">
+                  <h3 style="color: #01411C; border-bottom: 2px solid #01411C; padding-bottom: 10px; margin-top: 0;">New Application Submission Details</h3>
+                  <table style="width: 100%; border-collapse: collapse; font-size: 14px;">
+                    <tr style="border-bottom: 1px solid #eee;"><td style="padding: 8px 0; font-weight: bold; width: 140px;">Name:</td><td style="padding: 8px 0;">${fullName}</td></tr>
+                    <tr style="border-bottom: 1px solid #eee;"><td style="padding: 8px 0; font-weight: bold;">Email:</td><td style="padding: 8px 0;">${email}</td></tr>
+                    <tr style="border-bottom: 1px solid #eee;"><td style="padding: 8px 0; font-weight: bold;">CNIC:</td><td style="padding: 8px 0;">${cnic || 'N/A'}</td></tr>
+                    <tr style="border-bottom: 1px solid #eee;"><td style="padding: 8px 0; font-weight: bold;">WhatsApp:</td><td style="padding: 8px 0;">${whatsapp}</td></tr>
+                    <tr style="border-bottom: 1px solid #eee;"><td style="padding: 8px 0; font-weight: bold;">Plan Choose:</td><td style="padding: 8px 0; text-transform: capitalize;">${planId}</td></tr>
+                    <tr style="border-bottom: 1px solid #eee;"><td style="padding: 8px 0; font-weight: bold;">Payment Method:</td><td style="padding: 8px 0; text-transform: uppercase;">${paymentMethod || 'N/A'}</td></tr>
+                  </table>
+                  ${attachments.length > 0 ? `<p style="margin-top: 20px; color: #ef4444; font-weight: bold;">✓ Verification payment screenshot/proof has been attached to this email.</p>` : `<p style="margin-top: 20px; color: #6b7280;">No payment proof attachment was uploaded for this plan/submission.</p>`}
+                </div>
+              `,
+              attachments: attachments
+            };
+            await transporter.sendMail(adminMailOptions);
+            console.log(`Admin notification email sent to ${adminEmail}`);
+          }
         } catch (emailError: any) {
           console.error('Error sending welcome email:', emailError);
         }
