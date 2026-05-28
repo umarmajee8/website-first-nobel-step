@@ -745,20 +745,20 @@
 
                         <!-- Payment Method Toggle / Selector -->
                         <div class="grid grid-cols-2 gap-3 max-w-sm mx-auto">
-                            <!-- Easypaisa Button -->
-                            <button type="button" onclick="changePaymentMethod('easypaisa')" id="pay-btn-easypaisa" class="flex items-center justify-center gap-2.5 py-3.5 px-4 rounded-2xl border-2 transition-all font-sans font-bold text-sm bg-white dark:bg-gray-900 cursor-pointer border-gray-100 dark:border-gray-800 text-gray-500 shadow-sm">
-                                <div class="w-5 h-5 bg-[#00B551] rounded-full flex items-center justify-center text-white font-bold text-xs italic leading-none">e</div>
-                                <span class="dark:text-gray-200">Easypaisa</span>
-                            </button>
                             <!-- Faysal Bank Button -->
-                            <button type="button" onclick="changePaymentMethod('faysalbank')" id="pay-btn-faysalbank" class="flex items-center justify-center gap-2 py-3.5 px-3 rounded-2xl border-2 transition-all font-sans font-bold text-sm bg-white dark:bg-gray-900 cursor-pointer border-gray-100 dark:border-gray-800 text-gray-500 shadow-sm">
-                                <img src="/src/assets/images/faysal_bank_logo_1779996366819.png" alt="Faysal Bank Logo" class="w-5 h-5 object-contain rounded-md" referrerPolicy="no-referrer" />
+                            <button type="button" onclick="changePaymentMethod('faysalbank')" id="pay-btn-faysalbank" class="flex items-center justify-center gap-2 py-2.5 px-3 rounded-2xl border-2 transition-all font-sans font-bold text-sm bg-white dark:bg-gray-900 cursor-pointer border-gray-100 dark:border-gray-800 text-gray-500 shadow-sm">
+                                <img src="/src/assets/images/faysal_bank_logo_1779996366819.png" alt="Faysal Bank Logo" class="w-10 h-10 object-contain rounded-md" referrerPolicy="no-referrer" />
                                 <span class="dark:text-gray-200 text-xs truncate">Faysal Bank</span>
+                            </button>
+                            <!-- Easypaisa Button -->
+                            <button type="button" onclick="changePaymentMethod('easypaisa')" id="pay-btn-easypaisa" class="flex items-center justify-center gap-2.5 py-2.5 px-4 rounded-2xl border-2 transition-all font-sans font-bold text-sm bg-white dark:bg-gray-900 cursor-pointer border-gray-100 dark:border-gray-800 text-gray-500 shadow-sm">
+                                <div class="w-6 h-6 bg-[#00B551] rounded-full flex items-center justify-center text-white font-bold text-sm italic leading-none">e</div>
+                                <span class="dark:text-gray-200">Easypaisa</span>
                             </button>
                         </div>
 
                         <!-- Easypaisa Account Details Card -->
-                        <div id="easypaisa-card" class="bg-white dark:bg-gray-900 rounded-[2rem] border border-gray-100 dark:border-gray-800 shadow-[0_8px_30px_rgb(0,0,0,0.04)] dark:shadow-none text-center max-w-sm mx-auto overflow-hidden">
+                        <div id="easypaisa-card" class="hidden bg-white dark:bg-gray-900 rounded-[2rem] border border-gray-100 dark:border-gray-800 shadow-[0_8px_30px_rgb(0,0,0,0.04)] dark:shadow-none text-center max-w-sm mx-auto overflow-hidden">
                             <!-- Top Green Bar (Easypaisa branding) -->
                             <div class="bg-[#00B551] py-4 flex items-center justify-center gap-2">
                                 <div class="w-6 h-6 bg-white rounded-full flex items-center justify-center text-[#00B551] font-bold text-sm italic pr-0.5 pt-0.5 leading-none">e</div>
@@ -787,17 +787,17 @@
                         </div>
 
                         <!-- Faysal Bank Account Details Card -->
-                        <div id="faysalbank-card" class="hidden bg-white dark:bg-gray-900 rounded-[2rem] border border-gray-100 dark:border-gray-800 shadow-[0_8px_30px_rgb(0,0,0,0.04)] dark:shadow-none text-center max-w-sm mx-auto overflow-hidden">
+                        <div id="faysalbank-card" class="bg-white dark:bg-gray-900 rounded-[2rem] border border-gray-100 dark:border-gray-800 shadow-[0_8px_30px_rgb(0,0,0,0.04)] dark:shadow-none text-center max-w-sm mx-auto overflow-hidden">
                             <!-- Top Teal Bar (Faysal Bank branding) -->
                             <div class="bg-[#0A4D5C] py-4 flex items-center justify-center gap-2 border-b border-[#083E4A]">
-                                <img src="/src/assets/images/faysal_bank_logo_1779996366819.png" alt="Faysal Bank Mini Logo" class="w-5 h-5 object-contain" referrerPolicy="no-referrer" />
-                                <span class="text-white font-sans font-bold tracking-tight text-lg mb-0.5">faysalbank</span>
+                                <img src="/src/assets/images/faysal_bank_logo_1779996366819.png" alt="Faysal Bank Mini Logo" class="w-8 h-8 object-contain" referrerPolicy="no-referrer" />
+                                <span class="text-white font-sans font-bold tracking-tight text-xl mb-0.5">faysalbank</span>
                             </div>
 
                             <div class="p-6 space-y-5 flex flex-col items-center">
                                 <!-- Logo Box / QR substitute -->
-                                <div class="bg-white p-3 rounded-2xl shadow-sm border border-gray-100 dark:border-gray-800 flex-shrink-0">
-                                    <img src="/src/assets/images/faysal_bank_logo_1779996366819.png" alt="Faysal Bank Logo" class="w-24 h-24 object-contain">
+                                <div class="bg-white p-4 rounded-3xl shadow-sm border border-gray-100 dark:border-gray-800 w-full flex-shrink-0 flex items-center justify-center">
+                                    <img src="/src/assets/images/faysal_bank_logo_1779996366819.png" alt="Faysal Bank Logo" class="w-48 h-48 md:w-56 md:h-56 object-contain">
                                 </div>
 
                                 <!-- Details -->
@@ -1032,7 +1032,7 @@
             isOpen: false,
             step: 1,
             plan: null,
-            paymentMethod: 'easypaisa',
+            paymentMethod: 'faysalbank',
             paymentProofBase64: null,
             otpHash: null,
             data: {
@@ -1335,7 +1335,7 @@
                     btnEasypaisa.classList.remove('border-gray-100', 'dark:border-gray-800');
                 }
                 if (btnFaysalbank) {
-                    btnFaysalbank.classList.remove('border-[#0A4D5C]', 'bg-[#0A4D5C]/5');
+                    btnFaysalbank.classList.remove('border-[#0A4D5C]', 'bg-[#0A4D5C]/5', 'bg-[#0A4D5C]/10');
                     btnFaysalbank.classList.add('border-gray-100', 'dark:border-gray-800');
                 }
                 
@@ -1653,7 +1653,7 @@
                 
                 if (amountDisplay) amountDisplay.innerText = feeStr;
 
-                changePaymentMethod(state.paymentMethod || 'easypaisa');
+                changePaymentMethod(state.paymentMethod || 'faysalbank');
             }
 
             // Update Review Data

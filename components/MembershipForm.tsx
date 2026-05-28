@@ -688,21 +688,21 @@ const MembershipForm: React.FC<Props> = ({ initialPlanId, onClose }) => {
                   </div>
                   
                   <div className="grid grid-cols-1 gap-4">
-                    <label onClick={() => setFormData(prev => ({ ...prev, paymentMethod: 'easypaisa' }))} className={`flex items-center justify-between p-5 rounded-2xl border-2 transition-all cursor-pointer ${formData.paymentMethod === 'easypaisa' ? 'border-pakistan-green bg-green-50 dark:bg-green-900/10' : 'border-gray-100 dark:border-gray-800 hover:border-green-100'}`}>
-                      <div className="flex items-center">
-                        <h4 className="font-bold text-base dark:text-white">Easypaisa</h4>
-                      </div>
-                      <div className={`w-5 h-5 rounded-full border-2 flex items-center justify-center ${formData.paymentMethod === 'easypaisa' ? 'border-pakistan-green bg-pakistan-green text-white' : 'border-gray-200'}`}>
-                        {formData.paymentMethod === 'easypaisa' && <i className="fa-solid fa-check text-[10px]"></i>}
-                      </div>
-                    </label>
-
                     <label onClick={() => setFormData(prev => ({ ...prev, paymentMethod: 'faysalbank' }))} className={`flex items-center justify-between p-5 rounded-2xl border-2 transition-all cursor-pointer ${formData.paymentMethod === 'faysalbank' ? 'border-pakistan-green bg-green-50 dark:bg-green-900/10' : 'border-gray-100 dark:border-gray-800 hover:border-green-100'}`}>
                       <div className="flex items-center">
                         <h4 className="font-bold text-base dark:text-white">Faysal Bank</h4>
                       </div>
                       <div className={`w-5 h-5 rounded-full border-2 flex items-center justify-center ${formData.paymentMethod === 'faysalbank' ? 'border-pakistan-green bg-pakistan-green text-white' : 'border-gray-200'}`}>
                         {formData.paymentMethod === 'faysalbank' && <i className="fa-solid fa-check text-[10px]"></i>}
+                      </div>
+                    </label>
+
+                    <label onClick={() => setFormData(prev => ({ ...prev, paymentMethod: 'easypaisa' }))} className={`flex items-center justify-between p-5 rounded-2xl border-2 transition-all cursor-pointer ${formData.paymentMethod === 'easypaisa' ? 'border-pakistan-green bg-green-50 dark:bg-green-900/10' : 'border-gray-100 dark:border-gray-800 hover:border-green-100'}`}>
+                      <div className="flex items-center">
+                        <h4 className="font-bold text-base dark:text-white">Easypaisa</h4>
+                      </div>
+                      <div className={`w-5 h-5 rounded-full border-2 flex items-center justify-center ${formData.paymentMethod === 'easypaisa' ? 'border-[#00B551] bg-[#00B551] text-white' : 'border-gray-200'}`}>
+                        {formData.paymentMethod === 'easypaisa' && <i className="fa-solid fa-check text-[10px]"></i>}
                       </div>
                     </label>
 
