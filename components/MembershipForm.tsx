@@ -527,18 +527,37 @@ const MembershipForm: React.FC<Props> = ({ initialPlanId, onClose }) => {
         </div>
         <nav className="px-8 py-4">
           <div className="flex items-center justify-between relative">
-            <div className="absolute top-1/2 left-0 w-full h-0.5 bg-gray-100 dark:bg-gray-800 -translate-y-1/2 -z-10"></div>
+            <div className="absolute top-1/2 left-0 w-full h-1 bg-gray-100 dark:bg-gray-800 rounded-full -translate-y-1/2 -z-10"></div>
             <motion.div 
-              className="absolute top-1/2 left-0 h-0.5 bg-pakistan-green -translate-y-1/2 -z-10" 
+              className="absolute top-1/2 left-0 h-1 bg-pakistan-green rounded-full -translate-y-1/2 -z-10" 
               initial={{ width: 0 }}
               animate={{ width: `${((step - 1) / 5) * 100}%` }}
-              transition={{ duration: 0.5 }}
+              transition={{ duration: 0.75, ease: [0.34, 1.56, 0.64, 1] }}
             />
-            {[1,2,3,4,5,6].map(n => (
-              <motion.div key={n} className="flex flex-col items-center" initial={{ scale: 0.8 }} animate={{ scale: step >= n ? 1 : 0.9 }}>
-                <div className={`w-8 h-8 rounded-full flex items-center justify-center text-[10px] font-lemon transition-all border-2 ${step >= n ? 'bg-pakistan-green border-pakistan-green text-white' : 'bg-white dark:bg-gray-900 border-gray-200 text-gray-400'}`}>{n}</div>
-              </motion.div>
-            ))}
+            {[1,2,3,4,5,6].map(n => {
+              const isActive = step === n;
+              const isCompleted = step > n;
+              return (
+                <motion.div 
+                  key={n} 
+                  className="flex flex-col items-center relative z-10" 
+                  initial={{ scale: 0.8 }} 
+                  animate={{ 
+                    scale: isActive ? 1.25 : 1,
+                    y: isActive ? -1 : 0
+                  }}
+                  transition={{ type: 'spring', stiffness: 300, damping: 18 }}
+                >
+                  <div className={`w-8 h-8 rounded-full flex items-center justify-center text-[10px] font-lemon transition-all duration-300 border-2 ${
+                    isActive ? 'bg-pakistan-green border-pakistan-green text-white ring-4 ring-green-100 dark:ring-green-950/40 shadow-lg shadow-green-500/10' : 
+                    isCompleted ? 'bg-pakistan-green border-pakistan-green text-white' : 
+                    'bg-white dark:bg-gray-900 border-gray-200 text-gray-400 dark:border-gray-800'
+                  }`}>
+                    {isCompleted ? <i className="fa-solid fa-check text-[8px]"></i> : n}
+                  </div>
+                </motion.div>
+              );
+            })}
           </div>
         </nav>
         <form onSubmit={handleSubmit} className="flex-grow overflow-y-auto px-8 py-6 custom-scrollbar">
