@@ -147,52 +147,6 @@
             animation: scale-up 0.3s cubic-bezier(0.34, 1.56, 0.64, 1) forwards;
         }
     </style>
-<script type="importmap">
-{
-  "imports": {
-    "react/": "https://esm.sh/react@^19.2.3/",
-    "react": "https://esm.sh/react@^19.2.3"
-  }
-}
-</script>
-<script type="module">
-    import { initializeApp } from "https://www.gstatic.com/firebasejs/10.9.0/firebase-app.js";
-    import { getAuth, RecaptchaVerifier, signInWithPhoneNumber } from "https://www.gstatic.com/firebasejs/10.9.0/firebase-auth.js";
-
-    const firebaseConfig = {
-      apiKey: "AIzaSyCV99pJn6rtCywO-XWph91PyNZ75ZAasFQ",
-      authDomain: "firstnoblestep-7d323.firebaseapp.com",
-      projectId: "firstnoblestep-7d323",
-      storageBucket: "firstnoblestep-7d323.firebasestorage.app",
-      messagingSenderId: "509916109588",
-      appId: "1:509916109588:web:3578edc003c42edd310001",
-      measurementId: "G-JDVNP7S1TF"
-    };
-
-    const app = initializeApp(firebaseConfig);
-    const auth = getAuth(app);
-    window.firebaseAuth = auth;
-    window.signInWithPhoneNumber = signInWithPhoneNumber;
-    window.RecaptchaVerifier = RecaptchaVerifier;
-
-    // reCAPTCHA Setup
-    const setupRecaptcha = () => {
-        try {
-            window.recaptchaVerifier = new RecaptchaVerifier(auth, 'recaptcha-container', {
-                'size': 'invisible',
-                'callback': (response) => {
-                    // reCAPTCHA solved
-                    console.log("reCAPTCHA solved");
-                }
-            });
-        } catch (e) {
-            console.warn("reCAPTCHA pre-init deferred or failed: ", e);
-        }
-    };
-    
-    // Defer setup slightly to ensure DOM is fully ready
-    setTimeout(setupRecaptcha, 100);
-</script>
 <link rel="stylesheet" href="/index.css">
 </head>
 <body class="min-h-screen flex flex-col bg-white dark:bg-gray-900 text-gray-900 dark:text-white transition-colors duration-300 selection:bg-green-100 selection:text-pakistan-green">
@@ -461,7 +415,7 @@
                                     </div>
                                 </div>
                                 <h3 class="text-lg font-lemon mb-1 tracking-tight dark:text-white">Students & Professionals</h3>
-                                <p class="text-gray-500 dark:text-gray-400 text-xs leading-relaxed">Academic excellence and direct access to fully sponsored international career opportunities.</p>
+                                <p class="text-gray-500 dark:text-gray-400 text-xs leading-relaxed">The world doesn't remember those who waited, it celebrates those who rose. Step into Noble Career Foundation, where your ambition gets the strategy, the support, and the spotlight it truly deserves.</p>
                             </div>
                             <div class="h-px bg-gray-100 dark:bg-gray-800 w-full mb-6"></div>
                             <div class="mb-3 text-[10px] font-lemon text-pakistan-green dark:text-green-400 tracking-widest">Available Packages:</div>
@@ -492,7 +446,7 @@
                                     <i class="fa-solid fa-rocket text-xl"></i>
                                 </div>
                                 <h3 class="text-lg font-lemon mb-1 tracking-tight dark:text-white">Entrepreneurs</h3>
-                                <p class="text-gray-500 dark:text-gray-400 text-xs leading-relaxed">Transform your vision into a funded reality with expert mentorship.</p>
+                                <p class="text-gray-500 dark:text-gray-400 text-xs leading-relaxed">Your idea survived self doubt, sleepless nights, and the weight of "what if" now it deserves a stage. First Noble Step doesn't just support businesses, it transforms bold visions into thriving empires, powerful legacies, and names the world will remember.</p>
                             </div>
                             <div class="h-px bg-gray-100 dark:bg-gray-800 w-full mb-6"></div>
                             <div class="mb-3 text-[10px] font-lemon text-pakistan-green dark:text-green-400 tracking-widest">What You Unlock:</div>
@@ -615,6 +569,19 @@
                 </div>
             </nav>
 
+            <!-- Form Submit Skeleton Overlay -->
+            <div id="form-submit-overlay" class="hidden absolute inset-0 z-50 bg-white/95 dark:bg-gray-900/95 backdrop-blur-sm flex-col items-center justify-center transition-opacity duration-300 opacity-0">
+                <div class="animate-pulse space-y-6 w-full max-w-sm px-8 flex flex-col items-center">
+                    <div class="flex justify-center w-full mb-8">
+                        <i class="fa-solid fa-circle-notch fa-spin text-5xl text-pakistan-green"></i>
+                    </div>
+                    <div class="h-6 bg-gray-200 dark:bg-gray-800 rounded w-1/2 mb-2"></div>
+                    <div class="h-12 bg-gray-100 dark:bg-gray-800 rounded-xl w-full"></div>
+                    <div class="h-12 bg-gray-100 dark:bg-gray-800 rounded-xl w-full"></div>
+                    <div class="h-12 bg-gray-100 dark:bg-gray-800 rounded-xl w-full"></div>
+                </div>
+            </div>
+
             <!-- Form Content -->
             <div id="form-body" class="flex-grow overflow-y-auto px-8 py-6 custom-scrollbar">
                 
@@ -702,25 +669,11 @@
                     
                     <div class="w-full relative group">
                         <div class="flex items-center justify-between mb-2">
-                            <label class="block text-[10px] font-lemon tracking-widest text-gray-500 dark:text-gray-400">Phone Number <span class="text-red-500 font-sans">*</span></label>
+                            <label class="block text-[10px] font-lemon tracking-widest text-gray-500 dark:text-gray-400">Email Address <span class="text-red-500 font-sans">*</span></label>
                             <div class="relative group/tooltip">
                                 <i class="fa-solid fa-circle-info text-[10px] text-gray-400 hover:text-pakistan-green transition-colors cursor-help"></i>
                                 <div class="absolute bottom-full right-0 mb-2 w-48 p-2 bg-gray-900 text-white text-[9px] rounded-lg opacity-0 group-hover/tooltip:opacity-100 pointer-events-none transition-opacity z-50 shadow-xl border border-white/10">
-                                    <div class="relative z-10">Enter your phone number starting with 92 (e.g., 923001234567). (Required)</div>
-                                    <div class="absolute top-full right-2 -mt-1 w-2 h-2 bg-gray-900 rotate-45"></div>
-                                </div>
-                            </div>
-                        </div>
-                        <input type="tel" id="input-whatsapp" oninput="this.value = this.value.replace(/\D/g, '').slice(0, 13); validateStep2()" class="w-full px-4 py-3 rounded-xl bg-gray-50 dark:bg-gray-800/50 border border-gray-200 dark:border-gray-700 focus:border-pakistan-green outline-none text-sm dark:text-white transition-all" placeholder="923XXXXXXXXX">
-                    </div>
-
-                    <div class="w-full relative group">
-                        <div class="flex items-center justify-between mb-2">
-                            <label class="block text-[10px] font-lemon tracking-widest text-gray-500 dark:text-gray-400">Email Address <span class="text-[9px] text-gray-400 lowercase">(optional)</span></label>
-                            <div class="relative group/tooltip">
-                                <i class="fa-solid fa-circle-info text-[10px] text-gray-400 hover:text-pakistan-green transition-colors cursor-help"></i>
-                                <div class="absolute bottom-full right-0 mb-2 w-48 p-2 bg-gray-900 text-white text-[9px] rounded-lg opacity-0 group-hover/tooltip:opacity-100 pointer-events-none transition-opacity z-50 shadow-xl border border-white/10">
-                                    <div class="relative z-10">Provide a valid email address for verification and communication. (Optional)</div>
+                                    <div class="relative z-10">Provide a valid email address for verification and communication.</div>
                                     <div class="absolute top-full right-2 -mt-1 w-2 h-2 bg-gray-900 rotate-45"></div>
                                 </div>
                             </div>
@@ -731,23 +684,22 @@
 
                 <!-- STEP 3: Phone Verification -->
                 <div id="step-3" class="hidden text-center space-y-6">
-                    <div class="w-16 h-16 bg-green-50 dark:bg-green-900/20 rounded-full flex items-center justify-center mx-auto mb-4 text-pakistan-green dark:text-green-400">
-                        <i class="fa-solid fa-mobile-screen-button text-2xl"></i>
+                    <div class="w-16 h-16 bg-blue-50 dark:bg-blue-900/20 rounded-full flex items-center justify-center mx-auto mb-4 text-blue-600 dark:text-blue-400">
+                        <i class="fa-solid fa-envelope text-2xl"></i>
                     </div>
-                    <h3 class="text-xl font-bold text-gray-900 dark:text-white mb-2">Phone Verification</h3>
+                    <h3 class="text-xl font-bold text-gray-900 dark:text-white mb-2">Email Verification</h3>
                     <p class="text-xs text-gray-600 dark:text-gray-400 mb-6 max-w-sm mx-auto">
-                        Please verify your Phone Number (<strong id="otp-phone-display" class="font-bold text-pakistan-green dark:text-green-400">--</strong>) to continue.
+                        Please enter the 6-digit verification code sent to <br/><strong id="otp-phone-display" class="font-bold text-blue-600 dark:text-blue-400 text-sm mt-1 inline-block">--</strong>
+                        <br/><span class="block mt-2 text-[10px] text-gray-500">Agr code Nazar nhi ah rha to aap spam me Dekho.</span>
                     </p>
-                    <!-- reCAPTCHA Container -->
-                    <div id="recaptcha-container" class="flex justify-center mb-4"></div>
                     <div class="flex flex-col gap-4 items-center w-full">
                         <div class="w-full max-w-xs relative">
-                            <input type="text" id="input-otp" maxlength="6" oninput="validateStep3Code()" placeholder="------" class="w-full px-5 py-4 text-center tracking-[0.5em] font-mono font-bold text-2xl rounded-2xl bg-gray-100 dark:bg-gray-800/90 border-2 border-gray-300 dark:border-gray-600 focus:border-pakistan-green focus:bg-white dark:focus:bg-gray-900 outline-none text-gray-900 dark:text-white shadow-inner transition-all" >
+                            <input type="text" id="input-otp" maxlength="6" oninput="validateStep3Code()" placeholder="------" class="w-full px-5 py-4 text-center tracking-[0.5em] font-mono font-bold text-2xl rounded-2xl bg-gray-100 dark:bg-gray-800/90 border-2 border-gray-300 dark:border-gray-600 focus:border-blue-500 focus:bg-white dark:focus:bg-gray-900 outline-none text-gray-900 dark:text-white shadow-inner transition-all" >
                         </div>
                         <div class="flex flex-col items-center gap-1">
-                            <span id="otp-sending-text" class="hidden text-[10px] text-gray-500 dark:text-gray-500">Sending verification code to Phone...</span>
-                            <button id="btn-otp-resend" type="button" onclick="sendVerificationCode()" class="text-xs font-lemon text-pakistan-green dark:text-green-400 underline hover:text-green-800 transition-colors uppercase tracking-wider hidden">
-                                Send Code / Resend Code
+                            <span id="otp-sending-text" class="hidden text-[10px] text-gray-500 dark:text-gray-500">Sending verification code...</span>
+                            <button id="btn-otp-resend" type="button" onclick="sendVerificationCode()" class="text-xs font-lemon text-blue-600 dark:text-blue-400 underline hover:text-blue-800 transition-colors uppercase tracking-wider hidden">
+                                Resend Code
                             </button>
                             <span id="otp-status-message" class="text-[10px] text-green-600 dark:text-green-400 font-medium"></span>
                         </div>
@@ -872,8 +824,7 @@
                         <h4 class="font-lemon text-[10px] text-pakistan-green dark:text-green-400 mb-6 uppercase tracking-widest">Application Review</h4>
                         <div class="grid grid-cols-1 md:grid-cols-2 gap-4 text-xs relative z-10">
                           <div class="md:col-span-2"><span class="text-gray-400 text-[10px] uppercase">Name</span><span id="review-name" class="font-bold dark:text-white block text-sm">--</span></div>
-                          <div><span class="text-gray-400 text-[10px] uppercase">Phone Number</span><span id="review-whatsapp" class="font-bold dark:text-white block font-mono">--</span></div>
-                          <div><span class="text-gray-400 text-[10px] uppercase">Email</span><span id="review-email" class="font-bold dark:text-white block font-mono">--</span></div>
+                          <div class="md:col-span-2"><span class="text-gray-400 text-[10px] uppercase">Email</span><span id="review-email" class="font-bold dark:text-white block font-mono">--</span></div>
                         </div>
                       </div>
                       
@@ -892,30 +843,38 @@
             </div>
 
             <!-- Footer Buttons -->
-            <div id="form-footer" class="px-8 pb-8 pt-4 flex gap-4 border-t border-gray-100 dark:border-gray-800">
-                <button id="btn-back" type="button" onclick="prevStep()" class="hidden px-6 py-4 rounded-2xl font-lemon text-[10px] border border-gray-200 dark:border-gray-700 text-gray-500 hover:bg-gray-50 dark:hover:bg-gray-800">Back</button>
-                <button id="btn-next" type="button" onclick="nextStep()" disabled class="relative flex-grow py-4 rounded-2xl font-lemon text-[10px] tracking-widest text-white transition-all bg-gray-200 dark:bg-gray-700 cursor-not-allowed flex items-center justify-center gap-2 overflow-hidden min-h-[56px] select-none">
-                    <!-- Dot Loading State (for custom submission) -->
-                    <div id="btn-next-dots" class="hidden absolute inset-0 flex items-center justify-center gap-1.5 bg-pakistan-green">
-                        <span class="w-2 h-2 rounded-full bg-white animate-[dot-pulse_1s_infinite_ease-in-out]"></span>
-                        <span class="w-2 h-2 rounded-full bg-white animate-[dot-pulse_1s_infinite_ease-in-out_0.20s]"></span>
-                        <span class="w-2 h-2 rounded-full bg-white animate-[dot-pulse_1s_infinite_ease-in-out_0.40s]"></span>
-                    </div>
-                    <!-- Success Status Overlays -->
-                    <div id="btn-next-success-state" class="hidden absolute inset-0 flex items-center justify-center gap-2 bg-pakistan-green font-sans font-semibold text-sm tracking-normal text-white">
-                        <svg class="w-4 h-4 text-white animate-scale-up" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="3">
-                            <path stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7" />
-                        </svg>
-                        <span class="font-bold text-[13px] tracking-normal">Success</span>
-                    </div>
-                    
-                    <!-- Normal Content -->
-                    <div id="btn-next-normal-content" class="flex items-center justify-center gap-2">
-                        <i class="fa-solid fa-circle-notch fa-spin hidden" id="btn-next-spinner"></i>
-                        <span id="btn-next-icon-placeholder" class="hidden text-white font-extrabold text-sm select-none mr-1">↓</span>
-                        <span id="btn-next-text">Continue</span>
-                    </div>
-                </button>
+            <div id="form-footer" class="px-8 pb-8 pt-4 flex flex-col items-center gap-4 border-t border-gray-100 dark:border-gray-800">
+                <div class="flex gap-4 w-full w-full">
+                    <button id="btn-back" type="button" onclick="prevStep()" class="hidden px-6 py-4 rounded-2xl font-lemon text-[10px] border border-gray-200 dark:border-gray-700 text-gray-500 hover:bg-gray-50 dark:hover:bg-gray-800">Back</button>
+                    <button id="btn-next" type="button" onclick="nextStep()" disabled class="relative flex-grow py-4 rounded-2xl font-lemon text-[10px] tracking-widest text-white transition-all bg-gray-200 dark:bg-gray-700 cursor-not-allowed flex items-center justify-center gap-2 overflow-hidden min-h-[56px] select-none">
+                        <!-- Dot Loading State (for custom submission) -->
+                        <div id="btn-next-dots" class="hidden absolute inset-0 flex items-center justify-center gap-1.5 bg-pakistan-green">
+                            <span class="w-2 h-2 rounded-full bg-white animate-[dot-pulse_1s_infinite_ease-in-out]"></span>
+                            <span class="w-2 h-2 rounded-full bg-white animate-[dot-pulse_1s_infinite_ease-in-out_0.20s]"></span>
+                            <span class="w-2 h-2 rounded-full bg-white animate-[dot-pulse_1s_infinite_ease-in-out_0.40s]"></span>
+                        </div>
+                        <!-- Success Status Overlays -->
+                        <div id="btn-next-success-state" class="hidden absolute inset-0 flex items-center justify-center gap-2 bg-pakistan-green font-sans font-semibold text-sm tracking-normal text-white">
+                            <svg class="w-4 h-4 text-white animate-scale-up" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="3">
+                                <path stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7" />
+                            </svg>
+                            <span class="font-bold text-[13px] tracking-normal">Success</span>
+                        </div>
+                        
+                        <!-- Normal Content -->
+                        <div id="btn-next-normal-content" class="flex items-center justify-center gap-2">
+                            <i class="fa-solid fa-circle-notch fa-spin hidden" id="btn-next-spinner"></i>
+                            <span id="btn-next-icon-placeholder" class="hidden text-white font-extrabold text-sm select-none mr-1">↓</span>
+                            <span id="btn-next-text">Continue</span>
+                        </div>
+                    </button>
+                </div>
+                
+                <!-- Real-time API status indicator -->
+                <div id="api-status-wrapper" class="flex items-center gap-2 h-4 opacity-0 transition-opacity duration-300 pointer-events-none mt-1">
+                   <div id="api-status-dot" class="w-1.5 h-1.5 rounded-full bg-gray-400 transition-colors"></div>
+                   <span id="api-status-text" class="text-[10px] uppercase tracking-widest font-mono text-gray-500 dark:text-gray-400 font-semibold">Ready</span>
+                </div>
             </div>
         </div>
 
@@ -970,6 +929,42 @@
             }
         }
 
+        function updateApiStatus(status, text = null) {
+            const wrapper = document.getElementById('api-status-wrapper');
+            const dot = document.getElementById('api-status-dot');
+            const statusText = document.getElementById('api-status-text');
+
+            if (!wrapper || !dot || !statusText) return;
+
+            wrapper.classList.remove('opacity-0');
+            wrapper.classList.add('opacity-100');
+            
+            dot.className = 'w-1.5 h-1.5 rounded-full transition-colors'; 
+            if (text) statusText.innerText = text;
+
+            switch(status) {
+                case 'loading':
+                    dot.classList.add('bg-blue-500', 'animate-pulse');
+                    if (!text) statusText.innerText = 'Connecting...';
+                    break;
+                case 'success':
+                    dot.classList.add('bg-pakistan-green');
+                    if (!text) statusText.innerText = 'Connected';
+                    break;
+                case 'error':
+                    dot.classList.add('bg-red-500');
+                    if (!text) statusText.innerText = 'Error';
+                    break;
+                case 'idle':
+                default:
+                    dot.classList.add('bg-gray-400');
+                    wrapper.classList.remove('opacity-100');
+                    wrapper.classList.add('opacity-0');
+                    if (!text) statusText.innerText = 'Ready';
+                    break;
+            }
+        }
+
         // --- State Management ---
         let state = {
             isOpen: false,
@@ -978,12 +973,10 @@
             paymentMethod: 'easypaisa',
             paymentProofBase64: null,
             otpHash: null,
-            confirmationResult: null,
             data: {
                 fullName: '',
                 cnic: '',
                 email: '',
-                whatsapp: '',
                 institute: '',
                 degree: '',
                 businessName: '',
@@ -1089,7 +1082,7 @@
             hideError();
             state.step = 1;
             state.plan = null;
-            state.data = { fullName: '', cnic: '', email: '', whatsapp: '' };
+            state.data = { fullName: '', cnic: '', email: '' };
             selectPlan(null);
             // Clear inputs
             document.querySelectorAll('input').forEach(i => i.value = '');
@@ -1325,16 +1318,17 @@
             if (state.step === 5) {
                 submitForm();
             } else if (state.step === 2) {
-                const whatsapp = document.getElementById('input-whatsapp').value.trim();
+                const email = document.getElementById('input-email').value.trim();
                 
                 state.step++;
                 updateUI();
                 
-                document.getElementById('otp-phone-display').innerText = '+' + whatsapp.replace(/\D/g, '');
+                document.getElementById('otp-phone-display').innerText = email;
                 
                 sendVerificationCode();
             } else if (state.step === 3) {
                 const otpVal = document.getElementById('input-otp').value.trim();
+                const emailVal = document.getElementById('input-email').value.trim();
                 
                 if (otpVal.length !== 6) {
                     showError('Verification Required', 'Please enter a 6-digit verification code.');
@@ -1347,16 +1341,29 @@
                     
                     btnNext.disabled = true;
                     if (btnNextText) btnNextText.innerText = 'Verifying...';
+                    if (typeof updateApiStatus === 'function') updateApiStatus('loading', 'Verifying code...');
                     
-                    if (state.confirmationResult) {
-                        await state.confirmationResult.confirm(otpVal);
+                    if (state.otpHash) {
+                        const response = await fetch('/api/verify-otp', {
+                            method: 'POST',
+                            headers: { 'Content-Type': 'application/json' },
+                            body: JSON.stringify({ email: emailVal, otp: otpVal, otpHash: state.otpHash })
+                        });
+                        
+                        const data = await response.json();
+                        
+                        if (!response.ok) {
+                            throw new Error(data.error || 'Verification failed');
+                        }
                         
                         const statusMsg = document.getElementById('otp-status-message');
                         if (statusMsg) {
-                            statusMsg.innerText = 'Phone Verified Successfully!';
+                            statusMsg.innerText = 'Email Verified Successfully!';
                             statusMsg.classList.remove('text-red-500');
                             statusMsg.classList.add('text-green-600', 'dark:text-green-400');
                         }
+                        if (typeof updateApiStatus === 'function') updateApiStatus('success', 'Verified');
+                        
                         document.getElementById('input-otp').classList.add('border-green-500', 'bg-green-50', 'dark:bg-green-900/20');
                         
                         if (btnNextText) btnNextText.innerText = 'Continue';
@@ -1369,21 +1376,14 @@
                     }
                 } catch (err) {
                     console.error(err);
+                    if (typeof updateApiStatus === 'function') updateApiStatus('error', 'Verification failed');
+                    
                     const btnNextText = document.getElementById('btn-next-text');
                     const btnNext = document.getElementById('btn-next');
                     if (btnNextText) btnNextText.innerText = 'Continue';
                     btnNext.disabled = false;
                     
-                    let errorMsg = err.message || 'Invalid code. Please try again.';
-                    if (err.code === 'auth/invalid-verification-code') {
-                        errorMsg = 'The verification code you entered is incorrect. Please check the code and try again.';
-                    } else if (err.code === 'auth/code-expired') {
-                        errorMsg = 'The verification code has expired. Please click "Resend Code" to get a new one.';
-                    } else if (err.code === 'auth/too-many-requests') {
-                        errorMsg = 'Too many attempts. Please wait a while before trying again.';
-                    }
-                    
-                    showError('Verification Error', errorMsg);
+                    showError('Verification Error', err.message || 'Invalid code. Please try again.');
                 }
             } else if (state.step < 5) {
                 state.step++;
@@ -1407,19 +1407,11 @@
         }
 
         async function sendVerificationCode() {
-            let phoneVal = document.getElementById('input-whatsapp').value.trim();
-            let digits = phoneVal.replace(/\D/g, '');
-            if (!digits) {
-                showError('Phone Number Required', 'Please enter a valid phone number before proceeding.');
+            let emailVal = document.getElementById('input-email').value.trim();
+            if (!emailVal) {
+                showError('Email Required', 'Please enter a valid email address before proceeding.');
                 return;
             }
-            // Automatically format to Pakistani standard if missing country code
-            if (digits.startsWith('0')) {
-                digits = '92' + digits.substring(1);
-            } else if (!digits.startsWith('92')) {
-                digits = '92' + digits;
-            }
-            phoneVal = '+' + digits;
             
             const statusMsg = document.getElementById('otp-status-message');
             const sendingText = document.getElementById('otp-sending-text');
@@ -1433,88 +1425,49 @@
             if (sendingText) sendingText.classList.remove('hidden');
             if (resendBtn) resendBtn.disabled = true;
 
-            // Make sure Firebase Auth is loaded
-            if (!window.firebaseAuth) {
-                if (sendingText) sendingText.classList.add('hidden');
-                if (resendBtn) {
-                    resendBtn.disabled = false;
-                    resendBtn.classList.remove('hidden');
-                }
-                showError('System Loading', 'Firebase service is initializing. Please wait a second and click "Send Code / Resend Code".');
-                return;
-            }
-
-            // Lazy/on-demand-initialization of recaptchaVerifier
-            if (!window.recaptchaVerifier) {
-                if (window.RecaptchaVerifier) {
-                    try {
-                        window.recaptchaVerifier = new window.RecaptchaVerifier(window.firebaseAuth, 'recaptcha-container', {
-                            'size': 'invisible',
-                            'callback': (response) => {
-                                console.log("reCAPTCHA solved");
-                            },
-                            'expired-callback': () => {
-                                showError('Security Verification', 'reCAPTCHA expired. Please try again.');
-                            }
-                        });
-                    } catch (e) {
-                        console.error("Failed to initialize RecaptchaVerifier: ", e);
-                        if (sendingText) sendingText.classList.add('hidden');
-                        if (resendBtn) {
-                            resendBtn.disabled = false;
-                            resendBtn.classList.remove('hidden');
-                        }
-                        showError('Security Error', 'Failed to initialize the reCAPTCHA security verifier. Please check your internet connection and refresh.');
-                        return;
-                    }
-                } else {
-                    if (sendingText) sendingText.classList.add('hidden');
-                    if (resendBtn) {
-                        resendBtn.disabled = false;
-                        resendBtn.classList.remove('hidden');
-                    }
-                    showError('System Error', 'Recaptcha SDK failed to load. Please check your internet connection.');
-                    return;
-                }
-            }
-            
             try {
-                const appVerifier = window.recaptchaVerifier;
-                const confirmationResult = await window.signInWithPhoneNumber(window.firebaseAuth, phoneVal, appVerifier);
+                if (typeof updateApiStatus === 'function') updateApiStatus('loading', 'Sending OTP...');
                 
-                state.confirmationResult = confirmationResult;
+                const response = await fetch('/api/send-otp', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ email: emailVal })
+                });
+                
+                const data = await response.json();
+                
+                if (!response.ok) {
+                    throw new Error(data.error || 'Failed to send OTP.');
+                }
+                
+                state.otpHash = data.hash;
                 
                 if (sendingText) sendingText.classList.add('hidden');
-                if (statusMsg) statusMsg.innerText = 'Verification code sent successfully to ' + phoneVal;
+                if (statusMsg) statusMsg.innerText = 'Verification code sent successfully to ' + emailVal;
                 
                 if (resendBtn) {
                     resendBtn.disabled = false;
                     resendBtn.classList.remove('hidden');
                 }
+                
+                if (typeof updateApiStatus === 'function') updateApiStatus('success', 'OTP Sent');
             } catch (error) {
+                console.error("OTP send error:", error);
+                if (typeof updateApiStatus === 'function') updateApiStatus('error', 'Sending failed');
+                
                 if (sendingText) sendingText.classList.add('hidden');
                 if (resendBtn) {
                     resendBtn.disabled = false;
                     resendBtn.classList.remove('hidden');
                 }
                 
-                let errorMsg = error.message;
-                if (error.code === 'auth/operation-not-allowed') {
-                    errorMsg = 'Phone Auth is disabled. Please enable it in Firebase Console -> Authentication -> Sign-in methods.';
-                } else if (error.code === 'auth/invalid-phone-number') {
-                    errorMsg = 'Invalid phone number format.';
-                } else if (error.code === 'auth/too-many-requests') {
-                    errorMsg = 'Too many requests. Please try again later.';
-                }
-
-                showError('OTP Sending Failed', errorMsg);
+                showError('OTP Sending Failed', error.message || 'Error occurred while sending OTP.');
                 
                 if (statusMsg) {
-                    statusMsg.innerText = 'Failed: ' + errorMsg;
+                    statusMsg.innerText = 'Failed: ' + error.message;
                     statusMsg.classList.remove('text-green-600', 'dark:text-green-400');
                     statusMsg.classList.add('text-red-500', 'dark:text-red-400');
                 }
-                console.error("Firebase Auth Error: ", error);
             }
         }
 
@@ -1529,6 +1482,8 @@
             const footerEl = document.getElementById('form-footer');
             if (progressEl) progressEl.classList.remove('hidden');
             if (footerEl) footerEl.classList.remove('hidden');
+
+            if (typeof updateApiStatus === 'function') updateApiStatus('idle');
 
             // Update Progress Bar
             const progress = ((state.step - 1) / 4) * 100;
@@ -1582,9 +1537,6 @@
                 document.getElementById('review-name').innerText = document.getElementById('input-fullname').value || '--';
                 if (document.getElementById('review-email')) {
                     document.getElementById('review-email').innerText = document.getElementById('input-email').value || '--';
-                }
-                if (document.getElementById('review-whatsapp')) {
-                    document.getElementById('review-whatsapp').innerText = document.getElementById('input-whatsapp').value || '--';
                 }
             }
 
@@ -1645,13 +1597,11 @@
         function validateStep2(checkOnly = false) {
             const name = document.getElementById('input-fullname').value.trim();
             const email = document.getElementById('input-email').value.trim();
-            const whatsapp = document.getElementById('input-whatsapp').value.trim();
             
             const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
             
             const valid = name.length >= 3 && 
-                          (email === '' || emailRegex.test(email)) && 
-                          whatsapp.replace(/\D/g, '').length >= 10;
+                          emailRegex.test(email);
             
             if (!checkOnly) validateCurrentStep();
             return valid;
@@ -1679,7 +1629,6 @@
                 fullName: document.getElementById('input-fullname').value,
                 cnic: '',
                 email: document.getElementById('input-email').value.trim(),
-                whatsapp: document.getElementById('input-whatsapp').value,
                 status: document.getElementById('input-status') ? document.getElementById('input-status').value : '',
                 businessName: document.getElementById('input-business') ? document.getElementById('input-business').value : '',
                 industry: document.getElementById('input-industry') ? (document.getElementById('input-industry').value === 'other' ? document.getElementById('input-industry-other').value : document.getElementById('input-industry').value) : '',
@@ -1701,6 +1650,15 @@
             
             if (btnNormalContent) btnNormalContent.classList.add('hidden');
             if (btnDots) btnDots.classList.remove('hidden');
+            
+            const formOverlay = document.getElementById('form-submit-overlay');
+            if (formOverlay) {
+                formOverlay.classList.remove('hidden');
+                formOverlay.classList.add('flex');
+                setTimeout(() => formOverlay.classList.remove('opacity-0'), 10);
+            }
+            
+            if (typeof updateApiStatus === 'function') updateApiStatus('loading', 'Submitting application securely...');
 
             try {
                 const response = await fetch('/api/submit-membership', {
@@ -1713,6 +1671,8 @@
                 if (!response.ok) {
                     throw new Error(data.error || 'Server encountered an error while processing your request.');
                 }
+                
+                if (typeof updateApiStatus === 'function') updateApiStatus('success', 'Application submitted cleanly.');
 
                 // Switch button to Success state with checkmark!
                 if (btnDots) btnDots.classList.add('hidden');
@@ -1748,12 +1708,27 @@
                 if (btnSuccessState) btnSuccessState.classList.add('hidden');
                 if (btnNormalContent) btnNormalContent.classList.remove('hidden');
                 
+                if (formOverlay) {
+                    formOverlay.classList.add('opacity-0');
+                    formOverlay.classList.add('hidden');
+                    formOverlay.classList.remove('flex');
+                }
+                
             } catch (err) {
                 console.error(err);
+                if (typeof updateApiStatus === 'function') updateApiStatus('error', 'Submission failed.');
                 // Revert button back to interactive normal layout so they can retry
                 if (btnDots) btnDots.classList.add('hidden');
                 if (btnSuccessState) btnSuccessState.classList.add('hidden');
                 if (btnNormalContent) btnNormalContent.classList.remove('hidden');
+                
+                if (formOverlay) {
+                    formOverlay.classList.add('opacity-0');
+                    setTimeout(() => {
+                        formOverlay.classList.add('hidden');
+                        formOverlay.classList.remove('flex');
+                    }, 300);
+                }
                 
                 btnNext.disabled = false;
                 btnBack.classList.remove('hidden');
