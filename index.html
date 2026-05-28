@@ -512,6 +512,22 @@
         </div>
     </footer>
 
+    <!-- SPAM ALERT MODAL -->
+    <div id="spam-alert-modal" class="hidden fixed inset-0 z-[200] flex items-center justify-center p-4 bg-black/60 backdrop-blur-sm transition-all duration-300 opacity-0">
+        <div class="bg-white dark:bg-gray-900 rounded-[2rem] w-full max-w-sm p-8 shadow-2xl border border-gray-100 dark:border-gray-800 flex flex-col items-center text-center transform scale-95 transition-all duration-300">
+            <div class="w-16 h-16 bg-blue-50 dark:bg-blue-900/20 text-blue-600 dark:text-blue-400 rounded-full flex items-center justify-center mb-6">
+                <i class="fa-solid fa-envelope-open-text text-2xl"></i>
+            </div>
+            <h3 class="text-xl font-bold text-gray-900 dark:text-white mb-2">Check Your Spam Folder</h3>
+            <p class="text-xs text-gray-500 dark:text-gray-400 mb-6 leading-relaxed">
+                We have resent the verification code. If it doesn't show up in your Inbox, please make sure to check your <strong>Spam or Junk folder</strong>!
+            </p>
+            <button onclick="closeSpamAlertModal()" class="w-full py-3.5 rounded-xl bg-pakistan-green text-white font-lemon text-[10px] tracking-widest shadow-lg shadow-green-900/10 hover:bg-green-800 uppercase transition-all">
+                Okay, I'll Check
+            </button>
+        </div>
+    </div>
+
     <!-- MODAL OVERLAY -->
     <div id="modal-overlay" class="hidden fixed inset-0 z-[100] flex items-center justify-center p-4 bg-black/60 backdrop-blur-sm overflow-y-auto transition-opacity duration-300">
         
@@ -690,7 +706,6 @@
                     <h3 class="text-xl font-bold text-gray-900 dark:text-white mb-2">Email Verification</h3>
                     <p class="text-xs text-gray-600 dark:text-gray-400 mb-6 max-w-sm mx-auto">
                         Please enter the 6-digit verification code sent to <br/><strong id="otp-phone-display" class="font-bold text-blue-600 dark:text-blue-400 text-sm mt-1 inline-block">--</strong>
-                        <br/><span class="block mt-2 text-[10px] text-gray-500">Agr code Nazar nhi ah rha to aap spam me Dekho.</span>
                     </p>
                     <div class="flex flex-col gap-4 items-center w-full">
                         <div class="w-full max-w-xs relative">
@@ -1014,6 +1029,7 @@
         // --- Modal Logic ---
         async function openForm(planId) {
             state.isOpen = true;
+            state.otpSentCount = 0;
             modalOverlay.classList.remove('hidden');
             setTimeout(() => {
                 modalContent.classList.remove('scale-95', 'opacity-0');
@@ -1106,6 +1122,26 @@
 
         function hideError() {
             document.getElementById('form-error-banner').classList.add('hidden');
+        }
+
+        function showSpamAlertModal() {
+            const modal = document.getElementById('spam-alert-modal');
+            const content = modal.querySelector('div');
+            modal.classList.remove('hidden');
+            setTimeout(() => {
+                modal.classList.add('opacity-100');
+                if (content) content.classList.remove('scale-95');
+            }, 10);
+        }
+
+        function closeSpamAlertModal() {
+            const modal = document.getElementById('spam-alert-modal');
+            const content = modal.querySelector('div');
+            modal.classList.remove('opacity-100');
+            if (content) content.classList.add('scale-95');
+            setTimeout(() => {
+                modal.classList.add('hidden');
+            }, 300);
         }
 
         // --- Form Navigation & Logic ---
@@ -1441,6 +1477,11 @@
                 }
                 
                 state.otpHash = data.hash;
+                
+                state.otpSentCount = (state.otpSentCount || 0) + 1;
+                if (state.otpSentCount > 1) {
+                    showSpamAlertModal();
+                }
                 
                 if (sendingText) sendingText.classList.add('hidden');
                 if (statusMsg) statusMsg.innerText = 'Verification code sent successfully to ' + emailVal;
