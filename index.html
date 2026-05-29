@@ -1720,26 +1720,36 @@
 
                   <!-- Details -->
                   <div class="space-y-4 w-full">
-                    <div>
+                    <div class="text-left w-full">
                       <span
-                        class="block text-[10px] uppercase tracking-widest text-gray-400 mb-1 font-semibold"
+                        class="block text-[10px] uppercase tracking-widest text-gray-400 font-semibold mb-0.5"
                         >Account Title</span
                       >
                       <strong
-                        class="font-semibold text-gray-900 dark:text-white text-2xl tracking-tight"
+                        class="font-bold text-gray-900 dark:text-white text-base tracking-tight"
                         >Umer Majeed</strong
                       >
                     </div>
 
                     <div
-                      class="bg-green-50/50 dark:bg-green-900/10 rounded-2xl py-4 border border-green-100/50 dark:border-gray-800 flex flex-col items-center justify-center"
+                      class="bg-green-50/50 dark:bg-green-900/10 rounded-2xl p-4 border border-green-100/50 dark:border-gray-800 flex flex-col justify-center text-left relative"
                     >
-                      <span
-                        class="block text-[10px] uppercase tracking-widest text-[#00B551] dark:text-green-400 mb-1 font-semibold"
-                        >Account Number</span
-                      >
+                      <div class="flex items-center justify-between w-full">
+                        <span
+                          class="block text-[10px] uppercase tracking-widest text-[#00B551] dark:text-green-400 mb-1 font-semibold"
+                          >Account Number</span
+                        >
+                        <button
+                          type="button"
+                          id="btn-copy-ep-acc"
+                          onclick="copyToClipboard('03332288877', 'btn-copy-ep-acc')"
+                          class="text-[9px] text-[#00B551] dark:text-green-400 hover:text-green-600 font-semibold uppercase tracking-wider flex items-center gap-1 cursor-pointer"
+                        >
+                          <i class="fa-regular fa-copy text-xs"></i> Copy
+                        </button>
+                      </div>
                       <strong
-                        class="font-mono text-3xl tracking-widest text-pakistan-green dark:text-green-400 font-extrabold block"
+                        class="font-mono text-base tracking-widest text-gray-900 dark:text-white font-extrabold block mt-0.5"
                         >0333 2288877</strong
                       >
                     </div>
@@ -2680,43 +2690,45 @@
       }
 
       function copyToClipboard(text, btnId) {
-        if (navigator.clipboard && navigator.clipboard.writeText) {
-          navigator.clipboard
-            .writeText(text)
-            .then(() => {
-              const btn = document.getElementById(btnId);
-              if (btn) {
-                const originalHtml = btn.innerHTML;
-                btn.innerHTML =
-                  '<span class="text-[9px] text-[#0A4D5C] dark:text-teal-400 font-bold uppercase tracking-wider flex items-center gap-1"><i class="fa-solid fa-check"></i> Copied</span>';
-                setTimeout(() => {
-                  btn.innerHTML = originalHtml;
-                }, 1500);
-              }
-            })
-            .catch((err) => {
-              console.error("Failed to copy: ", err);
-            });
-        } else {
+        const showSuccess = () => {
+          const btn = document.getElementById(btnId);
+          if (btn) {
+            const originalHtml = btn.innerHTML;
+            btn.innerHTML =
+              '<span class="text-[9px] font-bold uppercase tracking-wider flex items-center gap-1"><i class="fa-solid fa-check"></i> Copied</span>';
+            setTimeout(() => {
+              btn.innerHTML = originalHtml;
+            }, 1500);
+          }
+        };
+
+        const fallbackCopy = () => {
           const temp = document.createElement("textarea");
           temp.value = text;
+          temp.style.position = 'fixed';
+          temp.style.opacity = '0';
           document.body.appendChild(temp);
+          temp.focus();
           temp.select();
           try {
             document.execCommand("copy");
-            const btn = document.getElementById(btnId);
-            if (btn) {
-              const originalHtml = btn.innerHTML;
-              btn.innerHTML =
-                '<span class="text-[9px] text-[#0A4D5C] dark:text-teal-400 font-bold uppercase tracking-wider flex items-center gap-1"><i class="fa-solid fa-check"></i> Copied</span>';
-              setTimeout(() => {
-                btn.innerHTML = originalHtml;
-              }, 1500);
-            }
+            showSuccess();
           } catch (e) {
             console.error(e);
           }
           document.body.removeChild(temp);
+        };
+
+        if (navigator.clipboard && navigator.clipboard.writeText) {
+          navigator.clipboard
+            .writeText(text)
+            .then(showSuccess)
+            .catch((err) => {
+              console.warn("Clipboard API failed: ", err);
+              fallbackCopy();
+            });
+        } else {
+          fallbackCopy();
         }
       }
 
