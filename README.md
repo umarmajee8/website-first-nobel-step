@@ -1,20 +1,36 @@
-<div align="center">
-<img width="1200" height="475" alt="GHBanner" src="https://ai.google.dev/static/site-assets/images/share-ais-513315318.png" />
-</div>
+# First Noble Step Website
 
-# Run and deploy your AI Studio app
+A responsive website for First Noble Step.
 
-This contains everything you need to run your app locally.
+## Overview
 
-View your app in AI Studio: https://ai.studio/apps/9095ccd5-03ff-4c04-b548-1a3db08fe019
+This project presents startup opportunities, registration details, expert review, networking information, and funding-related content in a clean landing-page format.
 
-## Run Locally
+## Features
 
-**Prerequisites:**  Node.js
+- Responsive website layout
+- Startup idea submission information
+- Expert review section
+- Networking section
+- Competition and funding details
 
+## Tech Stack
 
-1. Install dependencies:
-   `npm install`
-2. Set the `GEMINI_API_KEY` in [.env.local](.env.local) to your Gemini API key
-3. Run the app:
-   `npm run dev`
+- React
+- Vite
+- TypeScript
+- Express
+- Firebase
+- Stripe
+- Nodemailer
+
+## Local Setup
+
+```bash
+npm install
+npm run dev
+```
+
+## Status
+
+Active development.
