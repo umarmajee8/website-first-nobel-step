@@ -1,1 +1,13 @@
-/* footer layout fix file */
+/* Footer background gap fix */
+html {
+  background-color: rgb(240, 253, 244);
+}
+
+body {
+  background-color: rgb(240, 253, 244);
+  overflow-x: hidden;
+}
+
+footer {
+  background-color: rgb(240, 253, 244);
+}
