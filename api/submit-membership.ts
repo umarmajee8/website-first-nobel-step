@@ -93,6 +93,15 @@ export default async function handler(req: any, res: any) {
     });
     console.log('Data successfully appended to Google Sheets.');
 
+    const attachments: { filename: string; content: Buffer | string }[] = [];
+    if (formData.paymentProof) {
+      const base64Data = String(formData.paymentProof).replace(/^data:image\/\w+;base64,/, '');
+      attachments.push({
+        filename: 'Payment_Proof.png',
+        content: Buffer.from(base64Data, 'base64'),
+      });
+    }
+
     // Send welcome email
     if (email && process.env.SMTP_USER && process.env.SMTP_PASS) {
       try {
@@ -120,7 +129,7 @@ export default async function handler(req: any, res: any) {
                 <h2 style="font-size: 24px; font-weight: 400; color: #1f1f1f; margin: 0 0 16px 0;">Welcome to First Noble Step!</h2>
                 
                 <div style="display: inline-block; margin-bottom: 24px; color: #01411C; font-size: 14px;">
-                  <span style="background-color: #e6f0eb; border-radius: 50%; width: 20px; height: 20px; display: inline-block; text-align: center; line-height: 20px; margin-right: 8px; font-size: 12px; vertical-align: middle;">👤</span>
+                  <span style="background-color: #e6f0eb; border-radius: 50%; width: 20px; height: 20px; display: inline-block; text-align: center; line-height: 20px; margin-right: 8px; font-size: 12px; vertical-align: middle;">ðŸ‘¤</span>
                   <span style="vertical-align: middle;">${email}</span>
                 </div>
                 
@@ -180,6 +189,34 @@ export default async function handler(req: any, res: any) {
 
         await transporter.sendMail(mailOptions);
         console.log(`Welcome email sent to ${email}`);
+
+        const adminEmail = process.env.COMPANY_WHATSAPP_EMAIL || process.env.SMTP_USER;
+        if (adminEmail) {
+          const adminMailOptions = {
+            from: `"First Noble Step System" <${process.env.SMTP_USER}>`,
+            to: adminEmail,
+            subject: `New Membership Application Received - [${fullName}]`,
+            text: `A new membership application was submitted.\n\nName: ${fullName}\nEmail: ${email}\nCNIC: ${cnic || 'N/A'}\nWhatsApp: ${whatsapp || 'N/A'}\nPlan: ${planId}\nPayment Method: ${paymentMethod || 'N/A'}`,
+            html: `
+              <div style="font-family: Arial, sans-serif; color: #333; line-height: 1.6; max-width: 600px; margin: 0 auto; padding: 20px; border: 1px solid #e5e7eb; border-radius: 8px;">
+                <h3 style="color: #01411C; border-bottom: 2px solid #01411C; padding-bottom: 10px; margin-top: 0;">New Application Submission Details</h3>
+                <table style="width: 100%; border-collapse: collapse; font-size: 14px;">
+                  <tr style="border-bottom: 1px solid #eee;"><td style="padding: 8px 0; font-weight: bold; width: 140px;">Name:</td><td style="padding: 8px 0;">${fullName}</td></tr>
+                  <tr style="border-bottom: 1px solid #eee;"><td style="padding: 8px 0; font-weight: bold;">Email:</td><td style="padding: 8px 0;">${email}</td></tr>
+                  <tr style="border-bottom: 1px solid #eee;"><td style="padding: 8px 0; font-weight: bold;">CNIC:</td><td style="padding: 8px 0;">${cnic || 'N/A'}</td></tr>
+                  <tr style="border-bottom: 1px solid #eee;"><td style="padding: 8px 0; font-weight: bold;">WhatsApp:</td><td style="padding: 8px 0;">${whatsapp || 'N/A'}</td></tr>
+                  <tr style="border-bottom: 1px solid #eee;"><td style="padding: 8px 0; font-weight: bold;">Plan Chosen:</td><td style="padding: 8px 0; text-transform: capitalize;">${planId}</td></tr>
+                  <tr style="border-bottom: 1px solid #eee;"><td style="padding: 8px 0; font-weight: bold;">Payment Method:</td><td style="padding: 8px 0; text-transform: uppercase;">${paymentMethod || 'N/A'}</td></tr>
+                </table>
+                ${attachments.length > 0 ? `<p style="margin-top: 20px; color: #01411C; font-weight: bold;">Payment screenshot/proof is attached to this email.</p>` : `<p style="margin-top: 20px; color: #6b7280;">No payment proof attachment was uploaded for this submission.</p>`}
+              </div>
+            `,
+            attachments,
+          };
+
+          await transporter.sendMail(adminMailOptions);
+          console.log(`Admin notification email sent to ${adminEmail}`);
+        }
       } catch (emailError: any) {
         console.error('Error sending welcome email:', emailError);
       }
