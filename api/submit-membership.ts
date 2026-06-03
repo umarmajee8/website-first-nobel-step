@@ -129,7 +129,7 @@ export default async function handler(req: any, res: any) {
                 <h2 style="font-size: 24px; font-weight: 400; color: #1f1f1f; margin: 0 0 16px 0;">Welcome to First Noble Step!</h2>
                 
                 <div style="display: inline-block; margin-bottom: 24px; color: #01411C; font-size: 14px;">
-                  <span style="background-color: #e6f0eb; border-radius: 50%; width: 20px; height: 20px; display: inline-block; text-align: center; line-height: 20px; margin-right: 8px; font-size: 12px; vertical-align: middle;">ðŸ‘¤</span>
+                  <span style="background-color: #e6f0eb; border-radius: 12px; padding: 3px 8px; margin-right: 8px; font-size: 12px; vertical-align: middle;">Applicant</span>
                   <span style="vertical-align: middle;">${email}</span>
                 </div>
                 
