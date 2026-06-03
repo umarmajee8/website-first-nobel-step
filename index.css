@@ -16,3 +16,17 @@ footer {
   margin: 0;
   background-color: rgb(240, 253, 244) !important;
 }
+
+#modal-content > .flex-grow {
+  min-height: 0;
+}
+
+#form-footer {
+  position: relative;
+  z-index: 2;
+  background-color: #fff;
+}
+
+.dark #form-footer {
+  background-color: rgb(17, 24, 39);
+}
