@@ -1,13 +1,18 @@
-/* Footer background gap fix */
-html {
-  background-color: rgb(240, 253, 244);
-}
-
+/* Keep the page end visually attached to the footer. */
+html,
 body {
-  background-color: rgb(240, 253, 244);
+  min-height: 100%;
+  background-color: rgb(240, 253, 244) !important;
   overflow-x: hidden;
 }
 
+main {
+  background-color: #fff;
+}
+
 footer {
-  background-color: rgb(240, 253, 244);
+  position: relative;
+  z-index: 1;
+  margin: 0;
+  background-color: rgb(240, 253, 244) !important;
 }
