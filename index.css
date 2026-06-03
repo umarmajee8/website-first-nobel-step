@@ -30,3 +30,48 @@ footer {
 .dark #form-footer {
   background-color: rgb(17, 24, 39);
 }
+
+#pay-btn-faysalbank img {
+  width: 6rem !important;
+  height: 2.75rem !important;
+  background: #fff;
+}
+
+#pay-btn-faysalbank span,
+#faysalbank-card > div:first-child span {
+  display: none;
+}
+
+#faysalbank-card > div:first-child img {
+  width: 8.5rem !important;
+  height: 4rem !important;
+  padding: 0.25rem 0.75rem;
+  border-radius: 0.75rem;
+  background: #fff;
+}
+
+#pay-btn-easypaisa > div,
+#pay-btn-easypaisa > span,
+#easypaisa-card > div:first-child > div,
+#easypaisa-card > div:first-child > span {
+  display: none;
+}
+
+#pay-btn-easypaisa::before,
+#easypaisa-card > div:first-child::before {
+  content: "";
+  display: block;
+  background: #fff url("/easypaisa-logo.png") center / contain no-repeat;
+}
+
+#pay-btn-easypaisa::before {
+  width: 7rem;
+  height: 2.25rem;
+}
+
+#easypaisa-card > div:first-child::before {
+  width: 11rem;
+  height: 3rem;
+  border-radius: 0.75rem;
+  box-shadow: 0 1px 3px rgba(15, 23, 42, 0.12);
+}
