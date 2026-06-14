@@ -2450,14 +2450,15 @@
         // Show Package Details
         const packageDetails = {
           basic: [
-            '<span class="flex flex-col gap-1.5 p-2 bg-gradient-to-br from-amber-50 to-orange-50 dark:from-amber-900/20 dark:to-orange-900/10 border border-amber-200/60 dark:border-amber-700/30 rounded-xl shadow-sm relative overflow-hidden mt-1 w-full"><span class="absolute -right-2 -top-2 opacity-[0.08]"><i class="fa-solid fa-award text-5xl text-amber-600"></i></span><span class="bg-gradient-to-r from-amber-400 to-orange-500 text-black px-2 py-1 rounded-md text-[9px] font-black uppercase tracking-widest shadow-sm inline-flex items-center gap-1.5 max-w-max z-10 leading-none animate-[pulse_3s_ease-in-out_infinite]"><i class="fa-solid fa-ribbon text-[10px]"></i> Certification</span><strong class="text-amber-900 dark:text-amber-400 text-xs z-10 pr-4">Official Noble Career Foundation Certificate</strong></span>',
+            '<div class="flex flex-col gap-1 w-full box-border bg-gradient-to-br from-amber-50 to-orange-50 dark:from-amber-900/20 dark:to-orange-900/10 border border-amber-200/60 dark:border-amber-700/30 rounded-lg shadow-sm relative overflow-hidden p-1.5 mt-0.5"><div class="absolute -right-1 -top-1 opacity-[0.08] pointer-events-none"><i class="fa-solid fa-award text-4xl text-amber-600"></i></div><div class="bg-gradient-to-r from-amber-400 to-orange-500 text-black px-1.5 py-0.5 rounded text-[8px] font-black uppercase tracking-widest shadow-sm inline-flex items-center gap-1 max-w-max z-10 leading-none animate-[pulse_3s_ease-in-out_infinite]"><i class="fa-solid fa-ribbon text-[8px]"></i> Certification</div><strong class="text-amber-900 dark:text-amber-400 text-[10px] z-10 relative pr-2 leading-tight">Official Noble Career Foundation Certificate</strong></div>',
             "Resume & CV optimization",
             "Job search strategy guide",
-            "Project Showcase Page",
+            "Fresh Graduate Job List",
             "30-Day Job Search Action Plan",
             "Job Scam Awareness Guide",
           ],
           standard: [
+            '<span class="font-bold text-pakistan-green">Everything on the Basic Package</span>',
             "Salary negotiation coaching",
             "Exclusive 1-on-1 call",
             "LinkedIn profile review",
@@ -2467,6 +2468,7 @@
             "Feeling stuck or overwhelmed in your career journey? We provide Comprehensive Case Analysis & Strategic Guidance",
           ],
           professional_pkg: [
+            '<span class="font-bold text-pakistan-green">Everything on the Standard Package</span>',
             "Verified Profile Badge for your resume",
             "Industry Connections & Networking",
             "Global Exposure through Professional Connections",
@@ -2510,7 +2512,7 @@
           detailsList.innerHTML = packageDetails[planId]
             .map(
               (detail) =>
-                `<li class="flex items-start gap-2.5"><div class="shrink-0 w-4 h-4 bg-green-50 dark:bg-green-900/20 rounded-full flex items-center justify-center mt-0.5"><i class="fa-solid fa-check text-pakistan-green dark:text-green-400 text-[8px]"></i></div> <span class="leading-relaxed text-xs">${detail}</span></li>`,
+                `<li class="flex items-start gap-2.5"><div class="shrink-0 w-4 h-4 bg-green-50 dark:bg-green-900/20 rounded-full flex items-center justify-center mt-0.5"><i class="fa-solid fa-check text-pakistan-green dark:text-green-400 text-[8px]"></i></div> <div class="leading-relaxed text-xs flex-1">${detail}</div></li>`,
             )
             .join("");
 
