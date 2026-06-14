@@ -246,13 +246,12 @@
         </div>
 
         <div class="flex items-center gap-3 sm:gap-4">
-          <!-- Desktop Navigation -->
-          <nav class="hidden md:flex items-center gap-6 mr-4 font-bold text-sm">
-            <a href="#hero" class="text-gray-600 dark:text-gray-300 hover:text-pakistan-green dark:hover:text-green-400 transition-colors">Home</a>
-            <a href="#membership" class="text-gray-600 dark:text-gray-300 hover:text-pakistan-green dark:hover:text-green-400 transition-colors">Programs</a>
-            <a href="#footer" class="text-gray-600 dark:text-gray-300 hover:text-pakistan-green dark:hover:text-green-400 transition-colors">Contact</a>
-          </nav>
           <!-- Apply Button -->
+          <div class="hidden lg:flex items-center mr-1">
+            <span class="text-[9px] font-black uppercase tracking-widest text-pakistan-green dark:text-green-400 bg-green-50 dark:bg-green-900/30 px-2.5 py-1 rounded-md border border-green-200 dark:border-green-800 animate-pulse flex items-center gap-1.5 shadow-sm">
+              <i class="fa-solid fa-certificate text-orange-500"></i> Now Introducing E-Internship Program
+            </span>
+          </div>
           <button
             onclick="openForm()"
             class="group relative inline-flex items-center justify-center overflow-hidden bg-pakistan-green text-white px-5 py-2 rounded-lg font-lemon text-[10px] tracking-widest hover:bg-green-800 transition-all shadow-[0_10px_20px_-5px_rgba(1,65,28,0.4)] active:scale-95 text-center"
@@ -264,23 +263,7 @@
               class="fa-solid fa-arrow-right absolute right-3 translate-x-4 opacity-0 transition-all duration-300 group-hover:translate-x-0 group-hover:opacity-100"
             ></i>
           </button>
-          
-          <!-- Mobile Hamburger Button -->
-          <button
-            id="mobile-menu-btn"
-            onclick="toggleMobileMenu()"
-            class="md:hidden flex items-center justify-center w-10 h-10 rounded-lg text-gray-600 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-800 transition-colors"
-          >
-            <i class="fa-solid fa-bars text-lg pointer-events-none"></i>
-          </button>
         </div>
-      </div>
-      
-      <!-- Mobile Menu Dropdown -->
-      <div id="mobile-menu" class="hidden md:hidden absolute top-full left-0 w-full bg-white dark:bg-gray-900 border-b border-gray-100 dark:border-gray-800 shadow-lg px-4 py-4 space-y-4 transition-all duration-300 z-50">
-        <a href="#hero" onclick="toggleMobileMenu()" class="block font-bold text-gray-800 dark:text-white hover:text-pakistan-green dark:hover:text-green-400 transition-colors">Home</a>
-        <a href="#membership" onclick="toggleMobileMenu()" class="block font-bold text-gray-800 dark:text-white hover:text-pakistan-green dark:hover:text-green-400 transition-colors">Programs</a>
-        <a href="#footer" onclick="toggleMobileMenu()" class="block font-bold text-gray-800 dark:text-white hover:text-pakistan-green dark:hover:text-green-400 transition-colors">Contact</a>
       </div>
     </header>
 
@@ -1318,12 +1301,6 @@
             </div>
             <div class="flex flex-col items-center relative">
               <div
-                id="step-4-indicator"
-                class="w-4 h-4 rounded-full transition-all duration-500 ease-out border-2 bg-white dark:bg-gray-900 border-gray-200 dark:border-gray-700 text-gray-400 dark:text-gray-500 flex items-center justify-center text-[9px] font-bold"
-              ></div>
-            </div>
-            <div class="flex flex-col items-center relative">
-              <div
                 id="step-5-indicator"
                 class="w-4 h-4 rounded-full transition-all duration-500 ease-out border-2 bg-white dark:bg-gray-900 border-gray-200 dark:border-gray-700 text-gray-400 dark:text-gray-500 flex items-center justify-center text-[9px] font-bold"
               ></div>
@@ -1421,7 +1398,6 @@
                   <div class="relative">
                     <h4 class="font-lemon text-[10px] dark:text-white flex items-center gap-1.5 flex-wrap">
                       Standard Package
-                      <span class="inline-block px-1.5 py-0.5 bg-blue-100 text-blue-600 rounded-md text-[8px] uppercase font-black tracking-widest leading-none border border-blue-200 shadow-sm"><i class="fa-solid fa-fire text-[8px] mr-0.5 text-orange-500"></i> POPULAR</span>
                     </h4>
                     <p class="text-blue-600 font-bold mt-1 text-sm leading-none flex items-end gap-1.5">
                       <span class="text-xs text-gray-400 line-through font-semibold">PKR 14,000</span>
@@ -1454,7 +1430,6 @@
                       class="font-lemon text-[10px] text-gray-900 dark:text-white transition-colors flex items-center gap-1.5 flex-wrap"
                     >
                       Premium Package
-                      <span class="inline-block px-1.5 py-0.5 bg-gradient-to-r from-[#D4AF37] to-yellow-500 text-white rounded-md text-[8px] uppercase font-black tracking-widest leading-none shadow-[0_2px_8px_rgba(212,175,55,0.4)] animate-[pulse_3s_ease-in-out_infinite]"><i class="fa-solid fa-gem text-[8px] mr-1"></i> MOST VALUABLE</span>
                     </h4>
                     <p
                       class="text-[#A67C00] dark:text-[#D4AF37] font-bold mt-1 tracking-wide text-sm leading-none flex items-end gap-1.5"
@@ -1689,7 +1664,7 @@
             </div>
           </div>
 
-          <!-- STEP 4: Payment via Easypaisa -->
+          <!-- STEP 4: Payment -->
           <div id="step-4" class="hidden space-y-6 text-center">
             <div id="payment-non-free-ui" class="space-y-6">
               <div class="space-y-1">
@@ -1706,112 +1681,6 @@
                     >--</span
                   >
                 </p>
-              </div>
-
-              <!-- Payment Method Toggle / Selector -->
-              <div class="grid grid-cols-2 gap-3 max-w-sm mx-auto">
-                <!-- Faysal Bank Button -->
-                <button
-                  type="button"
-                  onclick="changePaymentMethod('faysalbank')"
-                  id="pay-btn-faysalbank"
-                  class="flex items-center justify-center gap-2 py-2.5 px-3 rounded-2xl border-2 transition-all font-sans font-bold text-sm bg-white dark:bg-gray-900 cursor-pointer border-gray-100 dark:border-gray-800 text-gray-500 shadow-sm"
-                >
-                  <img
-                    src="/src/assets/images/faysal_bank_logo_1779996366819.png"
-                    alt="Faysal Bank Logo"
-                    class="w-10 h-10 object-contain rounded-md"
-                    referrerpolicy="no-referrer"
-                  />
-                  <span class="dark:text-gray-200 text-xs truncate"
-                    >Faysal Bank</span
-                  >
-                </button>
-                <!-- Easypaisa Button -->
-                <button
-                  type="button"
-                  onclick="changePaymentMethod('easypaisa')"
-                  id="pay-btn-easypaisa"
-                  class="flex items-center justify-center gap-2.5 py-2.5 px-4 rounded-2xl border-2 transition-all font-sans font-bold text-sm bg-white dark:bg-gray-900 cursor-pointer border-gray-100 dark:border-gray-800 text-gray-500 shadow-sm"
-                >
-                  <div
-                    class="w-6 h-6 bg-[#00B551] rounded-full flex items-center justify-center text-white font-bold text-sm italic leading-none"
-                  >
-                    e
-                  </div>
-                  <span class="dark:text-gray-200">Easypaisa</span>
-                </button>
-              </div>
-
-              <!-- Easypaisa Account Details Card -->
-              <div
-                id="easypaisa-card"
-                class="hidden bg-white dark:bg-gray-900 rounded-[2rem] border border-gray-100 dark:border-gray-800 shadow-[0_8px_30px_rgb(0,0,0,0.04)] dark:shadow-none text-center max-w-sm mx-auto overflow-hidden"
-              >
-                <!-- Top Green Bar (Easypaisa branding) -->
-                <div
-                  class="bg-[#00B551] py-4 flex items-center justify-center gap-2"
-                >
-                  <div
-                    class="w-6 h-6 bg-white rounded-full flex items-center justify-center text-[#00B551] font-bold text-sm italic pr-0.5 pt-0.5 leading-none"
-                  >
-                    e
-                  </div>
-                  <span
-                    class="text-white font-sans font-bold tracking-tight text-xl mb-0.5"
-                    >easypaisa</span
-                  >
-                </div>
-
-                <div class="p-6 space-y-5 flex flex-col items-center">
-                  <!-- QR Code Box -->
-                  <div
-                    class="bg-white p-2.5 rounded-2xl shadow-sm border border-gray-100 dark:border-gray-800 flex-shrink-0"
-                  >
-                    <img
-                      src="https://api.qrserver.com/v1/create-qr-code/?size=150x150&data=03332288877&color=01411C"
-                      alt="Easypaisa QR Code"
-                      class="w-32 h-32 md:w-36 md:h-36 object-cover mix-blend-multiply"
-                    />
-                  </div>
-
-                  <!-- Details -->
-                  <div class="space-y-4 w-full">
-                    <div class="text-left w-full">
-                      <span
-                        class="block text-[10px] uppercase tracking-widest text-gray-400 font-semibold mb-0.5"
-                        >Account Title</span
-                      >
-                      <strong
-                        class="font-bold text-gray-900 dark:text-white text-base tracking-tight"
-                        >Umer Majeed</strong
-                      >
-                    </div>
-
-                    <div
-                      class="bg-green-50/50 dark:bg-green-900/10 rounded-2xl p-4 border border-green-100/50 dark:border-gray-800 flex flex-col justify-center text-left relative"
-                    >
-                      <div class="flex items-center justify-between w-full">
-                        <span
-                          class="block text-[10px] uppercase tracking-widest text-[#00B551] dark:text-green-400 mb-1 font-semibold"
-                          >Account Number</span
-                        >
-                        <button
-                          type="button"
-                          id="btn-copy-ep-acc"
-                          onclick="copyToClipboard('03332288877', 'btn-copy-ep-acc')"
-                          class="text-[9px] text-[#00B551] dark:text-green-400 hover:text-green-600 font-semibold uppercase tracking-wider flex items-center gap-1 cursor-pointer"
-                        >
-                          <i class="fa-regular fa-copy text-xs"></i> Copy
-                        </button>
-                      </div>
-                      <strong
-                        class="font-mono text-base tracking-widest text-gray-900 dark:text-white font-extrabold block mt-0.5"
-                        >0333 2288877</strong
-                      >
-                    </div>
-                  </div>
-                </div>
               </div>
 
               <!-- Faysal Bank Account Details Card -->
@@ -2257,24 +2126,6 @@
 
     <!-- MAIN JAVASCRIPT LOGIC -->
     <script>
-      function toggleMobileMenu() {
-        const menu = document.getElementById('mobile-menu');
-        const icon = document.querySelector('#mobile-menu-btn i');
-        
-        if (menu.classList.contains('hidden')) {
-            menu.classList.remove('hidden');
-            if(icon) {
-                icon.classList.remove('fa-bars');
-                icon.classList.add('fa-xmark');
-            }
-        } else {
-            menu.classList.add('hidden');
-            if(icon) {
-                icon.classList.remove('fa-xmark');
-                icon.classList.add('fa-bars');
-            }
-        }
-      }
 
       // --- State Persist/Restore Helper Prototypes ---
       function saveState() {
@@ -2601,11 +2452,12 @@
           basic: [
             '<span class="flex flex-col gap-1.5 p-2 bg-gradient-to-br from-amber-50 to-orange-50 dark:from-amber-900/20 dark:to-orange-900/10 border border-amber-200/60 dark:border-amber-700/30 rounded-xl shadow-sm relative overflow-hidden mt-1 w-full"><span class="absolute -right-2 -top-2 opacity-[0.08]"><i class="fa-solid fa-award text-5xl text-amber-600"></i></span><span class="bg-gradient-to-r from-amber-400 to-orange-500 text-black px-2 py-1 rounded-md text-[9px] font-black uppercase tracking-widest shadow-sm inline-flex items-center gap-1.5 max-w-max z-10 leading-none animate-[pulse_3s_ease-in-out_infinite]"><i class="fa-solid fa-ribbon text-[10px]"></i> Certification</span><strong class="text-amber-900 dark:text-amber-400 text-xs z-10 pr-4">Official Noble Career Foundation Certificate</strong></span>',
             "Resume & CV optimization",
-            "Mock interview session",
             "Job search strategy guide",
+            "Project Showcase Page",
+            "30-Day Job Search Action Plan",
+            "Job Scam Awareness Guide",
           ],
           standard: [
-            '<span class="font-bold text-pakistan-green">Everything on the Basic Package</span>',
             "Salary negotiation coaching",
             "Exclusive 1-on-1 call",
             "LinkedIn profile review",
@@ -2615,7 +2467,6 @@
             "Feeling stuck or overwhelmed in your career journey? We provide Comprehensive Case Analysis & Strategic Guidance",
           ],
           professional_pkg: [
-            '<span class="font-bold text-pakistan-green">Everything on the Standard Package</span>',
             "Verified Profile Badge for your resume",
             "Industry Connections & Networking",
             "Global Exposure through Professional Connections",
@@ -2714,57 +2565,7 @@
         if (state.step === 6) validateCurrentStep();
       }
 
-      function changePaymentMethod(method) {
-        state.paymentMethod = method;
-
-        const btnEasypaisa = document.getElementById("pay-btn-easypaisa");
-        const btnFaysalbank = document.getElementById("pay-btn-faysalbank");
-        const epCard = document.getElementById("easypaisa-card");
-        const fbCard = document.getElementById("faysalbank-card");
-
-        if (method === "easypaisa") {
-          if (btnEasypaisa) {
-            btnEasypaisa.classList.add("border-[#00B551]", "bg-[#00B551]/5");
-            btnEasypaisa.classList.remove(
-              "border-gray-100",
-              "dark:border-gray-800",
-            );
-          }
-          if (btnFaysalbank) {
-            btnFaysalbank.classList.remove(
-              "border-[#0A4D5C]",
-              "bg-[#0A4D5C]/5",
-              "bg-[#0A4D5C]/10",
-            );
-            btnFaysalbank.classList.add(
-              "border-gray-100",
-              "dark:border-gray-800",
-            );
-          }
-
-          if (epCard) epCard.classList.remove("hidden");
-          if (fbCard) fbCard.classList.add("hidden");
-        } else {
-          if (btnEasypaisa) {
-            btnEasypaisa.classList.remove("border-[#00B551]", "bg-[#00B551]/5");
-            btnEasypaisa.classList.add(
-              "border-gray-100",
-              "dark:border-gray-800",
-            );
-          }
-          if (btnFaysalbank) {
-            btnFaysalbank.classList.add("border-[#0A4D5C]", "bg-[#0A4D5C]/10");
-            btnFaysalbank.classList.remove(
-              "border-gray-100",
-              "dark:border-gray-800",
-            );
-          }
-
-          if (epCard) epCard.classList.add("hidden");
-          if (fbCard) fbCard.classList.remove("hidden");
-        }
-      }
-
+      // Automatically setting state.paymentMethod to faysalbank since it's the only one left
       function copyToClipboard(text, btnId) {
         const showSuccess = () => {
           const btn = document.getElementById(btnId);
@@ -2928,7 +2729,7 @@
               if (btnNextText) btnNextText.innerText = "Continue";
               btnNext.disabled = false;
 
-              state.step++;
+              state.step = 5;
               updateUI();
             } else {
               throw new Error(
@@ -2952,6 +2753,7 @@
           }
         } else if (state.step < 5) {
           state.step++;
+          if (state.step === 4) state.step = 5;
           updateUI();
         } else {
           submitForm();
@@ -2960,12 +2762,12 @@
 
       function prevStep() {
         hideError();
+        if (state.step === 5) {
+          state.step = 3;
+          updateUI();
+          return;
+        }
         if (state.step > 1) {
-          if (state.step === 4) {
-            if (state.planId === "basic") {
-              state.step = 3;
-            }
-          }
           state.step--;
           updateUI();
         }
@@ -3080,7 +2882,7 @@
               // Current active step - beautiful glow, slight scale-up and clear number
               el.className =
                 "w-6 h-6 rounded-full transition-all duration-500 border-2 bg-pakistan-green border-pakistan-green text-white flex items-center justify-center text-[10px] font-bold scale-125 shadow-lg shadow-green-500/20 ring-4 ring-green-100 dark:ring-green-950/40 z-10";
-              el.innerHTML = i;
+              el.innerHTML = i === 5 ? 4 : i;
             } else if (i < state.step) {
               // Completed steps - elegant green check icon
               el.className =
@@ -3091,7 +2893,7 @@
               // Future steps - default light aesthetic
               el.className =
                 "w-4 h-4 rounded-full transition-all duration-300 border-2 bg-white dark:bg-gray-900 border-gray-200 dark:border-gray-700 text-gray-400 dark:text-gray-500 flex items-center justify-center text-[8px] font-bold z-0";
-              el.innerHTML = i;
+              el.innerHTML = i === 5 ? 4 : i;
             }
           }
         }
@@ -3123,8 +2925,8 @@
           else if (state.plan === "entrepreneur") feeStr = "PKR 49,999";
 
           if (amountDisplay) amountDisplay.innerText = feeStr;
-
-          changePaymentMethod(state.paymentMethod || "faysalbank");
+          
+          state.paymentMethod = "faysalbank";
         }
 
         // Update Review Data
@@ -3580,7 +3382,6 @@
         handleOtherOption,
         triggerSuccessAnimation,
         triggerSuccessScreenConfetti,
-        changePaymentMethod,
         copyToClipboard,
         selectPaymentMethod,
         handleProofUpload,
