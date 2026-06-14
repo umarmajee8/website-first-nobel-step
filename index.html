@@ -232,6 +232,12 @@
         </div>
 
         <div class="flex items-center gap-3 sm:gap-4">
+          <!-- Desktop Navigation -->
+          <nav class="hidden md:flex items-center gap-6 mr-4 font-bold text-sm">
+            <a href="#hero" class="text-gray-600 dark:text-gray-300 hover:text-pakistan-green dark:hover:text-green-400 transition-colors">Home</a>
+            <a href="#membership" class="text-gray-600 dark:text-gray-300 hover:text-pakistan-green dark:hover:text-green-400 transition-colors">Programs</a>
+            <a href="#footer" class="text-gray-600 dark:text-gray-300 hover:text-pakistan-green dark:hover:text-green-400 transition-colors">Contact</a>
+          </nav>
           <!-- Apply Button -->
           <button
             onclick="openForm()"
@@ -244,13 +250,30 @@
               class="fa-solid fa-arrow-right absolute right-3 translate-x-4 opacity-0 transition-all duration-300 group-hover:translate-x-0 group-hover:opacity-100"
             ></i>
           </button>
+          
+          <!-- Mobile Hamburger Button -->
+          <button
+            id="mobile-menu-btn"
+            onclick="toggleMobileMenu()"
+            class="md:hidden flex items-center justify-center w-10 h-10 rounded-lg text-gray-600 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-800 transition-colors"
+          >
+            <i class="fa-solid fa-bars text-lg pointer-events-none"></i>
+          </button>
         </div>
+      </div>
+      
+      <!-- Mobile Menu Dropdown -->
+      <div id="mobile-menu" class="hidden md:hidden absolute top-full left-0 w-full bg-white dark:bg-gray-900 border-b border-gray-100 dark:border-gray-800 shadow-lg px-4 py-4 space-y-4 transition-all duration-300 z-50">
+        <a href="#hero" onclick="toggleMobileMenu()" class="block font-bold text-gray-800 dark:text-white hover:text-pakistan-green dark:hover:text-green-400 transition-colors">Home</a>
+        <a href="#membership" onclick="toggleMobileMenu()" class="block font-bold text-gray-800 dark:text-white hover:text-pakistan-green dark:hover:text-green-400 transition-colors">Programs</a>
+        <a href="#footer" onclick="toggleMobileMenu()" class="block font-bold text-gray-800 dark:text-white hover:text-pakistan-green dark:hover:text-green-400 transition-colors">Contact</a>
       </div>
     </header>
 
     <main class="flex-grow">
       <!-- HERO SECTION -->
       <section
+        id="hero"
         class="relative bg-white dark:bg-gray-900 text-gray-900 dark:text-white py-12 lg:py-20 overflow-hidden border-b border-gray-100 dark:border-gray-800 transition-colors duration-300"
       >
         <div
@@ -835,9 +858,10 @@
                       class="fa-solid fa-circle text-green-500 dark:text-green-400 text-[6px] mt-1.5"
                     ></i>
                     <span
-                      class="text-gray-700 dark:text-gray-300 font-medium text-xs"
-                      ><strong>Basic Package</strong> (PKR 2,499) - Smart career
-                      foundation & expert guidance.</span
+                      class="text-gray-700 dark:text-gray-300 font-medium text-xs leading-relaxed"
+                      ><strong>Basic Package</strong> <span class="text-gray-400 line-through text-[10px] ml-1">PKR 5,000</span> <strong class="text-green-600 dark:text-green-400 ml-1 text-sm">(PKR 2,500)</strong>
+                      <span class="inline-block ml-1 px-2 py-0.5 bg-red-100 text-red-600 rounded-md text-[9px] tracking-widest uppercase font-extrabold animate-pulse shadow-sm border border-red-200">Sale 50% Off</span>
+                      <br/>- Smart career foundation & expert guidance.</span
                     >
                   </li>
                   <li class="flex items-start gap-2.5 text-sm">
@@ -975,6 +999,7 @@
 
     <!-- FOOTER -->
     <footer
+      id="footer"
       class="bg-green-50 dark:bg-gray-950 text-gray-700 dark:text-gray-400 py-12 border-t border-green-100 dark:border-gray-800 transition-colors duration-300"
     >
       <div class="max-w-7xl mx-auto px-4">
@@ -1353,12 +1378,14 @@
                       class="w-5 h-5 rounded-full border-2 flex items-center justify-center border-gray-200 check-circle"
                     ></div>
                   </div>
-                  <div>
-                    <h4 class="font-lemon text-[10px] dark:text-white">
-                      Basic Package
+                  <div class="relative">
+                    <h4 class="font-lemon text-[10px] dark:text-white flex items-center gap-1.5 flex-wrap">
+                      Basic Package 
+                      <span class="inline-block px-1.5 py-0.5 bg-red-100 text-red-600 rounded-md text-[8px] animate-pulse uppercase font-black tracking-widest leading-none border border-red-200">50% OFF</span>
                     </h4>
-                    <p class="text-[10px] text-green-600 font-bold mt-0.5">
-                      PKR 2,499
+                    <p class="text-green-600 font-bold mt-1 flex items-end gap-1.5 flex-wrap">
+                      <span class="text-xs text-gray-400 line-through font-semibold">PKR 5,000</span>
+                      <span class="text-sm leading-none">PKR 2,500</span>
                     </p>
                   </div>
                 </div>
@@ -1582,41 +1609,53 @@
 
           <!-- STEP 3: Phone Verification -->
           <div id="step-3" class="hidden text-center space-y-6">
-            <div
-              class="w-16 h-16 bg-green-50 dark:bg-green-900/20 rounded-full flex items-center justify-center mx-auto mb-4 text-pakistan-green dark:text-green-400"
-            >
-              <i class="fa-solid fa-envelope text-2xl"></i>
+            <div class="relative w-24 h-24 mx-auto mb-6">
+              <!-- Animated Rings -->
+              <div class="absolute inset-0 bg-green-100 dark:bg-green-900/30 rounded-full animate-[ping_2s_ease-in-out_infinite]"></div>
+              <div class="absolute inset-2 bg-green-200 dark:bg-green-800/40 rounded-full animate-[ping_2.5s_ease-in-out_infinite] delay-150"></div>
+              <!-- Envelope Icon -->
+              <div
+                class="absolute inset-4 bg-white dark:bg-gray-800 rounded-full flex items-center justify-center text-pakistan-green dark:text-green-400 shadow-xl z-10 animate-bounce"
+                style="animation-duration: 3s;"
+              >
+                <i class="fa-solid fa-envelope-open-text text-3xl"></i>
+              </div>
             </div>
-            <h3 class="text-xl font-bold text-gray-900 dark:text-white mb-2">
-              Email Verification
+            <h3 class="text-2xl font-bold text-gray-900 dark:text-white mb-2 tracking-tight">
+              Verify your Email
             </h3>
             <p
-              class="text-xs text-gray-600 dark:text-gray-400 mb-6 max-w-sm mx-auto"
+              class="text-xs text-gray-600 dark:text-gray-400 mb-8 max-w-sm mx-auto leading-relaxed"
             >
-              Please enter the 6-digit verification code sent to <br /><strong
+              We've sent a 6-digit verification code to <br /><strong
                 id="otp-phone-display"
-                class="font-bold text-pakistan-green dark:text-green-400 text-sm mt-1 inline-block"
+                class="font-bold text-pakistan-green dark:text-green-400 text-sm mt-1 mb-2 inline-block py-1 px-3 bg-green-50 dark:bg-green-900/20 rounded-full"
                 >--</strong
               >
             </p>
-            <div class="flex flex-col gap-4 items-center w-full">
-              <div class="w-full max-w-xs relative">
-                <input
-                  type="text"
-                  id="input-otp"
-                  maxlength="6"
-                  oninput="validateStep3Code()"
-                  placeholder="------"
-                  class="w-full px-5 py-4 text-center tracking-[0.5em] font-mono font-bold text-2xl rounded-2xl bg-gray-100 dark:bg-gray-800/90 border-2 border-gray-300 dark:border-gray-600 focus:border-pakistan-green focus:bg-white dark:focus:bg-gray-900 outline-none text-gray-900 dark:text-white shadow-inner transition-all"
-                />
+            
+            <div class="flex flex-col gap-6 items-center w-full">
+              <!-- Hidden input for logic compatibility -->
+              <input type="hidden" id="input-otp" value="" />
+              
+              <!-- Custom 6-digit OTP UI -->
+              <div class="flex gap-2 sm:gap-3 justify-center w-full max-w-sm" id="otp-boxes" dir="ltr">
+                <input type="text" maxlength="1" class="otp-box w-11 h-14 sm:w-12 sm:h-16 text-center font-bold text-2xl rounded-2xl border border-gray-200 dark:border-gray-700 bg-gray-50 dark:bg-gray-800/50 text-gray-900 dark:text-white shadow-inner focus:border-pakistan-green dark:focus:border-green-400 focus:bg-white dark:focus:bg-gray-900 focus:ring-4 focus:ring-green-100 dark:focus:ring-green-900/20 outline-none transition-all" />
+                <input type="text" maxlength="1" class="otp-box w-11 h-14 sm:w-12 sm:h-16 text-center font-bold text-2xl rounded-2xl border border-gray-200 dark:border-gray-700 bg-gray-50 dark:bg-gray-800/50 text-gray-900 dark:text-white shadow-inner focus:border-pakistan-green dark:focus:border-green-400 focus:bg-white dark:focus:bg-gray-900 focus:ring-4 focus:ring-green-100 dark:focus:ring-green-900/20 outline-none transition-all" />
+                <input type="text" maxlength="1" class="otp-box w-11 h-14 sm:w-12 sm:h-16 text-center font-bold text-2xl rounded-2xl border border-gray-200 dark:border-gray-700 bg-gray-50 dark:bg-gray-800/50 text-gray-900 dark:text-white shadow-inner focus:border-pakistan-green dark:focus:border-green-400 focus:bg-white dark:focus:bg-gray-900 focus:ring-4 focus:ring-green-100 dark:focus:ring-green-900/20 outline-none transition-all" />
+                <input type="text" maxlength="1" class="otp-box w-11 h-14 sm:w-12 sm:h-16 text-center font-bold text-2xl rounded-2xl border border-gray-200 dark:border-gray-700 bg-gray-50 dark:bg-gray-800/50 text-gray-900 dark:text-white shadow-inner focus:border-pakistan-green dark:focus:border-green-400 focus:bg-white dark:focus:bg-gray-900 focus:ring-4 focus:ring-green-100 dark:focus:ring-green-900/20 outline-none transition-all" />
+                <input type="text" maxlength="1" class="otp-box w-11 h-14 sm:w-12 sm:h-16 text-center font-bold text-2xl rounded-2xl border border-gray-200 dark:border-gray-700 bg-gray-50 dark:bg-gray-800/50 text-gray-900 dark:text-white shadow-inner focus:border-pakistan-green dark:focus:border-green-400 focus:bg-white dark:focus:bg-gray-900 focus:ring-4 focus:ring-green-100 dark:focus:ring-green-900/20 outline-none transition-all" />
+                <input type="text" maxlength="1" class="otp-box w-11 h-14 sm:w-12 sm:h-16 text-center font-bold text-2xl rounded-2xl border border-gray-200 dark:border-gray-700 bg-gray-50 dark:bg-gray-800/50 text-gray-900 dark:text-white shadow-inner focus:border-pakistan-green dark:focus:border-green-400 focus:bg-white dark:focus:bg-gray-900 focus:ring-4 focus:ring-green-100 dark:focus:ring-green-900/20 outline-none transition-all" />
               </div>
-              <div class="flex flex-col items-center gap-1">
+              
+              <div class="flex flex-col items-center gap-1 mt-2">
                 <span
                   id="otp-sending-text"
                   class="hidden text-[10px] text-gray-500 dark:text-gray-500"
                   >Sending verification code...</span
                 >
                 <button
+
                   id="btn-otp-resend"
                   type="button"
                   onclick="sendVerificationCode()"
@@ -2200,6 +2239,25 @@
 
     <!-- MAIN JAVASCRIPT LOGIC -->
     <script>
+      function toggleMobileMenu() {
+        const menu = document.getElementById('mobile-menu');
+        const icon = document.querySelector('#mobile-menu-btn i');
+        
+        if (menu.classList.contains('hidden')) {
+            menu.classList.remove('hidden');
+            if(icon) {
+                icon.classList.remove('fa-bars');
+                icon.classList.add('fa-xmark');
+            }
+        } else {
+            menu.classList.add('hidden');
+            if(icon) {
+                icon.classList.remove('fa-xmark');
+                icon.classList.add('fa-bars');
+            }
+        }
+      }
+
       // --- State Persist/Restore Helper Prototypes ---
       function saveState() {
         if (typeof state !== "undefined") {
@@ -2840,13 +2898,14 @@
               if (typeof updateApiStatus === "function")
                 updateApiStatus("success", "Verified");
 
-              document
-                .getElementById("input-otp")
-                .classList.add(
+              const boxes = document.querySelectorAll(".otp-box");
+              boxes.forEach(box => {
+                box.classList.add(
                   "border-green-500",
                   "bg-green-50",
                   "dark:bg-green-900/20",
                 );
+              });
 
               if (btnNextText) btnNextText.innerText = "Continue";
               btnNext.disabled = false;
@@ -3039,8 +3098,8 @@
           if (freeUi) freeUi.classList.add("hidden");
           if (nonFree) nonFree.classList.remove("hidden");
 
-          let feeStr = "PKR 2,499";
-          if (state.plan === "basic") feeStr = "PKR 2,499";
+          let feeStr = "PKR 2,500";
+          if (state.plan === "basic") feeStr = "PKR 2,500";
           else if (state.plan === "standard") feeStr = "PKR 6,999";
           else if (state.plan === "professional_pkg") feeStr = "PKR 14,999";
           else if (state.plan === "entrepreneur") feeStr = "PKR 49,999";
@@ -3420,8 +3479,69 @@
       }
 
       // Check for payment status in URL on load (FastPay temporarily removed)
+      function setupOTPBoxes() {
+        const otpContainer = document.getElementById("otp-boxes");
+        if (!otpContainer) return;
+        const boxes = otpContainer.querySelectorAll(".otp-box");
+        const hiddenInput = document.getElementById("input-otp");
+
+        boxes.forEach((box, index) => {
+          box.addEventListener("input", (e) => {
+            const val = e.target.value.replace(/\D/g, "");
+            e.target.value = val;
+            
+            if (val && index < boxes.length - 1) {
+              boxes[index + 1].focus();
+            }
+            updateHiddenOTP();
+          });
+          
+          box.addEventListener("keydown", (e) => {
+            if (e.key === "Backspace") {
+              if (!e.target.value && index > 0) {
+                boxes[index - 1].focus();
+                boxes[index - 1].value = "";
+                updateHiddenOTP();
+                e.preventDefault();
+              }
+            } else if (e.key === "ArrowLeft" && index > 0) {
+              boxes[index - 1].focus();
+            } else if (e.key === "ArrowRight" && index < boxes.length - 1) {
+              boxes[index + 1].focus();
+            }
+          });
+          
+          box.addEventListener("paste", (e) => {
+            e.preventDefault();
+            const pasteData = e.clipboardData.getData("text").replace(/\D/g, "").slice(0, 6);
+            if (!pasteData) return;
+            
+            pasteData.split("").forEach((char, i) => {
+              if (i < boxes.length) {
+                boxes[i].value = char;
+              }
+            });
+            const focusIndex = Math.min(pasteData.length, boxes.length - 1);
+            boxes[focusIndex].focus();
+            updateHiddenOTP();
+          });
+        });
+
+        function updateHiddenOTP() {
+          let otpVals = "";
+          boxes.forEach((b) => {
+            otpVals += b.value;
+          });
+          if (hiddenInput) {
+            hiddenInput.value = otpVals;
+            validateStep3Code();
+          }
+        }
+      }
+
       window.addEventListener("DOMContentLoaded", () => {
         // FastPay logic removed
+        setupOTPBoxes();
       });
 
       // Expose functions to window for HTML event handlers
