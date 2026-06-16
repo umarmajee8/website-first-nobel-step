@@ -204,24 +204,25 @@
   <body
     class="min-h-screen flex flex-col bg-white dark:bg-gray-900 text-gray-900 dark:text-white transition-colors duration-300 selection:bg-green-100 selection:text-pakistan-green"
   >
-    <!-- Announcement Banner -->
-    <div class="bg-gradient-to-r from-pakistan-green to-green-900 text-white px-4 py-2.5 text-center relative overflow-hidden flex items-center justify-center shadow-md border-b border-green-900/30 z-[60]">
-      <div class="absolute inset-0 bg-[url('https://www.transparenttextures.com/patterns/carbon-fibre.png')] opacity-10"></div>
-      <div class="absolute top-0 left-0 w-full h-[1px] bg-white/20"></div>
-      <span class="relative z-10 flex flex-col sm:flex-row items-center gap-2 sm:gap-3">
-        <span class="flex items-center gap-1.5 font-black uppercase tracking-widest text-[9px] sm:text-[10px] bg-green-950/60 shadow-inner px-2.5 py-1 rounded-md animate-[pulse_2s_ease-in-out_infinite] border border-green-400/30">
-          <i class="fa-solid fa-bolt text-yellow-300"></i> New
-        </span>
-        <span class="font-medium text-[11px] sm:text-xs drop-shadow-sm tracking-wide">
-          Now offering <strong class="font-black text-yellow-300 tracking-wider">E-INTERNSHIPS!</strong> 100% online projects with official Noble certifications.
-        </span>
-      </span>
-    </div>
-
     <!-- HEADER -->
     <header
-      class="sticky top-0 z-50 bg-white/80 dark:bg-gray-900/80 backdrop-blur-md border-b border-gray-100 dark:border-gray-800 transition-colors duration-300"
+      class="relative sticky top-0 z-50 bg-white/80 dark:bg-gray-900/80 backdrop-blur-md border-b border-gray-100 dark:border-gray-800 transition-colors duration-300"
     >
+      <!-- Small Announcement Banner -->
+      <div 
+        onclick="openDirectPayment('e_internship')" 
+        class="bg-gradient-to-r from-pakistan-green to-emerald-900 border-b border-green-800 text-white px-4 py-2.5 text-center flex flex-col sm:flex-row items-center justify-center sm:gap-4 cursor-pointer hover:brightness-110 shadow-sm transition-all w-full relative group"
+      >
+        <div class="absolute inset-0 bg-white/5 opacity-0 group-hover:opacity-100 transition-opacity"></div>
+        <span class="font-medium tracking-wide flex items-center text-[10px] sm:text-xs z-10">
+          <i class="fa-solid fa-bolt text-yellow-400 mr-2 animate-pulse"></i>
+          <span>Exciting News: </span><strong class="font-black text-yellow-300 ml-1.5 uppercase tracking-widest drop-shadow-md">E-Internships Now Available!</strong>
+        </span>
+        <div class="z-10 mt-1 sm:mt-0 bg-yellow-400/20 text-yellow-300 border border-yellow-400/40 px-3 py-0.5 rounded-full text-[9px] font-bold uppercase group-hover:bg-yellow-400 group-hover:text-amber-900 transition-colors shadow-sm flex items-center gap-1">
+          Apply & Pay Now <i class="fa-solid fa-arrow-right text-[8px]"></i>
+        </div>
+      </div>
+
       <div
         class="max-w-7xl mx-auto px-4 h-16 flex items-center justify-between"
       >
@@ -247,11 +248,6 @@
 
         <div class="flex items-center gap-3 sm:gap-4">
           <!-- Apply Button -->
-          <div class="hidden lg:flex items-center mr-1">
-            <span class="text-[9px] font-black uppercase tracking-widest text-pakistan-green dark:text-green-400 bg-green-50 dark:bg-green-900/30 px-2.5 py-1 rounded-md border border-green-200 dark:border-green-800 animate-pulse flex items-center gap-1.5 shadow-sm">
-              <i class="fa-solid fa-certificate text-orange-500"></i> Now Introducing E-Internship Program
-            </span>
-          </div>
           <button
             onclick="openForm()"
             class="group relative inline-flex items-center justify-center overflow-hidden bg-pakistan-green text-white px-5 py-2 rounded-lg font-lemon text-[10px] tracking-widest hover:bg-green-800 transition-all shadow-[0_10px_20px_-5px_rgba(1,65,28,0.4)] active:scale-95 text-center"
@@ -312,7 +308,7 @@
               </p>
 
               <div
-                class="flex flex-col sm:flex-row gap-5 items-stretch justify-center lg:justify-start"
+                class="flex flex-col sm:flex-row gap-5 items-stretch justify-center lg:justify-start flex-wrap"
               >
                 <button
                   onclick="openForm()"
@@ -855,10 +851,9 @@
                       class="fa-solid fa-circle text-green-500 dark:text-green-400 text-[6px] mt-1.5"
                     ></i>
                     <span
-                      class="text-gray-700 dark:text-gray-300 font-medium text-xs leading-relaxed"
-                      ><strong>Basic Package</strong> <span class="text-gray-400 line-through text-[10px] ml-1">PKR 5,000</span> <strong class="text-green-600 dark:text-green-400 ml-1 text-sm">(PKR 2,500)</strong>
-                      <span class="inline-block ml-1 px-2 py-0.5 bg-red-100 text-red-600 rounded-md text-[9px] tracking-widest uppercase font-extrabold animate-pulse shadow-sm border border-red-200">Sale 50% Off</span>
-                      <br/>- Smart career foundation & expert guidance.</span
+                      class="text-gray-700 dark:text-gray-300 font-medium text-xs"
+                      ><strong>Basic Package</strong> (PKR 2,500) - Smart career foundation
+                      & expert guidance.</span
                     >
                   </li>
                   <li class="flex items-start gap-2.5 text-sm">
@@ -902,7 +897,7 @@
                 Growth
               </h3>
               <div
-                class="relative bg-white dark:bg-gray-900 flex flex-col p-8 rounded-[2.5rem] border border-pakistan-green dark:border-green-600 ring-4 ring-green-50 dark:ring-green-900/20 shadow-[0_25px_60px_-15px_rgba(1,65,28,0.3)] flex-grow transition-all duration-500"
+                class="relative bg-white dark:bg-gray-900 flex flex-col p-8 rounded-[2.5rem] border border-pakistan-green dark:border-green-600 ring-4 ring-green-50 dark:ring-green-900/20 shadow-[0_25px_60px_-15px_rgba(1,65,28,0.3)] flex-grow transition-all duration-500 group"
               >
                 <div
                   class="absolute top-0 left-1/2 -translate-x-1/2 -translate-y-1/2 bg-pakistan-green text-white text-[9px] font-lemon px-5 py-1.5 rounded-full tracking-widest shadow-lg whitespace-nowrap"
@@ -911,7 +906,7 @@
                 </div>
                 <div class="mb-6 text-center sm:text-left">
                   <div
-                    class="w-12 h-12 rounded-xl flex items-center justify-center mb-4 bg-pakistan-green text-white"
+                    class="w-12 h-12 rounded-xl flex items-center justify-center mb-4 bg-green-50 dark:bg-green-900/30 text-pakistan-green dark:text-green-400 group-hover:bg-pakistan-green group-hover:text-white transition-colors"
                   >
                     <i class="fa-solid fa-rocket text-xl"></i>
                   </div>
@@ -1468,9 +1463,13 @@
                   <h4 class="font-lemon text-[10px] dark:text-white">
                     Entrepreneur
                   </h4>
-                  <p class="text-[10px] text-green-600 font-bold mt-0.5">
-                    PKR 49,999
-                  </p>
+                  <div class="mt-1 flex flex-col gap-1 z-10 w-full relative">
+                    <span class="flex items-center gap-2">
+                      <span class="bg-red-100 text-red-600 px-1.5 py-0.5 rounded text-[8px] font-black uppercase tracking-wider animate-pulse border border-red-200 shadow-sm">Save 20,000</span>
+                      <span class="line-through text-gray-400 dark:text-gray-500 font-medium text-[9px]">PKR 70,000</span>
+                    </span>
+                    <span class="text-[14px] text-green-700 dark:text-green-400 font-black tracking-tight drop-shadow-[0_2px_2px_rgba(0,0,0,0.05)]">PKR 49,999</span>
+                  </div>
                 </div>
               </div>
             </div>
@@ -1692,14 +1691,8 @@
                 <div
                   class="bg-[#0A4D5C] py-4 flex items-center justify-center gap-2 border-b border-[#083E4A]"
                 >
-                  <img
-                    src="/src/assets/images/faysal_bank_logo_1779996366819.png"
-                    alt="Faysal Bank Mini Logo"
-                    class="w-8 h-8 object-contain"
-                    referrerpolicy="no-referrer"
-                  />
                   <span
-                    class="text-white font-sans font-bold tracking-tight text-xl mb-0.5"
+                    class="text-white font-sans font-bold tracking-tight text-5xl mb-0.5"
                     >faysalbank</span
                   >
                 </div>
@@ -1707,12 +1700,12 @@
                 <div class="p-6 space-y-5 flex flex-col items-center">
                   <!-- Logo Box / QR substitute -->
                   <div
-                    class="bg-white p-4 rounded-3xl shadow-sm border border-gray-100 dark:border-gray-800 w-full flex-shrink-0 flex items-center justify-center"
+                    class="bg-white p-4 rounded-3xl shadow-sm border border-gray-100 dark:border-gray-800 w-full flex-shrink-0 flex items-center justify-center min-h-[16rem]"
                   >
                     <img
                       src="/src/assets/images/faysal_bank_logo_1779996366819.png"
                       alt="Faysal Bank Logo"
-                      class="w-48 h-48 md:w-56 md:h-56 object-contain"
+                      class="w-72 h-72 md:w-96 md:h-96 object-contain drop-shadow-md"
                     />
                   </div>
 
@@ -2241,6 +2234,19 @@
       }
 
       // --- Modal Logic ---
+      async function openDirectPayment(planName) {
+        state.isOpen = true;
+        state.plan = planName;
+        state.step = 4;
+        
+        modalOverlay.classList.remove("hidden");
+        setTimeout(() => {
+          modalContent.classList.remove("scale-95", "opacity-0");
+          modalContent.classList.add("scale-100", "opacity-100");
+          updateUI();
+        }, 10);
+      }
+
       async function openForm(planId) {
         state.isOpen = true;
         state.otpSentCount = 0;
@@ -2480,7 +2486,7 @@
           entrepreneur: [
             "Business Plan Evaluation",
             "Strategic feedback from leaders",
-            "Get a chance to turn your idea into funded reality",
+            "<span class='inline-flex items-center gap-1.5 bg-yellow-100 dark:bg-yellow-900/30 border border-yellow-300 dark:border-yellow-700/50 text-yellow-900 dark:text-yellow-300 font-bold px-2.5 py-1 -ml-1 mt-0.5 mb-0.5 rounded-md shadow-sm text-xs'><i class='fa-solid fa-star text-yellow-500 animate-[pulse_2s_ease-in-out_infinite]'></i>Get a chance to turn your idea into funded reality</span>",
             "Powerful Business Networking",
             "Exclusive direct access to CEOs, founders, CXOs, and industry leaders",
             "Get a verified badge certificate on your business idea from First Noble Step",
@@ -2755,7 +2761,6 @@
           }
         } else if (state.step < 5) {
           state.step++;
-          if (state.step === 4) state.step = 5;
           updateUI();
         } else {
           submitForm();
@@ -2764,11 +2769,6 @@
 
       function prevStep() {
         hideError();
-        if (state.step === 5) {
-          state.step = 3;
-          updateUI();
-          return;
-        }
         if (state.step > 1) {
           state.step--;
           updateUI();
@@ -2924,9 +2924,10 @@
           if (state.plan === "basic") feeStr = "PKR 2,500";
           else if (state.plan === "standard") feeStr = "PKR 6,999";
           else if (state.plan === "professional_pkg") feeStr = "PKR 14,999";
-          else if (state.plan === "entrepreneur") feeStr = "PKR 49,999";
+          else if (state.plan === "entrepreneur") feeStr = "<span class='line-through text-gray-400 mr-2 text-sm'>PKR 70,000</span>PKR 49,999";
+          else if (state.plan === "e_internship") feeStr = "PKR 3,000";
 
-          if (amountDisplay) amountDisplay.innerText = feeStr;
+          if (amountDisplay) amountDisplay.innerHTML = feeStr;
           
           state.paymentMethod = "faysalbank";
         }
