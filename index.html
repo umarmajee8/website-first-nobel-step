@@ -1309,6 +1309,12 @@
             </div>
             <div class="flex flex-col items-center relative">
               <div
+                id="step-4-indicator"
+                class="w-4 h-4 rounded-full transition-all duration-500 ease-out border-2 bg-white dark:bg-gray-900 border-gray-200 dark:border-gray-700 text-gray-400 dark:text-gray-500 flex items-center justify-center text-[9px] font-bold"
+              ></div>
+            </div>
+            <div class="flex flex-col items-center relative">
+              <div
                 id="step-5-indicator"
                 class="w-4 h-4 rounded-full transition-all duration-500 ease-out border-2 bg-white dark:bg-gray-900 border-gray-200 dark:border-gray-700 text-gray-400 dark:text-gray-500 flex items-center justify-center text-[9px] font-bold"
               ></div>
@@ -1420,13 +1426,13 @@
                       Standard Package
                     </h4>
                     <p
-                      class="text-blue-600 font-bold mt-1 text-sm leading-none flex items-end gap-1.5"
+                      class="text-blue-600 font-bold mt-1 flex items-end gap-1.5 flex-wrap"
                     >
                       <span
                         class="text-xs text-gray-400 line-through font-semibold"
                         >PKR 14,000</span
                       >
-                      <span>PKR 6,999</span>
+                      <span class="text-sm leading-none">PKR 6,999</span>
                     </p>
                   </div>
                 </div>
@@ -1457,13 +1463,13 @@
                       Premium Package
                     </h4>
                     <p
-                      class="text-[#A67C00] dark:text-[#D4AF37] font-bold mt-1 tracking-wide text-sm leading-none flex items-end gap-1.5"
+                      class="text-[#A67C00] dark:text-[#D4AF37] font-bold mt-1 tracking-wide flex items-end gap-1.5 flex-wrap"
                     >
                       <span
                         class="text-xs text-gray-400 line-through font-semibold filter grayscale opacity-60"
                         >PKR 30,000</span
                       >
-                      <span>PKR 14,999</span>
+                      <span class="text-sm leading-none">PKR 14,999</span>
                     </p>
                   </div>
                 </div>
@@ -2678,8 +2684,7 @@
           ],
           e_internship: [
             "100 percent online internship from home",
-            "Certificate will be given after completion",
-            "Physical certificate can be delivered to your home",
+            '<div class="flex flex-col gap-1.5 w-full box-border bg-gradient-to-br from-green-50 to-emerald-50/70 dark:from-green-950/20 dark:to-emerald-950/10 border-2 border-green-200/80 dark:border-green-800/30 rounded-2xl shadow-[0_4px_12px_rgba(16,185,129,0.06)] relative overflow-hidden p-3.5 mt-2 mb-2"><div class="absolute -right-2 -top-2 opacity-10 pointer-events-none text-green-600 dark:text-green-400"><i class="fa-solid fa-graduation-cap text-5xl"></i></div><div class="bg-gradient-to-r from-green-600 to-emerald-700 text-white px-2 py-0.5 rounded text-[8px] font-black uppercase tracking-widest shadow-sm inline-flex items-center gap-1 max-w-max z-10 leading-none animate-[pulse_3s_ease-in-out_infinite]"><i class="fa-solid fa-ribbon text-[8px]"></i> Premium Certification</div><strong class="text-green-950 dark:text-green-300 text-xs font-bold z-10 relative pr-2 leading-tight">Official Verification Certificate</strong><p class="text-[10px] text-green-800 dark:text-green-400/90 z-10 leading-relaxed font-semibold max-w-[95%]">Get an official, verifiable Certificate upon completion of the internship. Best of all: Get your physical printed certificate delivered directly to your home address!</p></div>',
             "No fixed timing required, you can work anytime",
             "No need to visit any office",
             "Students will get online projects to complete",
@@ -2709,10 +2714,12 @@
                     : "Entrepreneur Package Details";
           detailsTitle.innerText = title;
           detailsList.innerHTML = packageDetails[planId]
-            .map(
-              (detail) =>
-                `<li class="flex items-start gap-2.5"><div class="shrink-0 w-4 h-4 bg-green-50 dark:bg-green-900/20 rounded-full flex items-center justify-center mt-0.5"><i class="fa-solid fa-check text-pakistan-green dark:text-green-400 text-[8px]"></i></div> <div class="leading-relaxed text-xs flex-1">${detail}</div></li>`,
-            )
+            .map((detail) => {
+              if (detail.trim().startsWith("<div")) {
+                return `<li class="w-full list-none">${detail}</li>`;
+              }
+              return `<li class="flex items-start gap-2.5"><div class="shrink-0 w-4 h-4 bg-green-50 dark:bg-green-900/20 rounded-full flex items-center justify-center mt-0.5"><i class="fa-solid fa-check text-pakistan-green dark:text-green-400 text-[8px]"></i></div> <div class="leading-relaxed text-xs flex-1">${detail}</div></li>`;
+            })
             .join("");
 
           // Move the container inside the selected plan card!
@@ -2930,7 +2937,7 @@
               if (btnNextText) btnNextText.innerText = "Continue";
               btnNext.disabled = false;
 
-              state.step = 5;
+              state.step = 4;
               updateUI();
             } else {
               throw new Error(
