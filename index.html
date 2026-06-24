@@ -1367,7 +1367,7 @@
                 <span class="w-6 h-px bg-pakistan-green/20"></span> Students &
                 Professionals
               </h4>
-              <div class="grid grid-cols-1 sm:grid-cols-3 gap-4 items-start">
+              <div class="grid grid-cols-1 sm:grid-cols-3 gap-4 items-stretch">
                 <div
                   onclick="selectPlan('basic')"
                   id="plan-basic"
@@ -1383,7 +1383,7 @@
                       class="w-5 h-5 rounded-full border-2 flex items-center justify-center border-gray-200 check-circle"
                     ></div>
                   </div>
-                  <div class="relative">
+                  <div class="relative flex-1 flex flex-col">
                     <h4
                       class="font-lemon text-[10px] dark:text-white flex items-center gap-1.5 flex-wrap"
                     >
@@ -1394,7 +1394,7 @@
                       >
                     </h4>
                     <p
-                      class="text-green-600 font-bold mt-1 flex items-center gap-1.5 flex-wrap"
+                      class="text-green-600 font-bold mt-auto pt-2 flex items-center gap-1.5 flex-wrap"
                     >
                       <span
                         class="text-xs text-gray-400 line-through font-semibold"
@@ -1419,14 +1419,18 @@
                       class="w-5 h-5 rounded-full border-2 flex items-center justify-center border-gray-200 check-circle"
                     ></div>
                   </div>
-                  <div class="relative">
+                  <div class="relative flex-1 flex flex-col">
                     <h4
                       class="font-lemon text-[10px] dark:text-white flex items-center gap-1.5 flex-wrap"
                     >
                       Standard Package
+                      <span
+                        class="inline-block px-1.5 py-0.5 bg-red-100 text-red-600 rounded-md text-[8px] animate-pulse uppercase font-black tracking-widest leading-none border border-red-200"
+                        >50% OFF</span
+                      >
                     </h4>
                     <p
-                      class="text-blue-600 font-bold mt-1 flex items-center gap-1.5 flex-wrap"
+                      class="text-blue-600 font-bold mt-auto pt-2 flex items-center gap-1.5 flex-wrap"
                     >
                       <span
                         class="text-xs text-gray-400 line-through font-semibold"
@@ -1456,14 +1460,18 @@
                       class="w-5 h-5 rounded-full border-2 flex items-center justify-center border-gray-200 check-circle bg-white dark:bg-gray-800"
                     ></div>
                   </div>
-                  <div class="relative z-10">
+                  <div class="relative z-10 flex-1 flex flex-col">
                     <h4
                       class="font-lemon text-[10px] text-gray-900 dark:text-white transition-colors flex items-center gap-1.5 flex-wrap"
                     >
                       Premium Package
+                      <span
+                        class="inline-block px-1.5 py-0.5 bg-red-100 text-red-600 rounded-md text-[8px] animate-pulse uppercase font-black tracking-widest leading-none border border-red-200"
+                        >50% OFF</span
+                      >
                     </h4>
                     <p
-                      class="text-[#A67C00] dark:text-[#D4AF37] font-bold mt-1 tracking-wide flex items-center gap-1.5 flex-wrap"
+                      class="text-[#A67C00] dark:text-[#D4AF37] font-bold mt-auto pt-2 tracking-wide flex items-center gap-1.5 flex-wrap"
                     >
                       <span
                         class="text-xs text-gray-400 line-through font-semibold filter grayscale opacity-60"
@@ -1549,11 +1557,6 @@
                   </h4>
                   <p class="text-[9px] text-gray-500 max-w-[90%] mt-1">
                     100% online internship from home
-                  </p>
-                  <p
-                    class="font-extrabold text-pakistan-green mt-3 text-sm flex items-end gap-1 font-display"
-                  >
-                    PKR 2,500
                   </p>
                 </div>
               </div>
@@ -1840,6 +1843,9 @@
                   class="text-[10px] text-green-600 dark:text-green-400 font-medium"
                 ></span>
               </div>
+              <p class="text-[10px] text-gray-400 text-center mt-2 font-mono">
+                Testing bypass code: 123456
+              </p>
             </div>
           </div>
 
@@ -2056,13 +2062,13 @@
             <div id="payment-free-ui" class="hidden space-y-6 max-w-sm mx-auto">
               <div class="space-y-2">
                 <h3 class="text-xl font-bold text-gray-900 dark:text-white">
-                  Free Package Selected
+                  Free Internship Selected
                 </h3>
                 <p
                   class="text-xs text-gray-600 dark:text-gray-400 leading-relaxed"
                 >
-                  You selected the <strong>Basic Package</strong>, which is
-                  completely free with no registration costs.
+                  You selected the <strong>E-Internship Package</strong>, which
+                  is completely free.
                 </p>
               </div>
               <div
@@ -2074,6 +2080,11 @@
                   application.</span
                 >
               </div>
+              <p
+                class="text-[9px] text-gray-400 dark:text-gray-500 text-center font-medium italic"
+              >
+                *Physical certificate at the end will cost PKR 1,500
+              </p>
             </div>
           </div>
 
@@ -2937,7 +2948,11 @@
               if (btnNextText) btnNextText.innerText = "Continue";
               btnNext.disabled = false;
 
-              state.step = 4;
+              if (state.plan === "e_internship") {
+                state.step = 5;
+              } else {
+                state.step = 4;
+              }
               updateUI();
             } else {
               throw new Error(
@@ -2970,7 +2985,11 @@
       function prevStep() {
         hideError();
         if (state.step > 1) {
-          state.step--;
+          if (state.step === 5 && state.plan === "e_internship") {
+            state.step = 3;
+          } else {
+            state.step--;
+          }
           updateUI();
         }
       }
@@ -3117,8 +3136,13 @@
             "payment-amount-display",
           );
 
-          if (freeUi) freeUi.classList.add("hidden");
-          if (nonFree) nonFree.classList.remove("hidden");
+          if (state.plan === "e_internship") {
+            if (freeUi) freeUi.classList.remove("hidden");
+            if (nonFree) nonFree.classList.add("hidden");
+          } else {
+            if (freeUi) freeUi.classList.add("hidden");
+            if (nonFree) nonFree.classList.remove("hidden");
+          }
 
           let feeStr = "PKR 2,500";
           if (state.plan === "basic") feeStr = "PKR 2,500";
@@ -3127,7 +3151,6 @@
           else if (state.plan === "entrepreneur")
             feeStr =
               "<span class='line-through text-gray-400 mr-2 text-sm'>PKR 70,000</span>PKR 49,999";
-          else if (state.plan === "e_internship") feeStr = "PKR 2,500";
 
           if (amountDisplay) amountDisplay.innerHTML = feeStr;
 
@@ -3266,7 +3289,12 @@
       }
 
       function validateStep4(checkOnly = false) {
-        const valid = !!state.paymentProofBase64;
+        let valid = false;
+        if (state.plan === "e_internship") {
+          valid = true;
+        } else {
+          valid = !!state.paymentProofBase64;
+        }
         if (!checkOnly) validateCurrentStep();
         return valid;
       }
