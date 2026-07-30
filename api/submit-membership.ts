@@ -2,9 +2,22 @@ import { google } from 'googleapis';
 import nodemailer from 'nodemailer';
 import crypto from 'crypto';
 
+function getSecret(): string {
+  return process.env.OTP_SECRET || 'fallback-dev-secret-change-in-production-min-32-chars';
+}
+
+function hashOtp(otp: string, email: string): string {
+  const secret = getSecret();
+  return crypto.createHash('sha256').update(otp + email + secret).digest('hex');
+}
+
+function sanitize(str: string, maxLen = 200): string {
+  if (!str) return '';
+  return String(str).replace(/[<>]/g, '').slice(0, maxLen).trim();
+}
+
 export default async function handler(req: any, res: any) {
-  // CORS Headers
-  res.setHeader('Access-Control-Allow-Origin', '*');
+  res.setHeader('Access-Control-Allow-Origin', process.env.ALLOWED_ORIGIN || '*');
   res.setHeader('Access-Control-Allow-Methods', 'POST, OPTIONS');
   res.setHeader('Access-Control-Allow-Headers', 'Content-Type');
 
@@ -12,88 +25,107 @@ export default async function handler(req: any, res: any) {
     return res.status(200).end();
   }
 
-  // Only allow POST requests
   if (req.method !== 'POST') {
     return res.status(405).json({ success: false, error: 'Method not allowed' });
   }
 
-  console.log('Received request to submit membership:', req.body);
   try {
     const formData = req.body;
-    const { fullName, cnic, email: rawEmail, whatsapp, planId, institute, degree, businessName, industry, experience, targetCountry, paymentMethod, otp, otpHash } = formData;
+    const { fullName, email: rawEmail, whatsapp, planId, address, university, paymentMethod, paymentProof, otp, otpHash } = formData;
 
     const email = rawEmail ? rawEmail.toLowerCase().trim() : '';
 
-    // Verify OTP if it's not a basic plan and otpHash is provided (e.g. for custom/legacy paths)
-    if (planId !== 'basic' && otpHash) {
-      const secret = process.env.GOOGLE_PRIVATE_KEY || 'fallback_secret';
-      const expectedHash = crypto.createHash('sha256').update(otp + email + secret).digest('hex');
-      if (expectedHash !== otpHash) {
-        return res.status(400).json({ success: false, error: 'Invalid verification code. Please try again.' });
+    // Validation
+    if (!fullName || String(fullName).trim().length < 3) {
+      return res.status(400).json({ success: false, error: 'Full name must be at least 3 characters' });
+    }
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    if (!email || !emailRegex.test(email)) {
+      return res.status(400).json({ success: false, error: 'Valid email is required' });
+    }
+    const allowedPlans = ['basic', 'standard', 'professional_pkg', 'entrepreneur', 'e_internship'];
+    if (!planId || !allowedPlans.includes(planId)) {
+      return res.status(400).json({ success: false, error: 'Invalid plan selected' });
+    }
+
+    if (planId !== 'e_internship') {
+      const cleanWhatsapp = (whatsapp || '').replace(/\D/g, '');
+      if (cleanWhatsapp.length < 10 || cleanWhatsapp.length > 13) {
+        return res.status(400).json({ success: false, error: 'WhatsApp must be 10-13 digits' });
       }
     }
 
-    // Check for required environment variables
+    if (planId === 'e_internship' && (!address || String(address).trim().length < 5)) {
+      return res.status(400).json({ success: false, error: 'Postal address required for internship' });
+    }
+
+    if (planId !== 'e_internship' && !paymentProof) {
+      return res.status(400).json({ success: false, error: 'Payment proof required' });
+    }
+
+    if (paymentProof && paymentProof.length > 2 * 1024 * 1024) {
+      return res.status(400).json({ success: false, error: 'Proof file too large (max 1MB)' });
+    }
+
+    // OTP verification - verify hash
+    if (!otp || !otpHash) {
+      return res.status(400).json({ success: false, error: 'OTP verification required' });
+    }
+    const expectedHash = hashOtp(otp, email);
+    if (otpHash !== expectedHash) {
+      return res.status(400).json({ success: false, error: 'Invalid OTP. Please verify again.' });
+    }
+
+    // Google Sheets
     if (!process.env.GOOGLE_SHEET_ID || !process.env.GOOGLE_SERVICE_ACCOUNT_EMAIL || !process.env.GOOGLE_PRIVATE_KEY) {
-      return res.status(500).json({ 
-        success: false, 
-        error: 'Server configuration error: Missing Google Sheets credentials in Environment Variables. Please set GOOGLE_SHEET_ID, GOOGLE_SERVICE_ACCOUNT_EMAIL, and GOOGLE_PRIVATE_KEY in your Vercel Dashboard.' 
-      });
+      console.warn('Sheets env missing - skipping sheet write');
+    } else {
+      try {
+        let privateKey = process.env.GOOGLE_PRIVATE_KEY || '';
+        if (privateKey.startsWith('"') && privateKey.endsWith('"')) {
+          privateKey = privateKey.slice(1, -1);
+        }
+        privateKey = privateKey.replace(/\\n/g, '\n');
+
+        const auth = new google.auth.GoogleAuth({
+          credentials: {
+            client_email: process.env.GOOGLE_SERVICE_ACCOUNT_EMAIL,
+            private_key: privateKey,
+          },
+          scopes: ['https://www.googleapis.com/auth/spreadsheets'],
+        });
+
+        const sheets = google.sheets({ version: 'v4', auth });
+        const formattedDate = new Date().toLocaleString('en-PK', {
+          timeZone: 'Asia/Karachi',
+          dateStyle: 'short',
+          timeStyle: 'medium'
+        });
+
+        const values = [[
+          formattedDate,
+          sanitize(fullName, 100),
+          email,
+          sanitize(whatsapp, 20),
+          sanitize(planId, 30),
+          sanitize(paymentMethod || 'faysalbank', 30),
+          sanitize(address, 300),
+          sanitize(university, 100),
+        ]];
+
+        await sheets.spreadsheets.values.append({
+          spreadsheetId: process.env.GOOGLE_SHEET_ID,
+          range: 'Sheet1!A:H',
+          valueInputOption: 'USER_ENTERED',
+          requestBody: { values },
+        });
+        console.log('Sheets append success');
+      } catch (sheetErr) {
+        console.error('Sheets error:', sheetErr);
+      }
     }
 
-    let privateKey = process.env.GOOGLE_PRIVATE_KEY || '';
-    // Remove surrounding quotes if user accidentally pasted them
-    if (privateKey.startsWith('"') && privateKey.endsWith('"')) {
-      privateKey = privateKey.slice(1, -1);
-    }
-    // Handle literal \n strings
-    privateKey = privateKey.replace(/\\n/g, '\n');
-
-    const auth = new google.auth.GoogleAuth({
-      credentials: {
-        client_email: process.env.GOOGLE_SERVICE_ACCOUNT_EMAIL,
-        private_key: privateKey,
-      },
-      scopes: ['https://www.googleapis.com/auth/spreadsheets'],
-    });
-
-    const sheets = google.sheets({ version: 'v4', auth });
-
-    // Format date to a readable format (e.g., DD/MM/YYYY, HH:MM:SS AM/PM in Pakistan Time)
-    const formattedDate = new Date().toLocaleString('en-PK', { 
-      timeZone: 'Asia/Karachi',
-      dateStyle: 'short',
-      timeStyle: 'medium'
-    });
-
-    // Ensure the order matches the expected columns in the Google Sheet
-    const values = [[
-      formattedDate || '',
-      fullName || '',
-      cnic || '',
-      email || '',
-      whatsapp || '',
-      planId || '',
-      paymentMethod || '',
-      institute || '',
-      degree || '',
-      businessName || '',
-      industry || '',
-      experience || '',
-      targetCountry || ''
-    ]];
-
-    await sheets.spreadsheets.values.append({
-      spreadsheetId: process.env.GOOGLE_SHEET_ID,
-      range: 'Sheet1!A:M',
-      valueInputOption: 'USER_ENTERED',
-      requestBody: {
-        values: values,
-      },
-    });
-    console.log('Data successfully appended to Google Sheets.');
-
-    // Send welcome email
+    // Email
     if (email && process.env.SMTP_USER && process.env.SMTP_PASS) {
       try {
         const transporter = nodemailer.createTransport({
@@ -104,90 +136,68 @@ export default async function handler(req: any, res: any) {
           },
         });
 
-        const mailOptions = {
+        const safeName = sanitize(fullName, 100);
+        let attachments: { filename: string; content: Buffer }[] = [];
+        
+        if (paymentProof) {
+          try {
+            const base64Data = paymentProof.replace(/^data:image\/\w+;base64,/, "");
+            const buffer = Buffer.from(base64Data, 'base64');
+            if (buffer.length <= 2 * 1024 * 1024) {
+              attachments.push({ filename: 'Payment_Proof.png', content: buffer });
+            }
+          } catch (e) {
+            console.error('Proof parse error', e);
+          }
+        }
+
+        // User welcome email
+        const userMail = {
           from: `"First Noble Step" <${process.env.SMTP_USER}>`,
           to: email,
           subject: 'Welcome to First Noble Step - Membership Application Received',
-          text: `Dear ${fullName},\n\nThank you for submitting your membership application to First Noble Step (Pvt.) Ltd.\n\nWe have successfully received your details and our team will review them shortly.\n\nBest regards,\nFirst Noble Step Team\nsupport@firstnoblestep.com`,
           html: `
-            <div style="background-color: #f0f4f9; padding: 40px 20px; font-family: 'Google Sans', Roboto, Arial, sans-serif; margin: 0;">
-              <div style="background-color: #ffffff; max-width: 500px; margin: 0 auto; border: 1px solid #dadce0; border-radius: 8px; padding: 40px 20px; text-align: center;">
-                
-                <div style="margin-bottom: 16px;">
-                  <h1 style="margin: 0; font-size: 24px; font-weight: 600; color: #01411C; letter-spacing: -0.5px;">First Noble Step</h1>
-                </div>
-                
-                <h2 style="font-size: 24px; font-weight: 400; color: #1f1f1f; margin: 0 0 16px 0;">Welcome to First Noble Step!</h2>
-                
-                <div style="display: inline-block; margin-bottom: 24px; color: #01411C; font-size: 14px;">
-                  <span style="background-color: #e6f0eb; border-radius: 50%; width: 20px; height: 20px; display: inline-block; text-align: center; line-height: 20px; margin-right: 8px; font-size: 12px; vertical-align: middle;">👤</span>
-                  <span style="vertical-align: middle;">${email}</span>
-                </div>
-                
-                <hr style="border: 0; border-top: 1px solid #e3e3e3; margin: 0 20px 24px 20px;"/>
-                
-                <p style="font-size: 16px; color: #444746; line-height: 1.5; margin: 0 0 32px 0; padding: 0 20px;">
-                  Dear <strong style="color: #01411C;">${fullName}</strong>,<br><br>
-                  Thank you for submitting your membership application to First Noble Step (Pvt.) Ltd.<br><br>
-                  We have successfully received your details and our team will review them shortly.
-                </p>
-                
-                <a href="https://firstnoblestep.com" style="display: inline-block; background-color: #01411C; color: #ffffff; padding: 10px 24px; text-decoration: none; border-radius: 20px; font-weight: 500; font-size: 14px; margin-bottom: 32px;">Visit Website</a>
-                
-                <p style="font-size: 14px; color: #444746; margin: 0 0 25px 0;">
-                  You can also contact support at<br>
-                  <a href="mailto:support@firstnoblestep.com" style="color: #01411C; text-decoration: none;">support@firstnoblestep.com</a>
-                </p>
-                
-                <div style="margin-top: 35px; text-align: center; border-top: 1px solid #e3e3e3; padding-top: 30px;">
-                  <table role="presentation" cellspacing="0" cellpadding="0" border="0" align="center" style="margin: 0 auto 18px auto;">
-                    <tr>
-                      <td style="padding: 0 15px; vertical-align: middle;">
-                        <a href="https://www.linkedin.com/company/firstnoblestep" target="_blank" style="text-decoration: none;">
-                          <img src="https://img.icons8.com/ios-filled/100/7d7d7d/linkedin.png" width="30" height="30" alt="LinkedIn" style="display: block; border: 0;" />
-                        </a>
-                      </td>
-                      <td style="padding: 0 15px; vertical-align: middle;">
-                        <a href="https://www.youtube.com/@firstnoblestep" target="_blank" style="text-decoration: none;">
-                          <img src="https://img.icons8.com/ios-filled/100/7d7d7d/youtube-play.png" width="34" height="34" alt="YouTube" style="display: block; border: 0;" />
-                        </a>
-                      </td>
-                      <td style="padding: 0 15px; vertical-align: middle;">
-                        <a href="https://x.com/FirstNobleStep" target="_blank" style="text-decoration: none;">
-                          <img src="https://img.icons8.com/ios-filled/100/7d7d7d/twitterx.png" width="28" height="28" alt="X" style="display: block; border: 0;" />
-                        </a>
-                      </td>
-                    </tr>
-                  </table>
-                  
-                  <p style="font-size: 15px; color: #1f1f1f; line-height: 1.5; margin: 0 0 12px 0; max-width: 440px; margin-left: auto; margin-right: auto; text-align: center; font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;">
-                    We're on <a href="https://www.linkedin.com/company/firstnoblestep" target="_blank" style="color: #1a73e8; text-decoration: underline; font-weight: 500;">LinkedIn</a>. Follow us for new business-focused content, including the latest videos, blogs, podcasts, and interactive experiences from the team.
-                  </p>
-                  <p style="font-size: 15px; margin: 0; text-align: center; font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;">
-                    <a href="https://x.com/FirstNobleStep" target="_blank" style="color: #1a73e8; text-decoration: underline; font-weight: 500;">Follow us on X for updates</a>.
-                  </p>
-                </div>
-                
-              </div>
-              
-              <div style="max-width: 500px; margin: 24px auto 0; text-align: center; font-size: 12px; color: #5f6368; line-height: 1.5; padding: 0 20px;">
-                <p style="margin: 0 0 8px 0;">You received this email to let you know about important updates to your First Noble Step application.</p>
-                <p style="margin: 0 0 16px 0;">&copy; ${new Date().getFullYear()} First Noble Step (Pvt.) Ltd.<br>129 CCA-3, Block-X, DHA Phase 7, Lahore</p>
-              </div>
+            <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto; padding: 20px; border: 1px solid #e5e7eb; border-radius: 8px;">
+              <h2 style="color: #01411C; border-bottom: 2px solid #01411C; padding-bottom: 10px;">Welcome to First Noble Step!</h2>
+              <p>Dear <strong>${safeName}</strong>,</p>
+              <p>Thank you for submitting your membership application.</p>
+              <p>Our team will verify your payment within 72 working hours.</p>
+              <p>Best regards,<br><strong>First Noble Step Team</strong><br>support@firstnoblestep.com</p>
             </div>
           `
         };
+        await transporter.sendMail(userMail);
 
-        await transporter.sendMail(mailOptions);
-        console.log(`Welcome email sent to ${email}`);
-      } catch (emailError: any) {
-        console.error('Error sending welcome email:', emailError);
+        // Admin email
+        const adminEmail = process.env.COMPANY_WHATSAPP_EMAIL || process.env.SMTP_USER;
+        if (adminEmail) {
+          const adminMail = {
+            from: `"First Noble Step System" <${process.env.SMTP_USER}>`,
+            to: adminEmail,
+            subject: `New Application - ${safeName} - ${planId}`,
+            html: `
+              <div style="font-family: Arial, sans-serif; padding: 20px; border: 1px solid #e5e7eb; border-radius: 8px;">
+                <h3 style="color: #01411C; border-bottom: 2px solid #01411C; padding-bottom: 10px;">New Application</h3>
+                <p><strong>Name:</strong> ${safeName}</p>
+                <p><strong>Email:</strong> ${email}</p>
+                <p><strong>WhatsApp:</strong> ${sanitize(whatsapp, 20)}</p>
+                <p><strong>Plan:</strong> ${sanitize(planId, 30)}</p>
+                <p><strong>Address:</strong> ${sanitize(address, 300)}</p>
+                <p>${attachments.length > 0 ? '✓ Payment proof attached' : 'Free plan - no proof'}</p>
+              </div>
+            `,
+            attachments
+          };
+          await transporter.sendMail(adminMail);
+        }
+      } catch (emailError) {
+        console.error('Email error:', emailError);
       }
     }
 
     return res.status(200).json({ success: true });
   } catch (error: any) {
     console.error('Error submitting form:', error);
-    return res.status(500).json({ success: false, error: error.message || 'Failed to submit data' });
+    return res.status(500).json({ success: false, error: 'Server error. Please try again.' });
   }
 }

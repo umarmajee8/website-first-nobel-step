@@ -1,20 +1,57 @@
-<div align="center">
-<img width="1200" height="475" alt="GHBanner" src="https://ai.google.dev/static/site-assets/images/share-ais-513315318.png" />
-</div>
+# First Noble Step - Official Membership Portal
 
-# Run and deploy your AI Studio app
+Official membership portal of First Noble Step (Pvt.) Ltd.
 
-This contains everything you need to run your app locally.
-
-View your app in AI Studio: https://ai.studio/apps/9095ccd5-03ff-4c04-b548-1a3db08fe019
+## Features
+- Membership application with bank transfer proof upload
+- Email OTP verification
+- Faysal Bank integration
+- Google Sheets integration for data storage
+- Responsive design with Tailwind CSS
 
 ## Run Locally
 
-**Prerequisites:**  Node.js
-
+**Prerequisites:** Node.js 18+
 
 1. Install dependencies:
-   `npm install`
-2. Set the `GEMINI_API_KEY` in [.env.local](.env.local) to your Gemini API key
+   ```
+   npm install
+   ```
+
+2. Configure environment variables (create `.env` file):
+   ```
+   GOOGLE_SHEET_ID=
+   GOOGLE_SERVICE_ACCOUNT_EMAIL=
+   GOOGLE_PRIVATE_KEY=
+
+   SMTP_USER=
+   SMTP_PASS=
+
+   COMPANY_WHATSAPP_EMAIL=
+
+   OTP_SECRET=your-random-secret-string-min-32-chars
+   ```
+
 3. Run the app:
-   `npm run dev`
+   ```
+   npm run dev
+   ```
+
+## Build
+```
+npm run build
+npm start
+```
+
+## Deployment
+Configured for Vercel deployment. See `vercel.json`.
+
+## Security Features
+- OTP verification with hashed storage and 10-minute expiry
+- Rate limiting on OTP endpoints
+- No hard-coded bypass codes
+- File upload validation (type + size)
+- CORS configured
+- Secure headers
+
+© 2026 First Noble Step (Pvt.) Ltd.

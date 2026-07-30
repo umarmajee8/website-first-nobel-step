@@ -1,514 +1,293 @@
-
-import React, { useState, useEffect, useRef, useCallback } from 'react';
-import { motion, AnimatePresence } from "motion/react";
-import { FormStep, MembershipApplication } from '../types.ts';
-import { loadStripe } from '@stripe/stripe-js';
-import { Elements, CardElement, useStripe, useElements } from '@stripe/react-stripe-js';
-
-const stripePromise = loadStripe(import.meta.env.VITE_STRIPE_PUBLIC_KEY || '');
-
-const PaymentForm = () => {
-  const stripe = useStripe();
-  const elements = useElements();
-
-  const handleSubmit = async (event: React.FormEvent) => {
-    event.preventDefault();
-    if (!stripe || !elements) return;
-
-    const cardElement = elements.getElement(CardElement);
-    if (!cardElement) return;
-
-    const { error, paymentMethod } = await stripe.createPaymentMethod({
-      type: 'card',
-      card: cardElement as any,
-    });
-
-    if (error) {
-      console.error(error);
-    } else {
-      console.log('PaymentMethod:', paymentMethod);
-    }
-  };
-
-  return (
-    <form onSubmit={handleSubmit} className="space-y-4">
-      <CardElement className="p-4 border rounded-2xl" />
-      <button type="submit" disabled={!stripe} className="w-full bg-pakistan-green text-white py-4 rounded-2xl">
-        Pay Now
-      </button>
-    </form>
-  );
-};
+import React, { useState, useEffect, useRef } from 'react';
 
 interface Props {
   initialPlanId: string | null;
   onClose: () => void;
 }
 
-const STORAGE_KEY = 'fms_membership_progress';
+type Step = 1 | 2 | 3 | 4 | 5;
 
-interface InputFieldProps {
-  label: string;
-  id: string;
-  name: string;
-  type?: string;
-  placeholder?: string;
-  options?: {value: string, label: string}[];
-  value: string;
-  onChange: (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => void;
-  onBlur: (e: React.FocusEvent<HTMLInputElement | HTMLSelectElement>) => void;
-  onKeyDown?: (e: React.KeyboardEvent<HTMLInputElement | HTMLSelectElement>) => void;
-  error: string | null;
-  isValid: boolean;
-  tooltip?: string;
+interface FormDataState {
+  planId: string;
+  fullName: string;
+  email: string;
+  whatsapp: string;
+  address: string;
+  university: string;
+  otp: string;
+  otpHash: string | null;
+  paymentProofBase64: string | null;
+  paymentMethod: string;
 }
 
-const InputField: React.FC<InputFieldProps> = ({ 
-  label, id, name, type = "text", placeholder, options, value, onChange, onBlur, onKeyDown, error, isValid, tooltip 
-}) => {
-  const hasError = !!error;
-  const baseClasses = "w-full px-5 py-4 rounded-2xl bg-gray-50 dark:bg-gray-800/50 border-2 transition-all duration-200 text-sm font-medium text-gray-900 dark:text-white placeholder-gray-400 outline-none disabled:opacity-50 disabled:cursor-not-allowed";
-  const stateClasses = hasError 
-    ? "border-red-500/50 focus:border-red-500 bg-red-50/10 pr-12" 
-    : "border-gray-100 dark:border-gray-700 hover:border-gray-300 dark:hover:border-gray-600 focus:border-pakistan-green focus:bg-white dark:focus:bg-gray-800 focus:shadow-[0_0_0_4px_rgba(1,65,28,0.1)] pr-12";
-
-  return (
-    <div className="w-full group">
-      <div className="flex items-center justify-between mb-2.5">
-        <label htmlFor={id} className={`block text-[10px] font-lemon tracking-widest transition-colors duration-200 ${hasError ? 'text-red-500' : 'text-gray-500 group-focus-within:text-pakistan-green dark:text-gray-400 dark:group-focus-within:text-green-400'}`}>
-          {label}
-        </label>
-        {tooltip && (
-          <div className="relative group/tooltip">
-            <i className="fa-solid fa-circle-info text-[10px] text-gray-400 hover:text-pakistan-green transition-colors cursor-help"></i>
-            <div className="absolute bottom-full right-0 mb-2 w-48 p-2 bg-gray-900 text-white text-[9px] rounded-lg opacity-0 group-hover/tooltip:opacity-100 pointer-events-none transition-opacity z-50 shadow-xl border border-white/10">
-              <div className="relative z-10">{tooltip}</div>
-              <div className="absolute top-full right-2 -mt-1 w-2 h-2 bg-gray-900 rotate-45"></div>
-            </div>
-          </div>
-        )}
-      </div>
-      <div className="relative">
-        {type === "select" ? (
-          <div className="relative">
-            <select id={id} name={name} value={value} onChange={onChange} onBlur={onBlur} onKeyDown={onKeyDown} className={`${baseClasses} ${stateClasses} appearance-none cursor-pointer`}>
-              <option value="" disabled className="text-gray-400">{placeholder}</option>
-              {options?.map(opt => <option key={opt.value} value={opt.value} className="text-gray-900 dark:text-white bg-white dark:bg-gray-900">{opt.label}</option>)}
-            </select>
-            <div className={`absolute right-5 top-1/2 -translate-y-1/2 pointer-events-none transition-colors duration-200 ${hasError ? 'text-red-400' : 'text-gray-400 group-focus-within:text-pakistan-green'}`}>
-              <i className="fa-solid fa-chevron-down text-xs"></i>
-            </div>
-          </div>
-        ) : (
-          <input id={id} type={type} name={name} value={value} onChange={onChange} onBlur={onBlur} onKeyDown={onKeyDown} placeholder={placeholder} className={`${baseClasses} ${stateClasses}`} />
-        )}
-        <div className="absolute right-5 top-1/2 -translate-y-1/2 pointer-events-none flex items-center gap-2">
-           {hasError && <i className="fa-solid fa-circle-exclamation text-red-500 text-lg animate-in zoom-in duration-300"></i>}
-           {isValid && !hasError && type !== 'select' && <i className="fa-solid fa-check-circle text-pakistan-green text-lg animate-in zoom-in duration-300"></i>}
-        </div>
-      </div>
-      <div className={`overflow-hidden transition-all duration-300 ease-in-out ${hasError ? 'max-h-8 mt-2 opacity-100' : 'max-h-0 opacity-0'}`}>
-        <div className="flex items-center gap-2 text-red-500 pl-1">
-          <i className="fa-solid fa-circle-info text-[10px]"></i>
-          <span className="text-[10px] font-bold tracking-wide uppercase">{error}</span>
-        </div>
-      </div>
-    </div>
-  );
-};
+const plans = [
+  { id: 'basic', name: 'Basic Package', price: 'PKR 2,500', original: 'PKR 5,000', icon: 'fa-leaf', color: 'green' },
+  { id: 'standard', name: 'Standard Package', price: 'PKR 6,999', original: 'PKR 14,000', icon: 'fa-star', color: 'blue' },
+  { id: 'professional_pkg', name: 'Premium Package', price: 'PKR 14,999', original: 'PKR 30,000', icon: 'fa-crown', color: 'amber' },
+  { id: 'entrepreneur', name: 'Entrepreneur', price: 'PKR 49,999', original: 'PKR 70,000', icon: 'fa-rocket', color: 'green' },
+  { id: 'e_internship', name: 'E-Internship', price: 'Free', original: '', icon: 'fa-bolt', color: 'yellow' },
+];
 
 const MembershipForm: React.FC<Props> = ({ initialPlanId, onClose }) => {
-  const [formData, setFormData] = useState<Partial<MembershipApplication>>(() => {
-    const saved = localStorage.getItem(STORAGE_KEY);
-    if (saved) {
-      try {
-        const parsed = JSON.parse(saved);
-        return parsed.formData || { planId: initialPlanId || '', fullName: '', cnic: '', email: '', whatsapp: '', otp: '', otpHash: null };
-      } catch (e) { console.error(e); }
-    }
-    return { planId: initialPlanId || '', fullName: '', cnic: '', email: '', whatsapp: '', otp: '', otpHash: null };
+  const [step, setStep] = useState<Step>(initialPlanId ? 2 : 1);
+  const [formData, setFormData] = useState<FormDataState>({
+    planId: initialPlanId || '',
+    fullName: '',
+    email: '',
+    whatsapp: '',
+    address: '',
+    university: '',
+    otp: '',
+    otpHash: null,
+    paymentProofBase64: null,
+    paymentMethod: 'faysalbank',
   });
-
-  const [step, setStep] = useState<FormStep>(() => {
-    const saved = localStorage.getItem(STORAGE_KEY);
-    if (saved) {
-      try {
-        const parsed = JSON.parse(saved);
-        return parsed.step || (initialPlanId ? 2 : 1);
-      } catch (e) {}
-    }
-    return initialPlanId ? 2 : 1;
-  });
-
-  const [touchedFields, setTouchedFields] = useState<Record<string, boolean>>(() => {
-    const saved = localStorage.getItem(STORAGE_KEY);
-    if (saved) {
-      try {
-        const parsed = JSON.parse(saved);
-        return parsed.touchedFields || {};
-      } catch (e) {}
-    }
-    return {};
-  });
-
-  const [termsAccepted, setTermsAccepted] = useState<boolean>(() => {
-    const saved = localStorage.getItem(STORAGE_KEY);
-    if (saved) {
-      try {
-        const parsed = JSON.parse(saved);
-        return parsed.termsAccepted || false;
-      } catch (e) {}
-    }
-    return false;
-  });
-
-  const [isSubmitted, setIsSubmitted] = useState(false);
+  const [termsAccepted, setTermsAccepted] = useState(false);
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [error, setError] = useState<string | null>(null);
-  
-  // OTP States
-  const [otpSent, setOtpSent] = useState(false);
+  const [otpStatus, setOtpStatus] = useState('');
   const [otpLoading, setOtpLoading] = useState(false);
-  const [otpMessage, setOtpMessage] = useState('');
-  const [otpError, setOtpError] = useState('');
-  
-  // New state for exit confirmation
+  const [isSuccess, setIsSuccess] = useState(false);
   const [showExitConfirm, setShowExitConfirm] = useState(false);
+  const [proofPreview, setProofPreview] = useState<string | null>(null);
+  const [otpBoxes, setOtpBoxes] = useState<string[]>(['', '', '', '', '', '']);
 
   const modalRef = useRef<HTMLDivElement>(null);
-  const closeButtonRef = useRef<HTMLButtonElement>(null);
 
   useEffect(() => {
-    if (!isSubmitted && !isSubmitting) {
-      localStorage.setItem(STORAGE_KEY, JSON.stringify({ formData, step, touchedFields, termsAccepted }));
-    }
-  }, [formData, step, touchedFields, termsAccepted, isSubmitted, isSubmitting]);
+    document.body.style.overflow = 'hidden';
+    const handleEsc = (e: KeyboardEvent) => {
+      if (e.key === 'Escape') {
+        if (showExitConfirm) setShowExitConfirm(false);
+        else handleAttemptClose();
+      }
+    };
+    window.addEventListener('keydown', handleEsc);
+    return () => {
+      document.body.style.overflow = '';
+      window.removeEventListener('keydown', handleEsc);
+    };
+  }, [showExitConfirm, step, formData]);
 
-  const hasUnsavedChanges = useCallback(() => {
-    if (isSubmitted) return false;
-    // Considered "progress" if past step 1, or if specific text fields have content
-    const hasData = formData.fullName || formData.cnic || formData.email || formData.whatsapp;
-    return step > 1 || !!hasData;
-  }, [formData, step, isSubmitted]);
-
-  const handleAttemptClose = useCallback(() => {
-    if (hasUnsavedChanges()) {
+  const handleAttemptClose = () => {
+    const hasData = formData.fullName || formData.email || formData.whatsapp || formData.paymentProofBase64;
+    if (step > 1 || hasData) {
       setShowExitConfirm(true);
     } else {
       onClose();
     }
-  }, [hasUnsavedChanges, onClose]);
+  };
 
-  useEffect(() => {
-    const originalOverflow = document.body.style.overflow;
-    document.body.style.overflow = 'hidden';
-    closeButtonRef.current?.focus();
-
-    const handleEscape = (e: KeyboardEvent) => { 
-      if (e.key === 'Escape') {
-        if (showExitConfirm) {
-           setShowExitConfirm(false); // Close confirmation on escape if open
-        } else {
-           handleAttemptClose();
-        }
-      }
-    };
-
-    window.addEventListener('keydown', handleEscape);
-    return () => { 
-      document.body.style.overflow = originalOverflow; 
-      window.removeEventListener('keydown', handleEscape); 
-    };
-  }, [handleAttemptClose, showExitConfirm]);
-
-  const validateField = (name: string, value: string): string | null => {
-    if (name === 'referralSource') return null;
-    if (!value || value.trim() === '') return 'Required';
-    
-    if (name === 'fullName') {
-      if (value.length < 3) return 'Full Name must be at least 3 characters';
-      if (!/^[a-zA-Z\s]+$/.test(value)) return 'Only letters and spaces allowed';
-    }
-    
-    if (name === 'cnic') {
-      const cnicRegex = /^\d{5}-\d{7}-\d{1}$/;
-      if (!cnicRegex.test(value)) return 'Format: 12345-1234567-1';
-    }
-    
-    if (name === 'email') {
+  const validateStep = (currentStep = step): boolean => {
+    if (currentStep === 1) return !!formData.planId;
+    if (currentStep === 2) {
       const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-      if (!emailRegex.test(value.trim())) return 'Invalid email address';
+      const nameValid = formData.fullName.trim().length >= 3;
+      const emailValid = emailRegex.test(formData.email);
+      const whatsappClean = formData.whatsapp.replace(/\D/g, '');
+      const whatsappValid = formData.planId === 'e_internship' ? true : whatsappClean.length >= 10 && whatsappClean.length <= 13;
+      const addressValid = formData.planId === 'e_internship' ? formData.address.trim().length >= 5 : true;
+      return nameValid && emailValid && whatsappValid && addressValid;
     }
-    
-    if (name === 'whatsapp') {
-      if (!value || value.trim().length === 0) return null; // Optional
-      const cleaned = value.replace(/\D/g, '');
-      if (cleaned.length < 11) return 'Minimum 11 digits required';
-      if (cleaned.length > 13) return 'Maximum 13 digits allowed';
+    if (currentStep === 3) return formData.otp.length === 6;
+    if (currentStep === 4) {
+      if (formData.planId === 'e_internship') return true;
+      return !!formData.paymentProofBase64;
     }
-    
-    return null;
+    if (currentStep === 5) return termsAccepted;
+    return false;
   };
 
-  const getFieldError = (name: string) => {
-    if (!touchedFields[name]) return null;
-    return validateField(name, (formData as any)[name] || '');
-  };
-
-  const handleInputChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
-    const { name, value } = e.target;
-    setTouchedFields(prev => ({ ...prev, [name]: true }));
-    if (name === 'cnic') {
-      const cleaned = value.replace(/\D/g, '');
-      let formatted = cleaned;
-      if (cleaned.length > 5) formatted = cleaned.slice(0, 5) + '-' + cleaned.slice(5);
-      if (cleaned.length > 12) formatted = formatted.slice(0, 12) + '-' + cleaned.slice(12, 13);
-      setFormData(prev => ({ ...prev, cnic: formatted.slice(0, 15) }));
+  const handleSendOtp = async () => {
+    if (!formData.email) {
+      setError('Email is required');
       return;
     }
-    if (name === 'whatsapp') {
-      const cleaned = value.replace(/\D/g, '');
-      setFormData(prev => ({ ...prev, whatsapp: cleaned.slice(0, 13) }));
-      return;
-    }
-    setFormData(prev => ({ ...prev, [name]: value }));
-  };
-
-  const handlePlanSelect = (planId: string) => {
-    setFormData(prev => ({ ...prev, planId }));
-    setTimeout(() => setStep(2), 400);
-  };
-
-  const nextStep = async () => {
-    const currentFields = step === 2 ? ['fullName', 'cnic', 'email', 'whatsapp'] : 
-                         step === 4 ? (formData.planId === 'student' ? ['institute', 'degree'] : formData.planId === 'entrepreneur' ? ['businessName', 'industry'] : ['experience', 'targetCountry']) : [];
-    let hasErrors = false;
-    const newTouched = { ...touchedFields };
-    currentFields.forEach(f => {
-      newTouched[f] = true;
-      if (validateField(f, (formData as any)[f])) hasErrors = true;
-    });
-    setTouchedFields(newTouched);
-    
-    if (!hasErrors) {
-      if (step === 3) {
-        setOtpError('');
-        if (!formData.otp || formData.otp.length !== 6) {
-          setOtpError('Please enter a valid 6-digit code.');
-          return;
-        }
-        try {
-          const response = await fetch('/api/verify-otp', {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({ email: formData.email, otp: formData.otp, otpHash: formData.otpHash })
-          });
-          const data = await response.json();
-          if (!data.success) {
-            throw new Error(data.error || 'Invalid verification code');
-          }
-          setStep(4);
-        } catch (err: any) {
-          setOtpError(err.message);
-          return;
-        }
-      } else if (step === 5) {
-        setStep(6);
-      } else if (step < 6) {
-        setStep((prev) => (prev + 1) as FormStep);
-      }
-    }
-  };
-
-  const prevStep = () => { if (step > 1) setStep((prev) => (prev - 1) as FormStep); };
-
-  const handleSubmit = async (e: React.FormEvent) => {
-    e.preventDefault();
-    if (!termsAccepted || !formData.paymentMethod) return;
-    setIsSubmitting(true);
-    setError(null);
-    try {
-      const payload = { 
-        ...formData, 
-        email: formData.email?.trim(), 
-      };
-      const response = await fetch('/api/submit-membership', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify(payload),
-      });
-
-      const data = await response.json();
-
-      if (!response.ok) {
-        throw new Error(data.error || "Failed to submit application. Please try again later.");
-      }
-
-      const paymentResponse = await fetch('/api/create-fastpay-checkout', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({
-          amount: formData.planId === 'basic' ? 2499 : (formData.planId === 'standard' ? 6999 : (formData.planId === 'professional_pkg' ? 14999 : 49999)),
-          paymentMethod: formData.paymentMethod,
-          email: formData.email,
-          fullName: formData.fullName
-        })
-      });
-      
-      const paymentData = await paymentResponse.json();
-      if (!paymentResponse.ok || !paymentData.success) {
-        throw new Error(paymentData.error || 'Failed to initialize payment gateway.');
-      }
-      
-      window.location.href = paymentData.checkoutUrl;
-      return;
-
-      localStorage.removeItem(STORAGE_KEY);
-      setIsSubmitted(true);
-    } catch (err: any) {
-      console.error('Submission Error:', err);
-      setError(err.message || "An unexpected error occurred during submission.");
-    } finally {
-      setIsSubmitting(false);
-    }
-  };
-
-  useEffect(() => {
-    const urlParams = new URLSearchParams(window.location.search);
-    const paymentStatus = urlParams.get('payment_status');
-    
-    if (paymentStatus) {
-      if (paymentStatus === 'success') {
-        setIsSubmitted(true);
-        localStorage.removeItem(STORAGE_KEY);
-      } else {
-        setError('Your payment could not be processed. Please try again.');
-        setStep(6);
-      }
-      window.history.replaceState({}, document.title, window.location.pathname);
-    }
-  }, []);
-
-  useEffect(() => {
-    if (step === 3 && !otpSent && !otpLoading && !otpError) {
-      handleSendOTP();
-    }
-  }, [step, otpSent, otpLoading, otpError]);
-
-  const handleSendOTP = async () => {
     setOtpLoading(true);
-    setOtpError('');
-    setOtpMessage('');
+    setError(null);
+    setOtpStatus('Sending...');
     try {
-      const response = await fetch('/api/send-otp', {
+      const res = await fetch('/api/send-otp', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ email: formData.email, fullName: formData.fullName })
+        body: JSON.stringify({ email: formData.email, fullName: formData.fullName }),
       });
-      const data = await response.json();
-      if (data.success) {
-        setFormData(prev => ({ ...prev, otpHash: data.hash }));
-        setOtpSent(true);
-        setOtpMessage('Code sent successfully!');
-      } else {
-        throw new Error(data.error || 'Failed to send code');
-      }
+      const data = await res.json();
+      if (!res.ok) throw new Error(data.error || 'Failed to send OTP');
+      setFormData(prev => ({ ...prev, otpHash: data.hash }));
+      setOtpStatus(`Code sent to ${formData.email}`);
     } catch (err: any) {
-      setOtpError(err.message);
+      setError(err.message);
+      setOtpStatus('Failed to send code');
     } finally {
       setOtpLoading(false);
     }
   };
 
-  const isStepValid = () => {
-    if (step === 1) return !!formData.planId;
-    if (step === 2) return !validateField('fullName', formData.fullName || '') && !validateField('cnic', formData.cnic || '') && !validateField('email', formData.email || '') && !validateField('whatsapp', formData.whatsapp || '');
-    if (step === 3) {
-      if (formData.planId === 'student') return !!formData.institute && !!formData.degree;
-      if (formData.planId === 'entrepreneur') return !!formData.businessName && !!formData.industry;
-      if (formData.planId === 'professional') return !!formData.experience && !!formData.targetCountry;
+  const handleVerifyOtp = async () => {
+    if (formData.otp.length !== 6) {
+      setError('Enter 6-digit code');
+      return;
     }
-    if (step === 4) return termsAccepted;
-    if (step === 5) return formData.otp?.length === 6 && !!formData.otpHash;
-    if (step === 6) return !!formData.paymentMethod;
-    return false;
+    setOtpLoading(true);
+    setError(null);
+    try {
+      const res = await fetch('/api/verify-otp', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ email: formData.email, otp: formData.otp, otpHash: formData.otpHash }),
+      });
+      const data = await res.json();
+      if (!res.ok) throw new Error(data.error || 'Invalid code');
+      setOtpStatus('Verified successfully!');
+      if (formData.planId === 'e_internship') setStep(5);
+      else setStep(4);
+    } catch (err: any) {
+      setError(err.message);
+    } finally {
+      setOtpLoading(false);
+    }
   };
 
-  const renderInputField = (label: string, id: string, name: keyof MembershipApplication, type: string = "text", placeholder: string = "", options?: {value: string, label: string}[], tooltip?: string) => {
-     const val = (formData as any)[name] || '';
-     const error = getFieldError(name);
-     const touched = touchedFields[name];
-     
-     const handleKeyDown = (e: React.KeyboardEvent) => {
-       if (e.key === 'Enter') {
-         e.preventDefault();
-         if (isStepValid()) {
-           nextStep();
-         }
-       }
-     };
-
-     return <InputField label={label} id={id} name={name} type={type} placeholder={placeholder} options={options} value={val} onChange={handleInputChange} onBlur={(e) => setTouchedFields(p => ({...p, [e.target.name]: true}))} onKeyDown={handleKeyDown} error={error} isValid={!error && touched && !!val} tooltip={tooltip} />;
+  const handleProofUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (!file) return;
+    const validTypes = ['image/jpeg', 'image/png', 'image/jpg', 'image/webp'];
+    if (!validTypes.includes(file.type) && !file.type.startsWith('image/')) {
+      setError('Only JPG, PNG, WEBP allowed');
+      return;
+    }
+    if (file.size > 1 * 1024 * 1024) {
+      setError('File must be less than 1MB');
+      return;
+    }
+    const reader = new FileReader();
+    reader.onload = (ev) => {
+      const result = ev.target?.result as string;
+      if (result.length > 2 * 1024 * 1024) {
+        setError('Image too large after encoding');
+        return;
+      }
+      setFormData(prev => ({ ...prev, paymentProofBase64: result }));
+      setProofPreview(result);
+    };
+    reader.readAsDataURL(file);
   };
 
-  // Exit Confirmation Dialog Overlay
-  const ExitConfirmationDialog = () => (
-    <div className="absolute inset-0 z-[110] flex items-center justify-center p-6 bg-black/20 backdrop-blur-[2px] animate-in fade-in duration-200" onClick={(e) => e.stopPropagation()}>
-      <div className="bg-white dark:bg-gray-800 rounded-3xl p-6 w-full max-w-xs text-center shadow-[0_20px_50px_rgba(0,0,0,0.3)] border border-gray-100 dark:border-gray-700 transform scale-100 animate-in zoom-in-95 duration-200">
-        <div className="w-12 h-12 bg-red-50 dark:bg-red-900/20 rounded-full flex items-center justify-center mx-auto mb-4 text-red-500">
-          <i className="fa-solid fa-triangle-exclamation text-xl"></i>
-        </div>
-        <h3 className="text-base font-bold text-gray-900 dark:text-white mb-2">Discard Changes?</h3>
-        <p className="text-xs text-gray-500 dark:text-gray-400 mb-6 leading-relaxed">
-          You have unsaved progress. Are you sure you want to leave?
-        </p>
-        <div className="flex flex-col gap-2">
-          <button 
-            onClick={() => setShowExitConfirm(false)}
-            className="w-full py-3 bg-gray-100 dark:bg-gray-700 hover:bg-gray-200 dark:hover:bg-gray-600 text-gray-900 dark:text-white rounded-xl font-bold text-xs transition-colors"
-          >
-            No, Keep Editing
-          </button>
-          <button 
-            onClick={() => {
-              localStorage.removeItem(STORAGE_KEY);
-              onClose();
-            }}
-            className="w-full py-3 bg-transparent text-red-500 hover:bg-red-50 dark:hover:bg-red-900/20 rounded-xl font-bold text-xs transition-colors"
-          >
-            Yes, Discard & Exit
-          </button>
-        </div>
-      </div>
-    </div>
-  );
+  const handleSubmit = async () => {
+    if (!termsAccepted) {
+      setError('Please accept terms and conditions');
+      return;
+    }
+    setIsSubmitting(true);
+    setError(null);
+    try {
+      const payload = {
+        planId: formData.planId,
+        fullName: formData.fullName.trim(),
+        email: formData.email.trim(),
+        whatsapp: formData.whatsapp.trim(),
+        address: formData.address.trim(),
+        university: formData.university.trim(),
+        paymentMethod: formData.paymentMethod,
+        paymentProof: formData.paymentProofBase64,
+        otp: formData.otp,
+        otpHash: formData.otpHash,
+      };
+      const res = await fetch('/api/submit-membership', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(payload),
+      });
+      const data = await res.json();
+      if (!res.ok) throw new Error(data.error || 'Submission failed');
+      setIsSuccess(true);
+    } catch (err: any) {
+      setError(err.message);
+    } finally {
+      setIsSubmitting(false);
+    }
+  };
+
+  const nextStep = async () => {
+    setError(null);
+    if (step === 2) {
+      // Send OTP automatically when moving from step 2 to 3
+      if (!validateStep(2)) {
+        setError('Please fill all required fields correctly');
+        return;
+      }
+      setStep(3);
+      setTimeout(() => handleSendOtp(), 300);
+    } else if (step === 3) {
+      await handleVerifyOtp();
+    } else if (step < 5) {
+      if (!validateStep()) {
+        setError('Please complete this step');
+        return;
+      }
+      setStep((prev) => (prev + 1) as Step);
+    } else {
+      await handleSubmit();
+    }
+  };
+
+  const prevStep = () => {
+    setError(null);
+    if (step > 1) {
+      if (step === 5 && formData.planId === 'e_internship') setStep(3);
+      else setStep((prev) => (prev - 1) as Step);
+    }
+  };
+
+  const handleOtpBoxChange = (index: number, value: string) => {
+    const clean = value.replace(/\D/g, '').slice(0, 1);
+    const newBoxes = [...otpBoxes];
+    newBoxes[index] = clean;
+    setOtpBoxes(newBoxes);
+    const combined = newBoxes.join('');
+    setFormData(prev => ({ ...prev, otp: combined }));
+    if (clean && index < 5) {
+      const next = document.getElementById(`otp-box-${index + 1}`);
+      next?.focus();
+    }
+  };
+
+  const handleOtpPaste = (e: React.ClipboardEvent) => {
+    e.preventDefault();
+    const pasted = e.clipboardData.getData('text').replace(/\D/g, '').slice(0, 6);
+    if (!pasted) return;
+    const newBoxes = pasted.split('');
+    while (newBoxes.length < 6) newBoxes.push('');
+    setOtpBoxes(newBoxes);
+    setFormData(prev => ({ ...prev, otp: pasted }));
+  };
 
   if (isSubmitting) {
     return (
-      <div role="alert" className="fixed inset-0 z-[100] flex items-center justify-center p-4 bg-black/60 backdrop-blur-sm">
-        <div className="bg-white dark:bg-gray-900 rounded-3xl p-12 max-w-md w-full text-center shadow-2xl animate-in zoom-in-95 duration-300">
+      <div className="fixed inset-0 z-[100] flex items-center justify-center p-4 bg-black/60 backdrop-blur-sm">
+        <div className="bg-white dark:bg-gray-900 rounded-3xl p-12 max-w-md w-full text-center shadow-2xl">
           <div className="relative w-20 h-20 mx-auto mb-6">
             <div className="absolute inset-0 border-4 border-gray-100 dark:border-gray-800 rounded-full"></div>
-            <div className="absolute inset-0 border-4 border-transparent border-t-pakistan-green rounded-full animate-spin"></div>
-            <div className="absolute inset-0 flex items-center justify-center text-pakistan-green animate-pulse"><i className="fa-solid fa-shield-halved text-xl"></i></div>
+            <div className="absolute inset-0 border-4 border-transparent border-t-green-700 rounded-full animate-spin"></div>
           </div>
-          <h2 className="text-xl font-lemon dark:text-white mb-2">Processing Securely</h2>
-          <p className="text-gray-500 text-[10px] font-lemon tracking-widest uppercase">Verified Servers</p>
+          <h2 className="text-xl font-bold dark:text-white mb-2">Processing Securely</h2>
+          <p className="text-gray-500 text-[10px] tracking-widest uppercase">Verified Servers</p>
         </div>
       </div>
     );
   }
 
-  if (isSubmitted) {
+  if (isSuccess) {
     return (
       <div className="fixed inset-0 z-[100] flex items-center justify-center p-4 bg-black/60 backdrop-blur-sm">
-        <div className="bg-white dark:bg-gray-900 rounded-3xl p-8 max-w-md w-full text-center shadow-2xl relative">
-          <div className="w-14 h-14 bg-green-50 dark:bg-green-900/20 rounded-full flex items-center justify-center mx-auto mb-6 text-pakistan-green"><i className="fa-solid fa-check text-2xl animate-bounce"></i></div>
-          <h2 className="text-xl font-lemon mb-2 dark:text-white">Applied!</h2>
-          <p className="text-gray-500 mb-8 text-sm leading-relaxed">Your details are submitted successfully. We will review your application and get back to you soon.</p>
-          <button onClick={onClose} className="w-full py-4 bg-pakistan-green text-white rounded-2xl font-lemon text-xs tracking-widest shadow-lg">Close</button>
+        <div className="bg-white dark:bg-gray-900 rounded-3xl p-8 max-w-md w-full text-center shadow-2xl">
+          <div className="w-14 h-14 bg-green-50 dark:bg-green-900/20 rounded-full flex items-center justify-center mx-auto mb-6 text-green-700">
+            <i className="fa-solid fa-check text-2xl"></i>
+          </div>
+          <h2 className="text-xl font-bold mb-2 dark:text-white">Applied!</h2>
+          <p className="text-gray-500 mb-8 text-sm">Your details are submitted successfully. Our team will contact you after verifying payment.</p>
+          <button onClick={onClose} className="w-full py-4 bg-green-800 text-white rounded-2xl font-bold text-xs tracking-widest">Close</button>
         </div>
       </div>
     );
@@ -516,251 +295,205 @@ const MembershipForm: React.FC<Props> = ({ initialPlanId, onClose }) => {
 
   return (
     <div className="fixed inset-0 z-[100] flex items-center justify-center p-4 bg-black/60 backdrop-blur-sm overflow-y-auto" onClick={(e) => e.target === e.currentTarget && handleAttemptClose()}>
-      <div ref={modalRef} role="dialog" className="bg-white dark:bg-gray-900 rounded-[2rem] w-full max-w-2xl shadow-2xl border border-gray-100 dark:border-gray-800 flex flex-col max-h-[90vh] relative overflow-hidden" onClick={(e) => e.stopPropagation()}>
-        
-        {/* Render Exit Confirmation Dialog Over Main Form */}
-        {showExitConfirm && <ExitConfirmationDialog />}
+      <div ref={modalRef} className="bg-white dark:bg-gray-900 rounded-[2rem] w-full max-w-2xl shadow-2xl border border-gray-100 dark:border-gray-800 flex flex-col max-h-[90vh] relative overflow-hidden" onClick={(e) => e.stopPropagation()}>
+        {showExitConfirm && (
+          <div className="absolute inset-0 z-[110] flex items-center justify-center p-6 bg-black/20 backdrop-blur-[2px]">
+            <div className="bg-white dark:bg-gray-800 rounded-3xl p-6 w-full max-w-xs text-center shadow-xl border border-gray-100 dark:border-gray-700">
+              <h3 className="text-base font-bold text-gray-900 dark:text-white mb-2">Discard Changes?</h3>
+              <p className="text-xs text-gray-500 mb-6">You have unsaved progress. Are you sure you want to leave?</p>
+              <div className="flex flex-col gap-2">
+                <button onClick={() => setShowExitConfirm(false)} className="w-full py-3 bg-gray-100 dark:bg-gray-700 text-gray-900 dark:text-white rounded-xl font-bold text-xs">No, Keep Editing</button>
+                <button onClick={onClose} className="w-full py-3 bg-transparent text-red-500 rounded-xl font-bold text-xs">Yes, Discard & Exit</button>
+              </div>
+            </div>
+          </div>
+        )}
 
         <div className="px-8 pt-8 pb-4 flex items-center justify-between">
-          <div><h2 className="text-2xl font-lemon tracking-tight dark:text-white">Processing Fees</h2><p className="text-[10px] font-lemon text-pakistan-green tracking-widest mt-1">Official Portal</p></div>
-          <button ref={closeButtonRef} onClick={handleAttemptClose} className="w-10 h-10 flex items-center justify-center rounded-full hover:bg-gray-100 dark:hover:bg-gray-800 transition-colors"><i className="fa-solid fa-times text-gray-400"></i></button>
+          <div>
+            <h2 className="text-2xl font-bold tracking-tight dark:text-white">Membership Application</h2>
+            <p className="text-[10px] text-green-700 tracking-widest mt-1">Official Portal</p>
+          </div>
+          <button onClick={handleAttemptClose} className="w-10 h-10 flex items-center justify-center rounded-full hover:bg-gray-100 dark:hover:bg-gray-800">
+            <i className="fa-solid fa-times text-gray-400"></i>
+          </button>
         </div>
+
         <nav className="px-8 py-4">
           <div className="flex items-center justify-between relative">
             <div className="absolute top-1/2 left-0 w-full h-1 bg-gray-100 dark:bg-gray-800 rounded-full -translate-y-1/2 -z-10"></div>
-            <motion.div 
-              className="absolute top-1/2 left-0 h-1 bg-pakistan-green rounded-full -translate-y-1/2 -z-10" 
-              initial={{ width: 0 }}
-              animate={{ width: `${((step - 1) / 5) * 100}%` }}
-              transition={{ duration: 0.75, ease: [0.34, 1.56, 0.64, 1] }}
-            />
-            {[1,2,3,4,5,6].map(n => {
-              const isActive = step === n;
-              const isCompleted = step > n;
-              return (
-                <motion.div 
-                  key={n} 
-                  className="flex flex-col items-center relative z-10" 
-                  initial={{ scale: 0.8 }} 
-                  animate={{ 
-                    scale: isActive ? 1.25 : 1,
-                    y: isActive ? -1 : 0
-                  }}
-                  transition={{ type: 'spring', stiffness: 300, damping: 18 }}
-                >
-                  <div className={`w-8 h-8 rounded-full flex items-center justify-center text-[10px] font-lemon transition-all duration-300 border-2 ${
-                    isActive ? 'bg-pakistan-green border-pakistan-green text-white ring-4 ring-green-100 dark:ring-green-950/40 shadow-lg shadow-green-500/10' : 
-                    isCompleted ? 'bg-pakistan-green border-pakistan-green text-white' : 
-                    'bg-white dark:bg-gray-900 border-gray-200 text-gray-400 dark:border-gray-800'
-                  }`}>
-                    {isCompleted ? <i className="fa-solid fa-check text-[8px]"></i> : n}
-                  </div>
-                </motion.div>
-              );
-            })}
+            <div className="absolute top-1/2 left-0 h-1 bg-green-800 rounded-full -translate-y-1/2 -z-10 transition-all duration-700" style={{ width: `${((step - 1) / 4) * 100}%` }}></div>
+            {[1, 2, 3, 4, 5].map(n => (
+              <div key={n} className={`w-6 h-6 rounded-full flex items-center justify-center text-[9px] font-bold border-2 transition-all ${step === n ? 'bg-green-800 border-green-800 text-white scale-125 shadow-lg' : step > n ? 'bg-green-800 border-green-800 text-white' : 'bg-white dark:bg-gray-900 border-gray-200 text-gray-400'}`}>
+                {step > n ? <i className="fa-solid fa-check text-[7px]"></i> : n}
+              </div>
+            ))}
           </div>
         </nav>
-        <form onSubmit={handleSubmit} className="flex-grow overflow-y-auto px-8 py-6 custom-scrollbar">
-          <AnimatePresence mode="wait">
-            <motion.div
-              key={step}
-              initial={{ opacity: 0, x: 20 }}
-              animate={{ opacity: 1, x: 0 }}
-              exit={{ opacity: 0, x: -20 }}
-              transition={{ duration: 0.3 }}
-            >
-              {step === 1 && (
-                <fieldset className="space-y-8">
-              <div className="bg-gray-50/50 dark:bg-gray-800/30 p-6 rounded-[2rem] border border-gray-100 dark:border-gray-700">
-                <h4 className="text-[10px] font-lemon tracking-[0.2em] text-pakistan-green mb-6 uppercase flex items-center gap-3">
-                  <span className="w-6 h-px bg-pakistan-green/20"></span> Individual Pathways
-                </h4>
-                <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                  {[{id:'professional',name:'Job Professional',icon:'fa-briefcase'},{id:'student',name:'Official Student',icon:'fa-graduation-cap'}].map(p => (
-                    <label key={p.id} onClick={() => handlePlanSelect(p.id)} className={`flex items-center gap-4 p-5 rounded-2xl border-2 transition-all cursor-pointer ${formData.planId === p.id ? 'border-pakistan-green bg-green-50 dark:bg-green-900/10' : 'border-gray-100 dark:border-gray-800 hover:border-green-100'}`}>
-                      <div className={`w-10 h-10 rounded-xl flex items-center justify-center ${formData.planId === p.id ? 'bg-pakistan-green text-white' : 'bg-gray-50 dark:bg-gray-800 text-gray-400'}`}><i className={`fa-solid ${p.icon}`}></i></div>
-                      <h4 className="font-lemon text-[10px] dark:text-white">{p.name}</h4>
-                      <div className={`ml-auto w-5 h-5 rounded-full border-2 flex items-center justify-center ${formData.planId === p.id ? 'border-pakistan-green bg-pakistan-green text-white' : 'border-gray-200'}`}>{formData.planId === p.id && <i className="fa-solid fa-check text-[10px]"></i>}</div>
-                    </label>
-                  ))}
-                </div>
-              </div>
 
-              <div className="p-6">
-                <h4 className="text-[10px] font-lemon tracking-[0.2em] text-pakistan-green mb-6 uppercase flex items-center gap-3">
-                  <span className="w-6 h-px bg-pakistan-green/20"></span> Business Growth
-                </h4>
-                {[{id:'entrepreneur',name:'Entrepreneur',icon:'fa-rocket'}].map(p => (
-                  <label key={p.id} onClick={() => handlePlanSelect(p.id)} className={`flex items-center gap-4 p-5 rounded-2xl border-2 transition-all cursor-pointer ${formData.planId === p.id ? 'border-pakistan-green bg-green-50 dark:bg-green-900/10' : 'border-gray-100 dark:border-gray-800 hover:border-green-100'}`}>
-                    <div className={`w-10 h-10 rounded-xl flex items-center justify-center ${formData.planId === p.id ? 'bg-pakistan-green text-white' : 'bg-gray-50 dark:bg-gray-800 text-gray-400'}`}><i className={`fa-solid ${p.icon}`}></i></div>
-                    <h4 className="font-lemon text-[10px] dark:text-white">{p.name}</h4>
-                    <div className={`ml-auto w-5 h-5 rounded-full border-2 flex items-center justify-center ${formData.planId === p.id ? 'border-pakistan-green bg-pakistan-green text-white' : 'border-gray-200'}`}>{formData.planId === p.id && <i className="fa-solid fa-check text-[10px]"></i>}</div>
-                  </label>
-                ))}
-              </div>
-            </fieldset>
-              )}
-              {step === 2 && (
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-              {renderInputField("Full Name (As per CNIC)", "fullName", "fullName", "text", "Enter Full Name", undefined, "Enter your full name exactly as it appears on your CNIC.")}
-              {renderInputField("CNIC Number", "cnic", "cnic", "text", "XXXXX-XXXXXXX-X", undefined, "Enter your 13-digit CNIC number in the format: 12345-1234567-1")}
-              {renderInputField("Email Address", "email", "email", "email", "name@example.com", undefined, "Provide a valid email address for verification and communication.")}
-              {renderInputField("WhatsApp Number", "whatsapp", "whatsapp", "tel", "923XXXXXXXXX", undefined, "Enter your WhatsApp number starting with 92 (e.g., 923001234567).")}
-            </div>
-              )}
-              {step === 3 && (
-                <div className="p-6 text-center">
-                  <div className="w-16 h-16 bg-green-50 dark:bg-green-900/20 rounded-full flex items-center justify-center mx-auto mb-4 text-pakistan-green">
-                    <i className="fa-solid fa-envelope-circle-check text-2xl"></i>
-                  </div>
-                  <h3 className="text-xl font-bold text-gray-900 dark:text-white mb-2">Email Verification</h3>
-                  <p className="text-sm text-gray-600 dark:text-gray-400 mb-6 max-w-xs mx-auto">
-                    Please verify your email (<span className="font-semibold text-pakistan-green">{formData.email}</span>) to proceed.
-                  </p>
-                  
-                  <div className="flex flex-col gap-3 items-center w-full">
-                    <div className="flex flex-col items-center gap-3 w-full">
-                      {otpLoading && <p className="text-xs text-gray-500">Sending verification code...</p>}
-                      <input 
-                        type="text" 
-                        maxLength={6} 
-                        placeholder="------" 
-                        value={formData.otp || ''}
-                        onChange={(e) => setFormData(prev => ({ ...prev, otp: e.target.value }))}
-                        className="text-center tracking-[0.5em] font-mono text-lg w-full max-w-[200px] px-4 py-4 rounded-2xl border-2 border-gray-100 dark:border-gray-700 bg-white dark:bg-gray-900 focus:border-pakistan-green outline-none dark:text-white" 
-                      />
-                      {(!otpLoading && (otpSent || otpError)) && (
-                        <button 
-                          type="button" 
-                          onClick={handleSendOTP} 
-                          disabled={otpLoading}
-                          className="w-full max-w-xs py-3 bg-transparent text-pakistan-green underline hover:text-green-700 text-xs rounded-2xl transition-colors font-lemon tracking-widest uppercase disabled:opacity-50"
-                        >
-                          Resend Code
-                        </button>
-                      )}
-                      {otpMessage && <p className="text-xs text-green-600">{otpMessage}</p>}
-                      {otpError && <p className="text-xs text-red-500">{otpError}</p>}
-                    </div>
-                  </div>
-                </div>
-              )}
-              {step === 4 && (
-                <div className="space-y-6">
-              {formData.planId === 'student' && (
-                <div className="space-y-6">
-                  {renderInputField("Academic Institution", "institute", "institute", "text", "e.g. University of the Punjab")}
-                  {renderInputField("Current Degree", "degree", "degree", "text", "e.g. BS Computer Science")}
-                </div>
-              )}
-              {formData.planId === 'entrepreneur' && (
-                <div className="space-y-6">
-                  {renderInputField("Business Name", "businessName", "businessName", "text", "e.g. NextGen Solutions")}
-                  {renderInputField("Industry", "industry", "industry", "select", "Select Industry", [
-                    {value:'tech',label:'Technology & IT'},
-                    {value:'retail',label:'Retail & E-commerce'},
-                    {value:'agriculture',label:'Agriculture'},
-                    {value:'services',label:'Professional Services'},
-                    {value:'other',label:'Other'}
-                  ])}
-                </div>
-              )}
-              {formData.planId === 'professional' && (
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                  {renderInputField("Years of Experience", "experience", "experience", "text", "e.g. 3 Years")}
-                  {renderInputField("Target Country", "targetCountry", "targetCountry", "select", "Select Country", [
-                    {value:'usa',label:'United States'},
-                    {value:'uk',label:'United Kingdom'},
-                    {value:'canada',label:'Canada'},
-                    {value:'uae',label:'UAE & Gulf'},
-                    {value:'europe',label:'Europe (Schengen)'},
-                    {value:'australia',label:'Australia'},
-                    {value:'other',label:'Other'}
-                  ])}
-                </div>
-              )}
-            </div>
-              )}
-              {step === 5 && (
-                <div className="space-y-8">
-              <div className="bg-green-50/50 dark:bg-green-900/10 p-6 rounded-[1.5rem] border border-green-100 dark:border-green-800/50 relative overflow-hidden">
-                <h4 className="font-lemon text-[10px] text-pakistan-green dark:text-green-400 mb-6 uppercase tracking-widest">Application Review</h4>
-                <div className="grid grid-cols-2 gap-4 text-xs relative z-10">
-                  <div><span className="text-gray-400 text-[10px] uppercase">Name</span><span className="font-bold dark:text-white block">{formData.fullName}</span></div>
-                  <div><span className="text-gray-400 text-[10px] uppercase">CNIC</span><span className="font-bold dark:text-white block font-mono">{formData.cnic}</span></div>
-                </div>
-              </div>
-              <label className="flex items-start gap-4 p-5 cursor-pointer bg-gray-50 dark:bg-gray-800/50 rounded-2xl border border-gray-100 dark:border-gray-700">
-                <input type="checkbox" checked={termsAccepted} onChange={(e) => setTermsAccepted(e.target.checked)} className="mt-1 h-5 w-5 rounded border-gray-300 text-pakistan-green" />
-                <span className="text-xs text-gray-600 dark:text-gray-400">I declare all information is correct and I agree to the <a href="/privacy-policy.html" className="text-pakistan-green dark:text-green-400 underline hover:text-green-700 transition-colors">Privacy Policy</a> and <a href="/terms-and-conditions.html" className="text-pakistan-green dark:text-green-400 underline hover:text-green-700 transition-colors">Terms & Conditions</a>.</span>
-              </label>
-            </div>
-              )}
-              {step === 6 && (
-                <div className="space-y-6">
-                  <div className="text-center mb-6">
-                    <div className="w-16 h-16 bg-green-50 dark:bg-green-900/20 rounded-full flex items-center justify-center mx-auto mb-4 text-pakistan-green">
-                      <i className="fa-solid fa-wallet text-2xl"></i>
-                    </div>
-                    <h3 className="text-lg font-lemon dark:text-white">Select Payment Method</h3>
-                    <p className="text-xs text-gray-500 dark:text-gray-400 mt-2">Choose how you want to pay your processing fee via Fastpay.</p>
-                  </div>
-                  
-                  <div className="grid grid-cols-1 gap-4">
-                    <label onClick={() => setFormData(prev => ({ ...prev, paymentMethod: 'faysalbank' }))} className={`flex items-center justify-between p-5 rounded-2xl border-2 transition-all cursor-pointer ${formData.paymentMethod === 'faysalbank' ? 'border-pakistan-green bg-green-50 dark:bg-green-900/10' : 'border-gray-100 dark:border-gray-800 hover:border-green-100'}`}>
-                      <div className="flex items-center">
-                        <h4 className="font-bold text-base dark:text-white">Faysal Bank</h4>
-                      </div>
-                      <div className={`w-5 h-5 rounded-full border-2 flex items-center justify-center ${formData.paymentMethod === 'faysalbank' ? 'border-pakistan-green bg-pakistan-green text-white' : 'border-gray-200'}`}>
-                        {formData.paymentMethod === 'faysalbank' && <i className="fa-solid fa-check text-[10px]"></i>}
-                      </div>
-                    </label>
-
-                    <label onClick={() => setFormData(prev => ({ ...prev, paymentMethod: 'easypaisa' }))} className={`flex items-center justify-between p-5 rounded-2xl border-2 transition-all cursor-pointer ${formData.paymentMethod === 'easypaisa' ? 'border-pakistan-green bg-green-50 dark:bg-green-900/10' : 'border-gray-100 dark:border-gray-800 hover:border-green-100'}`}>
-                      <div className="flex items-center">
-                        <h4 className="font-bold text-base dark:text-white">Easypaisa</h4>
-                      </div>
-                      <div className={`w-5 h-5 rounded-full border-2 flex items-center justify-center ${formData.paymentMethod === 'easypaisa' ? 'border-[#00B551] bg-[#00B551] text-white' : 'border-gray-200'}`}>
-                        {formData.paymentMethod === 'easypaisa' && <i className="fa-solid fa-check text-[10px]"></i>}
-                      </div>
-                    </label>
-
-                    <label onClick={() => setFormData(prev => ({ ...prev, paymentMethod: 'card' }))} className={`flex items-center justify-between p-5 rounded-2xl border-2 transition-all cursor-pointer ${formData.paymentMethod === 'card' ? 'border-pakistan-green bg-green-50 dark:bg-green-900/10' : 'border-gray-100 dark:border-gray-800 hover:border-green-100'}`}>
-                      <div className="flex items-center">
-                        <h4 className="font-bold text-base dark:text-white">Credit / Debit Card</h4>
-                      </div>
-                      <div className={`w-5 h-5 rounded-full border-2 flex items-center justify-center ${formData.paymentMethod === 'card' ? 'border-pakistan-green bg-pakistan-green text-white' : 'border-gray-200'}`}>
-                        {formData.paymentMethod === 'card' && <i className="fa-solid fa-check text-[10px]"></i>}
-                      </div>
-                    </label>
-                  </div>
-
-                  <div className="flex items-center justify-center gap-2 text-[10px] text-gray-400 mt-6">
-                    <i className="fa-solid fa-shield-halved text-pakistan-green"></i>
-                    <span>Secured by Fastpay</span>
-                  </div>
-
-                  {formData.paymentMethod === 'card' && (
-                    <Elements stripe={stripePromise}>
-                      <PaymentForm />
-                    </Elements>
-                  )}
-                </div>
-              )}
-            </motion.div>
-          </AnimatePresence>
-        </form>
-        <div className="px-8 pb-8 pt-4 flex flex-col gap-4 border-t border-gray-100 dark:border-gray-800">
+        <div className="flex-grow overflow-y-auto px-8 py-6 custom-scrollbar">
           {error && (
-            <div className="bg-red-50 dark:bg-red-900/20 text-red-600 dark:text-red-400 p-4 rounded-2xl text-xs font-bold flex items-center gap-3 animate-in fade-in zoom-in-95 duration-200">
-              <i className="fa-solid fa-circle-exclamation"></i>
-              {error}
+            <div className="mb-4 p-4 bg-red-50 dark:bg-red-900/20 border border-red-200 dark:border-red-800/30 rounded-xl flex items-start gap-3 text-red-600 dark:text-red-400">
+              <i className="fa-solid fa-circle-exclamation mt-0.5"></i>
+              <p className="text-xs flex-grow">{error}</p>
+              <button onClick={() => setError(null)} className="text-red-400 hover:text-red-600"><i className="fa-solid fa-times"></i></button>
             </div>
           )}
-          <div className="flex gap-4">
-            {step > 1 && <button type="button" onClick={prevStep} className="px-6 py-4 rounded-2xl font-lemon text-[10px] border border-gray-200 text-gray-500">Back</button>}
-            <button type="button" onClick={step === 6 ? (e) => handleSubmit(e as any) : nextStep} disabled={!isStepValid()} className={`flex-grow py-4 rounded-2xl font-lemon text-[10px] tracking-widest text-white transition-all ${!isStepValid() ? 'bg-gray-200 cursor-not-allowed' : 'bg-pakistan-green shadow-lg'}`}>{step === 6 ? 'Submit Payment' : 'Continue'}</button>
-          </div>
+
+          {step === 1 && (
+            <div className="space-y-6">
+              <h4 className="text-[10px] tracking-[0.2em] text-green-800 uppercase flex items-center gap-3"><span className="w-6 h-px bg-green-800/20"></span> Select Package</h4>
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                {plans.map(p => (
+                  <div key={p.id} onClick={() => setFormData(prev => ({ ...prev, planId: p.id }))} className={`p-4 rounded-2xl border-2 cursor-pointer transition-all ${formData.planId === p.id ? 'border-green-800 bg-green-50 dark:bg-green-900/10' : 'border-gray-100 dark:border-gray-800 hover:border-green-100'}`}>
+                    <div className="flex items-center justify-between mb-3">
+                      <div className={`w-8 h-8 rounded-lg flex items-center justify-center ${p.color === 'green' ? 'bg-green-100 text-green-600' : p.color === 'blue' ? 'bg-blue-100 text-blue-600' : p.color === 'amber' ? 'bg-amber-100 text-amber-600' : 'bg-yellow-100 text-yellow-600'}`}>
+                        <i className={`fa-solid ${p.icon}`}></i>
+                      </div>
+                      <div className={`w-5 h-5 rounded-full border-2 flex items-center justify-center ${formData.planId === p.id ? 'bg-green-800 border-green-800 text-white' : 'border-gray-200'}`}>
+                        {formData.planId === p.id && <i className="fa-solid fa-check text-[10px]"></i>}
+                      </div>
+                    </div>
+                    <h4 className="font-bold text-[11px] dark:text-white">{p.name}</h4>
+                    <p className="text-sm font-bold mt-2 text-green-700 flex items-center gap-1.5 flex-wrap">
+                      {p.original && <span className="text-xs text-gray-400 line-through">{p.original}</span>}
+                      <span>{p.price}</span>
+                    </p>
+                  </div>
+                ))}
+              </div>
+            </div>
+          )}
+
+          {step === 2 && (
+            <div className="flex flex-col gap-5">
+              <div>
+                <label className="block text-[10px] tracking-widest text-gray-500 mb-2">Full Name <span className="text-red-500">*</span></label>
+                <input type="text" value={formData.fullName} onChange={e => setFormData(prev => ({ ...prev, fullName: e.target.value }))} className="w-full px-4 py-3 rounded-xl bg-gray-50 dark:bg-gray-800/50 border border-gray-200 dark:border-gray-700 focus:border-green-800 outline-none text-sm dark:text-white" placeholder="Enter Full Name" />
+              </div>
+              <div>
+                <label className="block text-[10px] tracking-widest text-gray-500 mb-2">Email Address <span className="text-red-500">*</span></label>
+                <input type="email" value={formData.email} onChange={e => setFormData(prev => ({ ...prev, email: e.target.value }))} className="w-full px-4 py-3 rounded-xl bg-gray-50 dark:bg-gray-800/50 border border-gray-200 dark:border-gray-700 focus:border-green-800 outline-none text-sm dark:text-white" placeholder="name@example.com" />
+              </div>
+              <div>
+                <label className="block text-[10px] tracking-widest text-gray-500 mb-2">WhatsApp Number {formData.planId !== 'e_internship' ? <span className="text-red-500">*</span> : <span className="text-gray-400 text-[9px]">(Optional)</span>}</label>
+                <input type="tel" value={formData.whatsapp} onChange={e => setFormData(prev => ({ ...prev, whatsapp: e.target.value.replace(/\D/g, '').slice(0, 13) }))} className="w-full px-4 py-3 rounded-xl bg-gray-50 dark:bg-gray-800/50 border border-gray-200 dark:border-gray-700 focus:border-green-800 outline-none text-sm dark:text-white" placeholder="e.g., 923001234567" />
+              </div>
+              {formData.planId === 'e_internship' && (
+                <>
+                  <div>
+                    <label className="block text-[10px] tracking-widest text-gray-500 mb-2">Postal Address <span className="text-red-500">*</span></label>
+                    <input type="text" value={formData.address} onChange={e => setFormData(prev => ({ ...prev, address: e.target.value }))} className="w-full px-4 py-3 rounded-xl bg-gray-50 dark:bg-gray-800/50 border border-gray-200 dark:border-gray-700 focus:border-green-800 outline-none text-sm dark:text-white" placeholder="Street Address, City, Province, Postal Code" />
+                  </div>
+                  <div>
+                    <label className="block text-[10px] tracking-widest text-gray-500 mb-2">University / Institution <span className="text-gray-400 text-[9px]">(Optional)</span></label>
+                    <input type="text" value={formData.university} onChange={e => setFormData(prev => ({ ...prev, university: e.target.value }))} className="w-full px-4 py-3 rounded-xl bg-gray-50 dark:bg-gray-800/50 border border-gray-200 dark:border-gray-700 focus:border-green-800 outline-none text-sm dark:text-white" placeholder="Your University Name" />
+                  </div>
+                </>
+              )}
+            </div>
+          )}
+
+          {step === 3 && (
+            <div className="text-center space-y-6">
+              <div className="w-20 h-20 mx-auto bg-green-50 dark:bg-green-900/20 rounded-full flex items-center justify-center text-green-800">
+                <i className="fa-solid fa-envelope-open-text text-2xl"></i>
+              </div>
+              <div>
+                <h3 className="text-xl font-bold dark:text-white">Verify your Email</h3>
+                <p className="text-xs text-gray-500 mt-2">Code sent to <strong className="text-green-800">{formData.email}</strong></p>
+              </div>
+              <div className="flex gap-2 justify-center" onPaste={handleOtpPaste}>
+                {otpBoxes.map((val, idx) => (
+                  <input key={idx} id={`otp-box-${idx}`} type="text" maxLength={1} value={val} onChange={e => handleOtpBoxChange(idx, e.target.value)} className="w-11 h-14 text-center font-bold text-xl rounded-2xl border border-gray-200 dark:border-gray-700 bg-gray-50 dark:bg-gray-800/50 text-gray-900 dark:text-white focus:border-green-800 outline-none" />
+                ))}
+              </div>
+              <div className="flex flex-col items-center gap-2">
+                <span className="text-[10px] text-green-700">{otpStatus}</span>
+                <button type="button" onClick={handleSendOtp} disabled={otpLoading} className="text-xs text-green-800 underline uppercase tracking-wider disabled:opacity-50">
+                  {otpLoading ? 'Sending...' : 'Resend Code'}
+                </button>
+              </div>
+            </div>
+          )}
+
+          {step === 4 && (
+            <div className="space-y-6 text-center">
+              {formData.planId === 'e_internship' ? (
+                <div className="space-y-4 max-w-sm mx-auto">
+                  <h3 className="text-xl font-bold dark:text-white">Free Internship</h3>
+                  <p className="text-xs text-gray-500">No payment needed for e-internship!</p>
+                  <div className="bg-green-50 dark:bg-green-900/10 p-4 rounded-2xl border border-green-100 text-xs text-green-700 flex items-center gap-3">
+                    <i className="fa-solid fa-circle-check"></i>
+                    <span className="text-left">Press Continue to finish your application.</span>
+                  </div>
+                </div>
+              ) : (
+                <>
+                  <div>
+                    <h3 className="text-xl font-bold dark:text-white">Complete Payment</h3>
+                    <p className="text-sm text-gray-500 mt-1">Total Due: <span className="font-bold text-green-800">{plans.find(p => p.id === formData.planId)?.price}</span></p>
+                  </div>
+                  <div className="bg-white dark:bg-gray-900 rounded-[2rem] border border-gray-100 dark:border-gray-800 max-w-sm mx-auto overflow-hidden">
+                    <div className="bg-[#0A4D5C] py-4 text-center">
+                      <span className="text-white font-bold text-3xl">faysalbank</span>
+                    </div>
+                    <div className="p-6 space-y-3 text-left text-sm">
+                      <div><span className="block text-[9px] text-gray-400 uppercase">Account Title</span><strong className="text-[#0A4D5C]">FIRST NOBLE STEP (PRIVATE) LIMITED</strong></div>
+                      <div><span className="block text-[9px] text-gray-400 uppercase">Account Number</span><strong className="font-mono">3291499000005525</strong></div>
+                      <div><span className="block text-[9px] text-gray-400 uppercase">IBAN</span><strong className="font-mono text-xs break-all">PK03FAYS3291499000005525</strong></div>
+                      <div className="bg-red-50 border border-red-100 rounded-xl p-3 text-[10px] text-gray-600">
+                        Payment will be confirmed within 72 working hours. Fake proof will not be accepted.
+                      </div>
+                    </div>
+                  </div>
+                  <div className="max-w-sm mx-auto text-left space-y-2">
+                    <label className="block text-[10px] tracking-widest text-gray-500 uppercase">Upload Receipt (Max 1MB)</label>
+                    <label className="flex flex-col items-center justify-center w-full min-h-[120px] rounded-[1.5rem] border-2 border-dashed border-gray-200 dark:border-gray-700 hover:border-green-600 cursor-pointer bg-gray-50/50 dark:bg-gray-800/20 relative overflow-hidden">
+                      {proofPreview ? (
+                        <img src={proofPreview} alt="Preview" className="absolute inset-0 w-full h-full object-contain p-2 bg-white" />
+                      ) : (
+                        <div className="flex flex-col items-center p-4">
+                          <i className="fa-solid fa-cloud-arrow-up text-xl text-gray-400 mb-2"></i>
+                          <p className="text-[11px] text-gray-500">Click to attach screenshot</p>
+                        </div>
+                      )}
+                      <input type="file" accept="image/jpeg,image/png,image/webp" onChange={handleProofUpload} className="hidden" />
+                    </label>
+                    <div className="flex justify-between text-[10px] text-gray-500">
+                      <span>{formData.paymentProofBase64 ? 'File attached' : 'No file selected'}</span>
+                      {formData.paymentProofBase64 && <button type="button" onClick={() => { setFormData(prev => ({ ...prev, paymentProofBase64: null })); setProofPreview(null); }} className="text-red-500">Clear</button>}
+                    </div>
+                  </div>
+                </>
+              )}
+            </div>
+          )}
+
+          {step === 5 && (
+            <div className="space-y-6">
+              <div className="bg-green-50/50 dark:bg-green-900/10 p-6 rounded-[1.5rem] border border-green-100">
+                <h4 className="text-[10px] text-green-800 uppercase tracking-widest mb-4">Application Review</h4>
+                <div className="grid grid-cols-1 gap-3 text-xs">
+                  <div><span className="text-gray-400 text-[10px] uppercase">Name</span><span className="font-bold block dark:text-white">{formData.fullName || '--'}</span></div>
+                  <div><span className="text-gray-400 text-[10px] uppercase">Email</span><span className="font-bold block dark:text-white">{formData.email || '--'}</span></div>
+                  <div><span className="text-gray-400 text-[10px] uppercase">WhatsApp</span><span className="font-bold block dark:text-white">{formData.whatsapp || '--'}</span></div>
+                  <div><span className="text-gray-400 text-[10px] uppercase">Plan</span><span className="font-bold block dark:text-white">{formData.planId}</span></div>
+                </div>
+              </div>
+              <label className="flex items-start gap-3 cursor-pointer">
+                <input type="checkbox" checked={termsAccepted} onChange={e => setTermsAccepted(e.target.checked)} className="mt-0.5 h-5 w-5 rounded border-gray-300 text-green-800" />
+                <span className="text-xs text-gray-600 dark:text-gray-400">I declare all information is correct and I agree to the <a href="/privacy-policy.html" className="text-green-800 underline">Privacy Policy</a> and <a href="/terms-and-conditions.html" className="text-green-800 underline">Terms & Conditions</a>.</span>
+              </label>
+            </div>
+          )}
+        </div>
+
+        <div className="px-8 pb-8 pt-4 flex gap-4 border-t border-gray-100 dark:border-gray-800">
+          {step > 1 && <button type="button" onClick={prevStep} className="px-6 py-4 rounded-2xl text-[10px] border border-gray-200 text-gray-500">Back</button>}
+          <button type="button" onClick={nextStep} disabled={!validateStep() || otpLoading} className={`flex-grow py-4 rounded-2xl text-[10px] tracking-widest text-white transition-all ${!validateStep() ? 'bg-gray-200 cursor-not-allowed' : 'bg-green-800 hover:bg-green-900 shadow-lg'}`}>
+            {step === 5 ? 'Submit' : 'Continue'}
+          </button>
         </div>
       </div>
     </div>
