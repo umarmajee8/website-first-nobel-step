@@ -1,0 +1,56 @@
+# First Noble Step - robots.txt
+# Optimized for SEO & AI crawlers
+
+User-agent: *
+Allow: /
+Allow: /privacy-policy.html
+Allow: /terms-and-conditions.html
+Allow: /faysal_bank_logo.png
+Allow: /logo_main.png
+Allow: /favicon.png
+
+# Disallow private/API
+Disallow: /api/
+Disallow: /dist/
+Disallow: /*.json$
+Disallow: /src/
+
+# Sitemap
+Sitemap: https://firstnoblestep.com/sitemap.xml
+
+# AI Crawlers - Explicitly Allow (for AI SEO - ChatGPT, Claude, Perplexity, Google AI, Bing AI)
+User-agent: GPTBot
+Allow: /
+
+User-agent: ChatGPT-User
+Allow: /
+
+User-agent: Google-Extended
+Allow: /
+
+User-agent: CCBot
+Allow: /
+
+User-agent: anthropic-ai
+Allow: /
+
+User-agent: Claude-Web
+Allow: /
+
+User-agent: PerplexityBot
+Allow: /
+
+User-agent: Applebot-Extended
+Allow: /
+
+User-agent: Bytespider
+Allow: /
+
+User-agent: FacebookBot
+Allow: /
+
+User-agent: cohere-ai
+Allow: /
+
+# Crawl-delay for politeness
+Crawl-delay: 1
