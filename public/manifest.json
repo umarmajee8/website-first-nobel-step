@@ -1,0 +1,45 @@
+{
+  "name": "First Noble Step - Official Career & Business Growth Platform Pakistan",
+  "short_name": "First Noble Step",
+  "description": "Pakistan's leading career counseling, jobs, business funding & internships platform. Official membership portal of First Noble Step (Pvt.) Ltd.",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#ffffff",
+  "theme_color": "#01411C",
+  "orientation": "portrait-primary",
+  "scope": "/",
+  "lang": "en-PK",
+  "categories": ["business", "education", "career"],
+  "icons": [
+    {
+      "src": "/favicon.png",
+      "sizes": "192x192",
+      "type": "image/png",
+      "purpose": "any maskable"
+    },
+    {
+      "src": "/logo_main.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "any"
+    }
+  ],
+  "shortcuts": [
+    {
+      "name": "Apply Now",
+      "short_name": "Apply",
+      "description": "Apply for membership",
+      "url": "/#membership",
+      "icons": [{ "src": "/favicon.png", "sizes": "96x96" }]
+    },
+    {
+      "name": "Contact Us",
+      "short_name": "Contact",
+      "description": "Contact headquarters",
+      "url": "/#contact",
+      "icons": [{ "src": "/favicon.png", "sizes": "96x96" }]
+    }
+  ],
+  "related_applications": [],
+  "prefer_related_applications": false
+}
