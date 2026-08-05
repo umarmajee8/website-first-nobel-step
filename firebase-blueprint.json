@@ -1,0 +1,29 @@
+{
+  "entities": {
+    "Application": {
+      "title": "Membership Application",
+      "description": "Details of a user membership application",
+      "type": "object",
+      "properties": {
+        "fullName": { "type": "string", "description": "Full name of the applicant" },
+        "cnic": { "type": "string", "description": "CNIC number" },
+        "email": { "type": "string", "description": "Email address" },
+        "whatsapp": { "type": "string", "description": "WhatsApp number" },
+        "planId": { "type": "string", "description": "Selected plan ID" },
+        "status": { "type": "string", "description": "Academic or Professional status" },
+        "country": { "type": "string", "description": "Target country" },
+        "businessName": { "type": "string", "description": "Business name for entrepreneurs" },
+        "industry": { "type": "string", "description": "Business industry" },
+        "userId": { "type": "string", "description": "Firebase Auth UID" },
+        "createdAt": { "type": "string", "format": "date-time", "description": "Submission timestamp" }
+      },
+      "required": ["fullName", "email", "planId", "userId", "createdAt"]
+    }
+  },
+  "firestore": {
+    "/applications/{applicationId}": {
+      "schema": "Application",
+      "description": "User membership applications"
+    }
+  }
+}
