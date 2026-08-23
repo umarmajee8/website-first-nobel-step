@@ -1,1 +1,0 @@
-// React entry point disabled. The application now runs entirely from index.html as a standalone static file.
