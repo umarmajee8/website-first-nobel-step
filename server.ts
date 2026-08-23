@@ -3,11 +3,7 @@ import { google } from 'googleapis';
 import dotenv from 'dotenv';
 import path from 'path';
 import { createServer as createViteServer } from 'vite';
-import PDFDocument from 'pdfkit';
 import nodemailer from 'nodemailer';
-import { GoogleGenAI, Type } from '@google/genai';
-import Stripe from 'stripe';
-import fs from 'fs';
 
 dotenv.config();
 
@@ -17,23 +13,6 @@ async function startServer() {
 
   app.use(express.json({ limit: '20mb' }));
 
-  // Google Sheets API setup
-  const stripe = new Stripe(process.env.STRIPE_SECRET_KEY || '');
-
-  // API endpoint to create a payment intent
-  app.post('/api/create-payment-intent', async (req, res) => {
-    try {
-      const { amount, currency } = req.body;
-      const paymentIntent = await stripe.paymentIntents.create({
-        amount: amount, // amount in cents
-        currency: currency || 'pkr',
-      });
-      res.status(200).json({ clientSecret: paymentIntent.client_secret });
-    } catch (error: any) {
-      console.error('Error creating payment intent:', error);
-      res.status(500).json({ success: false, error: error.message });
-    }
-  });
   let privateKey = process.env.GOOGLE_PRIVATE_KEY || '';
   // Remove surrounding quotes if user accidentally pasted them
   if (privateKey.startsWith('"') && privateKey.endsWith('"')) {
@@ -118,8 +97,8 @@ async function startServer() {
       const secret = process.env.GOOGLE_PRIVATE_KEY || 'fallback_secret';
       const expectedHash = crypto.createHash('sha256').update(otp + email + secret).digest('hex');
 
-      // Check if it's the expected hash, OR allow "000000" and "123456" as a universal bypass for testing purposes
-      if (expectedHash === otpHash || otp === '000000' || otp === '123456') {
+      // Check if it's the expected hash
+      if (expectedHash === otpHash) {
         return res.status(200).json({ success: true });
       } else {
         console.warn(`[OTP Failed] User: ${email}, OTP: ${otp}. Expected ${expectedHash}, got ${otpHash}`);
@@ -306,106 +285,6 @@ async function startServer() {
       }
     }
   });
-
-  // API endpoint for checking program eligibility from CV/Resume
-  app.post('/api/check-eligibility', async (req, res) => {
-    try {
-      const { cvFile, cvFileName, cvFileType } = req.body;
-      if (!cvFile) {
-        return res.status(400).json({ success: false, error: 'Resume/CV file is required.' });
-      }
-
-      const apiKey = process.env.GEMINI_API_KEY;
-      if (!apiKey) {
-        return res.status(500).json({ 
-          success: false, 
-          error: 'Gemini API key is not configured for the project. Please add GEMINI_API_KEY in Settings > Secrets.' 
-        });
-      }
-
-      // Initialize Google GenAI
-      const ai = new GoogleGenAI({
-        apiKey,
-        httpOptions: {
-          headers: {
-            'User-Agent': 'aistudio-build'
-          }
-        }
-      });
-
-      const base64Data = cvFile.replace(/^data:.*;base64,/, "");
-      const mimeType = cvFileType || "application/pdf";
-
-      const filePart = {
-        inlineData: {
-          mimeType: mimeType,
-          data: base64Data
-        }
-      };
-
-      const promptText = `
-You are a highly experienced and friendly career counselor and academic evaluator at First Noble Step (Pvt.) Ltd.
-Evaluate the uploaded CV/Resume content or image for program eligibility.
-
-We offer three main program packages/pathways:
-1. "professional" (Job Professional Pathway / Careers, Job training, development)
-2. "student" (Official Student Pathway / Academic growth, studies abroad, scholarships)
-3. "entrepreneur" (Entrepreneur Pathway / Starting/growing a business, scaling, investment coaching)
-4. "basic" (General Career Advisory and free pathway coaching)
-
-Determine the following:
-a. recommendedPathway: MUST be one of: "professional", "student", "entrepreneur", or "basic"
-b. pathwayName: A elegant Urdu/English title for their recommended match (e.g., "Official Student Pathway", "Global Job Professional", "Pioneering Entrepreneur")
-c. matchScore: An integer between 50 and 100 based on their experience alignment
-d. summary: A warm, friendly summary (2-3 sentences) in natural Roman Urdu/Urdu-English (e.g., "Aap ka software engineering profile bohot behtreen hai...") commenting on their current background.
-e. swotAnalysis: Provide strengths, weaknesses, opportunities, and threats (each list must contain 2-3 short, specific points) in a friendly mix of English/Roman Urdu.
-f. recommendations: 3 clean, highly actionable steps in friendly Roman Urdu or Urdu-English telling them how First Noble Step will help them unlock this potential (e.g., "Standard/Professional Package select karke professional advice start krain...").
-
-Respond with the exact requested JSON schema.
-`;
-
-      const response = await ai.models.generateContent({
-        model: 'gemini-3.5-flash',
-        contents: [filePart, promptText],
-        config: {
-          responseMimeType: 'application/json',
-          responseSchema: {
-            type: Type.OBJECT,
-            properties: {
-              recommendedPathway: { type: Type.STRING },
-              pathwayName: { type: Type.STRING },
-              matchScore: { type: Type.INTEGER },
-              summary: { type: Type.STRING },
-              swotAnalysis: {
-                type: Type.OBJECT,
-                properties: {
-                  strengths: { type: Type.ARRAY, items: { type: Type.STRING } },
-                  weaknesses: { type: Type.ARRAY, items: { type: Type.STRING } },
-                  opportunities: { type: Type.ARRAY, items: { type: Type.STRING } },
-                  threats: { type: Type.ARRAY, items: { type: Type.STRING } }
-                },
-                required: ["strengths", "weaknesses", "opportunities", "threats"]
-              },
-              recommendations: { type: Type.ARRAY, items: { type: Type.STRING } }
-            },
-            required: ["recommendedPathway", "pathwayName", "matchScore", "summary", "swotAnalysis", "recommendations"]
-          }
-        }
-      });
-
-      const responseText = response.text;
-      if (!responseText) {
-        throw new Error('Emply response received from AI model');
-      }
-
-      const result = JSON.parse(responseText);
-      return res.status(200).json({ success: true, result });
-    } catch (error: any) {
-      console.error('Error in check-eligibility API:', error);
-      return res.status(500).json({ success: false, error: error.message || 'Evaluation failed. Please try again.' });
-    }
-  });
-
 
   // Vite middleware for development
 

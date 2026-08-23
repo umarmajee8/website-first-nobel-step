@@ -2518,6 +2518,27 @@
 
       async function nextStep() {
         hideError();
+        if (state.step === 1 && !state.plan) {
+          showError(
+            "Select a Pathway",
+            "Please select the Entrepreneur pathway to continue.",
+          );
+          return;
+        }
+        if (state.step === 2 && !validateStep2(true)) {
+          showError(
+            "Incomplete Details",
+            "Please provide your name, a valid email and WhatsApp number.",
+          );
+          return;
+        }
+        if (state.step === 4 && !validateStep4(true)) {
+          showError(
+            "Payment Proof Required",
+            "Please upload your payment receipt to continue.",
+          );
+          return;
+        }
         if (state.step === 5) {
           submitForm();
         } else if (state.step === 2) {
@@ -2817,13 +2838,6 @@
       }
 
       // --- Validation Logic ---
-      function formatCNIC(input) {
-        let val = input.value.replace(/\D/g, "");
-        if (val.length > 5) val = val.slice(0, 5) + "-" + val.slice(5);
-        if (val.length > 13) val = val.slice(0, 13) + "-" + val.slice(13, 14);
-        input.value = val.slice(0, 15);
-      }
-
       function validateCurrentStep() {
         let isValid = false;
         if (state.step === 1) {
@@ -2915,30 +2929,8 @@
           fullName: document.getElementById("input-fullname").value,
           cnic: "",
           email: document.getElementById("input-email").value.trim(),
-          address: document.getElementById("input-address")
-            ? document.getElementById("input-address").value.trim()
-            : "",
-          university: document.getElementById("input-university")
-            ? document.getElementById("input-university").value.trim()
-            : "",
           whatsapp: document.getElementById("input-whatsapp")
             ? document.getElementById("input-whatsapp").value.trim()
-            : "",
-          status: document.getElementById("input-status")
-            ? document.getElementById("input-status").value
-            : "",
-          businessName: document.getElementById("input-business")
-            ? document.getElementById("input-business").value
-            : "",
-          industry: document.getElementById("input-industry")
-            ? document.getElementById("input-industry").value === "other"
-              ? document.getElementById("input-industry-other").value
-              : document.getElementById("input-industry").value
-            : "",
-          targetCountry: document.getElementById("input-country")
-            ? document.getElementById("input-country").value === "other"
-              ? document.getElementById("input-country-other").value
-              : document.getElementById("input-country").value
             : "",
           paymentMethod: state.paymentMethod,
           paymentProof: state.paymentProofBase64
@@ -3246,7 +3238,6 @@
         sendVerificationCode,
         validateStep4,
         hideError,
-        formatCNIC,
         triggerSuccessAnimation,
         triggerSuccessScreenConfetti,
         copyToClipboard,
