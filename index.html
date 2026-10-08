@@ -161,35 +161,6 @@
         }
       }
 
-      #modal-overlay.e-training-drawer {
-        inset: 4rem 0 0;
-        align-items: flex-start;
-        padding: 0;
-      }
-
-      #modal-content.e-training-drawer-content {
-        width: 100%;
-        max-width: none;
-        max-height: calc(100vh - 4rem);
-        border-radius: 0 0 1.5rem 1.5rem;
-      }
-
-      #modal-content.e-training-drawer-content #form-modal-header {
-        background-color: #dc2626;
-        color: #fff;
-      }
-
-      #modal-content.e-training-drawer-content #form-title,
-      #modal-content.e-training-drawer-content #form-modal-subtitle,
-      #modal-content.e-training-drawer-content #form-modal-close,
-      #modal-content.e-training-drawer-content #form-modal-close i {
-        color: #fff;
-      }
-
-      #modal-content.e-training-drawer-content #form-modal-close:hover {
-        background-color: rgba(255, 255, 255, 0.15);
-      }
-
       @keyframes dot-pulse {
         0%,
         100% {
@@ -2864,21 +2835,8 @@
       function updateUI() {
         const progressEl = document.getElementById("form-progress");
         const footerEl = document.getElementById("form-footer");
-        const modalOverlayEl = document.getElementById("modal-overlay");
-        const modalContentEl = document.getElementById("modal-content");
         const titleEl = document.getElementById("form-title");
-        // The full-width red drawer look belongs to the banner entry only; an
-        // E-Training pick inside the form stays in the normal modal frame.
-        const isBannerETrainingEntry =
-          state.isETraining && !state.eTrainingFromPlanStep;
-        modalOverlayEl?.classList.toggle(
-          "e-training-drawer",
-          isBannerETrainingEntry,
-        );
-        modalContentEl?.classList.toggle(
-          "e-training-drawer-content",
-          isBannerETrainingEntry,
-        );
+        // E-Training and membership both open in the same centred modal card.
         const successMessage = document.getElementById("success-message");
         if (progressEl) progressEl.classList.remove("hidden");
         if (footerEl) footerEl.classList.remove("hidden");

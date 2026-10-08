@@ -76,8 +76,11 @@ assert($('e-training-banner-close') !== null, 'white close control exists on the
 $('e-training-banner').dispatchEvent(new window.MouseEvent('click', { bubbles: true }));
 await sleep(50);
 assert(visible('modal-overlay'), 'clicking anywhere on the E-Training section opens the application form');
-assert($('modal-overlay').classList.contains('e-training-drawer'), 'e-Training form opens below the header');
-assert($('modal-content').classList.contains('e-training-drawer-content'), 'e-Training form spans the header width');
+assert(!html.includes('e-training-drawer'), 'no full-width drawer styling remains in the stylesheet');
+assert(!$('modal-overlay').classList.contains('e-training-drawer'), 'E-Training form is not a full-width drawer');
+assert($('modal-overlay').classList.contains('items-center') && $('modal-overlay').classList.contains('justify-center'), 'E-Training form opens as a centred modal');
+assert($('modal-content').classList.contains('max-w-2xl'), 'E-Training form uses the same centred card width as the membership form');
+assert(!$('modal-content').classList.contains('e-training-drawer-content'), 'E-Training card does not stretch edge to edge');
 assert($('form-modal-close').getAttribute('aria-label') === 'Close application form', 'close control is available in the panel header');
 assert(visible('step-2'), 'e-Training starts on the name/details section');
 assert($('form-title').textContent.includes('E-Training'), 'e-Training form has the right title');
