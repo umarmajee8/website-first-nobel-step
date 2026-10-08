@@ -61,6 +61,16 @@ assert(typeof window.openForm === 'function', 'openForm exposed');
 assert(typeof window.selectPlan === 'function', 'selectPlan exposed');
 assert(typeof window.nextStep === 'function', 'nextStep exposed');
 
+// Project affiliation reads as one balanced statement, not a tiny stacked label.
+const projectAffiliation = $('project-affiliation');
+const affiliationText = projectAffiliation?.querySelector('span');
+assert(projectAffiliation !== null && visible('project-affiliation'), 'project affiliation badge is visible');
+assert(projectAffiliation?.closest('#hero') === $('hero'), 'project affiliation appears in the hero section');
+assert(projectAffiliation?.textContent.replace(/\s+/g, ' ').trim() === 'Part of UN33B GROUP OF COMPANIES', 'project affiliation shows the requested company name');
+assert(projectAffiliation?.querySelector('i')?.getAttribute('aria-hidden') === 'true', 'decorative affiliation icon is hidden from assistive technology');
+assert(affiliationText?.classList.contains('text-[13px]') && affiliationText.classList.contains('sm:text-sm'), 'Part of and the company name share a larger, readable font size');
+assert(affiliationText?.querySelector('span')?.classList.contains('font-semibold') && !affiliationText.classList.contains('flex-col'), 'Part of is emphasized inline instead of stacked above the company name');
+
 // Header/nav sanity
 assert($('membership') !== null, 'membership section exists');
 assert($('automation') !== null, 'automation section exists');
@@ -71,6 +81,11 @@ assert($('e-training-apply') !== null, 'E-Training apply button exists in the ba
 assert($('e-training-apply').textContent.includes('Enrollment Currently Open for E-Training'), 'banner shows the enrollment announcement');
 assert($('e-training-apply').classList.contains('sf-pro-font'), 'enrollment announcement uses the SF Pro font stack');
 assert($('e-training-banner-close') !== null, 'white close control exists on the banner');
+const enrollmentDeadline = $('e-training-enrollment-deadline');
+assert(enrollmentDeadline !== null && !visible('e-training-enrollment-deadline'), 'enrollment deadline starts hidden until E-Training is chosen');
+assert(enrollmentDeadline?.textContent.replace(/\s+/g, ' ').trim() === 'Last date to enroll: 20 October', 'enrollment deadline shows the requested date');
+assert($('form-modal-header').nextElementSibling === enrollmentDeadline, 'enrollment deadline sits at the beginning of the form, directly below the header');
+assert(enrollmentDeadline?.querySelector('i')?.getAttribute('aria-hidden') === 'true', 'decorative deadline icon is hidden from assistive technology');
 
 // e-Training opens the personal-details form and skips plan/payment steps
 $('e-training-banner').dispatchEvent(new window.MouseEvent('click', { bubbles: true }));
@@ -84,6 +99,7 @@ assert(!$('modal-content').classList.contains('e-training-drawer-content'), 'E-T
 assert($('form-modal-close').getAttribute('aria-label') === 'Close application form', 'close control is available in the panel header');
 assert(visible('step-2'), 'e-Training starts on the name/details section');
 assert($('form-title').textContent.includes('E-Training'), 'e-Training form has the right title');
+assert(visible('e-training-enrollment-deadline'), 'enrollment deadline is visible immediately when E-Training opens from the banner');
 assert($('btn-back').classList.contains('hidden'), 'first e-Training step has no plan-selection back step');
 assert($('step-1-indicator').parentElement.classList.contains('hidden'), 'plan-selection progress step is skipped');
 assert($('step-4-indicator').parentElement.classList.contains('hidden'), 'payment progress step is skipped');
@@ -95,11 +111,88 @@ window.validateStep2();
 await window.nextStep();
 await sleep(50);
 assert(visible('step-3'), 'e-Training continues to email verification');
-'123456'.split('').forEach((char, index) => {
-  const box = document.querySelectorAll('#otp-boxes .otp-box')[index];
-  box.value = char;
-  box.dispatchEvent(new window.Event('input', { bubbles: true }));
-});
+
+// OTP clipboard, keyboard suggestions, and autofill must fill six separate boxes.
+const otpBoxes = Array.from(document.querySelectorAll('#otp-boxes .otp-box'));
+assert(otpBoxes.length === 6, 'email verification has six OTP boxes');
+assert(otpBoxes.every(box => box.inputMode === 'numeric' && box.maxLength !== 1), 'OTP inputs show a numeric keyboard without truncating a pasted code');
+assert(otpBoxes[0].autocomplete === 'one-time-code', 'first OTP box supports full-code autofill');
+assert(otpBoxes.every(box => box.getAttribute('aria-label')), 'OTP digits have accessible labels');
+const checkOTPCode = (code, message) => {
+  const expected = [...code, ...Array(6 - code.length).fill('')];
+  assert(otpBoxes.every((box, index) => box.value === expected[index]) && $('input-otp').value === code, message);
+  assert($('btn-next').disabled === (code.length !== 6), `${message}: Continue requires a complete code`);
+};
+const pasteOTPCode = (index, text) => {
+  const event = new window.Event('paste', { bubbles: true, cancelable: true });
+  Object.defineProperty(event, 'clipboardData', { value: { getData: type => ['text/plain', 'text'].includes(type) ? text : '' } });
+  otpBoxes[index].focus();
+  otpBoxes[index].dispatchEvent(event);
+  return event;
+};
+const inputOTPCode = (index, value, data = null, inputType = 'insertReplacementText') => {
+  otpBoxes[index].focus();
+  otpBoxes[index].value = value;
+  otpBoxes[index].dispatchEvent(new window.InputEvent('input', { bubbles: true, data, inputType }));
+};
+for (const [index, text, expected, label] of [
+  [0, '123456', '123456', 'full OTP clipboard paste fills all six boxes'],
+  [5, '012345', '012345', 'full paste into the last box preserves a leading zero'],
+  [2, ' 123-456\n', '123456', 'clipboard formatting is removed before distributing digits'],
+  [0, '123456789', '123456', 'overlong clipboard input is limited to six digits'],
+]) {
+  assert(pasteOTPCode(index, text).defaultPrevented, `${label}: native paste is handled`);
+  checkOTPCode(expected, label);
+}
+pasteOTPCode(0, 'No digits');
+checkOTPCode('123456', 'non-numeric paste leaves the existing code intact');
+pasteOTPCode(0, '98');
+checkOTPCode('98', 'short paste clears stale trailing digits');
+pasteOTPCode(2, '76');
+checkOTPCode('9876', 'partial paste starts at the selected box and preserves the prefix');
+assert(document.activeElement === otpBoxes[4], 'partial paste focuses the next empty box');
+pasteOTPCode(0, '123456');
+pasteOTPCode(1, '9');
+checkOTPCode('193456', 'single-digit paste replaces only the selected digit');
+inputOTPCode(4, '123456', '123456');
+checkOTPCode('123456', 'mobile multi-digit input without a paste event fills all six boxes');
+inputOTPCode(3, '654321');
+checkOTPCode('654321', 'autofill without event data distributes the entire code');
+inputOTPCode(2, '19', '9', 'insertText');
+checkOTPCode('659321', 'typing beside an existing digit replaces it without overwriting adjacent boxes');
+const beforeInput = new window.InputEvent('beforeinput', { bubbles: true, cancelable: true, data: '123 456', inputType: 'insertText' });
+otpBoxes[3].dispatchEvent(beforeInput);
+assert(beforeInput.defaultPrevented, 'keyboard clipboard suggestions are handled before native insertion');
+checkOTPCode('123456', 'beforeinput distributes a complete code instead of keeping one digit');
+const nonCancelableInput = new window.InputEvent('beforeinput', { bubbles: true, data: '654321', inputType: 'insertReplacementText' });
+otpBoxes[0].dispatchEvent(nonCancelableInput);
+inputOTPCode(0, '654321');
+checkOTPCode('654321', 'non-cancelable autofill uses the input-event fallback');
+const nativePasteFallback = new window.Event('paste', { bubbles: true, cancelable: true });
+otpBoxes[0].dispatchEvent(nativePasteFallback);
+assert(!nativePasteFallback.defaultPrevented, 'missing clipboard data is allowed to fall back to native input');
+inputOTPCode(0, '123456');
+checkOTPCode('123456', 'native clipboard fallback still fills all six boxes');
+inputOTPCode(1, '2x', 'x', 'insertText');
+checkOTPCode('123456', 'non-numeric typing is ignored without changing a valid code');
+assert(document.activeElement === otpBoxes[1], 'ignored non-numeric typing does not advance focus');
+
+// Keep ordinary typing, deletion, and keyboard navigation working.
+otpBoxes.forEach(box => { box.value = ''; });
+otpBoxes[0].dispatchEvent(new window.Event('input', { bubbles: true }));
+'123456'.split('').forEach((digit, index) => inputOTPCode(index, digit, digit, 'insertText'));
+checkOTPCode('123456', 'manual digit-by-digit typing still builds a complete OTP');
+inputOTPCode(5, '', null, 'deleteContentBackward');
+checkOTPCode('12345', 'deleting a digit disables Continue');
+const backspace = new window.KeyboardEvent('keydown', { key: 'Backspace', bubbles: true, cancelable: true });
+otpBoxes[5].dispatchEvent(backspace);
+checkOTPCode('1234', 'backspace from an empty box clears the previous digit');
+assert(backspace.defaultPrevented && document.activeElement === otpBoxes[4], 'backspace focuses the previous OTP box');
+otpBoxes[4].dispatchEvent(new window.KeyboardEvent('keydown', { key: 'ArrowLeft', bubbles: true, cancelable: true }));
+assert(document.activeElement === otpBoxes[3], 'left arrow moves to the previous OTP box');
+otpBoxes[3].dispatchEvent(new window.KeyboardEvent('keydown', { key: 'ArrowRight', bubbles: true, cancelable: true }));
+assert(document.activeElement === otpBoxes[4], 'right arrow moves to the next OTP box');
+pasteOTPCode(0, '123456');
 await window.nextStep();
 assert(visible('step-5'), 'verified e-Training application goes directly to review');
 assert(!visible('step-4'), 'e-Training never shows the payment section');
@@ -126,6 +219,7 @@ await sleep(50);
 assert(visible('modal-overlay'), 'modal opens');
 assert(visible('step-1'), 'step 1 visible');
 assert(visible('section-entrepreneur'), 'entrepreneur section visible');
+assert(!visible('e-training-enrollment-deadline'), 'enrollment deadline stays hidden in the membership form');
 assert(document.getElementById('section-students') === null, 'old packages removed');
 
 // Select entrepreneur
@@ -153,6 +247,7 @@ assert(!card.classList.contains('border-pakistan-green'), 'Entrepreneur card des
 assert(visible('package-details-container'), 'E-Training details shown');
 assert($('package-details-title').textContent.includes('E-Training'), 'details title switches to E-Training');
 assert($('form-title').textContent.includes('E-Training'), 'form title switches to the E-Training application');
+assert(visible('e-training-enrollment-deadline'), 'selecting E-Training inside the form immediately shows the enrollment deadline');
 assert(!$('modal-overlay').classList.contains('e-training-drawer'), 'in-form E-Training keeps the normal modal frame');
 assert(visible('step-1'), 'in-form E-Training keeps the plan-selection step');
 assert(!$('step-1-indicator').parentElement.classList.contains('hidden'), 'plan step stays in the in-form E-Training progress');
@@ -171,6 +266,7 @@ window.selectPlan('entrepreneur');
 await sleep(20);
 assert(!$('modal-overlay').classList.contains('e-training-drawer'), 'membership flow has no e-Training drawer');
 assert($('form-title').textContent.includes('Membership'), 'title returns to the Membership Application');
+assert(!visible('e-training-enrollment-deadline'), 'switching back to Entrepreneur hides the E-Training deadline');
 
 // Step 1 -> 2
 window.nextStep();
@@ -194,8 +290,7 @@ await sleep(60);
 assert(visible('step-3'), 'step 3 (OTP) visible');
 
 // OTP wrong then right
-const boxes = document.querySelectorAll('#step-3 input[maxlength="1"]');
-const otpInputs = boxes.length ? boxes : [ $('input-otp') ].filter(Boolean);
+const boxes = document.querySelectorAll('#otp-boxes .otp-box');
 // fill otp boxes if present
 if (boxes.length >= 6) {
   '123456'.split('').forEach((ch, i) => {

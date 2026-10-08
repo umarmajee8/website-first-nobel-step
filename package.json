@@ -9,7 +9,8 @@
     "start": "node dist/server.cjs",
     "lint": "tsc --noEmit",
     "preview": "vite preview",
-    "test": "node smoke-test.mjs",
+    "test": "node seo-test.mjs && node smoke-test.mjs",
+    "test:seo": "node seo-test.mjs",
     "build:css": "tailwindcss -c tailwind.config.js -i src/tailwind.input.css -o public/vendor/tailwind.css --minify"
   },
   "dependencies": {
