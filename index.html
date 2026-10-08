@@ -161,35 +161,6 @@
         }
       }
 
-      #modal-overlay.e-training-drawer {
-        inset: 4rem 0 0;
-        align-items: flex-start;
-        padding: 0;
-      }
-
-      #modal-content.e-training-drawer-content {
-        width: 100%;
-        max-width: none;
-        max-height: calc(100vh - 4rem);
-        border-radius: 0 0 1.5rem 1.5rem;
-      }
-
-      #modal-content.e-training-drawer-content #form-modal-header {
-        background-color: #dc2626;
-        color: #fff;
-      }
-
-      #modal-content.e-training-drawer-content #form-title,
-      #modal-content.e-training-drawer-content #form-modal-subtitle,
-      #modal-content.e-training-drawer-content #form-modal-close,
-      #modal-content.e-training-drawer-content #form-modal-close i {
-        color: #fff;
-      }
-
-      #modal-content.e-training-drawer-content #form-modal-close:hover {
-        background-color: rgba(255, 255, 255, 0.15);
-      }
-
       @keyframes dot-pulse {
         0%,
         100% {
@@ -1489,6 +1460,41 @@
                   </div>
                 </div>
               </div>
+
+              <h4
+                class="text-[10px] font-lemon tracking-[0.2em] text-pakistan-green mb-6 mt-10 uppercase flex items-center gap-3"
+              >
+                <span class="w-6 h-px bg-pakistan-green/20"></span> E-Training
+              </h4>
+              <div
+                onclick="selectPlan('e-training')"
+                id="plan-e-training"
+                class="plan-card flex flex-col gap-3 p-5 rounded-2xl border-2 transition-all cursor-pointer border-gray-100 dark:border-gray-800 hover:border-green-100 overflow-hidden relative"
+              >
+                <div class="flex items-center justify-between w-full mb-2 z-10">
+                  <div
+                    class="w-10 h-10 rounded-xl flex items-center justify-center bg-gray-50 dark:bg-gray-800 text-gray-400 icon-box"
+                  >
+                    <i class="fa-solid fa-graduation-cap"></i>
+                  </div>
+                  <div
+                    class="w-5 h-5 rounded-full border-2 flex items-center justify-center border-gray-200 check-circle"
+                  ></div>
+                </div>
+                <div class="z-10">
+                  <h4 class="font-lemon text-[10px] dark:text-white">
+                    E-Training
+                  </h4>
+                  <div class="mt-1 flex flex-col gap-1 z-10 w-full relative">
+                    <span class="flex items-center gap-2">
+                      <span
+                        class="bg-red-100 text-red-600 px-1.5 py-0.5 rounded text-[8px] font-black uppercase tracking-wider animate-pulse border border-red-200 shadow-sm"
+                        >Enrollment Open</span
+                      >
+                    </span>
+                  </div>
+                </div>
+              </div>
             </div>
 
 
@@ -2231,6 +2237,7 @@
       let state = {
         isOpen: false,
         isETraining: false,
+        eTrainingFromPlanStep: false,
         step: 1,
         plan: null,
         paymentMethod: "faysalbank",
@@ -2270,6 +2277,7 @@
       async function openForm(planId) {
         const isETrainingApplication = planId === "e-training";
         state.isETraining = isETrainingApplication;
+        state.eTrainingFromPlanStep = false;
         state.isOpen = true;
         state.otpSentCount = 0;
         modalOverlay.classList.remove("hidden");
@@ -2303,8 +2311,11 @@
       }
 
       function attemptCloseForm() {
-        // E-Training starts on the personal-details step, so that is its first step.
-        const isFirstETrainingStep = state.isETraining && state.step === 2;
+        // E-Training opened from the red banner starts on the personal-details
+        // step, so that is its first step. When it is picked inside the form,
+        // the plan-selection step comes first.
+        const isFirstETrainingStep =
+          state.isETraining && !state.eTrainingFromPlanStep && state.step === 2;
         if ((state.step > 1 && !isFirstETrainingStep) || state.data.fullName) {
           exitConfirm.classList.remove("hidden");
         } else {
@@ -2343,6 +2354,7 @@
       function resetForm() {
         hideError();
         state.isETraining = false;
+        state.eTrainingFromPlanStep = false;
         state.step = 1;
         state.plan = null;
         state.paymentMethod = "faysalbank";
@@ -2400,6 +2412,10 @@
       function selectPlan(planId) {
         hideError();
         state.plan = planId;
+        // Selecting E-Training inside the form switches the application over to
+        // the E-Training flow (no payment step) while keeping the plan list.
+        state.isETraining = planId === "e-training";
+        state.eTrainingFromPlanStep = state.isETraining;
         // Highlight UI
         document.querySelectorAll(".plan-card").forEach((el) => {
           const checkCircle = el.querySelector(".check-circle");
@@ -2453,6 +2469,12 @@
             "Proudly eligible for the First Noble Step Business & Leadership Awards",
             "Honorably receive your exclusive Legacy Card & Certificate for your company from First Noble Step",
           ],
+          "e-training": [
+            "<span class='inline-flex items-center gap-1.5 bg-yellow-100 dark:bg-yellow-900/30 border border-yellow-300 dark:border-yellow-700/50 text-yellow-900 dark:text-yellow-300 font-bold px-2.5 py-1 -ml-1 mt-0.5 mb-0.5 rounded-md shadow-sm text-xs'><i class='fa-solid fa-graduation-cap text-yellow-500'></i>Enrollment currently open for E-Training</span>",
+            "<span class='inline-flex items-center gap-1.5 bg-gradient-to-r from-yellow-100 to-amber-100 dark:from-yellow-900/40 dark:to-amber-900/30 border border-yellow-400 dark:border-yellow-600 text-yellow-900 dark:text-yellow-200 font-bold px-2.5 py-1 -ml-1 mt-0.5 mb-0.5 rounded-md shadow-sm text-xs'><i class='fa-solid fa-certificate text-yellow-500'></i>Golden Certificate awarded after completing the E-Training program</span>",
+            "Experience Letter provided along with your Golden Certificate",
+            "Real projects — hands-on work on live projects during the training",
+          ],
         };
 
         const detailsContainer = document.getElementById(
@@ -2462,7 +2484,10 @@
         const detailsTitle = document.getElementById("package-details-title");
 
         if (packageDetails[planId]) {
-          detailsTitle.innerText = "Entrepreneur Package Details";
+          detailsTitle.innerText =
+            planId === "e-training"
+              ? "E-Training Details"
+              : "Entrepreneur Package Details";
           detailsList.innerHTML = packageDetails[planId]
             .map((detail) => {
               if (detail.trim().startsWith("<div")) {
@@ -2482,7 +2507,9 @@
           if (detailsContainer) detailsContainer.classList.add("hidden");
         }
 
-        validateCurrentStep();
+        // Refresh the whole form chrome (title, step flow, progress) so picking
+        // E-Training instantly switches it into the E-Training application.
+        updateUI();
       }
 
       function copyToClipboard(text, btnId) {
@@ -2701,7 +2728,10 @@
 
       function prevStep() {
         hideError();
-        if (state.isETraining && state.step === 2) return;
+        // The banner entry starts at the details step, so there is nothing to
+        // go back to; the in-form entry can step back to the plan list.
+        if (state.isETraining && !state.eTrainingFromPlanStep && state.step === 2)
+          return;
         if (state.step > 1) {
           state.step =
             state.isETraining && state.step === 5 ? 3 : state.step - 1;
@@ -2805,14 +2835,8 @@
       function updateUI() {
         const progressEl = document.getElementById("form-progress");
         const footerEl = document.getElementById("form-footer");
-        const modalOverlayEl = document.getElementById("modal-overlay");
-        const modalContentEl = document.getElementById("modal-content");
         const titleEl = document.getElementById("form-title");
-        modalOverlayEl?.classList.toggle("e-training-drawer", state.isETraining);
-        modalContentEl?.classList.toggle(
-          "e-training-drawer-content",
-          state.isETraining,
-        );
+        // E-Training and membership both open in the same centred modal card.
         const successMessage = document.getElementById("success-message");
         if (progressEl) progressEl.classList.remove("hidden");
         if (footerEl) footerEl.classList.remove("hidden");
@@ -2829,8 +2853,14 @@
 
         if (typeof updateApiStatus === "function") updateApiStatus("idle");
 
-        // E-Training skips both plan selection and payment, so its progress has 3 steps.
-        const flowSteps = state.isETraining ? [2, 3, 5] : [1, 2, 3, 4, 5];
+        // E-Training never asks for payment. Picked from the banner it starts on
+        // the details step (3 steps total); picked inside the form it keeps the
+        // plan-selection step (4 steps total).
+        const flowSteps = !state.isETraining
+          ? [1, 2, 3, 4, 5]
+          : state.eTrainingFromPlanStep
+            ? [1, 2, 3, 5]
+            : [2, 3, 5];
         const currentFlowIndex = flowSteps.indexOf(state.step);
         const progress =
           currentFlowIndex <= 0
@@ -2922,7 +2952,10 @@
         // Update Buttons
         btnBack.classList.toggle(
           "hidden",
-          state.step === 1 || (state.isETraining && state.step === 2),
+          state.step === 1 ||
+            (state.isETraining &&
+              !state.eTrainingFromPlanStep &&
+              state.step === 2),
         );
         const btnNextText = document.getElementById("btn-next-text");
 

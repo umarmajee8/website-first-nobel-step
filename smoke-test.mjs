@@ -76,8 +76,11 @@ assert($('e-training-banner-close') !== null, 'white close control exists on the
 $('e-training-banner').dispatchEvent(new window.MouseEvent('click', { bubbles: true }));
 await sleep(50);
 assert(visible('modal-overlay'), 'clicking anywhere on the E-Training section opens the application form');
-assert($('modal-overlay').classList.contains('e-training-drawer'), 'e-Training form opens below the header');
-assert($('modal-content').classList.contains('e-training-drawer-content'), 'e-Training form spans the header width');
+assert(!html.includes('e-training-drawer'), 'no full-width drawer styling remains in the stylesheet');
+assert(!$('modal-overlay').classList.contains('e-training-drawer'), 'E-Training form is not a full-width drawer');
+assert($('modal-overlay').classList.contains('items-center') && $('modal-overlay').classList.contains('justify-center'), 'E-Training form opens as a centred modal');
+assert($('modal-content').classList.contains('max-w-2xl'), 'E-Training form uses the same centred card width as the membership form');
+assert(!$('modal-content').classList.contains('e-training-drawer-content'), 'E-Training card does not stretch edge to edge');
 assert($('form-modal-close').getAttribute('aria-label') === 'Close application form', 'close control is available in the panel header');
 assert(visible('step-2'), 'e-Training starts on the name/details section');
 assert($('form-title').textContent.includes('E-Training'), 'e-Training form has the right title');
@@ -132,6 +135,42 @@ const card = $('plan-entrepreneur');
 assert(card.classList.contains('border-pakistan-green'), 'plan card highlighted');
 assert(visible('package-details-container'), 'package details shown');
 assert($('package-details-title').textContent.includes('Entrepreneur'), 'details title correct');
+
+// E-Training is offered inside the form as well, right below the Entrepreneur card
+assert($('plan-e-training') !== null, 'E-Training option exists inside the membership form');
+assert($('plan-e-training').classList.contains('plan-card'), 'E-Training option uses the same plan-card styling as Entrepreneur');
+assert($('plan-e-training').getAttribute('onclick') === "selectPlan('e-training')", 'E-Training option selects the e-training pathway');
+assert($('section-entrepreneur').contains($('plan-e-training')), 'E-Training option sits in the plan-selection step');
+assert(!/application fee|no fee|free/i.test($('plan-e-training').textContent), 'E-Training card makes no fee claim');
+window.selectPlan('e-training');
+await sleep(20);
+assert(!/application fee|no fee|free/i.test($('package-details-list').textContent), 'E-Training details make no fee claim');
+assert(/Golden Certificate/i.test($('package-details-list').textContent), 'E-Training details list the Golden Certificate');
+assert(/Experience Letter/i.test($('package-details-list').textContent), 'E-Training details list the Experience Letter');
+assert(/Real projects/i.test($('package-details-list').textContent), 'E-Training details list real projects');
+assert($('plan-e-training').classList.contains('border-pakistan-green'), 'E-Training card highlights when picked');
+assert(!card.classList.contains('border-pakistan-green'), 'Entrepreneur card deselects when E-Training is picked');
+assert(visible('package-details-container'), 'E-Training details shown');
+assert($('package-details-title').textContent.includes('E-Training'), 'details title switches to E-Training');
+assert($('form-title').textContent.includes('E-Training'), 'form title switches to the E-Training application');
+assert(!$('modal-overlay').classList.contains('e-training-drawer'), 'in-form E-Training keeps the normal modal frame');
+assert(visible('step-1'), 'in-form E-Training keeps the plan-selection step');
+assert(!$('step-1-indicator').parentElement.classList.contains('hidden'), 'plan step stays in the in-form E-Training progress');
+assert($('step-4-indicator').parentElement.classList.contains('hidden'), 'payment step is skipped for in-form E-Training');
+
+window.nextStep();
+await sleep(20);
+assert(visible('step-2'), 'in-form E-Training continues to the details step');
+assert(!$('btn-back').classList.contains('hidden'), 'in-form E-Training can step back to the plan list');
+window.prevStep();
+await sleep(20);
+assert(visible('step-1'), 'back from details returns to the plan list');
+
+// Switch back to Entrepreneur for the membership flow
+window.selectPlan('entrepreneur');
+await sleep(20);
+assert(!$('modal-overlay').classList.contains('e-training-drawer'), 'membership flow has no e-Training drawer');
+assert($('form-title').textContent.includes('Membership'), 'title returns to the Membership Application');
 
 // Step 1 -> 2
 window.nextStep();
@@ -207,6 +246,45 @@ assert(ind5 && ind5.textContent.trim() === '5', 'indicator 5 shows number 5 (no 
 window.forceCloseForm();
 await sleep(350);
 assert(!visible('modal-overlay'), 'modal closes');
+
+// Full in-form E-Training application: no payment step, submits as e-training
+window.openForm();
+await sleep(50);
+assert(visible('step-1'), 'Apply Now opens the plan list again');
+window.selectPlan('e-training');
+await sleep(20);
+window.nextStep();
+await sleep(20);
+assert(visible('step-2'), 'in-form E-Training form starts with the details step after the plan list');
+$('input-fullname').value = 'In Form Trainee';
+$('input-email').value = 'inform@example.com';
+$('input-whatsapp').value = '923007654321';
+window.validateStep2();
+await window.nextStep();
+await sleep(60);
+assert(visible('step-3'), 'in-form E-Training asks for email verification');
+'123456'.split('').forEach((char, index) => {
+  const box = document.querySelectorAll('#otp-boxes .otp-box')[index];
+  box.value = char;
+  box.dispatchEvent(new window.Event('input', { bubbles: true }));
+});
+await window.nextStep();
+await sleep(60);
+assert(visible('step-5'), 'in-form E-Training goes straight to review');
+assert(!visible('step-4'), 'in-form E-Training never shows the payment section');
+assert($('step-5-indicator').parentElement.classList.contains('hidden') === false, 'review step is part of the in-form E-Training progress');
+$('input-terms').checked = true;
+$('input-terms').dispatchEvent(new window.Event('change', { bubbles: true }));
+window.validateStep5();
+window.nextStep();
+await sleep(2100);
+const inFormETraining = submittedApplications[submittedApplications.length - 1];
+assert(visible('success-view'), 'in-form E-Training application submits successfully');
+assert(inFormETraining?.applicationType === 'e-training' && inFormETraining?.planId === 'e-training', 'in-form E-Training submits as an e-training application');
+assert(inFormETraining?.paymentProof === '' && inFormETraining?.paymentMethod === '', 'in-form E-Training needs no payment proof or method');
+window.forceCloseForm();
+await sleep(350);
+assert(!visible('modal-overlay'), 'modal closes after the in-form E-Training application');
 
 if (errors.length) {
   console.log('RUNTIME ERRORS:', errors);
