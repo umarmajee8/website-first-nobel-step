@@ -138,8 +138,10 @@ assert($('plan-e-training') !== null, 'E-Training option exists inside the membe
 assert($('plan-e-training').classList.contains('plan-card'), 'E-Training option uses the same plan-card styling as Entrepreneur');
 assert($('plan-e-training').getAttribute('onclick') === "selectPlan('e-training')", 'E-Training option selects the e-training pathway');
 assert($('section-entrepreneur').contains($('plan-e-training')), 'E-Training option sits in the plan-selection step');
+assert(!/application fee|no fee|free/i.test($('plan-e-training').textContent), 'E-Training card makes no fee claim');
 window.selectPlan('e-training');
 await sleep(20);
+assert(!/application fee|no fee|free/i.test($('package-details-list').textContent), 'E-Training details make no fee claim');
 assert($('plan-e-training').classList.contains('border-pakistan-green'), 'E-Training card highlights when picked');
 assert(!card.classList.contains('border-pakistan-green'), 'Entrepreneur card deselects when E-Training is picked');
 assert(visible('package-details-container'), 'E-Training details shown');
