@@ -34,50 +34,57 @@ async function startServer() {
   // API endpoint to send OTP
   app.post('/api/send-otp', async (req, res) => {
     try {
-      const { email: rawEmail, fullName } = req.body;
-      if (!rawEmail) return res.status(400).json({ success: false, error: 'Email is required' });
-      
+      const { email: rawEmail, fullName, applicationType } = req.body;
+      if (!rawEmail) {
+        return res.status(400).json({ success: false, error: 'Email is required' });
+      }
+
+      if (!process.env.SMTP_USER || !process.env.SMTP_PASS) {
+        console.error('OTP email not sent: SMTP_USER and SMTP_PASS are not configured.');
+        return res.status(503).json({
+          success: false,
+          error: 'Email verification is temporarily unavailable because server email is not configured. Please contact support.',
+        });
+      }
+
       const email = rawEmail.toLowerCase().trim();
+      const isETrainingApplication = applicationType === 'e-training';
+      const applicationLabel = isETrainingApplication
+        ? 'E-Training application'
+        : 'First Noble Step membership application';
       const otp = Math.floor(100000 + Math.random() * 900000).toString();
       const crypto = await import('crypto');
       const secret = process.env.GOOGLE_PRIVATE_KEY || 'fallback_secret';
       const hash = crypto.createHash('sha256').update(otp + email + secret).digest('hex');
-      
-      console.log(`[OTP GENERATED] For ${email}: ${otp}`); // Helpful for testing
 
-      if (process.env.SMTP_USER && process.env.SMTP_PASS) {
-        const transporter = nodemailer.createTransport({
-          service: 'gmail',
-          auth: {
-            user: process.env.SMTP_USER,
-            pass: process.env.SMTP_PASS,
-          },
-        });
+      const transporter = nodemailer.createTransport({
+        service: 'gmail',
+        auth: {
+          user: process.env.SMTP_USER,
+          pass: process.env.SMTP_PASS,
+        },
+      });
 
-        const mailOptions = {
-          from: `"First Noble Step" <${process.env.SMTP_USER}>`,
-          to: email,
-          subject: 'Your Verification Code - First Noble Step',
-          html: `
-            <div style="font-family: Arial, sans-serif; padding: 20px; color: #333; max-width: 500px; margin: 0 auto; border: 1px solid #e5e7eb; border-radius: 8px;">
-              <h2 style="color: #01411C; border-bottom: 2px solid #01411C; padding-bottom: 10px;">Email Verification</h2>
-              <p>Dear ${fullName || 'Applicant'},</p>
-              <p>Your verification code for the First Noble Step membership application is:</p>
-              <div style="text-align: center; margin: 30px 0;">
-                  <span style="font-size: 32px; letter-spacing: 5px; color: #01411C; background: #f0f4f9; padding: 15px 25px; border-radius: 8px; font-weight: bold;">${otp}</span>
-              </div>
-              <p>Please enter this code in the application form to proceed with your payment.</p>
-              <p style="font-size: 12px; color: #666; margin-top: 30px;">If you did not request this code, please ignore this email.</p>
+      const mailOptions = {
+        from: `"First Noble Step" <${process.env.SMTP_USER}>`,
+        to: email,
+        subject: 'Your Verification Code - First Noble Step',
+        html: `
+          <div style="font-family: Arial, sans-serif; padding: 20px; color: #333; max-width: 500px; margin: 0 auto; border: 1px solid #e5e7eb; border-radius: 8px;">
+            <h2 style="color: #01411C; border-bottom: 2px solid #01411C; padding-bottom: 10px;">Email Verification</h2>
+            <p>Dear ${fullName || 'Applicant'},</p>
+            <p>Your verification code for the ${applicationLabel} is:</p>
+            <div style="text-align: center; margin: 30px 0;">
+                <span style="font-size: 32px; letter-spacing: 5px; color: #01411C; background: #f0f4f9; padding: 15px 25px; border-radius: 8px; font-weight: bold;">${otp}</span>
             </div>
-          `
-        };
+            <p>${isETrainingApplication ? 'Please enter this code in the application form to continue.' : 'Please enter this code in the application form to proceed with your payment.'}</p>
+            <p style="font-size: 12px; color: #666; margin-top: 30px;">If you did not request this code, please ignore this email.</p>
+          </div>
+        `,
+      };
 
-        await transporter.sendMail(mailOptions);
-        return res.status(200).json({ success: true, hash });
-      } else {
-        console.log(`[SMTP NOT CONFIGURED] Pretending to send OTP. Use ${otp} to verify.`);
-        return res.status(200).json({ success: true, hash });
-      }
+      await transporter.sendMail(mailOptions);
+      return res.status(200).json({ success: true, hash });
     } catch (error: any) {
       console.error('Error sending OTP:', error);
       return res.status(500).json({ success: false, error: error.message || 'Failed to send verification code' });
@@ -115,9 +122,11 @@ async function startServer() {
     console.log('Received request to submit membership:', req.body);
     try {
       const formData = req.body;
-      const { fullName, cnic, email: rawEmail, whatsapp, planId, institute, degree, businessName, industry, experience, targetCountry, paymentMethod } = formData;
+      const { fullName, cnic, email: rawEmail, whatsapp, planId, applicationType, institute, degree, businessName, industry, experience, targetCountry, paymentMethod } = formData;
 
       const email = rawEmail ? rawEmail.toLowerCase().trim() : '';
+      const isETrainingApplication = applicationType === 'e-training' || planId === 'e-training';
+      const applicationLabel = isETrainingApplication ? 'E-Training' : 'Membership';
 
       if (!process.env.GOOGLE_SHEET_ID || !process.env.GOOGLE_SERVICE_ACCOUNT_EMAIL || !process.env.GOOGLE_PRIVATE_KEY) {
         return res.status(500).json({ success: false, error: 'Server configuration error: Missing Google Sheets credentials in Environment Variables. Please set GOOGLE_SHEET_ID, GOOGLE_SERVICE_ACCOUNT_EMAIL, and GOOGLE_PRIVATE_KEY.' });
@@ -196,14 +205,16 @@ async function startServer() {
           const mailOptions = {
             from: `"First Noble Step" <${process.env.SMTP_USER}>`,
             to: email,
-            subject: 'Welcome to First Noble Step - Membership Application Received',
-            text: `Dear ${fullName},\n\nThank you for submitting your membership application to First Noble Step (Pvt.) Ltd.\n\nWe have successfully received your details and our team will review them shortly.\n\nBest regards,\nFirst Noble Step Team\nsupport@firstnoblestep.com`,
+            subject: isETrainingApplication
+              ? 'E-Training Application Received - First Noble Step'
+              : 'Welcome to First Noble Step - Membership Application Received',
+            text: `Dear ${fullName},\n\n${isETrainingApplication ? 'Thank you for applying to the E-Training program at First Noble Step (Pvt.) Ltd.' : 'Thank you for submitting your membership application to First Noble Step (Pvt.) Ltd.'}\n\n${isETrainingApplication ? 'Our team will contact you about your application shortly.' : 'We have successfully received your details and our team will review them shortly.'}\n\nBest regards,\nFirst Noble Step Team\nsupport@firstnoblestep.com`,
             html: `
               <div style="font-family: Arial, sans-serif; color: #333; line-height: 1.6; max-width: 600px; margin: 0 auto; padding: 20px; border: 1px solid #e5e7eb; border-radius: 8px;">
                 <h2 style="color: #01411C; border-bottom: 2px solid #01411C; padding-bottom: 10px;">Welcome to First Noble Step!</h2>
                 <p>Dear <strong>${fullName}</strong>,</p>
-                <p>Thank you for submitting your membership application to First Noble Step (Pvt.) Ltd.</p>
-                <p>We have successfully received your details and our team will review them shortly.</p>
+                <p>${isETrainingApplication ? 'Thank you for applying to the E-Training program' : 'Thank you for submitting your membership application'} at First Noble Step (Pvt.) Ltd.</p>
+                <p>${isETrainingApplication ? 'Our team will contact you about your application shortly.' : 'We have successfully received your details and our team will review them shortly.'}</p>
                 <br/>
                 <p>Best regards,</p>
                 <p style="margin-bottom: 25px;"><strong>First Noble Step Team</strong><br/>
@@ -242,20 +253,20 @@ async function startServer() {
             const adminMailOptions = {
               from: `"First Noble Step System" <${process.env.SMTP_USER}>`,
               to: adminEmail,
-              subject: `New Membership Application Received - [${fullName}]`,
-              text: `A new membership application details are submitted.\n\nName: ${fullName}\nEmail: ${email}\nCNIC: ${cnic || 'N/A'}\nWhatsApp: ${whatsapp || 'N/A'}\nPlan: ${planId}\nPayment Method: ${paymentMethod || 'N/A'}`,
+              subject: `New ${applicationLabel} Application Received - [${fullName}]`,
+              text: `A new ${applicationLabel.toLowerCase()} application was submitted.\n\nName: ${fullName}\nEmail: ${email}\nCNIC: ${cnic || 'N/A'}\nWhatsApp: ${whatsapp || 'N/A'}\nPlan: ${planId}\nPayment Method: ${paymentMethod || 'N/A'}`,
               html: `
                 <div style="font-family: Arial, sans-serif; color: #333; line-height: 1.6; max-width: 600px; margin: 0 auto; padding: 20px; border: 1px solid #e5e7eb; border-radius: 8px;">
-                  <h3 style="color: #01411C; border-bottom: 2px solid #01411C; padding-bottom: 10px; margin-top: 0;">New Application Submission Details</h3>
+                  <h3 style="color: #01411C; border-bottom: 2px solid #01411C; padding-bottom: 10px; margin-top: 0;">New ${applicationLabel} Application Details</h3>
                   <table style="width: 100%; border-collapse: collapse; font-size: 14px;">
                     <tr style="border-bottom: 1px solid #eee;"><td style="padding: 8px 0; font-weight: bold; width: 140px;">Name:</td><td style="padding: 8px 0;">${fullName}</td></tr>
                     <tr style="border-bottom: 1px solid #eee;"><td style="padding: 8px 0; font-weight: bold;">Email:</td><td style="padding: 8px 0;">${email}</td></tr>
                     <tr style="border-bottom: 1px solid #eee;"><td style="padding: 8px 0; font-weight: bold;">CNIC:</td><td style="padding: 8px 0;">${cnic || 'N/A'}</td></tr>
                     <tr style="border-bottom: 1px solid #eee;"><td style="padding: 8px 0; font-weight: bold;">WhatsApp:</td><td style="padding: 8px 0;">${whatsapp || 'N/A'}</td></tr>
-                    <tr style="border-bottom: 1px solid #eee;"><td style="padding: 8px 0; font-weight: bold;">Plan Choose:</td><td style="padding: 8px 0; text-transform: capitalize;">${planId}</td></tr>
+                    <tr style="border-bottom: 1px solid #eee;"><td style="padding: 8px 0; font-weight: bold;">${isETrainingApplication ? 'Application Type' : 'Plan Choose'}:</td><td style="padding: 8px 0; text-transform: capitalize;">${isETrainingApplication ? 'E-Training' : planId}</td></tr>
                     <tr style="border-bottom: 1px solid #eee;"><td style="padding: 8px 0; font-weight: bold;">Payment Method:</td><td style="padding: 8px 0; text-transform: uppercase;">${paymentMethod || 'N/A'}</td></tr>
                   </table>
-                  ${attachments.length > 0 ? `<p style="margin-top: 20px; color: #ef4444; font-weight: bold;">✓ Verification payment screenshot/proof has been attached to this email.</p>` : `<p style="margin-top: 20px; color: #6b7280;">No payment proof attachment was uploaded for this plan/submission.</p>`}
+                  ${attachments.length > 0 ? `<p style="margin-top: 20px; color: #ef4444; font-weight: bold;">✓ Verification payment screenshot/proof has been attached to this email.</p>` : isETrainingApplication ? '' : `<p style="margin-top: 20px; color: #6b7280;">No payment proof attachment was uploaded for this plan/submission.</p>`}
                 </div>
               `,
               attachments: attachments
