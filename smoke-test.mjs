@@ -4,6 +4,7 @@ import fs from 'fs';
 const html = fs.readFileSync(new URL('./index.html', import.meta.url), 'utf8');
 
 const errors = [];
+const submittedApplications = [];
 const vc = new (class {
   constructor() {}
 })();
@@ -31,6 +32,7 @@ const dom = new JSDOM(html, {
         return { ok, json: async () => (ok ? { success: true } : { success: false, error: 'Invalid' }) };
       }
       if (String(url).includes('/api/submit-membership')) {
+        submittedApplications.push(body);
         return { ok: true, json: async () => ({ success: true }) };
       }
       return { ok: true, json: async () => ({ success: true }) };
@@ -62,6 +64,58 @@ assert(typeof window.nextStep === 'function', 'nextStep exposed');
 // Header/nav sanity
 assert($('membership') !== null, 'membership section exists');
 assert($('automation') !== null, 'automation section exists');
+assert($('internship') === null, 'internship section removed');
+assert($('e-training-banner') !== null && visible('e-training-banner'), 'full-width E-Training section is visible below the header');
+assert(html.includes('@keyframes e-training-drop-in'), 'E-Training section has a drop-in animation');
+assert($('e-training-apply') !== null, 'E-Training apply button exists in the banner');
+assert($('e-training-apply').textContent.includes('Enrollment Currently Open for E-Training'), 'banner shows the enrollment announcement');
+assert($('e-training-apply').classList.contains('sf-pro-font'), 'enrollment announcement uses the SF Pro font stack');
+assert($('e-training-banner-close') !== null, 'white close control exists on the banner');
+
+// e-Training opens the personal-details form and skips plan/payment steps
+$('e-training-banner').dispatchEvent(new window.MouseEvent('click', { bubbles: true }));
+await sleep(50);
+assert(visible('modal-overlay'), 'clicking anywhere on the E-Training section opens the application form');
+assert($('modal-overlay').classList.contains('e-training-drawer'), 'e-Training form opens below the header');
+assert($('modal-content').classList.contains('e-training-drawer-content'), 'e-Training form spans the header width');
+assert($('form-modal-close').getAttribute('aria-label') === 'Close application form', 'close control is available in the panel header');
+assert(visible('step-2'), 'e-Training starts on the name/details section');
+assert($('form-title').textContent.includes('E-Training'), 'e-Training form has the right title');
+assert($('btn-back').classList.contains('hidden'), 'first e-Training step has no plan-selection back step');
+assert($('step-1-indicator').parentElement.classList.contains('hidden'), 'plan-selection progress step is skipped');
+assert($('step-4-indicator').parentElement.classList.contains('hidden'), 'payment progress step is skipped');
+
+$('input-fullname').value = 'Training Applicant';
+$('input-email').value = 'training@example.com';
+$('input-whatsapp').value = '923001234567';
+window.validateStep2();
+await window.nextStep();
+await sleep(50);
+assert(visible('step-3'), 'e-Training continues to email verification');
+'123456'.split('').forEach((char, index) => {
+  const box = document.querySelectorAll('#otp-boxes .otp-box')[index];
+  box.value = char;
+  box.dispatchEvent(new window.Event('input', { bubbles: true }));
+});
+await window.nextStep();
+assert(visible('step-5'), 'verified e-Training application goes directly to review');
+assert(!visible('step-4'), 'e-Training never shows the payment section');
+
+$('input-terms').checked = true;
+$('input-terms').dispatchEvent(new window.Event('change', { bubbles: true }));
+window.validateStep5();
+window.nextStep();
+await sleep(2100);
+assert(visible('success-view'), 'e-Training application can be submitted without payment');
+assert($('success-message').textContent.includes('contact you shortly'), 'e-Training success message does not mention payment');
+assert(submittedApplications[0]?.planId === 'e-training', 'e-Training is recorded as its own application type');
+assert(submittedApplications[0]?.paymentProof === '', 'e-Training submits with no payment proof');
+assert(submittedApplications[0]?.paymentMethod === '', 'e-Training does not require a payment method');
+window.forceCloseForm();
+await sleep(350);
+$('e-training-banner-close').click();
+assert(!visible('e-training-banner'), 'banner close control dismisses the E-Training section');
+assert(!visible('modal-overlay'), 'banner close control does not open the form');
 
 // Open form
 window.openForm();

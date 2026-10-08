@@ -49,6 +49,12 @@
         font-weight: 700;
       }
 
+      .sf-pro-font {
+        font-family:
+          "SF Pro Display", "SF Pro Text", -apple-system, BlinkMacSystemFont,
+          "Segoe UI", sans-serif;
+      }
+
       h1,
       h2,
       h3 {
@@ -130,6 +136,60 @@
         display: none !important;
       }
 
+      @keyframes e-training-drop-in {
+        0% {
+          opacity: 0;
+          transform: translateY(-100%);
+        }
+        72% {
+          opacity: 1;
+          transform: translateY(0.4rem);
+        }
+        100% {
+          opacity: 1;
+          transform: translateY(0);
+        }
+      }
+
+      #e-training-banner {
+        animation: e-training-drop-in 700ms cubic-bezier(0.16, 1, 0.3, 1) both;
+      }
+
+      @media (prefers-reduced-motion: reduce) {
+        #e-training-banner {
+          animation: none;
+        }
+      }
+
+      #modal-overlay.e-training-drawer {
+        inset: 4rem 0 0;
+        align-items: flex-start;
+        padding: 0;
+      }
+
+      #modal-content.e-training-drawer-content {
+        width: 100%;
+        max-width: none;
+        max-height: calc(100vh - 4rem);
+        border-radius: 0 0 1.5rem 1.5rem;
+      }
+
+      #modal-content.e-training-drawer-content #form-modal-header {
+        background-color: #dc2626;
+        color: #fff;
+      }
+
+      #modal-content.e-training-drawer-content #form-title,
+      #modal-content.e-training-drawer-content #form-modal-subtitle,
+      #modal-content.e-training-drawer-content #form-modal-close,
+      #modal-content.e-training-drawer-content #form-modal-close i {
+        color: #fff;
+      }
+
+      #modal-content.e-training-drawer-content #form-modal-close:hover {
+        background-color: rgba(255, 255, 255, 0.15);
+      }
+
       @keyframes dot-pulse {
         0%,
         100% {
@@ -193,7 +253,7 @@
           <!-- Apply Button -->
           <button
             onclick="openForm()"
-            class="group relative inline-flex items-center justify-center overflow-hidden bg-pakistan-green text-white px-5 py-2 rounded-lg font-lemon text-[10px] tracking-widest hover:bg-green-800 transition-all shadow-[0_10px_20px_-5px_rgba(1,65,28,0.4)] active:scale-95 text-center"
+            class="group relative inline-flex items-center justify-center overflow-hidden bg-pakistan-green text-white px-2 sm:px-5 py-2 rounded-lg font-lemon text-[10px] tracking-widest hover:bg-green-800 transition-all shadow-[0_10px_20px_-5px_rgba(1,65,28,0.4)] active:scale-95 text-center"
           >
             <span class="transition-all duration-300 group-hover:-translate-x-2"
               >Apply Now</span
@@ -205,6 +265,36 @@
         </div>
       </div>
     </header>
+
+    <!-- FULL-WIDTH E-TRAINING SECTION -->
+    <section
+      id="e-training-banner"
+      class="relative z-40 w-full cursor-pointer bg-red-600 text-white shadow-md transition-colors hover:bg-red-700"
+      aria-label="E-Training"
+      onclick="openForm('e-training')"
+    >
+      <div class="relative flex h-12 w-full items-center justify-center px-4">
+        <button
+          id="e-training-apply"
+          type="button"
+          aria-label="Apply for E-Training"
+          class="sf-pro-font inline-flex h-full items-center justify-center gap-2 px-2 sm:px-8 text-[10px] sm:text-sm font-semibold tracking-tight sm:tracking-wide text-center text-white transition-colors hover:bg-red-700 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-inset focus-visible:ring-white"
+        >
+          <i class="fa-solid fa-graduation-cap shrink-0" aria-hidden="true"></i>
+          <span>Enrollment Currently Open for E-Training</span>
+        </button>
+        <button
+          id="e-training-banner-close"
+          type="button"
+          onclick="dismissETrainingBanner(event)"
+          aria-label="Close E-Training section"
+          title="Close E-Training section"
+          class="absolute right-3 flex h-9 w-9 items-center justify-center rounded-full text-white transition-colors hover:bg-white/15 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white"
+        >
+          <i class="fa-solid fa-xmark text-lg" aria-hidden="true"></i>
+        </button>
+      </div>
+    </section>
 
     <main class="flex-grow">
       <!-- HERO SECTION -->
@@ -223,18 +313,6 @@
         <div class="max-w-7xl mx-auto px-4 relative z-10">
           <div class="flex flex-col lg:flex-row items-center gap-12 lg:gap-16">
             <div class="flex-1 text-center lg:text-left">
-              <div
-                class="inline-flex items-center gap-2 px-4 py-1.5 bg-green-50 dark:bg-green-900/20 border border-green-200 dark:border-green-800 rounded-full mb-6"
-              >
-                <span
-                  class="w-2 h-2 bg-green-500 rounded-full animate-pulse"
-                ></span>
-                <span
-                  class="text-[10px] font-lemon text-pakistan-green dark:text-green-400 tracking-[0.2em]"
-                  >Enrollment Currently Open for Interns</span
-                >
-              </div>
-
               <h1 class="hero-title text-6xl md:text-7xl mb-6">
                 FIRST <br />
                 <span class="text-pakistan-green dark:text-green-500"
@@ -719,112 +797,6 @@
         </div>
       </section>
 
-      <!-- INTERNSHIP SECTION -->
-      <section
-        id="internship"
-        class="py-20 bg-gray-50 dark:bg-gray-800 transition-colors duration-300"
-      >
-        <div class="max-w-7xl mx-auto px-4">
-          <div class="grid grid-cols-1 gap-8 max-w-2xl mx-auto">
-            <div class="flex flex-col">
-              <h3
-                class="font-lemon text-xs tracking-[0.3em] text-pakistan-green dark:text-green-400 mb-4 flex items-center gap-3"
-              >
-                <span class="w-8 h-px bg-pakistan-green/20"></span> For
-                Students &amp; Fresh Graduates
-              </h3>
-              <div
-                class="relative bg-white dark:bg-gray-900 flex flex-col p-8 rounded-[2.5rem] border border-pakistan-green dark:border-green-600 ring-4 ring-green-50 dark:ring-green-900/20 shadow-[0_25px_60px_-15px_rgba(1,65,28,0.3)] flex-grow transition-all duration-500 group"
-              >
-                <div
-                  class="absolute top-0 left-1/2 -translate-x-1/2 -translate-y-1/2 bg-pakistan-green text-white text-[9px] font-lemon px-5 py-1.5 rounded-full tracking-widest shadow-lg whitespace-nowrap"
-                >
-                  Enrollment Open for Interns
-                </div>
-                <div class="mb-6 text-center sm:text-left">
-                  <div
-                    class="w-12 h-12 rounded-xl flex items-center justify-center mb-4 bg-green-50 dark:bg-green-900/30 text-pakistan-green dark:text-green-400 group-hover:bg-pakistan-green group-hover:text-white transition-colors"
-                  >
-                    <i class="fa-solid fa-graduation-cap text-xl"></i>
-                  </div>
-                  <h3
-                    class="text-lg font-lemon mb-1 tracking-tight dark:text-white"
-                  >
-                    Internship Program
-                  </h3>
-                  <p
-                    class="text-gray-500 dark:text-gray-400 text-xs leading-relaxed"
-                  >
-                    Start your career before it officially begins. Learn how a
-                    real business runs, work alongside our team on live work,
-                    and leave with proof of what you can do.
-                  </p>
-                </div>
-                <div
-                  class="h-px bg-gray-100 dark:bg-gray-800 w-full mb-6"
-                ></div>
-                <div
-                  class="mb-3 text-[10px] font-lemon text-pakistan-green dark:text-green-400 tracking-widest"
-                >
-                  What You Get:
-                </div>
-                <ul class="space-y-3 mb-6 flex-grow">
-                  <li class="flex items-start gap-3">
-                    <div
-                      class="shrink-0 w-5 h-5 bg-green-50 dark:bg-green-900/40 rounded-full flex items-center justify-center"
-                    >
-                      <i
-                        class="fa-solid fa-check text-pakistan-green dark:text-green-400 text-[10px]"
-                      ></i>
-                    </div>
-                    <span
-                      class="text-gray-700 dark:text-gray-300 font-medium text-xs leading-5"
-                      ><span class="font-bold dark:text-white">3-month unpaid internship</span> for students and fresh graduates</span
-                    >
-                  </li>
-                  <li class="flex items-start gap-3">
-                    <div
-                      class="shrink-0 w-5 h-5 bg-green-50 dark:bg-green-900/40 rounded-full flex items-center justify-center"
-                    >
-                      <i
-                        class="fa-solid fa-check text-pakistan-green dark:text-green-400 text-[10px]"
-                      ></i>
-                    </div>
-                    <span
-                      class="text-gray-700 dark:text-gray-300 font-medium text-xs leading-5"
-                      ><span class="font-bold dark:text-white">Real projects</span>, not busywork, so you ship things that actually get used</span
-                    >
-                  </li>
-                  <li class="flex items-start gap-3">
-                    <div
-                      class="shrink-0 w-5 h-5 bg-green-50 dark:bg-green-900/40 rounded-full flex items-center justify-center"
-                    >
-                      <i
-                        class="fa-solid fa-check text-pakistan-green dark:text-green-400 text-[10px]"
-                      ></i>
-                    </div>
-                    <span
-                      class="text-gray-700 dark:text-gray-300 font-medium text-xs leading-5"
-                      ><span class="font-bold dark:text-white">Mentorship</span> from the team that builds our automations</span
-                    >
-                  </li>
-                                  </ul>
-                <div class="flex flex-col gap-3 mt-auto">
-                  <a
-                    href="https://wa.me/923332288877?text=Hi%20First%20Noble%20Step%2C%20I%27d%20like%20to%20apply%20for%20your%203-month%20Internship%20Program."
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    class="flex items-center justify-center gap-2 w-full py-4 rounded-xl font-lemon text-[10px] tracking-widest bg-pakistan-green text-white shadow-xl shadow-green-900/10 hover:bg-green-900 uppercase transition-all hover:scale-[1.02] active:scale-95"
-                  >
-                    <i class="fa-brands fa-whatsapp text-sm"></i>
-                    Apply on WhatsApp
-                  </a>
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
-      </section>
       <!-- MEMBERSHIP SECTION -->
       <section
         id="membership"
@@ -1343,18 +1315,28 @@
         class="bg-white dark:bg-gray-900 rounded-[2rem] w-full max-w-2xl shadow-2xl border border-gray-100 dark:border-gray-800 flex flex-col max-h-[90vh] relative overflow-hidden transition-all duration-300 transform scale-95 opacity-0"
       >
         <!-- Modal Header -->
-        <div class="px-8 pt-8 pb-4 flex items-center justify-between">
+        <div
+          id="form-modal-header"
+          class="px-8 pt-8 pb-4 flex items-center justify-between"
+        >
           <div>
-            <h2 class="text-2xl font-lemon tracking-tight dark:text-white">
+            <h2
+              id="form-title"
+              class="text-2xl font-lemon tracking-tight dark:text-white"
+            >
               Membership Application
             </h2>
             <p
+              id="form-modal-subtitle"
               class="text-[10px] font-lemon text-pakistan-green dark:text-green-400 tracking-widest mt-1"
             >
               Official Portal
             </p>
           </div>
           <button
+            id="form-modal-close"
+            type="button"
+            aria-label="Close application form"
             onclick="attemptCloseForm()"
             class="w-10 h-10 flex items-center justify-center rounded-full hover:bg-gray-100 dark:hover:bg-gray-800 transition-colors"
           >
@@ -2161,6 +2143,7 @@
         </div>
         <h2 class="text-xl font-lemon mb-2 dark:text-white">Applied!</h2>
         <p
+          id="success-message"
           class="text-gray-500 dark:text-gray-400 mb-8 text-sm leading-relaxed"
         >
           Your details are submitted successfully. Our team will contact you
@@ -2247,6 +2230,7 @@
       // --- State Management ---
       let state = {
         isOpen: false,
+        isETraining: false,
         step: 1,
         plan: null,
         paymentMethod: "faysalbank",
@@ -2278,7 +2262,14 @@
       const successView = document.getElementById("success-view");
 
       // --- Helper Logic ---
+      function dismissETrainingBanner(event) {
+        event?.stopPropagation();
+        document.getElementById("e-training-banner")?.classList.add("hidden");
+      }
+
       async function openForm(planId) {
+        const isETrainingApplication = planId === "e-training";
+        state.isETraining = isETrainingApplication;
         state.isOpen = true;
         state.otpSentCount = 0;
         modalOverlay.classList.remove("hidden");
@@ -2294,18 +2285,27 @@
         if (sectionEntrepreneur)
           sectionEntrepreneur.classList.remove("hidden");
 
-        if (planId) {
+        if (isETrainingApplication) {
+          state.step = 2;
+          state.plan = "e-training";
+          state.paymentMethod = "";
+          state.paymentProofBase64 = null;
+          state.otpHash = null;
+        } else if (planId) {
           selectPlan(planId);
         }
 
-        if (state.step === 0 || state.step === undefined) state.step = 1;
+        if (!isETrainingApplication && (state.step === 0 || state.step === undefined)) {
+          state.step = 1;
+        }
 
         updateUI();
       }
 
       function attemptCloseForm() {
-        // Check if user has started entering data
-        if (state.step > 1 || state.data.fullName) {
+        // E-Training starts on the personal-details step, so that is its first step.
+        const isFirstETrainingStep = state.isETraining && state.step === 2;
+        if ((state.step > 1 && !isFirstETrainingStep) || state.data.fullName) {
           exitConfirm.classList.remove("hidden");
         } else {
           forceCloseForm();
@@ -2342,8 +2342,12 @@
 
       function resetForm() {
         hideError();
+        state.isETraining = false;
         state.step = 1;
         state.plan = null;
+        state.paymentMethod = "faysalbank";
+        state.paymentProofBase64 = null;
+        state.otpHash = null;
         state.data = { fullName: "", cnic: "", email: "", whatsapp: "" };
         selectPlan(null);
         // Clear inputs
@@ -2665,7 +2669,7 @@
               if (btnNextText) btnNextText.innerText = "Continue";
               btnNext.disabled = false;
 
-              state.step = 4;
+              state.step = state.isETraining ? 5 : 4;
               updateUI();
             } else {
               throw new Error(
@@ -2697,8 +2701,10 @@
 
       function prevStep() {
         hideError();
+        if (state.isETraining && state.step === 2) return;
         if (state.step > 1) {
-          state.step--;
+          state.step =
+            state.isETraining && state.step === 5 ? 3 : state.step - 1;
           updateUI();
         }
       }
@@ -2732,7 +2738,11 @@
           const response = await fetch("/api/send-otp", {
             method: "POST",
             headers: { "Content-Type": "application/json" },
-            body: JSON.stringify({ email: emailVal }),
+            body: JSON.stringify({
+              email: emailVal,
+              fullName: document.getElementById("input-fullname").value.trim(),
+              applicationType: state.isETraining ? "e-training" : "membership",
+            }),
           });
 
           const data = await response.json();
@@ -2795,36 +2805,69 @@
       function updateUI() {
         const progressEl = document.getElementById("form-progress");
         const footerEl = document.getElementById("form-footer");
+        const modalOverlayEl = document.getElementById("modal-overlay");
+        const modalContentEl = document.getElementById("modal-content");
+        const titleEl = document.getElementById("form-title");
+        modalOverlayEl?.classList.toggle("e-training-drawer", state.isETraining);
+        modalContentEl?.classList.toggle(
+          "e-training-drawer-content",
+          state.isETraining,
+        );
+        const successMessage = document.getElementById("success-message");
         if (progressEl) progressEl.classList.remove("hidden");
         if (footerEl) footerEl.classList.remove("hidden");
+        if (titleEl) {
+          titleEl.innerText = state.isETraining
+            ? "E-Training Application"
+            : "Membership Application";
+        }
+        if (successMessage) {
+          successMessage.innerText = state.isETraining
+            ? "Your E-Training application has been submitted successfully. Our team will contact you shortly."
+            : "Your details are submitted successfully. Our team will contact you after verifying your payment.";
+        }
 
         if (typeof updateApiStatus === "function") updateApiStatus("idle");
 
-        // Update Progress Bar
-        const progress = ((state.step - 1) / 4) * 100;
+        // E-Training skips both plan selection and payment, so its progress has 3 steps.
+        const flowSteps = state.isETraining ? [2, 3, 5] : [1, 2, 3, 4, 5];
+        const currentFlowIndex = flowSteps.indexOf(state.step);
+        const progress =
+          currentFlowIndex <= 0
+            ? 0
+            : (currentFlowIndex / (flowSteps.length - 1)) * 100;
         document.getElementById("progress-line").style.width = `${progress}%`;
 
-        // Update Indicators
+        // Update indicators and hide steps that are not part of this application flow.
         for (let i = 1; i <= 5; i++) {
           const el = document.getElementById(`step-${i}-indicator`);
-          if (el) {
-            if (i === state.step) {
-              // Current active step - beautiful glow, slight scale-up and clear number
-              el.className =
-                "w-6 h-6 rounded-full transition-all duration-500 border-2 bg-pakistan-green border-pakistan-green text-white flex items-center justify-center text-[10px] font-bold scale-125 shadow-lg shadow-green-500/20 ring-4 ring-green-100 dark:ring-green-950/40 z-10";
-              el.innerHTML = i;
-            } else if (i < state.step) {
-              // Completed steps - elegant green check icon
-              el.className =
-                "w-4 h-4 rounded-full transition-all duration-300 border-2 bg-pakistan-green border-pakistan-green text-white flex items-center justify-center text-[8px] font-bold z-0";
-              el.innerHTML =
-                '<i class="fa-solid fa-check text-[7px]" style="font-size: 7px;"></i>';
-            } else {
-              // Future steps - default light aesthetic
-              el.className =
-                "w-4 h-4 rounded-full transition-all duration-300 border-2 bg-white dark:bg-gray-900 border-gray-200 dark:border-gray-700 text-gray-400 dark:text-gray-500 flex items-center justify-center text-[8px] font-bold z-0";
-              el.innerHTML = i;
-            }
+          if (!el) continue;
+
+          const flowIndex = flowSteps.indexOf(i);
+          const indicatorContainer = el.parentElement;
+          if (flowIndex === -1) {
+            indicatorContainer?.classList.add("hidden");
+            continue;
+          }
+          indicatorContainer?.classList.remove("hidden");
+
+          const displayNumber = flowIndex + 1;
+          if (i === state.step) {
+            // Current active step - beautiful glow, slight scale-up and clear number
+            el.className =
+              "w-6 h-6 rounded-full transition-all duration-500 border-2 bg-pakistan-green border-pakistan-green text-white flex items-center justify-center text-[10px] font-bold scale-125 shadow-lg shadow-green-500/20 ring-4 ring-green-100 dark:ring-green-950/40 z-10";
+            el.innerHTML = displayNumber;
+          } else if (flowIndex < currentFlowIndex) {
+            // Completed steps - elegant green check icon
+            el.className =
+              "w-4 h-4 rounded-full transition-all duration-300 border-2 bg-pakistan-green border-pakistan-green text-white flex items-center justify-center text-[8px] font-bold z-0";
+            el.innerHTML =
+              '<i class="fa-solid fa-check text-[7px]" style="font-size: 7px;"></i>';
+          } else {
+            // Future steps - default light aesthetic
+            el.className =
+              "w-4 h-4 rounded-full transition-all duration-300 border-2 bg-white dark:bg-gray-900 border-gray-200 dark:border-gray-700 text-gray-400 dark:text-gray-500 flex items-center justify-center text-[8px] font-bold z-0";
+            el.innerHTML = displayNumber;
           }
         }
 
@@ -2854,7 +2897,7 @@
           state.paymentMethod = "faysalbank";
         }
 
-        // WhatsApp is required for all membership plans
+        // WhatsApp is required for all applications.
         if (state.step === 2) {
           const wAst = document.getElementById("label-whatsapp-star");
           const wOpt = document.getElementById("label-whatsapp-opt");
@@ -2877,7 +2920,10 @@
         }
 
         // Update Buttons
-        btnBack.classList.toggle("hidden", state.step === 1);
+        btnBack.classList.toggle(
+          "hidden",
+          state.step === 1 || (state.isETraining && state.step === 2),
+        );
         const btnNextText = document.getElementById("btn-next-text");
 
         if (state.step === 5) {
@@ -2978,17 +3024,19 @@
         hideError();
         // Collect Data
         const formData = {
-          planId: state.plan,
+          applicationType: state.isETraining ? "e-training" : "membership",
+          planId: state.isETraining ? "e-training" : state.plan,
           fullName: document.getElementById("input-fullname").value,
           cnic: "",
           email: document.getElementById("input-email").value.trim(),
           whatsapp: document.getElementById("input-whatsapp")
             ? document.getElementById("input-whatsapp").value.trim()
             : "",
-          paymentMethod: state.paymentMethod,
-          paymentProof: state.paymentProofBase64
-            ? state.paymentProofBase64
-            : "",
+          paymentMethod: state.isETraining ? "" : state.paymentMethod,
+          paymentProof:
+            !state.isETraining && state.paymentProofBase64
+              ? state.paymentProofBase64
+              : "",
           otp: document.getElementById("input-otp")
             ? document.getElementById("input-otp").value
             : "",
@@ -3295,6 +3343,7 @@
         triggerSuccessScreenConfetti,
         copyToClipboard,
         handleProofUpload,
+        dismissETrainingBanner,
       });
     </script>
   </body>
