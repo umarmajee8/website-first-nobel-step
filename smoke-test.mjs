@@ -142,6 +142,9 @@ assert(!/application fee|no fee|free/i.test($('plan-e-training').textContent), '
 window.selectPlan('e-training');
 await sleep(20);
 assert(!/application fee|no fee|free/i.test($('package-details-list').textContent), 'E-Training details make no fee claim');
+assert(/Golden Certificate/i.test($('package-details-list').textContent), 'E-Training details list the Golden Certificate');
+assert(/Experience Letter/i.test($('package-details-list').textContent), 'E-Training details list the Experience Letter');
+assert(/Real projects/i.test($('package-details-list').textContent), 'E-Training details list real projects');
 assert($('plan-e-training').classList.contains('border-pakistan-green'), 'E-Training card highlights when picked');
 assert(!card.classList.contains('border-pakistan-green'), 'Entrepreneur card deselects when E-Training is picked');
 assert(visible('package-details-container'), 'E-Training details shown');
