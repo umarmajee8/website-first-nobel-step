@@ -1847,9 +1847,6 @@
                   class="text-[10px] text-green-600 dark:text-green-400 font-medium"
                 ></span>
               </div>
-              <p class="text-[10px] text-gray-400 text-center mt-2 font-mono">
-                Testing bypass code: 123456
-              </p>
             </div>
           </div>
 
@@ -2289,32 +2286,42 @@
     <script>
       // --- State Persist/Restore Helper Prototypes ---
       function saveState() {
-        if (typeof state !== "undefined") {
-          sessionStorage.setItem(
-            "membership_form_state",
-            JSON.stringify({
-              isOpen: state.isOpen,
-              step: state.step,
-              plan: state.plan,
-              paymentMethod: state.paymentMethod,
-              paymentProofBase64: state.paymentProofBase64,
-            }),
-          );
+        try {
+          if (typeof state !== "undefined" && typeof sessionStorage !== "undefined") {
+            sessionStorage.setItem(
+              "membership_form_state",
+              JSON.stringify({
+                isOpen: state.isOpen,
+                step: state.step,
+                plan: state.plan,
+                paymentMethod: state.paymentMethod,
+                paymentProofBase64: state.paymentProofBase64,
+              }),
+            );
+          }
+        } catch (e) {
+          // Ignore storage errors in restricted contexts
         }
       }
 
       function loadState() {
-        if (typeof state !== "undefined") {
-          const saved = sessionStorage.getItem("membership_form_state");
-          if (saved) {
-            try {
-              const parsed = JSON.parse(saved);
-              Object.assign(state, parsed);
-            } catch (e) {
-              console.error("Error restoring state:", e);
+        try {
+          if (typeof state !== "undefined" && typeof sessionStorage !== "undefined") {
+            const saved = sessionStorage.getItem("membership_form_state");
+            if (saved) {
+              try {
+                const parsed = JSON.parse(saved);
+                Object.assign(state, parsed);
+              } catch (e) {
+                console.error("Error restoring state:", e);
+              }
+              try {
+                sessionStorage.removeItem("membership_form_state");
+              } catch (e) {}
             }
-            sessionStorage.removeItem("membership_form_state");
           }
+        } catch (e) {
+          // Ignore storage errors in restricted contexts
         }
       }
 
@@ -3538,10 +3545,14 @@
         prevStep,
         nextStep,
         selectPlan,
+        validateCurrentStep,
         validateStep2,
         validateStep3Code,
         sendVerificationCode,
         validateStep4,
+        validateStep5,
+        clearProofUpload,
+        closeSpamAlertModal,
         hideError,
         triggerSuccessAnimation,
         triggerSuccessScreenConfetti,
