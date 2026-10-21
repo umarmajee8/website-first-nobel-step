@@ -16,7 +16,7 @@ export default async function handler(req: any, res: any) {
   }
 
   try {
-    const { email: rawEmail, fullName, applicationType } = req.body;
+    const { email: rawEmail, fullName } = req.body;
     if (!rawEmail) return res.status(400).json({ success: false, error: 'Email is required' });
     
     if (!process.env.SMTP_USER || !process.env.SMTP_PASS) {
@@ -28,10 +28,7 @@ export default async function handler(req: any, res: any) {
     }
 
     const email = rawEmail.toLowerCase().trim();
-    const isETrainingApplication = applicationType === 'e-training';
-    const applicationLabel = isETrainingApplication
-      ? 'E-Training application'
-      : 'First Noble Step membership application';
+    const applicationLabel = 'First Noble Step membership application';
     const otp = Math.floor(100000 + Math.random() * 900000).toString();
     const secret = process.env.GOOGLE_PRIVATE_KEY || 'fallback_secret';
     const hash = crypto.createHash('sha256').update(otp + email + secret).digest('hex');
@@ -56,7 +53,7 @@ export default async function handler(req: any, res: any) {
           <div style="text-align: center; margin: 30px 0;">
               <span style="font-size: 32px; letter-spacing: 5px; color: #01411C; background: #f0f4f9; padding: 15px 25px; border-radius: 8px; font-weight: bold;">${otp}</span>
           </div>
-          <p>${isETrainingApplication ? 'Please enter this code in the application form to continue.' : 'Please enter this code in the application form to proceed with your payment.'}</p>
+          <p>Please enter this code in the application form to proceed with your payment.</p>
           <p style="font-size: 12px; color: #666; margin-top: 30px;">If you did not request this code, please ignore this email.</p>
         </div>
       `,

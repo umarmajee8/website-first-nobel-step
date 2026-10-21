@@ -75,42 +75,38 @@ assert(affiliationText?.querySelector('span')?.classList.contains('font-semibold
 assert($('membership') !== null, 'membership section exists');
 assert($('automation') !== null, 'automation section exists');
 assert($('internship') === null, 'internship section removed');
-assert($('e-training-banner') !== null && visible('e-training-banner'), 'full-width E-Training section is visible below the header');
-assert(html.includes('@keyframes e-training-drop-in'), 'E-Training section has a drop-in animation');
-assert($('e-training-apply') !== null, 'E-Training apply button exists in the banner');
-assert($('e-training-apply').textContent.includes('Enrollment Currently Open for E-Training'), 'banner shows the enrollment announcement');
-assert($('e-training-apply').classList.contains('sf-pro-font'), 'enrollment announcement uses the SF Pro font stack');
-assert($('e-training-banner-close') !== null, 'white close control exists on the banner');
-const enrollmentDeadline = $('e-training-enrollment-deadline');
-assert(enrollmentDeadline !== null && !visible('e-training-enrollment-deadline'), 'enrollment deadline starts hidden until E-Training is chosen');
-assert(enrollmentDeadline?.textContent.replace(/\s+/g, ' ').trim() === 'Last date to enroll: 20 October', 'enrollment deadline shows the requested date');
-assert($('form-modal-header').nextElementSibling === enrollmentDeadline, 'enrollment deadline sits at the beginning of the form, directly below the header');
-assert(enrollmentDeadline?.querySelector('i')?.getAttribute('aria-hidden') === 'true', 'decorative deadline icon is hidden from assistive technology');
+assert(!/training/i.test(html), 'no E-Training content remains anywhere on the page');
+assert($('e-training-banner') === null, 'E-Training banner removed');
+assert($('e-training-enrollment-deadline') === null, 'E-Training enrollment deadline removed');
+assert($('plan-e-training') === null, 'E-Training plan option removed from the form');
+assert(typeof window.dismissETrainingBanner === 'undefined', 'E-Training banner dismiss handler removed');
 
-// e-Training opens the personal-details form and skips plan/payment steps
-$('e-training-banner').dispatchEvent(new window.MouseEvent('click', { bubbles: true }));
+// Membership opens on plan selection, then details, then email verification
+window.openForm();
 await sleep(50);
-assert(visible('modal-overlay'), 'clicking anywhere on the E-Training section opens the application form');
-assert(!html.includes('e-training-drawer'), 'no full-width drawer styling remains in the stylesheet');
-assert(!$('modal-overlay').classList.contains('e-training-drawer'), 'E-Training form is not a full-width drawer');
-assert($('modal-overlay').classList.contains('items-center') && $('modal-overlay').classList.contains('justify-center'), 'E-Training form opens as a centred modal');
-assert($('modal-content').classList.contains('max-w-2xl'), 'E-Training form uses the same centred card width as the membership form');
-assert(!$('modal-content').classList.contains('e-training-drawer-content'), 'E-Training card does not stretch edge to edge');
+assert(visible('modal-overlay'), 'Apply Now opens the application form');
+assert($('modal-overlay').classList.contains('items-center') && $('modal-overlay').classList.contains('justify-center'), 'membership form opens as a centred modal');
+assert($('modal-content').classList.contains('max-w-2xl'), 'membership form uses the centred card width');
 assert($('form-modal-close').getAttribute('aria-label') === 'Close application form', 'close control is available in the panel header');
-assert(visible('step-2'), 'e-Training starts on the name/details section');
-assert($('form-title').textContent.includes('E-Training'), 'e-Training form has the right title');
-assert(visible('e-training-enrollment-deadline'), 'enrollment deadline is visible immediately when E-Training opens from the banner');
-assert($('btn-back').classList.contains('hidden'), 'first e-Training step has no plan-selection back step');
-assert($('step-1-indicator').parentElement.classList.contains('hidden'), 'plan-selection progress step is skipped');
-assert($('step-4-indicator').parentElement.classList.contains('hidden'), 'payment progress step is skipped');
+assert(visible('step-1'), 'membership starts on plan selection');
+assert($('form-title').textContent.includes('Membership'), 'membership form has the right title');
+assert($('btn-back').classList.contains('hidden'), 'first membership step has no back step');
+assert(!$('step-1-indicator').parentElement.classList.contains('hidden'), 'plan-selection progress step is part of the flow');
+assert(!$('step-4-indicator').parentElement.classList.contains('hidden'), 'payment progress step is part of the flow');
 
-$('input-fullname').value = 'Training Applicant';
-$('input-email').value = 'training@example.com';
+window.selectPlan('entrepreneur');
+await sleep(20);
+window.nextStep();
+await sleep(20);
+assert(visible('step-2'), 'membership continues to the name/details section');
+
+$('input-fullname').value = 'Membership Applicant';
+$('input-email').value = 'membership@example.com';
 $('input-whatsapp').value = '923001234567';
 window.validateStep2();
 await window.nextStep();
 await sleep(50);
-assert(visible('step-3'), 'e-Training continues to email verification');
+assert(visible('step-3'), 'membership continues to email verification');
 
 // OTP clipboard, keyboard suggestions, and autofill must fill six separate boxes.
 const otpBoxes = Array.from(document.querySelectorAll('#otp-boxes .otp-box'));
@@ -194,24 +190,37 @@ otpBoxes[3].dispatchEvent(new window.KeyboardEvent('keydown', { key: 'ArrowRight
 assert(document.activeElement === otpBoxes[4], 'right arrow moves to the next OTP box');
 pasteOTPCode(0, '123456');
 await window.nextStep();
-assert(visible('step-5'), 'verified e-Training application goes directly to review');
-assert(!visible('step-4'), 'e-Training never shows the payment section');
+await sleep(50);
+assert(visible('step-4'), 'verified membership application continues to the payment section');
+assert(!visible('step-5'), 'membership does not skip the payment section');
+
+// Payment: upload proof, then review
+const firstFlowFileInput = $('proof-file-input');
+if (firstFlowFileInput) {
+  const file = new window.File([new Uint8Array([137, 80, 78, 71])], 'proof.png', { type: 'image/png' });
+  Object.defineProperty(firstFlowFileInput, 'files', { value: [file], configurable: true });
+  window.handleProofUpload({ target: firstFlowFileInput });
+  await sleep(200);
+}
+window.validateStep4();
+window.nextStep();
+await sleep(30);
+assert(visible('step-5'), 'membership continues to review after payment proof');
 
 $('input-terms').checked = true;
 $('input-terms').dispatchEvent(new window.Event('change', { bubbles: true }));
 window.validateStep5();
 window.nextStep();
 await sleep(2100);
-assert(visible('success-view'), 'e-Training application can be submitted without payment');
-assert($('success-message').textContent.includes('contact you shortly'), 'e-Training success message does not mention payment');
-assert(submittedApplications[0]?.planId === 'e-training', 'e-Training is recorded as its own application type');
-assert(submittedApplications[0]?.paymentProof === '', 'e-Training submits with no payment proof');
-assert(submittedApplications[0]?.paymentMethod === '', 'e-Training does not require a payment method');
+assert(visible('success-view'), 'membership application can be submitted after payment');
+assert($('success-message').textContent.includes('verifying your payment'), 'membership success message mentions payment verification');
+assert(submittedApplications[0]?.applicationType === 'membership', 'application is recorded as a membership application');
+assert(submittedApplications[0]?.planId === 'entrepreneur', 'entrepreneur plan is recorded on the application');
+assert(submittedApplications[0]?.paymentProof !== '', 'membership submits with payment proof');
+assert(submittedApplications[0]?.paymentMethod === 'faysalbank', 'membership submits with a payment method');
 window.forceCloseForm();
 await sleep(350);
-$('e-training-banner-close').click();
-assert(!visible('e-training-banner'), 'banner close control dismisses the E-Training section');
-assert(!visible('modal-overlay'), 'banner close control does not open the form');
+assert(!visible('modal-overlay'), 'modal closes after the membership application');
 
 // Open form
 window.openForm();
@@ -219,7 +228,6 @@ await sleep(50);
 assert(visible('modal-overlay'), 'modal opens');
 assert(visible('step-1'), 'step 1 visible');
 assert(visible('section-entrepreneur'), 'entrepreneur section visible');
-assert(!visible('e-training-enrollment-deadline'), 'enrollment deadline stays hidden in the membership form');
 assert(document.getElementById('section-students') === null, 'old packages removed');
 
 // Select entrepreneur
@@ -230,43 +238,22 @@ assert(card.classList.contains('border-pakistan-green'), 'plan card highlighted'
 assert(visible('package-details-container'), 'package details shown');
 assert($('package-details-title').textContent.includes('Entrepreneur'), 'details title correct');
 
-// E-Training is offered inside the form as well, right below the Entrepreneur card
-assert($('plan-e-training') !== null, 'E-Training option exists inside the membership form');
-assert($('plan-e-training').classList.contains('plan-card'), 'E-Training option uses the same plan-card styling as Entrepreneur');
-assert($('plan-e-training').getAttribute('onclick') === "selectPlan('e-training')", 'E-Training option selects the e-training pathway');
-assert($('section-entrepreneur').contains($('plan-e-training')), 'E-Training option sits in the plan-selection step');
-assert(!/application fee|no fee|free/i.test($('plan-e-training').textContent), 'E-Training card makes no fee claim');
-window.selectPlan('e-training');
-await sleep(20);
-assert(!/application fee|no fee|free/i.test($('package-details-list').textContent), 'E-Training details make no fee claim');
-assert(/Golden Certificate/i.test($('package-details-list').textContent), 'E-Training details list the Golden Certificate');
-assert(/Experience Letter/i.test($('package-details-list').textContent), 'E-Training details list the Experience Letter');
-assert(/Real projects/i.test($('package-details-list').textContent), 'E-Training details list real projects');
-assert($('plan-e-training').classList.contains('border-pakistan-green'), 'E-Training card highlights when picked');
-assert(!card.classList.contains('border-pakistan-green'), 'Entrepreneur card deselects when E-Training is picked');
-assert(visible('package-details-container'), 'E-Training details shown');
-assert($('package-details-title').textContent.includes('E-Training'), 'details title switches to E-Training');
-assert($('form-title').textContent.includes('E-Training'), 'form title switches to the E-Training application');
-assert(visible('e-training-enrollment-deadline'), 'selecting E-Training inside the form immediately shows the enrollment deadline');
-assert(!$('modal-overlay').classList.contains('e-training-drawer'), 'in-form E-Training keeps the normal modal frame');
-assert(visible('step-1'), 'in-form E-Training keeps the plan-selection step');
-assert(!$('step-1-indicator').parentElement.classList.contains('hidden'), 'plan step stays in the in-form E-Training progress');
-assert($('step-4-indicator').parentElement.classList.contains('hidden'), 'payment step is skipped for in-form E-Training');
+// Entrepreneur is the only plan offered in the form
+assert(document.querySelectorAll('.plan-card').length === 1, 'only the Entrepreneur plan card is offered');
+assert(!$('section-entrepreneur').querySelector('[id^="plan-"]:not(#plan-entrepreneur)'), 'no other plan options sit in the plan-selection step');
+assert(!$('step-4-indicator').parentElement.classList.contains('hidden'), 'payment step is part of the membership progress');
 
 window.nextStep();
 await sleep(20);
-assert(visible('step-2'), 'in-form E-Training continues to the details step');
-assert(!$('btn-back').classList.contains('hidden'), 'in-form E-Training can step back to the plan list');
+assert(visible('step-2'), 'membership continues to the details step');
+assert(!$('btn-back').classList.contains('hidden'), 'membership can step back to the plan list');
 window.prevStep();
 await sleep(20);
 assert(visible('step-1'), 'back from details returns to the plan list');
 
-// Switch back to Entrepreneur for the membership flow
 window.selectPlan('entrepreneur');
 await sleep(20);
-assert(!$('modal-overlay').classList.contains('e-training-drawer'), 'membership flow has no e-Training drawer');
-assert($('form-title').textContent.includes('Membership'), 'title returns to the Membership Application');
-assert(!visible('e-training-enrollment-deadline'), 'switching back to Entrepreneur hides the E-Training deadline');
+assert($('form-title').textContent.includes('Membership'), 'title stays on the Membership Application');
 
 // Step 1 -> 2
 window.nextStep();
@@ -341,45 +328,7 @@ assert(ind5 && ind5.textContent.trim() === '5', 'indicator 5 shows number 5 (no 
 window.forceCloseForm();
 await sleep(350);
 assert(!visible('modal-overlay'), 'modal closes');
-
-// Full in-form E-Training application: no payment step, submits as e-training
-window.openForm();
-await sleep(50);
-assert(visible('step-1'), 'Apply Now opens the plan list again');
-window.selectPlan('e-training');
-await sleep(20);
-window.nextStep();
-await sleep(20);
-assert(visible('step-2'), 'in-form E-Training form starts with the details step after the plan list');
-$('input-fullname').value = 'In Form Trainee';
-$('input-email').value = 'inform@example.com';
-$('input-whatsapp').value = '923007654321';
-window.validateStep2();
-await window.nextStep();
-await sleep(60);
-assert(visible('step-3'), 'in-form E-Training asks for email verification');
-'123456'.split('').forEach((char, index) => {
-  const box = document.querySelectorAll('#otp-boxes .otp-box')[index];
-  box.value = char;
-  box.dispatchEvent(new window.Event('input', { bubbles: true }));
-});
-await window.nextStep();
-await sleep(60);
-assert(visible('step-5'), 'in-form E-Training goes straight to review');
-assert(!visible('step-4'), 'in-form E-Training never shows the payment section');
-assert($('step-5-indicator').parentElement.classList.contains('hidden') === false, 'review step is part of the in-form E-Training progress');
-$('input-terms').checked = true;
-$('input-terms').dispatchEvent(new window.Event('change', { bubbles: true }));
-window.validateStep5();
-window.nextStep();
-await sleep(2100);
-const inFormETraining = submittedApplications[submittedApplications.length - 1];
-assert(visible('success-view'), 'in-form E-Training application submits successfully');
-assert(inFormETraining?.applicationType === 'e-training' && inFormETraining?.planId === 'e-training', 'in-form E-Training submits as an e-training application');
-assert(inFormETraining?.paymentProof === '' && inFormETraining?.paymentMethod === '', 'in-form E-Training needs no payment proof or method');
-window.forceCloseForm();
-await sleep(350);
-assert(!visible('modal-overlay'), 'modal closes after the in-form E-Training application');
+assert(submittedApplications.every(application => application.applicationType === 'membership'), 'every submitted application is a membership application');
 
 if (errors.length) {
   console.log('RUNTIME ERRORS:', errors);

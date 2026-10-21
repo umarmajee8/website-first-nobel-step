@@ -19,11 +19,10 @@ export default async function handler(req: any, res: any) {
   console.log('Received request to submit membership:', req.body);
   try {
     const formData = req.body;
-    const { fullName, cnic, email: rawEmail, whatsapp, planId, applicationType, institute, degree, businessName, industry, experience, targetCountry, paymentMethod } = formData;
+    const { fullName, cnic, email: rawEmail, whatsapp, planId, institute, degree, businessName, industry, experience, targetCountry, paymentMethod } = formData;
 
     const email = rawEmail ? rawEmail.toLowerCase().trim() : '';
-    const isETrainingApplication = applicationType === 'e-training' || planId === 'e-training';
-    const applicationLabel = isETrainingApplication ? 'E-Training' : 'Membership';
+    const applicationLabel = 'Membership';
 
     // Check for required environment variables
     if (!process.env.GOOGLE_SHEET_ID || !process.env.GOOGLE_SERVICE_ACCOUNT_EMAIL || !process.env.GOOGLE_PRIVATE_KEY) {
@@ -113,16 +112,14 @@ export default async function handler(req: any, res: any) {
         const mailOptions = {
           from: `"First Noble Step" <${process.env.SMTP_USER}>`,
           to: email,
-          subject: isETrainingApplication
-            ? 'E-Training Application Received - First Noble Step'
-            : 'Welcome to First Noble Step - Membership Application Received',
-          text: `Dear ${fullName},\n\n${isETrainingApplication ? 'Thank you for applying to the E-Training program at First Noble Step (Pvt.) Ltd.' : 'Thank you for submitting your membership application to First Noble Step (Pvt.) Ltd.'}\n\n${isETrainingApplication ? 'Our team will contact you about your application shortly.' : 'We have successfully received your details and our team will review them shortly.'}\n\nBest regards,\nFirst Noble Step Team\nsupport@firstnoblestep.com`,
+          subject: 'Welcome to First Noble Step - Membership Application Received',
+          text: `Dear ${fullName},\n\nThank you for submitting your membership application to First Noble Step (Pvt.) Ltd.\n\nWe have successfully received your details and our team will review them shortly.\n\nBest regards,\nFirst Noble Step Team\nsupport@firstnoblestep.com`,
           html: `
             <div style="font-family: Arial, sans-serif; color: #333; line-height: 1.6; max-width: 600px; margin: 0 auto; padding: 20px; border: 1px solid #e5e7eb; border-radius: 8px;">
               <h2 style="color: #01411C; border-bottom: 2px solid #01411C; padding-bottom: 10px;">Welcome to First Noble Step!</h2>
               <p>Dear <strong>${fullName}</strong>,</p>
-              <p>${isETrainingApplication ? 'Thank you for applying to the E-Training program' : 'Thank you for submitting your membership application'} at First Noble Step (Pvt.) Ltd.</p>
-              <p>${isETrainingApplication ? 'Our team will contact you about your application shortly.' : 'We have successfully received your details and our team will review them shortly.'}</p>
+              <p>Thank you for submitting your membership application at First Noble Step (Pvt.) Ltd.</p>
+              <p>We have successfully received your details and our team will review them shortly.</p>
               <br/>
               <p>Best regards,</p>
               <p style="margin-bottom: 25px;"><strong>First Noble Step Team</strong><br/>
@@ -171,10 +168,10 @@ export default async function handler(req: any, res: any) {
                   <tr style="border-bottom: 1px solid #eee;"><td style="padding: 8px 0; font-weight: bold;">Email:</td><td style="padding: 8px 0;">${email}</td></tr>
                   <tr style="border-bottom: 1px solid #eee;"><td style="padding: 8px 0; font-weight: bold;">CNIC:</td><td style="padding: 8px 0;">${cnic || 'N/A'}</td></tr>
                   <tr style="border-bottom: 1px solid #eee;"><td style="padding: 8px 0; font-weight: bold;">WhatsApp:</td><td style="padding: 8px 0;">${whatsapp || 'N/A'}</td></tr>
-                  <tr style="border-bottom: 1px solid #eee;"><td style="padding: 8px 0; font-weight: bold;">${isETrainingApplication ? 'Application Type' : 'Plan Choose'}:</td><td style="padding: 8px 0; text-transform: capitalize;">${isETrainingApplication ? 'E-Training' : planId}</td></tr>
+                  <tr style="border-bottom: 1px solid #eee;"><td style="padding: 8px 0; font-weight: bold;">Plan Choose:</td><td style="padding: 8px 0; text-transform: capitalize;">${planId}</td></tr>
                   <tr style="border-bottom: 1px solid #eee;"><td style="padding: 8px 0; font-weight: bold;">Payment Method:</td><td style="padding: 8px 0; text-transform: uppercase;">${paymentMethod || 'N/A'}</td></tr>
                 </table>
-                ${attachments.length > 0 ? `<p style="margin-top: 20px; color: #ef4444; font-weight: bold;">✓ Verification payment screenshot/proof has been attached to this email.</p>` : isETrainingApplication ? '' : `<p style="margin-top: 20px; color: #6b7280;">No payment proof attachment was uploaded for this plan/submission.</p>`}
+                ${attachments.length > 0 ? `<p style="margin-top: 20px; color: #ef4444; font-weight: bold;">✓ Verification payment screenshot/proof has been attached to this email.</p>` : `<p style="margin-top: 20px; color: #6b7280;">No payment proof attachment was uploaded for this plan/submission.</p>`}
               </div>
             `,
             attachments: attachments
