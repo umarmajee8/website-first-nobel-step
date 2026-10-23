@@ -1,6 +1,15 @@
 import nodemailer from 'nodemailer';
 import crypto from 'crypto';
 
+function escapeHtml(value: string): string {
+  return value
+    .replace(/&/g, '&amp;')
+    .replace(/</g, '&lt;')
+    .replace(/>/g, '&gt;')
+    .replace(/"/g, '&quot;')
+    .replace(/'/g, '&#39;');
+}
+
 export default async function handler(req: any, res: any) {
   // CORS Headers
   res.setHeader('Access-Control-Allow-Origin', '*');
@@ -16,9 +25,11 @@ export default async function handler(req: any, res: any) {
   }
 
   try {
-    const { email: rawEmail, fullName } = req.body;
-    if (!rawEmail) return res.status(400).json({ success: false, error: 'Email is required' });
-    
+    const { email: rawEmail, fullName } = req.body || {};
+    if (!rawEmail || typeof rawEmail !== 'string') {
+      return res.status(400).json({ success: false, error: 'Email is required' });
+    }
+
     if (!process.env.SMTP_USER || !process.env.SMTP_PASS) {
       console.error('OTP email not sent: SMTP_USER and SMTP_PASS are not configured.');
       return res.status(503).json({
@@ -28,8 +39,9 @@ export default async function handler(req: any, res: any) {
     }
 
     const email = rawEmail.toLowerCase().trim();
+    const safeName = escapeHtml(typeof fullName === 'string' && fullName.trim() ? fullName.trim() : 'Applicant');
     const applicationLabel = 'First Noble Step membership application';
-    const otp = Math.floor(100000 + Math.random() * 900000).toString();
+    const otp = crypto.randomInt(100000, 1000000).toString();
     const secret = process.env.GOOGLE_PRIVATE_KEY || 'fallback_secret';
     const hash = crypto.createHash('sha256').update(otp + email + secret).digest('hex');
 
@@ -48,7 +60,7 @@ export default async function handler(req: any, res: any) {
       html: `
         <div style="font-family: Arial, sans-serif; padding: 20px; color: #333; max-width: 500px; margin: 0 auto; border: 1px solid #e5e7eb; border-radius: 8px;">
           <h2 style="color: #01411C; border-bottom: 2px solid #01411C; padding-bottom: 10px;">Email Verification</h2>
-          <p>Dear ${fullName || 'Applicant'},</p>
+          <p>Dear ${safeName},</p>
           <p>Your verification code for the ${applicationLabel} is:</p>
           <div style="text-align: center; margin: 30px 0;">
               <span style="font-size: 32px; letter-spacing: 5px; color: #01411C; background: #f0f4f9; padding: 15px 25px; border-radius: 8px; font-weight: bold;">${otp}</span>

@@ -2,10 +2,62 @@ import express from 'express';
 import { google } from 'googleapis';
 import dotenv from 'dotenv';
 import path from 'path';
+import crypto from 'crypto';
 import { createServer as createViteServer } from 'vite';
 import nodemailer from 'nodemailer';
 
 dotenv.config();
+
+const PLAN_LABELS: Record<string, string> = {
+  entrepreneur: 'Entrepreneur (PKR 49,999)',
+  'startup-launch': 'Startup Launch Pad (PKR 399,000)',
+  'biz-transformation': 'Business Transformation Pro (PKR 599,000)',
+};
+
+function escapeHtml(value: unknown): string {
+  return String(value ?? '')
+    .replace(/&/g, '&amp;')
+    .replace(/</g, '&lt;')
+    .replace(/>/g, '&gt;')
+    .replace(/"/g, '&quot;')
+    .replace(/'/g, '&#39;');
+}
+
+function sanitizeSheetCell(value: unknown, forceText = false): string {
+  const str = String(value ?? '').trim();
+  if (!str) return '';
+  if (forceText || /^[=+\-@]/.test(str)) {
+    return `'${str}`;
+  }
+  return str;
+}
+
+function hashesMatch(expectedHex: string, providedHex: string): boolean {
+  if (!/^[a-f0-9]{64}$/i.test(providedHex)) return false;
+  const expectedBuf = Buffer.from(expectedHex, 'hex');
+  const providedBuf = Buffer.from(providedHex, 'hex');
+  return expectedBuf.length === providedBuf.length && crypto.timingSafeEqual(expectedBuf, providedBuf);
+}
+
+function parsePaymentProof(paymentProof: unknown): { filename: string; content: Buffer } | null {
+  if (typeof paymentProof !== 'string' || !paymentProof.trim()) return null;
+  const match = paymentProof.match(/^data:image\/([a-zA-Z0-9.+-]+);base64,([\s\S]+)$/);
+  let ext = 'png';
+  let base64Data = paymentProof;
+  if (match) {
+    const subtype = match[1].toLowerCase();
+    base64Data = match[2];
+    if (subtype === 'jpeg' || subtype === 'jpg') ext = 'jpg';
+    else if (subtype === 'webp') ext = 'webp';
+    else if (subtype === 'gif') ext = 'gif';
+    else if (subtype === 'svg+xml') ext = 'svg';
+    else ext = subtype.replace(/[^a-z0-9]/g, '') || 'png';
+  }
+  return {
+    filename: `Payment_Proof.${ext}`,
+    content: Buffer.from(base64Data, 'base64'),
+  };
+}
 
 async function startServer() {
   const app = express();
@@ -14,11 +66,9 @@ async function startServer() {
   app.use(express.json({ limit: '20mb' }));
 
   let privateKey = process.env.GOOGLE_PRIVATE_KEY || '';
-  // Remove surrounding quotes if user accidentally pasted them
   if (privateKey.startsWith('"') && privateKey.endsWith('"')) {
     privateKey = privateKey.slice(1, -1);
   }
-  // Handle literal \n strings
   privateKey = privateKey.replace(/\\n/g, '\n');
 
   const auth = new google.auth.GoogleAuth({
@@ -34,8 +84,8 @@ async function startServer() {
   // API endpoint to send OTP
   app.post('/api/send-otp', async (req, res) => {
     try {
-      const { email: rawEmail, fullName } = req.body;
-      if (!rawEmail) {
+      const { email: rawEmail, fullName } = req.body || {};
+      if (!rawEmail || typeof rawEmail !== 'string') {
         return res.status(400).json({ success: false, error: 'Email is required' });
       }
 
@@ -48,9 +98,9 @@ async function startServer() {
       }
 
       const email = rawEmail.toLowerCase().trim();
+      const safeName = escapeHtml(typeof fullName === 'string' && fullName.trim() ? fullName.trim() : 'Applicant');
       const applicationLabel = 'First Noble Step membership application';
-      const otp = Math.floor(100000 + Math.random() * 900000).toString();
-      const crypto = await import('crypto');
+      const otp = crypto.randomInt(100000, 1000000).toString();
       const secret = process.env.GOOGLE_PRIVATE_KEY || 'fallback_secret';
       const hash = crypto.createHash('sha256').update(otp + email + secret).digest('hex');
 
@@ -69,7 +119,7 @@ async function startServer() {
         html: `
           <div style="font-family: Arial, sans-serif; padding: 20px; color: #333; max-width: 500px; margin: 0 auto; border: 1px solid #e5e7eb; border-radius: 8px;">
             <h2 style="color: #01411C; border-bottom: 2px solid #01411C; padding-bottom: 10px;">Email Verification</h2>
-            <p>Dear ${fullName || 'Applicant'},</p>
+            <p>Dear ${safeName},</p>
             <p>Your verification code for the ${applicationLabel} is:</p>
             <div style="text-align: center; margin: 30px 0;">
                 <span style="font-size: 32px; letter-spacing: 5px; color: #01411C; background: #f0f4f9; padding: 15px 25px; border-radius: 8px; font-weight: bold;">${otp}</span>
@@ -91,21 +141,25 @@ async function startServer() {
   // API endpoint to verify OTP
   app.post('/api/verify-otp', async (req, res) => {
     try {
-      const { email: rawEmail, otp, otpHash } = req.body;
-      if (!rawEmail || !otp || !otpHash) {
+      const { email: rawEmail, otp, otpHash } = req.body || {};
+      if (
+        typeof rawEmail !== 'string' ||
+        typeof otp !== 'string' ||
+        typeof otpHash !== 'string' ||
+        !rawEmail.trim() ||
+        !otp.trim() ||
+        !otpHash.trim()
+      ) {
         return res.status(400).json({ success: false, error: 'Missing parameters' });
       }
-      
-      const email = rawEmail.toLowerCase().trim();
-      const crypto = await import('crypto');
-      const secret = process.env.GOOGLE_PRIVATE_KEY || 'fallback_secret';
-      const expectedHash = crypto.createHash('sha256').update(otp + email + secret).digest('hex');
 
-      // Check if it's the expected hash
-      if (expectedHash === otpHash) {
+      const email = rawEmail.toLowerCase().trim();
+      const secret = process.env.GOOGLE_PRIVATE_KEY || 'fallback_secret';
+      const expectedHash = crypto.createHash('sha256').update(otp.trim() + email + secret).digest('hex');
+
+      if (hashesMatch(expectedHash, otpHash.trim())) {
         return res.status(200).json({ success: true });
       } else {
-        console.warn(`[OTP Failed] User: ${email}, OTP: ${otp}. Expected ${expectedHash}, got ${otpHash}`);
         return res.status(400).json({ success: false, error: 'Invalid verification code' });
       }
     } catch (error: any) {
@@ -116,75 +170,109 @@ async function startServer() {
 
   // API endpoint to submit form data
   app.post('/api/submit-membership', async (req, res) => {
-    console.log('Received request to submit membership:', req.body);
     try {
-      const formData = req.body;
-      const { fullName, cnic, email: rawEmail, whatsapp, planId, institute, degree, businessName, industry, experience, targetCountry, paymentMethod } = formData;
+      const formData = req.body || {};
+      const {
+        fullName: rawFullName,
+        cnic,
+        email: rawEmail,
+        whatsapp,
+        planId,
+        institute,
+        degree,
+        businessName,
+        industry,
+        experience,
+        targetCountry,
+        paymentMethod,
+        otp,
+        otpHash,
+      } = formData;
 
-      const email = rawEmail ? rawEmail.toLowerCase().trim() : '';
+      const fullName = typeof rawFullName === 'string' ? rawFullName.trim() : '';
+      const email = typeof rawEmail === 'string' ? rawEmail.toLowerCase().trim() : '';
       const applicationLabel = 'Membership';
 
-      if (!process.env.GOOGLE_SHEET_ID || !process.env.GOOGLE_SERVICE_ACCOUNT_EMAIL || !process.env.GOOGLE_PRIVATE_KEY) {
-        return res.status(500).json({ success: false, error: 'Server configuration error: Missing Google Sheets credentials in Environment Variables. Please set GOOGLE_SHEET_ID, GOOGLE_SERVICE_ACCOUNT_EMAIL, and GOOGLE_PRIVATE_KEY.' });
+      if (!fullName || !email || !planId) {
+        return res.status(400).json({
+          success: false,
+          error: 'Missing required fields: fullName, email, and planId are required.',
+        });
       }
 
-      let sheetSuccess = false;
+      if (otp || otpHash || (process.env.SMTP_USER && process.env.SMTP_PASS)) {
+        if (typeof otp !== 'string' || typeof otpHash !== 'string' || !otp.trim() || !otpHash.trim()) {
+          return res.status(400).json({
+            success: false,
+            error: 'Email verification is required before submitting the application.',
+          });
+        }
+        const secret = process.env.GOOGLE_PRIVATE_KEY || 'fallback_secret';
+        const expectedHash = crypto.createHash('sha256').update(otp.trim() + email + secret).digest('hex');
+        if (!hashesMatch(expectedHash, otpHash.trim())) {
+          return res.status(400).json({
+            success: false,
+            error: 'Invalid email verification token. Please verify your email again.',
+          });
+        }
+      }
+
+      if (!process.env.GOOGLE_SHEET_ID || !process.env.GOOGLE_SERVICE_ACCOUNT_EMAIL || !process.env.GOOGLE_PRIVATE_KEY) {
+        return res.status(500).json({
+          success: false,
+          error: 'Server configuration error: Missing Google Sheets credentials in Environment Variables. Please set GOOGLE_SHEET_ID, GOOGLE_SERVICE_ACCOUNT_EMAIL, and GOOGLE_PRIVATE_KEY.',
+        });
+      }
+
       try {
-        console.log('Submitting to Sheet ID:', process.env.GOOGLE_SHEET_ID);
-        
-        // Format date to a readable format (e.g., DD/MM/YYYY, HH:MM:SS AM/PM in Pakistan Time)
-        const formattedDate = new Date().toLocaleString('en-PK', { 
+        const formattedDate = new Date().toLocaleString('en-PK', {
           timeZone: 'Asia/Karachi',
           dateStyle: 'short',
-          timeStyle: 'medium'
+          timeStyle: 'medium',
         });
 
-        // Ensure the order matches the expected columns in the Google Sheet
         const values = [[
           formattedDate || '',
-          fullName || '',
-          cnic || '',
-          email || '',
-          whatsapp || '',
-          planId || '',
-          paymentMethod || '',
-          institute || '',
-          degree || '',
-          businessName || '',
-          industry || '',
-          experience || '',
-          targetCountry || ''
+          sanitizeSheetCell(fullName),
+          sanitizeSheetCell(cnic, true),
+          sanitizeSheetCell(email),
+          sanitizeSheetCell(whatsapp, true),
+          sanitizeSheetCell(planId),
+          sanitizeSheetCell(paymentMethod),
+          sanitizeSheetCell(institute),
+          sanitizeSheetCell(degree),
+          sanitizeSheetCell(businessName),
+          sanitizeSheetCell(industry),
+          sanitizeSheetCell(experience),
+          sanitizeSheetCell(targetCountry),
         ]];
-        
-        console.log('Values to append:', values);
 
         const result = await sheets.spreadsheets.values.append({
           spreadsheetId: process.env.GOOGLE_SHEET_ID,
           range: 'Sheet1!A:M',
           valueInputOption: 'USER_ENTERED',
           requestBody: {
-            values: values,
+            values,
           },
         });
         console.log('Data successfully appended to Google Sheets. Result:', JSON.stringify(result.data));
-        sheetSuccess = true;
       } catch (sheetError: any) {
         console.error('Error appending to Google Sheets:', sheetError);
-        // We continue even if sheet fails, or we can choose to fail here. 
       }
 
-      let proofAttached = false;
-      let attachments: { filename: string; path?: string; content?: Buffer | string }[] = [];
-
-      if (formData.paymentProof) {
-          const base64Data = formData.paymentProof.replace(/^data:image\/\w+;base64,/, "");
-          const buffer = Buffer.from(base64Data, 'base64');
-          attachments.push({
-              filename: 'Payment_Proof.png',
-              content: buffer
-          });
-          proofAttached = true;
+      const attachments: { filename: string; path?: string; content?: Buffer | string }[] = [];
+      const parsedProof = parsePaymentProof(formData.paymentProof);
+      if (parsedProof) {
+        attachments.push(parsedProof);
       }
+
+      const safeFullName = escapeHtml(fullName);
+      const safeEmail = escapeHtml(email);
+      const safeCnic = escapeHtml(cnic || 'N/A');
+      const safeWhatsapp = escapeHtml(whatsapp || 'N/A');
+      const planDisplay = PLAN_LABELS[String(planId)] || String(planId);
+      const safePlanDisplay = escapeHtml(planDisplay);
+      const safePaymentMethod = escapeHtml(paymentMethod || 'N/A');
 
       // Send welcome email
       if (email && process.env.SMTP_USER && process.env.SMTP_PASS) {
@@ -197,7 +285,6 @@ async function startServer() {
             },
           });
 
-          // 1. Send clean welcome email to applicant (NO attachments)
           const mailOptions = {
             from: `"First Noble Step" <${process.env.SMTP_USER}>`,
             to: email,
@@ -206,7 +293,7 @@ async function startServer() {
             html: `
               <div style="font-family: Arial, sans-serif; color: #333; line-height: 1.6; max-width: 600px; margin: 0 auto; padding: 20px; border: 1px solid #e5e7eb; border-radius: 8px;">
                 <h2 style="color: #01411C; border-bottom: 2px solid #01411C; padding-bottom: 10px;">Welcome to First Noble Step!</h2>
-                <p>Dear <strong>${fullName}</strong>,</p>
+                <p>Dear <strong>${safeFullName}</strong>,</p>
                 <p>Thank you for submitting your membership application at First Noble Step (Pvt.) Ltd.</p>
                 <p>We have successfully received your details and our team will review them shortly.</p>
                 <br/>
@@ -235,35 +322,34 @@ async function startServer() {
                   </p>
                 </div>
               </div>
-            `
+            `,
           };
 
           await transporter.sendMail(mailOptions);
           console.log(`Welcome email sent to ${email}`);
 
-          // 2. Send separate notification email with details and payment proof attached to the company admin
           const adminEmail = process.env.COMPANY_WHATSAPP_EMAIL || process.env.SMTP_USER;
           if (adminEmail) {
             const adminMailOptions = {
               from: `"First Noble Step System" <${process.env.SMTP_USER}>`,
               to: adminEmail,
               subject: `New ${applicationLabel} Application Received - [${fullName}]`,
-              text: `A new ${applicationLabel.toLowerCase()} application was submitted.\n\nName: ${fullName}\nEmail: ${email}\nCNIC: ${cnic || 'N/A'}\nWhatsApp: ${whatsapp || 'N/A'}\nPlan: ${planId}\nPayment Method: ${paymentMethod || 'N/A'}`,
+              text: `A new ${applicationLabel.toLowerCase()} application was submitted.\n\nName: ${fullName}\nEmail: ${email}\nCNIC: ${cnic || 'N/A'}\nWhatsApp: ${whatsapp || 'N/A'}\nPlan: ${planDisplay}\nPayment Method: ${paymentMethod || 'N/A'}`,
               html: `
                 <div style="font-family: Arial, sans-serif; color: #333; line-height: 1.6; max-width: 600px; margin: 0 auto; padding: 20px; border: 1px solid #e5e7eb; border-radius: 8px;">
                   <h3 style="color: #01411C; border-bottom: 2px solid #01411C; padding-bottom: 10px; margin-top: 0;">New ${applicationLabel} Application Details</h3>
                   <table style="width: 100%; border-collapse: collapse; font-size: 14px;">
-                    <tr style="border-bottom: 1px solid #eee;"><td style="padding: 8px 0; font-weight: bold; width: 140px;">Name:</td><td style="padding: 8px 0;">${fullName}</td></tr>
-                    <tr style="border-bottom: 1px solid #eee;"><td style="padding: 8px 0; font-weight: bold;">Email:</td><td style="padding: 8px 0;">${email}</td></tr>
-                    <tr style="border-bottom: 1px solid #eee;"><td style="padding: 8px 0; font-weight: bold;">CNIC:</td><td style="padding: 8px 0;">${cnic || 'N/A'}</td></tr>
-                    <tr style="border-bottom: 1px solid #eee;"><td style="padding: 8px 0; font-weight: bold;">WhatsApp:</td><td style="padding: 8px 0;">${whatsapp || 'N/A'}</td></tr>
-                    <tr style="border-bottom: 1px solid #eee;"><td style="padding: 8px 0; font-weight: bold;">Plan Choose:</td><td style="padding: 8px 0; text-transform: capitalize;">${planId}</td></tr>
-                    <tr style="border-bottom: 1px solid #eee;"><td style="padding: 8px 0; font-weight: bold;">Payment Method:</td><td style="padding: 8px 0; text-transform: uppercase;">${paymentMethod || 'N/A'}</td></tr>
+                    <tr style="border-bottom: 1px solid #eee;"><td style="padding: 8px 0; font-weight: bold; width: 140px;">Name:</td><td style="padding: 8px 0;">${safeFullName}</td></tr>
+                    <tr style="border-bottom: 1px solid #eee;"><td style="padding: 8px 0; font-weight: bold;">Email:</td><td style="padding: 8px 0;">${safeEmail}</td></tr>
+                    <tr style="border-bottom: 1px solid #eee;"><td style="padding: 8px 0; font-weight: bold;">CNIC:</td><td style="padding: 8px 0;">${safeCnic}</td></tr>
+                    <tr style="border-bottom: 1px solid #eee;"><td style="padding: 8px 0; font-weight: bold;">WhatsApp:</td><td style="padding: 8px 0;">${safeWhatsapp}</td></tr>
+                    <tr style="border-bottom: 1px solid #eee;"><td style="padding: 8px 0; font-weight: bold;">Plan Chosen:</td><td style="padding: 8px 0;">${safePlanDisplay}</td></tr>
+                    <tr style="border-bottom: 1px solid #eee;"><td style="padding: 8px 0; font-weight: bold;">Payment Method:</td><td style="padding: 8px 0; text-transform: uppercase;">${safePaymentMethod}</td></tr>
                   </table>
                   ${attachments.length > 0 ? `<p style="margin-top: 20px; color: #ef4444; font-weight: bold;">✓ Verification payment screenshot/proof has been attached to this email.</p>` : `<p style="margin-top: 20px; color: #6b7280;">No payment proof attachment was uploaded for this plan/submission.</p>`}
                 </div>
               `,
-              attachments: attachments
+              attachments,
             };
             await transporter.sendMail(adminMailOptions);
             console.log(`Admin notification email sent to ${adminEmail}`);
@@ -282,8 +368,6 @@ async function startServer() {
       }
     }
   });
-
-  // Vite middleware for development
 
   // Vite middleware for development
   if (process.env.NODE_ENV !== 'production') {
