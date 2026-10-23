@@ -74,8 +74,13 @@ assert(affiliationText?.querySelector('span')?.classList.contains('font-semibold
 // Header/nav sanity
 assert($('membership') !== null, 'membership section exists');
 assert($('automation') !== null, 'automation section exists');
+const automationPoints = Array.from(document.querySelectorAll('#automation ul li')).map(li => li.textContent.replace(/\s+/g, ' ').trim());
+assert(automationPoints.length === 3, 'Automation Solutions displays exactly 3 points');
+assert(automationPoints[0] === 'Autonomous Multi Agent AI Orchestration (AI Workforce)', 'Automation point 1 matches');
+assert(automationPoints[1] === 'Custom LLM Fine Tuning & Proprietary Knowledge Bases', 'Automation point 2 matches');
+assert(automationPoints[2] === 'Enterprise Workflow & API Ecosystem Automation', 'Automation point 3 matches');
 assert($('internship') === null, 'internship section removed');
-assert(!/training/i.test(html), 'no E-Training content remains anywhere on the page');
+assert(!/e-?training/i.test(html), 'no E-Training content remains anywhere on the page');
 assert($('e-training-banner') === null, 'E-Training banner removed');
 assert($('e-training-enrollment-deadline') === null, 'E-Training enrollment deadline removed');
 assert($('plan-e-training') === null, 'E-Training plan option removed from the form');
@@ -238,9 +243,32 @@ assert(card.classList.contains('border-pakistan-green'), 'plan card highlighted'
 assert(visible('package-details-container'), 'package details shown');
 assert($('package-details-title').textContent.includes('Entrepreneur'), 'details title correct');
 
-// Entrepreneur is the only plan offered in the form
-assert(document.querySelectorAll('.plan-card').length === 1, 'only the Entrepreneur plan card is offered');
-assert(!$('section-entrepreneur').querySelector('[id^="plan-"]:not(#plan-entrepreneur)'), 'no other plan options sit in the plan-selection step');
+// Three Entrepreneur plans are offered with distinct icons and expected pricing
+const planCards = Array.from(document.querySelectorAll('#section-entrepreneur .plan-card'));
+assert(planCards.length === 3, 'three Entrepreneur plan cards are offered');
+assert($('plan-entrepreneur')?.textContent.includes('PKR 49,999'), 'first plan price is PKR 49,999');
+assert($('plan-startup-launch')?.textContent.includes('PKR 399,000'), 'second plan (Startup Launch Pad) price is PKR 399,000');
+assert($('plan-biz-transformation')?.textContent.includes('PKR 599,000'), 'third plan (Business Transformation Pro) price is PKR 599,000');
+
+const planIconClasses = planCards.map((el) => {
+  const icon = el.querySelector('.icon-box i');
+  return icon ? Array.from(icon.classList).find((c) => c.startsWith('fa-') && c !== 'fa-solid') : null;
+});
+assert(planIconClasses.every(Boolean), 'every Entrepreneur plan card has a FontAwesome icon');
+assert(new Set(planIconClasses).size === planCards.length, 'all Entrepreneur plan icons (including first two plans) are distinct');
+
+window.selectPlan('startup-launch');
+await sleep(20);
+assert($('plan-startup-launch').classList.contains('border-pakistan-green'), 'Startup Launch Pad card highlights on selection');
+assert($('package-details-title').textContent.includes('Startup Launch Pad'), 'Startup Launch Pad details title correct');
+
+window.selectPlan('biz-transformation');
+await sleep(20);
+assert($('plan-biz-transformation').classList.contains('border-pakistan-green'), 'Business Transformation Pro card highlights on selection');
+assert($('package-details-title').textContent.includes('Business Transformation Pro'), 'Business Transformation Pro details title correct');
+
+window.selectPlan('entrepreneur');
+await sleep(20);
 assert(!$('step-4-indicator').parentElement.classList.contains('hidden'), 'payment step is part of the membership progress');
 
 window.nextStep();
@@ -291,14 +319,25 @@ await sleep(30);
 window.nextStep();
 await sleep(80);
 assert(visible('step-4'), 'step 4 (payment) visible after valid OTP');
+assert($('payment-amount-display')?.textContent.includes('PKR 49,999'), 'step 4 shows PKR 49,999 for Entrepreneur plan');
+window.selectPlan('startup-launch');
+assert($('payment-amount-display')?.textContent.trim() === 'PKR 399,000', 'step 4 shows PKR 399,000 for Startup Launch Pad');
+window.selectPlan('biz-transformation');
+assert($('payment-amount-display')?.textContent.trim() === 'PKR 599,000', 'step 4 shows PKR 599,000 for Business Transformation Pro');
+window.selectPlan('entrepreneur');
 
 // Payment: upload proof via state (simulate)
 // handleProofUpload expects an event with file; simulate by setting state directly if exposed is hard.
 // Instead, use the file input change with a fake File
 const fileInput = $('proof-file-input');
 if (fileInput) {
+  const badFile = new window.File([new Uint8Array([65, 66, 67])], 'notes.txt', { type: 'text/plain' });
+  Object.defineProperty(fileInput, 'files', { value: [badFile], configurable: true });
+  window.handleProofUpload({ target: fileInput });
+  assert(visible('form-error-banner'), 'non-image receipt file triggers validation error');
+
   const file = new window.File([new Uint8Array([137, 80, 78, 71])], 'proof.png', { type: 'image/png' });
-  Object.defineProperty(fileInput, 'files', { value: [file] });
+  Object.defineProperty(fileInput, 'files', { value: [file], configurable: true });
   window.handleProofUpload({ target: fileInput });
   await sleep(200);
 }
@@ -307,8 +346,11 @@ window.nextStep();
 await sleep(30);
 assert(visible('step-5'), 'step 5 (review) visible');
 
-// Review shows data
+// Review shows data & legal links open in new tab
 assert($('review-name') && $('review-name').textContent.includes('Umar Majeed'), 'review shows name');
+assert($('review-plan') && $('review-plan').textContent.includes('Entrepreneur — PKR 49,999'), 'review shows selected plan and price');
+const step5Links = Array.from(document.querySelectorAll('#step-5 a'));
+assert(step5Links.length === 2 && step5Links.every(a => a.getAttribute('target') === '_blank'), 'step 5 legal links open in a new tab so progress is preserved');
 
 // Accept terms and submit
 const terms = $('input-terms');
@@ -324,10 +366,22 @@ assert(successVisible, 'success view shown after submit');
 const ind5 = $('step-5-indicator');
 assert(ind5 && ind5.textContent.trim() === '5', 'indicator 5 shows number 5 (no 4-4 bug)');
 
-// close form
+// close form and verify full UI reset
 window.forceCloseForm();
 await sleep(350);
 assert(!visible('modal-overlay'), 'modal closes');
+assert($('proof-file-name')?.textContent.trim() === 'No file selected', 'receipt filename resets after closing form');
+assert($('proof-preview')?.classList.contains('hidden'), 'receipt preview resets to hidden after closing form');
+assert(Array.from(document.querySelectorAll('#otp-boxes .otp-box')).every(b => !b.classList.contains('border-green-500') && b.value === ''), 'OTP boxes reset cleanly after closing form');
+
+// Unsaved input on step 1 still prompts before discarding
+window.openForm();
+await sleep(50);
+$('input-fullname').value = 'Draft Applicant';
+window.attemptCloseForm();
+assert(visible('exit-confirm'), 'unsaved input triggers exit confirmation even on step 1');
+window.forceCloseForm();
+await sleep(350);
 assert(submittedApplications.every(application => application.applicationType === 'membership'), 'every submitted application is a membership application');
 
 if (errors.length) {
