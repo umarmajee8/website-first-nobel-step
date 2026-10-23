@@ -61,6 +61,23 @@ assert(typeof window.openForm === 'function', 'openForm exposed');
 assert(typeof window.selectPlan === 'function', 'selectPlan exposed');
 assert(typeof window.nextStep === 'function', 'nextStep exposed');
 
+// Automation section reads as a large-scale capability, kept to one compact card.
+const automationCard = $('automation');
+const automationText = automationCard.textContent.replace(/\s+/g, ' ').trim();
+assert(/single branch to 100\+ locations/i.test(automationText), 'automation card states the scale it builds for');
+assert(automationCard.querySelectorAll('.plan-card, article').length === 0, 'automation stays a single compact card, not a multi-section page');
+const automationFeatures = Array.from(automationCard.querySelectorAll('li .font-bold')).map((el) => el.textContent.trim());
+assert(automationFeatures.length === 6, 'automation card lists six capabilities');
+for (const feature of ['Omnichannel Messaging', 'AI Agents & Chatbots', 'CRM & Sales Automation', 'ERP & Finance Workflows', 'Multi-Branch Reporting', 'Custom APIs & Integrations']) {
+  assert(automationFeatures.includes(feature), `automation capability includes ${feature}`);
+}
+const automationScale = automationText.match(/(\d+\+ Builds)\s*(\d+\+ Locations)\s*([\d.]+[MK]? Tasks \/ Month)/);
+assert(automationScale !== null, 'automation card carries a compact build-scale line');
+assert(
+  automationCard.querySelector('a[href^="mailto:support@firstnoblestep.com"]') !== null,
+  'automation card keeps its email booking link'
+);
+
 // Project affiliation reads as one balanced statement, not a tiny stacked label.
 const projectAffiliation = $('project-affiliation');
 const affiliationText = projectAffiliation?.querySelector('span');
@@ -75,7 +92,7 @@ assert(affiliationText?.querySelector('span')?.classList.contains('font-semibold
 assert($('membership') !== null, 'membership section exists');
 assert($('automation') !== null, 'automation section exists');
 assert($('internship') === null, 'internship section removed');
-assert(!/training/i.test(html), 'no E-Training content remains anywhere on the page');
+assert(!/e-?training/i.test(html), 'no E-Training content remains anywhere on the page');
 assert($('e-training-banner') === null, 'E-Training banner removed');
 assert($('e-training-enrollment-deadline') === null, 'E-Training enrollment deadline removed');
 assert($('plan-e-training') === null, 'E-Training plan option removed from the form');
@@ -238,9 +255,13 @@ assert(card.classList.contains('border-pakistan-green'), 'plan card highlighted'
 assert(visible('package-details-container'), 'package details shown');
 assert($('package-details-title').textContent.includes('Entrepreneur'), 'details title correct');
 
-// Entrepreneur is the only plan offered in the form
-assert(document.querySelectorAll('.plan-card').length === 1, 'only the Entrepreneur plan card is offered');
-assert(!$('section-entrepreneur').querySelector('[id^="plan-"]:not(#plan-entrepreneur)'), 'no other plan options sit in the plan-selection step');
+// The form offers the three premium programmes and nothing else
+const planCards = Array.from(document.querySelectorAll('.plan-card'));
+assert(planCards.length === 3, 'the plan-selection step offers exactly three programmes');
+assert(
+  ['plan-entrepreneur', 'plan-startup-launch', 'plan-biz-transformation'].every((id) => planCards[0].closest('#step-1').querySelector('#' + id)),
+  'plan options are the Entrepreneur, Startup Launch Pad and Business Transformation Pro programmes'
+);
 assert(!$('step-4-indicator').parentElement.classList.contains('hidden'), 'payment step is part of the membership progress');
 
 window.nextStep();
