@@ -62,7 +62,7 @@ for (const [file, directory, canonical] of pages) {
 const html = read(root, 'index.html');
 const home = new JSDOM(html);
 const { document } = home.window;
-assert.match(document.title, /SECP & FBR Registered Company/);
+  assert.equal(document.title, 'First Noble Step');
 assert.match(content(document, 'name', 'description'), /registered with SECP and FBR in Pakistan/);
 assert.equal(document.querySelectorAll('h1').length, 1, 'homepage needs one primary heading');
 assert.equal(normalizedText(document.getElementById('company-registration-status')), 'SECP & FBR Registered');
